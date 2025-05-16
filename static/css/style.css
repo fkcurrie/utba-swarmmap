@@ -1,0 +1,111 @@
+body { 
+    padding-top: 60px; 
+    background-color: #ffffff; /* White background like UTBA */
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.navbar {
+    background-color: #2c3e50; /* UTBA's dark blue */
+}
+
+.navbar-brand, .nav-link {
+    color: #ffffff !important; /* White text for navbar */
+    font-weight: 500;
+}
+
+.navbar-brand {
+    font-size: 1.4em;
+}
+
+.btn-primary {
+    background-color: #e67e22; /* UTBA's orange */
+    border-color: #e67e22;
+}
+
+.btn-primary:hover {
+    background-color: #d35400; /* Darker orange on hover */
+    border-color: #d35400;
+}
+
+footer {
+    background-color: #2c3e50; /* UTBA's dark blue */
+    color: #ffffff;
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.9em;
+    margin-top: 30px;
+}
+
+#map {
+    height: 70vh;
+    width: 100%;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.table-responsive {
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.table th {
+    background-color: #2c3e50;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.location-info {
+    font-family: monospace;
+    color: #2c3e50;
+}
+
+/* UTBA-specific styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h2 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Modal styles */
+.modal-header {
+    background-color: #2c3e50;
+    color: #ffffff;
+}
+
+.modal-title {
+    font-weight: 500;
+}
+
+.close {
+    color: #ffffff;
+}
+
+/* Form styles */
+.form-control:focus {
+    border-color: #e67e22;
+    box-shadow: 0 0 0 0.2rem rgba(230, 126, 34, 0.25);
+}
+
+/* Links */
+a {
+    color: #e67e22;
+}
+
+a:hover {
+    color: #d35400;
+    text-decoration: none;
+} 

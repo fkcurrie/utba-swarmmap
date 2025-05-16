@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>UTBA Swarm List</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+	<style>
+		.media-modal .modal-dialog {
+			max-width: 90%;
+			margin: 1.75rem auto;
+		}
+		.media-modal .modal-content {
+			background-color: #2c3e50;
+		}
+		.media-modal .modal-body {
+			padding: 0;
+			position: relative;
+		}
+		.media-content {
+			max-height: 80vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: #000;
+		}
+		.media-content img, .media-content video {
+			max-width: 100%;
+			max-height: 80vh;
+			object-fit: contain;
+		}
+		.media-nav {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			background: rgba(44, 62, 80, 0.8);
+			color: white;
+			border: none;
+			padding: 15px;
+			cursor: pointer;
+			z-index: 1000;
+		}
+		.media-nav:hover {
+			background: rgba(44, 62, 80, 1);
+		}
+		.media-nav.prev {
+			left: 0;
+			border-radius: 0 5px 5px 0;
+		}
+		.media-nav.next {
+			right: 0;
+			border-radius: 5px 0 0 5px;
+		}
+		.media-nav:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+		.media-counter {
+			position: absolute;
+			bottom: 10px;
+			right: 10px;
+			background: rgba(44, 62, 80, 0.8);
+			color: white;
+			padding: 5px 10px;
+			border-radius: 15px;
+			font-size: 0.9em;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-expand-md navbar-dark fixed-top">
+		<a class="navbar-brand" href="/">UTBA Swarm Map</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="/swarmlist">View Swarm List</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="https://github.com/fkcurrie/utba-swarmmap/issues/new" target="_blank">Provide Feedback/Log Issue</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container">
+		<h2>Registered Swarms</h2>
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Description</th>
+						<th>Status</th>
+						<th>Location</th>
+						<th>Nearest Intersection</th>
+						<th>Reported</th>
+						<th>Last Updated</th>
+						<th>Reported Media</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{range .Swarms}}
+					<tr>
+						<td>{{.ID}}</td>
+						<td>{{.Description}}</td>
+						<td>{{.Status}}</td>
+						<td class="location-info">
+							Lat: {{printf "%.6f" .Latitude}}<br>
+							Long: {{printf "%.6f" .Longitude}}
+						</td>
+						<td>{{.NearestIntersection}}</td>
+						<td>{{.ReportedTimestamp.Format "Jan 02, 2006 15:04"}}</td>
+						<td>{{.LastUpdatedTimestamp.Format "Jan 02, 2006 15:04"}}</td>
+						<td>
+							{{if .ReportedMediaURLs}}
+								<button class="btn btn-sm btn-primary" onclick="openMediaViewer([{{range $i, $url := .ReportedMediaURLs}}{{if $i}}, {{end}}'{{$url}}'{{end}}], 0)">
+									View Media ({{len .ReportedMediaURLs}})
+								</button>
+							{{else}}
+								No media
+							{{end}}
+						</td>
+					</tr>
+					{{end}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- Media Viewer Modal -->
+	<div class="modal fade media-modal" id="mediaViewerModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Media Viewer</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="media-content">
+						<img id="mediaViewer" src="" alt="Media content" style="display: none;">
+						<video id="videoViewer" controls style="display: none;"></video>
+					</div>
+					<button class="media-nav prev" onclick="navigateMedia(-1)">❮</button>
+					<button class="media-nav next" onclick="navigateMedia(1)">❯</button>
+					<div class="media-counter" id="mediaCounter"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Add a footer with version -->
+	<footer style="text-align: center; margin-top: 20px; font-size: 0.8em; color: #ffffff;">
+		Version: {{.Version}}
+	</footer>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script>
+		let currentMediaIndex = 0;
+		let currentMediaList = [];
+
+		function openMediaViewer(mediaUrls, startIndex = 0) {
+			currentMediaList = mediaUrls;
+			currentMediaIndex = startIndex;
+			updateMediaView();
+			$('#mediaViewerModal').modal('show');
+		}
+
+		function updateMediaView() {
+			const mediaUrl = currentMediaList[currentMediaIndex];
+			const isVideo = mediaUrl.match(/\.(mp4|webm|ogg)$/i);
+			
+			$('#mediaViewer').hide();
+			$('#videoViewer').hide();
+			
+			if (isVideo) {
+				const video = $('#videoViewer');
+				video.attr('src', mediaUrl);
+				video.show();
+			} else {
+				const img = $('#mediaViewer');
+				img.attr('src', mediaUrl);
+				img.show();
+			}
+			
+			// Update navigation buttons
+			$('.media-nav.prev').prop('disabled', currentMediaIndex === 0);
+			$('.media-nav.next').prop('disabled', currentMediaIndex === currentMediaList.length - 1);
+			
+			// Update counter
+			$('#mediaCounter').text(`${currentMediaIndex + 1} / ${currentMediaList.length}`);
+		}
+
+		function navigateMedia(direction) {
+			const newIndex = currentMediaIndex + direction;
+			if (newIndex >= 0 && newIndex < currentMediaList.length) {
+				currentMediaIndex = newIndex;
+				updateMediaView();
+			}
+		}
+
+		// Update the media links to use the viewer
+		document.addEventListener('DOMContentLoaded', function() {
+			const mediaLinks = document.querySelectorAll('a[href*="View Media"]');
+			mediaLinks.forEach(link => {
+				const mediaUrl = link.getAttribute('href');
+				link.setAttribute('onclick', `openMediaViewer(['${mediaUrl}']); return false;`);
+			});
+		});
+	</script>
+</body>
+</html> 

@@ -8,21 +8,8 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
     <style>
-        body { padding-top: 60px; }
-        #map {
-            height: 70vh;
-            width: 100%;
-            margin-bottom: 15px;
-        }
-        .leaflet-control-locate a {
-            font-size: 1.4em;
-            color: #333;
-            cursor: pointer;
-        }
-        .leaflet-control-locate a:hover {
-            color: #007bff;
-        }
         /* Custom marker colors using CSS (more flexible than just icon URLs) */
         .leaflet-marker-icon.red-marker {
             filter: hue-rotate(0deg) saturate(100%) brightness(1.7);
@@ -39,8 +26,21 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
         <a class="navbar-brand" href="#">UTBA Swarm Map</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/swarmlist">View Swarm List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/fkcurrie/utba-swarmmap/issues/new" target="_blank">Provide Feedback/Log Issue</a>
+                </li>
+            </ul>
+        </div>
     </nav>
 
     <div class="container-fluid">
@@ -74,8 +74,12 @@
                             <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="media">Upload Photo/Video (Optional)</label>
-                            <input type="file" class="form-control-file" id="media" name="media" accept="image/*,video/*" capture="environment">
+                            <label for="intersection">Nearest Major Intersection</label>
+                            <input type="text" class="form-control" id="intersection" name="intersection" placeholder="e.g., Yonge & Bloor" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="media">Upload Photos/Videos (Optional, you can select multiple)</label>
+                            <input type="file" class="form-control-file" id="media" name="media" accept="image/*,video/*" capture="environment" multiple>
                             <img id="mediaPreview" src="#" alt="Media Preview" style="max-width: 100%; max-height: 200px; margin-top: 10px; display: none;"/>
                         </div>
                         <input type="hidden" id="latitude" name="latitude">
@@ -105,23 +109,100 @@
         let currentLocationMarker; // Marker for user's actual geolocation
         let reportedSwarmMarkers = new Map(); // Use a Map to easily update/remove markers by swarm ID
 
-        // Custom "Center on My Location" control
-        L.Control.Locate = L.Control.extend({
-            onAdd: function(map) {
-                var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom leaflet-control-locate');
-                div.innerHTML = '<a href="#" title="Center on my location"><i class="fas fa-map-marker-alt"></i></a>';
-                div.onclick = function(e){
-                    e.stopPropagation(); // prevent map click
-                    locateUser(true); // true to pan the map
+        // Function to get nearest intersection using Nominatim
+        async function getNearestIntersection(lat, lng) {
+            try {
+                // First try to get the road information
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
+                const data = await response.json();
+                
+                if (data.address) {
+                    // Try to construct an intersection if possible
+                    const road = data.address.road || data.address.pedestrian || data.address.path;
+                    const intersection = data.address.intersection;
+                    
+                    if (road && intersection) {
+                        return `${road} & ${intersection}`;
+                    } else if (road) {
+                        // If no intersection found, try to get the nearest cross street
+                        const crossStreetResponse = await fetch(
+                            `https://nominatim.openstreetmap.org/search?format=json&q=${road} near ${lat},${lng}&limit=1`
+                        );
+                        const crossStreetData = await crossStreetResponse.json();
+                        
+                        if (crossStreetData.length > 0 && crossStreetData[0].display_name) {
+                            const addressParts = crossStreetData[0].display_name.split(',');
+                            // Try to find a cross street in the address parts
+                            for (const part of addressParts) {
+                                if (part.includes('&') || part.includes('and')) {
+                                    return part.trim();
+                                }
+                            }
+                        }
+                        
+                        // If no cross street found, return the road name
+                        return road;
+                    }
                 }
-                return div;
-            },
-            onRemove: function(map) {}
-        });
-        L.control.locate = function(opts) {
-            return new L.Control.Locate(opts);
+                
+                // Fallback to the full address if no road/intersection found
+                return data.display_name;
+            } catch (error) {
+                console.error('Error getting intersection:', error);
+                return '';
+            }
         }
-        L.control.locate({ position: 'topleft' }).addTo(map);
+
+        // Update the locateUser function to get intersection
+        async function locateUser(panToLocation = false) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async function(position) {
+                    const userLatLng = [position.coords.latitude, position.coords.longitude];
+                    if (panToLocation) {
+                        map.setView(userLatLng, 15);
+                    }
+                    if (currentLocationMarker) {
+                        currentLocationMarker.setLatLng(userLatLng);
+                    } else {
+                        currentLocationMarker = L.marker(userLatLng, {alt: 'Current Location'}).addTo(map).bindPopup("Your Current Location");
+                    }
+                    currentLocationMarker.openPopup();
+
+                    // Get nearest intersection
+                    const intersection = await getNearestIntersection(position.coords.latitude, position.coords.longitude);
+                    document.getElementById('intersection').value = intersection;
+                }, function() {
+                    console.log("Geolocation failed or was denied.");
+                    alert("Could not get your location. Please ensure location services are enabled and permissions are granted.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Update the map click handler to get intersection
+        map.on('click', async function(e) {
+            if (userClickedMarker) {
+                map.removeLayer(userClickedMarker);
+            }
+            userClickedMarker = L.marker(e.latlng).addTo(map).bindPopup("Chosen Swarm Location");
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = lng;
+
+            // Get nearest intersection
+            const intersection = await getNearestIntersection(lat, lng);
+            document.getElementById('intersection').value = intersection;
+
+            reportSwarmModal.show();
+        });
+
+        // Initialize on page load
+        window.onload = function() {
+            locateUser();
+            fetchAndDisplaySwarms(); // Ensure all swarms are displayed on the map
+        };
 
         function getMarkerClass(status) {
             switch (status) {
@@ -176,29 +257,6 @@
                 console.error("Could not fetch swarms:", error);
             }
         }
-        
-        function locateUser(panToLocation = false) {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    const userLatLng = [position.coords.latitude, position.coords.longitude];
-                    if (panToLocation) {
-                         map.setView(userLatLng, 15); // Zoom in closer when centering
-                    }
-                    if (currentLocationMarker) {
-                        currentLocationMarker.setLatLng(userLatLng);
-                    } else {
-                        currentLocationMarker = L.marker(userLatLng, {alt: 'Current Location'}).addTo(map).bindPopup("Your Current Location");
-                    }
-                    currentLocationMarker.openPopup();
-                }, function() {
-                    console.log("Geolocation failed or was denied.");
-                    alert("Could not get your location. Please ensure location services are enabled and permissions are granted.");
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-        locateUser(); // Attempt to locate user on page load, but don't pan
 
         const reportSwarmBtn = document.getElementById('reportSwarmBtn');
         const reportSwarmModal = new bootstrap.Modal(document.getElementById('reportSwarmModal'));
@@ -221,61 +279,75 @@
             }
         });
 
-        map.on('click', function(e) {
-            if (userClickedMarker) {
-                map.removeLayer(userClickedMarker);
-            }
-            userClickedMarker = L.marker(e.latlng).addTo(map).bindPopup("Chosen Swarm Location");
-            latitudeInput.value = e.latlng.lat;
-            longitudeInput.value = e.latlng.lng;
-            reportSwarmModal.show();
-        });
-
-        mediaInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    mediaPreview.src = e.target.result;
-                    mediaPreview.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            } else {
-                mediaPreview.src = "#";
-                mediaPreview.style.display = 'none';
-            }
-        });
-
-        reportSwarmForm.addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const formData = new FormData(reportSwarmForm);
+        mediaInput.addEventListener('change', function(e) {
+            const preview = document.getElementById('mediaPreview');
+            const files = e.target.files;
             
+            if (files.length > 0) {
+                const file = files[0]; // Show preview of first file
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                
+                if (file.type.startsWith('image/')) {
+                    reader.readAsDataURL(file);
+                } else if (file.type.startsWith('video/')) {
+                    preview.style.display = 'none';
+                }
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        reportSwarmForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const mediaFiles = document.getElementById('media').files;
+            
+            // Add each file to the FormData
+            for (let i = 0; i < mediaFiles.length; i++) {
+                formData.append('media', mediaFiles[i]);
+            }
+
             try {
-                const response = await fetch('/report_swarm', {
+                // First, prepare the swarm
+                const prepareResponse = await fetch('/prepare_swarm', {
                     method: 'POST',
                     body: formData
                 });
 
-                if (response.ok) {
-                    const newReport = await response.json(); // Backend now returns the created report
-                    alert(`Report ID: ${newReport.id} submitted successfully!`);
-                    reportSwarmModal.hide();
-                    reportSwarmForm.reset(); 
-                    mediaPreview.style.display = 'none';
-                    if(userClickedMarker) map.removeLayer(userClickedMarker); // Remove the temporary click marker
-                    fetchAndDisplaySwarms(); 
-                } else {
-                    const errorText = await response.text();
-                    alert(`Error submitting report: ${errorText}`);
+                if (!prepareResponse.ok) {
+                    throw new Error(`HTTP error! status: ${prepareResponse.status}`);
+                }
+
+                const prepareData = await prepareResponse.json();
+                
+                // Show confirmation dialog
+                if (confirm(`Please confirm the following details:\n\nDescription: ${prepareData.description}\nLocation: ${prepareData.nearestIntersection}\nMedia Files: ${prepareData.mediaFilenames.join(', ')}\n\nIs this information correct?`)) {
+                    // If confirmed, send the confirmation
+                    const confirmResponse = await fetch('/confirm_swarm', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!confirmResponse.ok) {
+                        throw new Error(`HTTP error! status: ${confirmResponse.status}`);
+                    }
+
+                    const confirmData = await confirmResponse.json();
+                    alert('Swarm report submitted successfully!');
+                    $('#reportSwarmModal').modal('hide');
+                    fetchAndDisplaySwarms(); // Refresh the map
                 }
             } catch (error) {
-                console.error("Failed to submit report:", error);
-                alert("Failed to submit report. Check console for details.");
+                console.error('Error:', error);
+                alert('Error submitting swarm report: ' + error.message);
             }
         });
-
-        // Initial fetch of swarms
-        fetchAndDisplaySwarms();
 
         // Example of how to call update_swarm_status (for testing/dev purposes)
         // You would build a proper UI for UTBA members for this.
@@ -304,5 +376,10 @@
         // To test: find a report ID from console after submitting, then call:
         // exampleUpdateStatus("1", "Captured", "Successfully collected the swarm.");
     </script>
+
+    <!-- Add a footer with version -->
+    <footer style="text-align: center; margin-top: 20px; font-size: 0.8em; color: #ffffff;">
+        Version: {{.Version}}
+    </footer>
 </body>
 </html> 
