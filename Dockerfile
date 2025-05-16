@@ -7,6 +7,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Create directory for service account key
+RUN mkdir -p /app
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
 
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app 
+# Run the application
+CMD exec gunicorn --bind :$PORT app:app 

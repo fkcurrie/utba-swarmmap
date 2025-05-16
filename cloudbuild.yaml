@@ -1,11 +1,11 @@
 steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/toronto-map', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/utba-swarmmap', '.']
 
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/toronto-map']
+    args: ['push', 'gcr.io/$PROJECT_ID/utba-swarmmap']
 
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -13,14 +13,18 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'toronto-map'
+      - 'utba-swarmmap'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/toronto-map'
+      - 'gcr.io/$PROJECT_ID/utba-swarmmap'
       - '--region'
-      - 'us-central1'
+      - 'northamerica-northeast2'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
+      - '--set-secrets'
+      - '/app/service-account-key.json=swarmmap-service-account:latest'
+      - '--set-env-vars'
+      - 'GOOGLE_APPLICATION_CREDENTIALS=/app/service-account-key.json'
 
 images:
-  - 'gcr.io/$PROJECT_ID/toronto-map' 
+  - 'gcr.io/$PROJECT_ID/utba-swarmmap' 
