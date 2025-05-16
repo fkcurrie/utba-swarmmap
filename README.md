@@ -2,6 +2,12 @@
 
 A web application for tracking and managing bee swarms in the Greater Toronto Area. This application allows members of the public to report bee swarms and enables UTBA (Urban Toronto Beekeepers Association) members to manage and respond to swarm reports.
 
+## Live Demo
+
+[UTBA Swarm Map on Cloud Run](https://utba-swarmmap-rcemytjnza-pd.a.run.app)
+
+> **Note:** This is a very early prototype. Features, functionality, and design are subject to rapid change and may be incomplete or unstable.
+
 ## Features
 
 - Interactive map showing reported bee swarms
