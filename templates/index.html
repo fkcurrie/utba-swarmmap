@@ -2,411 +2,307 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Toronto Bee Swarm Map</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UTBA Swarm Map</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            touch-action: manipulation;
-        }
-        .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-        .header p {
-            margin: 0.5rem 0 0;
-            font-size: 1rem;
-            opacity: 0.8;
-        }
+        body { padding-top: 60px; }
         #map {
-            flex-grow: 1;
+            height: 70vh;
             width: 100%;
-            min-height: 500px;
+            margin-bottom: 15px;
         }
-        .footer {
-            background-color: #f8f9fa;
-            padding: 1rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-        .report-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            transition: transform 0.2s;
-        }
-        .report-button:active {
-            transform: scale(0.95);
-        }
-        .modal-content {
-            border-radius: 15px;
-        }
-        .modal-header {
-            background-color: #2c3e50;
-            color: white;
-            border-radius: 15px 15px 0 0;
-        }
-        .form-label {
-            font-weight: 500;
-        }
-        .preview-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .preview-item {
-            position: relative;
-            width: 100px;
-            height: 100px;
-        }
-        .preview-item img, .preview-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-        .preview-item .remove-btn {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .leaflet-control-locate a {
+            font-size: 1.4em;
+            color: #333;
             cursor: pointer;
         }
-        .map-controls {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .leaflet-control-locate a:hover {
+            color: #007bff;
         }
-        .map-control-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: white;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #2c3e50;
-            transition: transform 0.2s;
+        /* Custom marker colors using CSS (more flexible than just icon URLs) */
+        .leaflet-marker-icon.red-marker {
+            filter: hue-rotate(0deg) saturate(100%) brightness(1.7);
         }
-        .map-control-btn:active {
-            transform: scale(0.95);
+        .leaflet-marker-icon.green-marker {
+            filter: hue-rotate(120deg) saturate(100%) brightness(1.2);
         }
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
+        .leaflet-marker-icon.pink-marker {
+            filter: hue-rotate(300deg) saturate(100%) brightness(1.7);
         }
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #e74c3c;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 2000;
-        }
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.5rem;
-            }
-            .header p {
-                font-size: 0.9rem;
-            }
-            .modal-dialog {
-                margin: 0.5rem;
-            }
-            .map-controls {
-                top: auto;
-                bottom: 90px;
-                right: 20px;
-            }
+        .leaflet-marker-icon.blue-marker {
+            filter: hue-rotate(240deg) saturate(100%) brightness(1.7);
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <h1>Toronto Bee Swarm Map</h1>
-            <p>Report and track bee swarms in Toronto</p>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">UTBA Swarm Map</a>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="map"></div>
+            </div>
         </div>
-    </header>
-    
-    <main id="map">
-        {% include 'map.html' %}
-    </main>
-
-    <div class="map-controls">
-        <button class="map-control-btn" id="toggleHeatmap" title="Toggle Heatmap">
-            <i class="bi bi-fire"></i>
-        </button>
-        <button class="map-control-btn" id="toggleReports" title="Toggle Reports">
-            <i class="bi bi-bug"></i>
-        </button>
-    </div>
-
-    <button class="report-button" data-bs-toggle="modal" data-bs-target="#reportModal">
-        <i class="bi bi-plus-lg"></i>
-    </button>
-
-    <div class="modal fade" id="reportModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Report a Bee Swarm</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="swarmReportForm">
-                        <div class="mb-3">
-                            <label class="form-label">Location</label>
-                            <div class="d-flex gap-2">
-                                <input type="number" class="form-control" id="latitude" name="latitude" step="any" placeholder="Latitude" required>
-                                <input type="number" class="form-control" id="longitude" name="longitude" step="any" placeholder="Longitude" required>
-                            </div>
-                            <button type="button" class="btn btn-outline-primary mt-2" id="useCurrentLocation">
-                                <i class="bi bi-geo-alt"></i> Use Current Location
-                            </button>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Describe the swarm (size, behavior, etc.)" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Photos/Videos</label>
-                            <input type="file" class="form-control" id="media" name="media" accept="image/*,video/*" multiple>
-                            <div class="preview-container" id="previewContainer"></div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="submitReport">Submit Report</button>
-                </div>
+        <div class="row mt-1 mb-3">
+            <div class="col-md-12 text-center">
+                <button id="reportSwarmBtn" class="btn btn-primary mr-2">Report Swarm at My Location</button>
+                <small class="text-muted"> (Or click on the map to report at a specific spot)</small>
             </div>
         </div>
     </div>
 
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-    </div>
-
-    <div class="toast-container"></div>
-
-    <footer class="footer">
-        <div class="container">
-            <p>© 2024 Toronto Bee Swarm Map | Data from OpenStreetMap</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Show toast notification
-        function showToast(message, type = 'success') {
-            const toastContainer = document.querySelector('.toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast align-items-center text-white bg-${type} border-0`;
-            toast.setAttribute('role', 'alert');
-            toast.setAttribute('aria-live', 'assertive');
-            toast.setAttribute('aria-atomic', 'true');
-            
-            toast.innerHTML = `
-                <div class="d-flex">
-                    <div class="toast-body">
-                        ${message}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    <!-- Report Swarm Modal -->
+    <div class="modal fade" id="reportSwarmModal" tabindex="-1" role="dialog" aria-labelledby="reportSwarmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportSwarmModalLabel">Report Bee Swarm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            `;
-            
-            toastContainer.appendChild(toast);
-            const bsToast = new bootstrap.Toast(toast);
-            bsToast.show();
-            
-            toast.addEventListener('hidden.bs.toast', () => {
-                toast.remove();
-            });
+                <div class="modal-body">
+                    <form id="reportSwarmForm">
+                        <div class="form-group">
+                            <label for="description">Description (e.g., size of swarm, height from ground, on a tree branch)</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="media">Upload Photo/Video (Optional)</label>
+                            <input type="file" class="form-control-file" id="media" name="media" accept="image/*,video/*" capture="environment">
+                            <img id="mediaPreview" src="#" alt="Media Preview" style="max-width: 100%; max-height: 200px; margin-top: 10px; display: none;"/>
+                        </div>
+                        <input type="hidden" id="latitude" name="latitude">
+                        <input type="hidden" id="longitude" name="longitude">
+                        <button type="submit" class="btn btn-primary">Submit Report</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TODO: Add a separate modal for UTBA members to update status -->
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <script>
+        const map = L.map('map').setView([43.6532, -79.3832], 12); // Default to Toronto
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        let userClickedMarker; // Marker for where user clicks to report
+        let currentLocationMarker; // Marker for user's actual geolocation
+        let reportedSwarmMarkers = new Map(); // Use a Map to easily update/remove markers by swarm ID
+
+        // Custom "Center on My Location" control
+        L.Control.Locate = L.Control.extend({
+            onAdd: function(map) {
+                var div = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom leaflet-control-locate');
+                div.innerHTML = '<a href="#" title="Center on my location"><i class="fas fa-map-marker-alt"></i></a>';
+                div.onclick = function(e){
+                    e.stopPropagation(); // prevent map click
+                    locateUser(true); // true to pan the map
+                }
+                return div;
+            },
+            onRemove: function(map) {}
+        });
+        L.control.locate = function(opts) {
+            return new L.Control.Locate(opts);
+        }
+        L.control.locate({ position: 'topleft' }).addTo(map);
+
+        function getMarkerClass(status) {
+            switch (status) {
+                case "Reported": return 'red-marker';
+                case "Verified": return 'pink-marker';
+                case "Captured": return 'green-marker';
+                case "Archived": return 'blue-marker'; // For old, non-captured swarms
+                default: return 'red-marker'; // Default
+            }
         }
 
-        // Handle current location
-        document.getElementById('useCurrentLocation').addEventListener('click', () => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        document.getElementById('latitude').value = position.coords.latitude;
-                        document.getElementById('longitude').value = position.coords.longitude;
-                    },
-                    (error) => {
-                        showToast('Error getting location: ' + error.message, 'danger');
-                    }
-                );
-            } else {
-                showToast('Geolocation is not supported by your browser', 'danger');
-            }
-        });
-
-        // Handle file previews
-        document.getElementById('media').addEventListener('change', (e) => {
-            const container = document.getElementById('previewContainer');
-            container.innerHTML = '';
-            
-            Array.from(e.target.files).forEach((file, index) => {
-                const reader = new FileReader();
-                const div = document.createElement('div');
-                div.className = 'preview-item';
-                
-                reader.onload = (e) => {
-                    if (file.type.startsWith('image/')) {
-                        div.innerHTML = `
-                            <img src="${e.target.result}" alt="Preview">
-                            <button type="button" class="remove-btn" data-index="${index}">×</button>
-                        `;
-                    } else if (file.type.startsWith('video/')) {
-                        div.innerHTML = `
-                            <video src="${e.target.result}" controls></video>
-                            <button type="button" class="remove-btn" data-index="${index}">×</button>
-                        `;
-                    }
-                };
-                
-                reader.readAsDataURL(file);
-                container.appendChild(div);
-            });
-        });
-
-        // Handle file removal
-        document.getElementById('previewContainer').addEventListener('click', (e) => {
-            if (e.target.classList.contains('remove-btn')) {
-                const index = e.target.dataset.index;
-                const dt = new DataTransfer();
-                const input = document.getElementById('media');
-                const { files } = input;
-                
-                for (let i = 0; i < files.length; i++) {
-                    if (i !== parseInt(index)) {
-                        dt.items.add(files[i]);
-                    }
+        async function fetchAndDisplaySwarms() {
+            try {
+                const response = await fetch('/get_swarms');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
-                input.files = dt.files;
-                e.target.parentElement.remove();
+                const swarms = await response.json() || [];
+
+                const currentSwarmIDs = new Set(swarms.map(s => s.id));
+
+                reportedSwarmMarkers.forEach((marker, id) => {
+                    if (!currentSwarmIDs.has(id)) {
+                        map.removeLayer(marker);
+                        reportedSwarmMarkers.delete(id);
+                    }
+                });
+
+                swarms.forEach(swarm => {
+                    // Use swarm.displayStatus for marker color, but actual swarm.status for popup text for clarity
+                    const markerClassName = getMarkerClass(swarm.displayStatus || swarm.status);
+                    const popupContent = `ID: ${swarm.id}<br>Status: ${swarm.status}<br>${swarm.description || "Reported Swarm"}`;
+
+                    let existingMarker = reportedSwarmMarkers.get(swarm.id);
+
+                    if (existingMarker) {
+                        existingMarker.setLatLng([swarm.latitude, swarm.longitude]);
+                        existingMarker.setPopupContent(popupContent);
+                        // Efficiently update icon class only if necessary
+                        const currentIconClass = existingMarker.options.icon.options.className;
+                        if (currentIconClass !== markerClassName) {
+                            existingMarker.setIcon(L.divIcon({ className: markerClassName, iconSize: [25, 41], iconAnchor: [12, 41] }));
+                        }
+                    } else {
+                        const newMarker = L.marker([swarm.latitude, swarm.longitude], {
+                             icon: L.divIcon({ className: markerClassName, iconSize: [25, 41], iconAnchor: [12, 41] })
+                        }).addTo(map).bindPopup(popupContent);
+                        reportedSwarmMarkers.set(swarm.id, newMarker);
+                    }
+                });
+            } catch (error) {
+                console.error("Could not fetch swarms:", error);
+            }
+        }
+        
+        function locateUser(panToLocation = false) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const userLatLng = [position.coords.latitude, position.coords.longitude];
+                    if (panToLocation) {
+                         map.setView(userLatLng, 15); // Zoom in closer when centering
+                    }
+                    if (currentLocationMarker) {
+                        currentLocationMarker.setLatLng(userLatLng);
+                    } else {
+                        currentLocationMarker = L.marker(userLatLng, {alt: 'Current Location'}).addTo(map).bindPopup("Your Current Location");
+                    }
+                    currentLocationMarker.openPopup();
+                }, function() {
+                    console.log("Geolocation failed or was denied.");
+                    alert("Could not get your location. Please ensure location services are enabled and permissions are granted.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+        locateUser(); // Attempt to locate user on page load, but don't pan
+
+        const reportSwarmBtn = document.getElementById('reportSwarmBtn');
+        const reportSwarmModal = new bootstrap.Modal(document.getElementById('reportSwarmModal'));
+        const reportSwarmForm = document.getElementById('reportSwarmForm');
+        const latitudeInput = document.getElementById('latitude');
+        const longitudeInput = document.getElementById('longitude');
+        const mediaInput = document.getElementById('media');
+        const mediaPreview = document.getElementById('mediaPreview');
+
+        reportSwarmBtn.addEventListener('click', function() {
+            if (currentLocationMarker) {
+                const latLng = currentLocationMarker.getLatLng();
+                latitudeInput.value = latLng.lat;
+                longitudeInput.value = latLng.lng;
+                if (userClickedMarker) map.removeLayer(userClickedMarker); // Remove map-click marker if exists
+                reportSwarmModal.show();
+            } else {
+                locateUser(true); // Try to locate and pan, then user can click again if needed
+                alert("Trying to get your location. If successful, click 'Report Swarm' again. Otherwise, click on the map.");
             }
         });
 
-        // Handle form submission
-        document.getElementById('submitReport').addEventListener('click', async () => {
-            const form = document.getElementById('swarmReportForm');
-            const formData = new FormData(form);
-            
-            // Show loading overlay
-            document.getElementById('loadingOverlay').style.display = 'flex';
+        map.on('click', function(e) {
+            if (userClickedMarker) {
+                map.removeLayer(userClickedMarker);
+            }
+            userClickedMarker = L.marker(e.latlng).addTo(map).bindPopup("Chosen Swarm Location");
+            latitudeInput.value = e.latlng.lat;
+            longitudeInput.value = e.latlng.lng;
+            reportSwarmModal.show();
+        });
+
+        mediaInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    mediaPreview.src = e.target.result;
+                    mediaPreview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                mediaPreview.src = "#";
+                mediaPreview.style.display = 'none';
+            }
+        });
+
+        reportSwarmForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(reportSwarmForm);
             
             try {
                 const response = await fetch('/report_swarm', {
                     method: 'POST',
                     body: formData
                 });
-                
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    showToast('Swarm report submitted successfully!');
-                    bootstrap.Modal.getInstance(document.getElementById('reportModal')).hide();
-                    form.reset();
-                    document.getElementById('previewContainer').innerHTML = '';
-                    // Reload the page to show the new report
-                    window.location.reload();
+
+                if (response.ok) {
+                    const newReport = await response.json(); // Backend now returns the created report
+                    alert(`Report ID: ${newReport.id} submitted successfully!`);
+                    reportSwarmModal.hide();
+                    reportSwarmForm.reset(); 
+                    mediaPreview.style.display = 'none';
+                    if(userClickedMarker) map.removeLayer(userClickedMarker); // Remove the temporary click marker
+                    fetchAndDisplaySwarms(); 
                 } else {
-                    showToast('Error: ' + result.message, 'danger');
+                    const errorText = await response.text();
+                    alert(`Error submitting report: ${errorText}`);
                 }
             } catch (error) {
-                showToast('Error submitting report: ' + error.message, 'danger');
-            } finally {
-                document.getElementById('loadingOverlay').style.display = 'none';
+                console.error("Failed to submit report:", error);
+                alert("Failed to submit report. Check console for details.");
             }
         });
 
-        // Map controls
-        document.getElementById('toggleHeatmap').addEventListener('click', () => {
-            const heatmapLayer = document.querySelector('.leaflet-heatmap-layer');
-            if (heatmapLayer) {
-                heatmapLayer.style.display = heatmapLayer.style.display === 'none' ? 'block' : 'none';
-            }
-        });
+        // Initial fetch of swarms
+        fetchAndDisplaySwarms();
 
-        document.getElementById('toggleReports').addEventListener('click', () => {
-            const reportMarkers = document.querySelectorAll('.leaflet-marker-icon[src*="marker-icon-orange"]');
-            reportMarkers.forEach(marker => {
-                marker.parentElement.style.display = marker.parentElement.style.display === 'none' ? 'block' : 'none';
-            });
-        });
-
-        // Prevent zoom on double tap (mobile)
-        document.addEventListener('touchend', (e) => {
-            if (e.touches.length === 0) {
-                e.preventDefault();
+        // Example of how to call update_swarm_status (for testing/dev purposes)
+        // You would build a proper UI for UTBA members for this.
+        async function exampleUpdateStatus(reportId, newStatus, notes) {
+            try {
+                const response = await fetch('/update_swarm_status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id: reportId, status: newStatus, beekeeperNotes: notes })
+                });
+                if (response.ok) {
+                    const updatedReport = await response.json();
+                    console.log("Update successful:", updatedReport);
+                    fetchAndDisplaySwarms(); // Refresh map
+                } else {
+                    const errorText = await response.text();
+                    console.error("Failed to update status:", errorText);
+                    alert("Failed to update status: " + errorText);
+                }
+            } catch (error) {
+                console.error("Error updating status:", error);
             }
-        }, { passive: false });
+        }
+        // To test: find a report ID from console after submitting, then call:
+        // exampleUpdateStatus("1", "Captured", "Successfully collected the swarm.");
     </script>
 </body>
 </html> 
