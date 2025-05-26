@@ -108,4 +108,294 @@ a {
 a:hover {
     color: #d35400;
     text-decoration: none;
+}
+
+/* Mobile Responsiveness Improvements */
+@media (max-width: 768px) {
+    /* Mobile navigation */
+    .navbar-brand {
+        font-size: 1.2em;
+    }
+    
+    /* Better map sizing for mobile */
+    #map {
+        height: 50vh;
+        margin-bottom: 10px;
+    }
+    
+    /* Mobile-friendly container */
+    .container {
+        padding: 10px;
+        max-width: 100%;
+    }
+    
+    /* Better mobile form styling */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-control, .form-control-file {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 12px 15px;
+        min-height: 44px; /* Better touch target */
+    }
+    
+    .btn {
+        min-height: 44px; /* Better touch target */
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+    
+    /* Mobile table improvements */
+    .table-responsive {
+        font-size: 0.85em;
+        margin-top: 10px;
+    }
+    
+    .table td, .table th {
+        padding: 8px 4px;
+        word-wrap: break-word;
+    }
+    
+    /* Modal improvements for mobile */
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    /* Location info more readable on mobile */
+    .location-info {
+        font-size: 0.9em;
+        word-break: break-all;
+    }
+    
+    /* Better spacing for mobile */
+    h2 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+    
+    /* Media preview sizing for mobile */
+    #mediaPreview {
+        max-width: 100%;
+        max-height: 150px;
+    }
+    
+    /* Better alert styling on mobile */
+    .alert {
+        margin-bottom: 10px;
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Very small mobile devices */
+    body {
+        padding-top: 56px;
+    }
+    
+    .navbar-brand {
+        font-size: 1em;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9em;
+    }
+    
+    #map {
+        height: 40vh;
+    }
+    
+    .container {
+        padding: 5px;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.75em;
+    }
+}
+
+/* File Upload and Progress Styles */
+#filePreviewArea {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+#filePreviewList {
+    background-color: white;
+}
+
+.file-thumbnail {
+    border: 1px solid #dee2e6;
+}
+
+/* File Management System Styles */
+.file-upload-section {
+    margin-bottom: 10px;
+}
+
+#addFileBtn {
+    transition: all 0.2s ease;
+}
+
+#addFileBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+#fileManagementArea {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+#selectedFilesList {
+    background-color: #ffffff;
+}
+
+.file-item {
+    transition: all 0.2s ease;
+    border: 1px solid #e9ecef !important;
+}
+
+.file-item:hover {
+    border-color: #007bff !important;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+}
+
+.file-item .btn-outline-danger {
+    transition: all 0.2s ease;
+}
+
+.file-item .btn-outline-danger:hover {
+    transform: scale(1.1);
+}
+
+.file-thumbnail {
+    border: 2px solid #dee2e6;
+    transition: transform 0.2s ease;
+}
+
+.file-thumbnail:hover {
+    transform: scale(1.05);
+}
+
+#uploadProgress {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Loading states */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Better button states */
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Mobile improvements for file uploads */
+@media (max-width: 768px) {
+    #filePreviewList {
+        font-size: 0.9em;
+    }
+    
+    .file-thumbnail, 
+    .file-thumbnail + div {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 16px !important;
+    }
+    
+    #uploadProgress {
+        padding: 1rem !important;
+        margin: 0.5rem -1rem;
+    }
+    
+    #uploadProgress .progress {
+        height: 8px;
+    }
+    
+    /* Mobile file management improvements */
+    #fileManagementArea {
+        padding: 10px;
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+    
+    #selectedFilesList {
+        padding: 10px;
+    }
+    
+    .file-item {
+        padding: 15px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .file-item .d-flex {
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+    
+    .file-item .file-thumbnail,
+    .file-item .file-icon {
+        align-self: center;
+        margin-right: 0 !important;
+        margin-bottom: 10px;
+    }
+    
+    .file-item .btn-outline-danger {
+        margin-top: 10px;
+        margin-left: 0 !important;
+        align-self: center;
+        width: 100%;
+        max-width: 120px;
+    }
+    
+    #addFileBtn {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    #filePreviewArea {
+        padding: 8px;
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+    
+    #filePreviewList {
+        padding: 8px;
+    }
+    
+    .file-thumbnail, 
+    .file-thumbnail + div {
+        width: 35px !important;
+        height: 35px !important;
+        font-size: 14px !important;
+    }
+    
+    .file-item .flex-grow-1 {
+        text-align: center;
+    }
 } 

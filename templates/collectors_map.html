@@ -3,30 +3,76 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=yes">
-    <title>UTBA Swarm Map</title>
+    <title>Collector Swarm Map - UTBA</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
+    <script>
+        // Client-side authentication check (Standard for authenticated pages)
+        async function checkAuth() {
+            try {
+                const response = await fetch('/auth', { cache: 'no-store' }); // Ensure fresh auth check
+                if (!response.ok) throw new Error('Auth check failed with status: ' + response.status);
+                const data = await response.json();
+                if (!data.authenticated || !data.user) { // Check for user object as well
+                    console.log('Collectors Map: Not authenticated or user data missing. Redirecting to login.');
+                    window.location.href = '/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                } else {
+                    console.log('Collectors Map: Authenticated as', data.user.username, 'Role:', data.user.role);
+                    // Update navbar with username if placeholder exists (optional enhancement)
+                    const welcomeMsg = document.getElementById('welcomeMessage');
+                    if (welcomeMsg) welcomeMsg.textContent = 'Welcome, ' + data.user.username;
+                }
+            } catch (error) {
+                console.error('Collectors Map: Authentication check error:', error);
+                alert('Critical authentication check error: ' + error.message + '. Redirecting to login.');
+                window.location.href = '/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+            }
+        }
+        checkAuth();
+
+        // Forceful client-side logout (Standard for authenticated pages)
+        async function forceLogout() {
+            alert('Logging out...');
+            try {
+                await fetch('/logout', { method: 'GET', headers: { 'Cache-Control': 'no-cache' } });
+                localStorage.removeItem('publicUserSessionId'); // Clear just in case
+                document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                alert('Redirecting to homepage...');
+                window.location.href = '/?logout=' + Date.now();
+            } catch (error) {
+                console.error('Error during forceLogout:', error);
+                alert('Error during logout. Redirecting manually...');
+                window.location.href = '/?logout_fallback=' + Date.now();
+            }
+        }
+    </script>
     <style>
         /* Map and marker styles are now handled directly via JavaScript for consistency */
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top">
-        <a class="navbar-brand" href="/">UTBA Swarm Map</a>
+        <a class="navbar-brand" href="/">UTBA Swarm Map (Public)</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Swarm Collectors</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://github.com/fkcurrie/utba-swarmmap/issues/new" target="_blank">Provide Feedback/Log Issue</a>
-                </li>
+                <li class="nav-item"><span id="welcomeMessage" class="navbar-text mr-3">Welcome, Collector!</span></li>
+                <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+                <!-- Add links to admin pages if user has appropriate roles - this requires passing user role to template -->
+                {{if .UserSessionData }} {{/* Placeholder for passing user data from Go handler */}}
+                    {{if or (eq .UserSessionData.Role "collector_admin") (eq .UserSessionData.Role "site_admin")}}
+                    <li class="nav-item"><a class="nav-link" href="/collector_admin">Collector Admin</a></li>
+                    {{end}}
+                    {{if eq .UserSessionData.Role "site_admin"}}
+                    <li class="nav-item"><a class="nav-link" href="/admin">Site Admin</a></li>
+                    {{end}}
+                {{end}}
+                <li class="nav-item"><a class="nav-link" href="#" onclick="forceLogout(); return false;">Logout</a></li>
             </ul>
         </div>
     </nav>
@@ -79,13 +125,9 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body py-2">
-                        <h6 class="card-title mb-2">Your Swarm Reports:</h6>
+                        <h6 class="card-title mb-2">Swarm Data (All - for Collectors):</h6>
                         <div id="debugSwarms" style="font-size: 12px; max-height: 150px; overflow-y: auto;">
-                            <em>Your reported swarms will appear here after submission</em>
-                        </div>
-                        <div class="mt-2">
-                            <button id="generateSampleBtn" class="btn btn-sm btn-info mr-2">Generate Sample Data</button>
-                            <small class="text-muted">Creates demo swarms showing all status types (Reported, Verified, Captured, Archived)</small>
+                            <em>All swarm reports will appear here after loading.</em>
                         </div>
                     </div>
                 </div>
@@ -182,23 +224,15 @@
             "Archived": "#0000ff"   // Blue
         };
 
-        // Public user session management
-        let publicUserSessionId = localStorage.getItem('publicUserSessionId');
-        if (!publicUserSessionId) {
-            publicUserSessionId = 'pub_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('publicUserSessionId', publicUserSessionId);
-        }
-        console.log('Public user session ID:', publicUserSessionId);
-
         const map = L.map('map').setView([43.6532, -79.3832], 12); // Default to Toronto
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        let userClickedMarker; // Marker for where user clicks to report
-        let currentLocationMarker; // Marker for user's actual geolocation
-        let reportedSwarmMarkers = new Map(); // Use a Map to easily update/remove markers by swarm ID
-        let _currentLocateUserDoPan = false; // Variable to hold doPan state for callback
+        let userClickedMarker; 
+        let currentLocationMarker; 
+        let reportedSwarmMarkers = new Map(); 
+        let _currentLocateUserDoPan = false; // Ensure this is defined for the workaround
 
         // Function to get nearest intersection using Nominatim
         async function getNearestIntersection(lat, lng) {
@@ -237,31 +271,31 @@
                 }
                 
                 // Fallback to the full address if no road/intersection found
-                return data.display_name;
+                return data.display_name || 'Unknown Location';
             } catch (error) {
                 console.error('Error getting intersection:', error);
-                return '';
+                return 'Intersection lookup failed';
             }
         }
 
         // Update the locateUser function to get intersection
         async function locateUser(doPan = false) {
-            console.log('[locateUser] Called with doPan:', doPan);
+            console.log('[Collectors Map - locateUser] Called with doPan:', doPan);
             _currentLocateUserDoPan = doPan;
 
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(async function(position) {
-                    console.log('[locateUser callback] Geolocation success. _currentLocateUserDoPan value:', _currentLocateUserDoPan);
+                    console.log('[Collectors Map - locateUser callback] Geolocation success. _currentLocateUserDoPan value:', _currentLocateUserDoPan);
                     const userLatLng = [position.coords.latitude, position.coords.longitude];
                     
                     if (!map) {
-                        console.error('[locateUser callback] Map object is not initialized!');
+                        console.error('[Collectors Map - locateUser callback] Map object is not initialized!');
                         if (_currentLocateUserDoPan) alert("Map error. Cannot proceed with report.");
                         return;
                     }
 
                     if (_currentLocateUserDoPan) { 
-                        console.log('[locateUser callback] Panning map to:', userLatLng);
+                        console.log('[Collectors Map - locateUser callback] Panning map to:', userLatLng);
                         map.setView(userLatLng, 15);
                         if (currentLocationMarker) {
                             currentLocationMarker.setLatLng(userLatLng);
@@ -270,45 +304,37 @@
                         }
                         currentLocationMarker.openPopup();
 
-                        // Update form fields for reporting
                         const latInput = document.getElementById('latitude');
                         const lonInput = document.getElementById('longitude');
                         const intersectionInput = document.getElementById('intersection');
-
                         if (latInput) latInput.value = userLatLng[0];
                         if (lonInput) lonInput.value = userLatLng[1];
                         
                         try {
                             const intersection = await getNearestIntersection(position.coords.latitude, position.coords.longitude);
-                            console.log('[locateUser callback] Fetched intersection for report:', intersection);
+                            console.log('[Collectors Map - locateUser callback] Fetched intersection for report:', intersection);
                             if (intersectionInput) intersectionInput.value = intersection;
                         } catch (e) {
-                            console.error('[locateUser callback] Error getting intersection for report:', e);
+                            console.error('[Collectors Map - locateUser callback] Error getting intersection for report:', e);
                             if (intersectionInput) intersectionInput.value = 'Could not fetch intersection';
                         }
                         
-                        // Open the report modal
                         if (reportSwarmModal) {
                             reportSwarmModal.show();
                         } else {
-                            console.warn("Report swarm modal instance not found to auto-open.");
+                            console.warn("Collectors map: Report swarm modal instance not found.");
                         }
                     } else {
-                        console.log('[locateUser callback] Not panning map. Geolocation received silently.');
-                        // For silent load, we could update a variable with userLatLng if needed elsewhere,
-                        // but currently no marker is placed.
+                        console.log('[Collectors Map - locateUser callback] Not panning map. Geolocation received silently.');
                     }
-
                 }, function(error) {
-                    console.error("[locateUser callback] Geolocation failed or was denied:", error.message);
-                    if (_currentLocateUserDoPan) { 
-                        alert("Could not get your location. Please ensure location services are enabled. Error: " + error.message);
+                    console.error("[Collectors Map - locateUser callback] Geolocation failed:", error.message);
+                    if (_currentLocateUserDoPan) {
+                        alert("Could not get your location. Error: " + error.message);
                     }
-                }, {
-                    enableHighAccuracy: true, timeout: 10000, maximumAge: 0 
-                });
+                }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
             } else {
-                console.log("[locateUser] Geolocation is not supported by this browser.");
+                console.log("[Collectors Map - locateUser] Geolocation is not supported.");
                 if (_currentLocateUserDoPan) {
                     alert("Geolocation is not supported by this browser.");
                 }
@@ -336,8 +362,7 @@
         // Initialize on page load
         window.onload = function() {
             locateUser(); 
-            // fetchAndDisplaySwarms(); // Removed: Public map should not show all user's historical swarms by default on load.
-                                     // It will still show swarms reported during the current session after submission.
+            fetchAndDisplaySwarms(); // Call for authenticated map
         };
 
         function getMarkerHTML(status) {
@@ -347,15 +372,13 @@
         }
 
         async function fetchAndDisplaySwarms() {
-            console.log('Fetching swarms for public user session:', publicUserSessionId);
+            console.log('Collectors Map: Fetching all swarms (authenticated user).');
             try {
-                // Add session ID as query parameter to only get this user's swarms
-                const response = await fetch(`/get_swarms?sessionId=${encodeURIComponent(publicUserSessionId)}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                // Authenticated users: fetch /get_swarms WITHOUT sessionId
+                const response = await fetch('/get_swarms'); 
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const swarms = await response.json() || [];
-                console.log('Fetched user swarms:', swarms.length, swarms);
+                console.log('Collectors Map: Fetched all swarms:', swarms.length, swarms);
 
                 const currentSwarmIDs = new Set(swarms.map(s => s.id));
 
@@ -424,7 +447,7 @@
                 // Update debug section
                 const debugDiv = document.getElementById('debugSwarms');
                 if (debugDiv) {
-                    let debugHTML = '<table class="table table-sm"><thead><tr><th>ID</th><th>Status</th><th>Display Status</th><th>Reported</th><th>Pin Color</th></tr></thead><tbody>';
+                    let debugHTML = '<table class="table table-sm"><thead><tr><th>ID</th><th>Status</th><th>Display</th><th>Reported</th><th>Pin</th></tr></thead><tbody>';
                     swarms.forEach(swarm => {
                         const markerStatus = swarm.displayStatus || swarm.status;
                         const reportedTime = new Date(swarm.reportedTimestamp).toLocaleString('en-US', { timeZone: 'America/Toronto' });
@@ -442,23 +465,24 @@
                     debugDiv.innerHTML = debugHTML;
                 }
             } catch (error) {
-                console.error("Could not fetch swarms:", error);
-                alert("Error loading swarms: " + error.message);
+                console.error("Collectors Map: Could not fetch swarms:", error);
+                alert("Collectors Map: Error loading swarms: " + error.message);
             }
         }
 
         const reportSwarmBtn = document.getElementById('reportSwarmBtn');
         const refreshMapBtn = document.getElementById('refreshMapBtn');
-        const reportSwarmModal = new bootstrap.Modal(document.getElementById('reportSwarmModal'));
+        const reportSwarmModalEl = document.getElementById('reportSwarmModal'); // Get element first
+        const reportSwarmModal = reportSwarmModalEl ? new bootstrap.Modal(reportSwarmModalEl) : null; // Initialize if element exists
         const reportSwarmForm = document.getElementById('reportSwarmForm');
         const latitudeInput = document.getElementById('latitude');
         const longitudeInput = document.getElementById('longitude');
         const mediaInput = document.getElementById('media');
         const mediaPreview = document.getElementById('mediaPreview');
 
-        if (reportSwarmBtn) { // Check if button exists
+        if (reportSwarmBtn) {
             reportSwarmBtn.addEventListener('click', function() {
-                locateUser(true); // This will now handle panning, marker, form fields, and opening the modal.
+                locateUser(true);
             });
         }
 
@@ -913,57 +937,6 @@
             console.log('All markers cleared, fetching fresh data...');
             fetchAndDisplaySwarms();
         });
-
-        // Generate sample data functionality
-        const generateSampleBtn = document.getElementById('generateSampleBtn');
-        if (generateSampleBtn) {
-            generateSampleBtn.addEventListener('click', async function() {
-                const originalText = generateSampleBtn.innerHTML;
-                
-                if (!confirm('This will add sample swarm data to demonstrate different statuses (Reported, Verified, Captured, Archived). Continue?')) {
-                    return;
-                }
-                
-                try {
-                    generateSampleBtn.disabled = true;
-                    generateSampleBtn.innerHTML = '<span class="spinner-border spinner-border-sm mr-1" role="status"></span>Generating...';
-                    
-                    const response = await fetch('/demo/generate_sample_data', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            sessionId: publicUserSessionId
-                        })
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        alert(`✅ ${result.message}\n\nCreated: ${result.created_count} swarms\nClick "Clear & Refresh Map" to see them on the map.`);
-                        
-                        // Auto-refresh the map to show new sample data
-                        setTimeout(() => {
-                            refreshMapBtn.click();
-                        }, 1000);
-                    } else {
-                        throw new Error('Failed to generate sample data');
-                    }
-                    
-                } catch (error) {
-                    console.error('Error generating sample data:', error);
-                    alert('Error generating sample data: ' + error.message);
-                } finally {
-                    generateSampleBtn.disabled = false;
-                    generateSampleBtn.innerHTML = originalText;
-                }
-            });
-        }
 
         // Modal reset handler
         $('#reportSwarmModal').on('hidden.bs.modal', function() {

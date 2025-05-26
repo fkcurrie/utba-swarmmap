@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collector Admin Dashboard - UTBA Swarm Map</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+        <a class="navbar-brand" href="/">UTBA Swarm Map</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Map</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="forceLogout(); return false;">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-5 pt-3">
+        <h2>Collector Administrator Dashboard</h2>
+        <p class="text-muted">Manage swarm collector registrations and accounts</p>
+        
+        <!-- Pending User Approvals -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Pending Collector Approvals</h5>
+                        <small class="text-muted">New collector registrations waiting for approval</small>
+                    </div>
+                    <div class="card-body">
+                        {{if .PendingUsers}}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Location</th>
+                                            <th>Registered</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{range .PendingUsers}}
+                                        <tr>
+                                            <td>{{.Name}}</td>
+                                            <td>{{.Email}}</td>
+                                            <td>{{.Phone}}</td>
+                                            <td>{{.Location}}</td>
+                                            <td>{{.CreatedAt.Format "Jan 02, 2006"}}</td>
+                                            <td>
+                                                <form method="POST" action="/admin/approve_user" style="display: inline;">
+                                                    <input type="hidden" name="userID" value="{{.ID}}">
+                                                    <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                                </form>
+                                                <form method="POST" action="/admin/reject_user" style="display: inline;">
+                                                    <input type="hidden" name="userID" value="{{.ID}}">
+                                                    <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {{end}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {{else}}
+                            <p class="text-muted">No pending collector approvals.</p>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approved Collectors -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Active Collectors</h5>
+                        <small class="text-muted">Approved swarm collectors</small>
+                    </div>
+                    <div class="card-body">
+                        {{if .AllCollectors}}
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Location</th>
+                                            <th>Role</th>
+                                            <th>Joined</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{range .AllCollectors}}
+                                        <tr>
+                                            <td>{{.Name}}</td>
+                                            <td>{{.Email}}</td>
+                                            <td>{{.Phone}}</td>
+                                            <td>{{.Location}}</td>
+                                            <td>
+                                                <span class="badge badge-{{if eq .Role "collector_admin"}}warning{{else if eq .Role "site_admin"}}danger{{else}}primary{{end}}">
+                                                    {{if eq .Role "collector_admin"}}Collector Admin{{else if eq .Role "site_admin"}}Site Admin{{else}}Collector{{end}}
+                                                </span>
+                                            </td>
+                                            <td>{{.CreatedAt.Format "Jan 02, 2006"}}</td>
+                                        </tr>
+                                        {{end}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {{else}}
+                            <p class="text-muted">No approved collectors yet.</p>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4>{{len .PendingUsers}}</h4>
+                        <p class="text-muted">Pending Approvals</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4>{{len .AllCollectors}}</h4>
+                        <p class="text-muted">Active Collectors</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; margin-top: 40px; padding: 20px; font-size: 0.8em; color: #666;">
+        Version: {{.Version}}
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Client-side authentication check
+        async function checkAuth() {
+            try {
+                const response = await fetch('/auth', {
+                    cache: 'no-store', // Force a fresh fetch from the server
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
+                if (!response.ok) throw new Error('Auth check failed with status: ' + response.status);
+                const data = await response.json();
+                console.log('Auth data received by client (collector_admin):', data);
+
+                if (!data.authenticated) {
+                    console.log('Client check (collector_admin): Not authenticated. Redirecting to login.');
+                    window.location.href = '/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                } else if (data.user && data.user.role !== 'collector_admin' && data.user.role !== 'site_admin') {
+                    console.log('Client check (collector_admin): Role mismatch. Expected collector_admin or site_admin, got:', data.user.role, '. Redirecting to dashboard.');
+                    alert('Access denied. You do not have permission to view this page (Role: ' + data.user.role + ').');
+                    window.location.href = '/dashboard';
+                } else {
+                    console.log('Client check (collector_admin): Authenticated with appropriate role (' + data.user.role + '). Access granted.');
+                }
+            } catch (error) {
+                console.error('Authentication check error (collector_admin):', error);
+                alert('Critical authentication check error: ' + error.message + '. Redirecting to login.');
+                window.location.href = '/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+            }
+        }
+        checkAuth();
+
+        // Forceful client-side logout
+        async function forceLogout() {
+            alert('Logging out...');
+            try {
+                const logoutResponse = await fetch('/logout', {
+                    method: 'GET',
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
+                console.log('Logout endpoint called. Status:', logoutResponse.status);
+
+                alert('Clearing session data...');
+                localStorage.removeItem('publicUserSessionId');
+                document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                console.log('localStorage and cookies cleared.');
+                
+                alert('Redirecting to homepage...');
+                window.location.href = '/?logout=' + Date.now();
+            } catch (error) {
+                console.error('Error during forceLogout:', error);
+                alert('Error during logout. Redirecting manually...');
+                window.location.href = '/?logout_fallback=' + Date.now();
+            }
+        }
+    </script>
+</body>
+</html> 

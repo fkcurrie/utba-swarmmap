@@ -80,6 +80,12 @@
 					<a class="nav-link" href="/swarmlist">View Swarm List</a>
 				</li>
 				<li class="nav-item">
+					<a class="nav-link" href="/login">Swarm Collectors</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#" onclick="forceLogout(); return false;">Logout</a>
+				</li>
+				<li class="nav-item">
 					<a class="nav-link" href="https://github.com/fkcurrie/utba-swarmmap/issues/new" target="_blank">Provide Feedback/Log Issue</a>
 				</li>
 			</ul>
@@ -113,12 +119,13 @@
 							Long: {{printf "%.6f" .Longitude}}
 						</td>
 						<td>{{.NearestIntersection}}</td>
-						<td>{{.ReportedTimestamp.Format "Jan 02, 2006 15:04"}}</td>
-						<td>{{.LastUpdatedTimestamp.Format "Jan 02, 2006 15:04"}}</td>
+						<td>{{.ReportedTimestamp.Format "Jan 02, 2006 15:04 EST"}}</td>
+						<td>{{.LastUpdatedTimestamp.Format "Jan 02, 2006 15:04 EST"}}</td>
 						<td>
 							{{if .ReportedMediaURLs}}
-								<button class="btn btn-sm btn-primary" onclick="openMediaViewer([{{range $i, $url := .ReportedMediaURLs}}{{if $i}}, {{end}}'{{$url}}'{{end}}], 0)">
-									View Media ({{len .ReportedMediaURLs}})
+								<button class="btn btn-sm btn-primary view-media-btn"
+								        data-media-urls='[{{range $i, $url := .ReportedMediaURLs}}{{if $i}},{{end}}"{{$url}}"{{end}}]'>
+								    View Media ({{len .ReportedMediaURLs}})
 								</button>
 							{{else}}
 								No media
@@ -175,7 +182,7 @@
 
 		function updateMediaView() {
 			const mediaUrl = currentMediaList[currentMediaIndex];
-			const isVideo = mediaUrl.match(/\.(mp4|webm|ogg)$/i);
+			const isVideo = mediaUrl.match(/\.(mp4|webm|mov|avi|3gp)$/i);
 			
 			$('#mediaViewer').hide();
 			$('#videoViewer').hide();
@@ -208,12 +215,68 @@
 
 		// Update the media links to use the viewer
 		document.addEventListener('DOMContentLoaded', function() {
-			const mediaLinks = document.querySelectorAll('a[href*="View Media"]');
-			mediaLinks.forEach(link => {
-				const mediaUrl = link.getAttribute('href');
-				link.setAttribute('onclick', `openMediaViewer(['${mediaUrl}']); return false;`);
+			const mediaButtons = document.querySelectorAll('.view-media-btn');
+			mediaButtons.forEach(button => {
+				button.addEventListener('click', function() {
+					const mediaUrlsString = this.getAttribute('data-media-urls');
+					try {
+						const mediaUrls = JSON.parse(mediaUrlsString);
+						if (Array.isArray(mediaUrls) && mediaUrls.length > 0) {
+							openMediaViewer(mediaUrls, 0);
+						} else {
+							console.error('No media URLs found or invalid format:', mediaUrlsString);
+							alert('No media to display or an error occurred.');
+						}
+					} catch (e) {
+						console.error('Failed to parse media URLs:', e, mediaUrlsString);
+						alert('Error loading media. Data might be corrupted.');
+					}
+				});
 			});
 		});
+	</script>
+
+	<script>
+		// Client-side authentication check
+		async function checkAuth() {
+			try {
+				const response = await fetch('/auth');
+				if (!response.ok) throw new Error('Auth check failed');
+				const data = await response.json();
+				if (!data.authenticated) {
+					window.location.href = '/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+				}
+			} catch (error) {
+				console.error('Authentication check error:', error);
+				// Fallback: redirect to login if auth check fails for any reason
+				window.location.href = '/login?returnUrl=' + encodeURIComponent(window.location.pathname);
+			}
+		}
+		checkAuth(); // Run immediately on page load
+
+		// Forceful client-side logout (NEW)
+		async function forceLogout() {
+			alert('Logging out...');
+			try {
+				const logoutResponse = await fetch('/logout', {
+					method: 'GET',
+					headers: { 'Cache-Control': 'no-cache' }
+				});
+				console.log('Logout endpoint called. Status:', logoutResponse.status);
+
+				alert('Clearing session data...');
+				localStorage.removeItem('publicUserSessionId');
+				document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+				console.log('localStorage and cookies cleared.');
+				
+				alert('Redirecting to homepage...');
+				window.location.href = '/?logout=' + Date.now();
+			} catch (error) {
+				console.error('Error during forceLogout:', error);
+				alert('Error during logout. Redirecting manually...');
+				window.location.href = '/?logout_fallback=' + Date.now();
+			}
+		}
 	</script>
 </body>
 </html> 
