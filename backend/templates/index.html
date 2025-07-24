@@ -1,0 +1,131 @@
+{{template "header.html" .}}
+
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-md-12 text-center">
+                <button id="reportSwarmBtn" class="btn btn-primary btn-lg">Report a Swarm at Your Location</button>
+                <p class="text-muted small mt-2">(Or click on the map to report at a specific spot)</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="map"></div>
+            </div>
+        </div>
+        
+        <!-- Pin Color Legend -->
+        <div class="row mt-3 mb-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body py-2">
+                        <h6 class="card-title mb-2">Pin Color Legend:</h6>
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <span class="mr-3 mb-1">
+                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #ff0000; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
+                                <small class="ml-1">Red = Reported (new)</small>
+                            </span>
+                            <span class="mr-3 mb-1">
+                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #ff69b4; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
+                                <small class="ml-1">Pink = Verified</small>
+                            </span>
+                            <span class="mr-3 mb-1">
+                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #00ff00; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
+                                <small class="ml-1">Green = Captured</small>
+                            </span>
+                            <span class="mr-3 mb-1">
+                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #0000ff; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
+                                <small class="ml-1">Blue = Archived (24h+)</small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+
+    <!-- Report Swarm Modal -->
+    <div class="modal fade" id="reportSwarmModal" tabindex="-1" role="dialog" aria-labelledby="reportSwarmModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportSwarmModalLabel">Report Bee Swarm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="reportSwarmForm">
+                        <div class="form-group">
+                            <label for="description">Description (e.g., size of swarm, height from ground, on a tree branch)</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="intersection">Nearest Major Intersection</label>
+                            <input type="text" class="form-control" id="intersection" name="intersection" placeholder="e.g., Yonge & Bloor" required>
+                        </div>
+                        
+                        <!-- Contact Information Section -->
+                        <div class="form-section mt-4 p-3 border rounded" style="background-color: #f8f9fa;">
+                            <h6 class="mb-3">📞 Contact Information (Optional but Recommended)</h6>
+                            <p class="small text-muted mb-3">Providing your contact details helps beekeepers reach you for additional information or to coordinate swarm collection.</p>
+                            
+                            <div class="form-group">
+                                <label for="reporterName">Your Name</label>
+                                <input type="text" class="form-control" id="reporterName" name="reporterName" placeholder="e.g., John Smith">
+                            </div>
+                            <div class="form-group">
+                                <label for="reporterEmail">Email Address</label>
+                                <input type="email" class="form-control" id="reporterEmail" name="reporterEmail" placeholder="e.g., john@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="reporterPhone">Phone Number</label>
+                                <input type="tel" class="form-control" id="reporterPhone" name="reporterPhone" placeholder="e.g., (416) 555-0123">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="media">📸 Upload Photo(s) and/or Video(s) (Optional)</label>
+                            <div class="file-upload-section">
+                                <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
+                                <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
+                                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('gallery-input').click();">
+                                    <i class="fas fa-plus"></i> Add Photo/Video
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('camera-input').click();">
+                                    <i class="fas fa-camera"></i> Take Photo/Video
+                                </button>
+                                <small class="form-text text-muted">Supported: JPG, PNG, HEIC, MP4, MOV, AVI, 3GP (max 10MB each)</small>
+                            </div>
+                            
+                            <!-- File management area -->
+                            <div id="fileManagementArea" style="margin-top: 15px; display: none;">
+                                <h6>Selected Files:</h6>
+                                <div id="selectedFilesList" class="border rounded p-3" style="max-height: 300px; overflow-y: auto; background-color: #f8f9fa;">
+                                    <!-- Selected files will be displayed here -->
+                                </div>
+                                <div class="mt-2 d-flex justify-content-between align-items-center">
+                                    <small class="text-success">✓ <span id="totalFileCount">0</span> file(s) ready to upload</small>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" id="clearAllFilesBtn">
+                                        <i class="fas fa-trash"></i> Clear All
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="latitude" name="latitude">
+                        <input type="hidden" id="longitude" name="longitude">
+                        <button type="submit" class="btn btn-primary">Submit Report</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TODO: Add a separate modal for UTBA members to update status -->
+
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/jquery/jquery.slim.min.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/popper/popper.min.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/leaflet/js/leaflet.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/js/main.js"></script>
+    {{template "footer.html" .}} 

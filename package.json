@@ -1,0 +1,28 @@
+{
+  "name": "utba-swarmmap",
+  "version": "1.0.0",
+  "description": "A web application for tracking and managing bee swarms in the Greater Toronto Area. This application allows members of the public to report bee swarms and enables UTBA (Urban Toronto Beekeepers Association) members to manage and respond to swarm reports.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fkcurrie/utba-swarmmap.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fkcurrie/utba-swarmmap/issues"
+  },
+  "homepage": "https://github.com/fkcurrie/utba-swarmmap#readme",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
+    "@popperjs/core": "^2.5.3",
+    "bootstrap": "^4.5.2",
+    "chart.js": "^4.5.0",
+    "jquery": "^3.5.1",
+    "leaflet": "^1.7.1"
+  }
+}

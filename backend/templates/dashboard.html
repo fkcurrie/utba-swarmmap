@@ -1,0 +1,141 @@
+{{template "header.html" .}}
+
+    <div class="container-fluid p-0">
+        <h2 class="mt-0">Swarm Collector Dashboard</h2>
+        
+        <!-- Quick Actions - Moved to top for better UX -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Quick Actions</h5>
+                    </div>
+                    <div class="card-body d-flex flex-wrap">
+                        <a href="/collectorsmap" class="btn btn-primary mr-2 mb-2">View Collector Map</a>
+                        <a href="/swarmlist" class="btn btn-secondary mr-2 mb-2">View All Swarms (List)</a>
+                        {{if .ShowSiteAdmin}}
+                            <a href="/admin" class="btn btn-danger mr-2 mb-2">Site Admin Dashboard</a>
+                        {{end}}
+                        {{if .ShowCollectorAdmin}}
+                            <a href="/collector_admin" class="btn btn-warning mb-2">Collector Admin Dashboard</a>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Available Swarms -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Available Swarms</h5>
+                        <small class="text-muted">New reports that need attention</small>
+                    </div>
+                    <div class="card-body">
+                        {{if .AvailableSwarms}}
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Location</th>
+                                            <th>Reported</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{range .AvailableSwarms}}
+                                        <tr>
+                                            <td>{{.NearestIntersection}}</td>
+                                            <td>{{.ReportedTimestamp.Format "Jan 02 15:04"}}</td>
+                                            <td>{{if gt (len .Description) 30}}{{slice .Description 0 30}}...{{else}}{{.Description}}{{end}}</td>
+                                            <td>
+                                                {{if .AssignedCollectorID}}
+                                                    <span class="badge badge-warning">Assigned to you</span>
+                                                    <form method="POST" action="/assign_swarm" style="display: inline;">
+                                                        <input type="hidden" name="swarmID" value="{{.ID}}">
+                                                        <input type="hidden" name="action" value="unassign">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">Unassign</button>
+                                                    </form>
+                                                {{else}}
+                                                    <form method="POST" action="/assign_swarm" style="display: inline;">
+                                                        <input type="hidden" name="swarmID" value="{{.ID}}">
+                                                        <input type="hidden" name="action" value="assign">
+                                                        <button type="submit" class="btn btn-sm btn-primary">Claim</button>
+                                                    </form>
+                                                {{end}}
+                                            </td>
+                                        </tr>
+                                        {{end}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {{else}}
+                            <p class="text-muted">No available swarms at the moment.</p>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assigned Swarms -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>My Assigned Swarms</h5>
+                        <small class="text-muted">Swarms you're handling</small>
+                    </div>
+                    <div class="card-body">
+                        {{if .AssignedSwarms}}
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Location</th>
+                                            <th>Status</th>
+                                            <th>Reported</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{range .AssignedSwarms}}
+                                        <tr>
+                                            <td>{{.NearestIntersection}}</td>
+                                            <td>
+                                                <span class="badge badge-{{if eq .Status "Reported"}}danger{{else if eq .Status "Verified"}}warning{{else if eq .Status "Captured"}}success{{else}}secondary{{end}}">
+                                                    {{.Status}}
+                                                </span>
+                                            </td>
+                                            <td>{{.ReportedTimestamp.Format "Jan 02 15:04"}}</td>
+                                            <td>
+                                                {{if eq .Status "Reported"}}
+                                                    <form method="POST" action="/update_swarm_status" style="display: inline;">
+                                                        <input type="hidden" name="id" value="{{.ID}}">
+                                                        <input type="hidden" name="status" value="Verified">
+                                                        <button type="submit" class="btn btn-sm btn-warning">Verify</button>
+                                                    </form>
+                                                {{else if eq .Status "Verified"}}
+                                                    <form method="POST" action="/update_swarm_status" style="display: inline;">
+                                                        <input type="hidden" name="id" value="{{.ID}}">
+                                                        <input type="hidden" name="status" value="Captured">
+                                                        <button type="submit" class="btn btn-sm btn-success">Mark Captured</button>
+                                                    </form>
+                                                {{else}}
+                                                    <span class="text-muted">Complete</span>
+                                                {{end}}
+                                            </td>
+                                        </tr>
+                                        {{end}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {{else}}
+                            <p class="text-muted">You haven't claimed any swarms yet.</p>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{template "footer.html" .}} 

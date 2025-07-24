@@ -1,0 +1,33 @@
+# cloudbuild-frontend.yaml
+# Use this for fast frontend-only deployments.
+# Command: gcloud builds submit --config cloudbuild-frontend.yaml .
+
+steps:
+  # Build and deploy the frontend assets service
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build Frontend Assets'
+    args: ['build', '-t', 'gcr.io/utba-swarmmap/utba-swarmmap-frontend-assets:latest', '.']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push Frontend Assets'
+    args: ['push', 'gcr.io/utba-swarmmap/utba-swarmmap-frontend-assets:latest']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Deploy Frontend Assets'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'utba-swarmmap-frontend'
+      - '--image=gcr.io/utba-swarmmap/utba-swarmmap-frontend-assets:latest'
+      - '--region=northamerica-northeast2'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--quiet'
+
+images:
+  - 'gcr.io/utba-swarmmap/utba-swarmmap-frontend-assets:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+

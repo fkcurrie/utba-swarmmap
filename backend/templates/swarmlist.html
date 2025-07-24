@@ -1,0 +1,72 @@
+{{template "header.html" .}}
+
+	<div class="container">
+		<h2>Registered Swarms</h2>
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Description</th>
+						<th>Status</th>
+						<th>Location</th>
+						<th>Nearest Intersection</th>
+						<th>Reported</th>
+						<th>Last Updated</th>
+						<th>Reported Media</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{range .Swarms}}
+					<tr>
+						<td>{{.ID}}</td>
+						<td>{{.Description}}</td>
+						<td>{{.Status}}</td>
+						<td class="location-info">
+							Lat: {{printf "%.6f" .Latitude}}<br>
+							Long: {{printf "%.6f" .Longitude}}
+						</td>
+						<td>{{.NearestIntersection}}</td>
+						<td>{{.ReportedTimestamp.Format "Jan 02, 2006 15:04 EST"}}</td>
+						<td>{{.LastUpdatedTimestamp.Format "Jan 02, 2006 15:04 EST"}}</td>
+						<td>
+							{{if .ReportedMediaURLs}}
+								<button class="btn btn-sm btn-primary view-media-btn"
+								        data-media-urls='[{{range $i, $url := .ReportedMediaURLs}}{{if $i}},{{end}}"{{$url}}"{{end}}]'>
+								    View Media ({{len .ReportedMediaURLs}})
+								</button>
+							{{else}}
+								No media
+							{{end}}
+						</td>
+					</tr>
+					{{end}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- Media Viewer Modal -->
+	<div class="modal fade media-modal" id="mediaViewerModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Media Viewer</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="media-content">
+						<img id="mediaViewer" src="" alt="Media content" style="display: none;">
+						<video id="videoViewer" controls style="display: none;"></video>
+					</div>
+					<button class="media-nav prev" onclick="navigateMedia(-1)">❮</button>
+					<button class="media-nav next" onclick="navigateMedia(1)">❯</button>
+					<div class="media-counter" id="mediaCounter"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{{template "footer.html" .}} 

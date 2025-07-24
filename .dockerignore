@@ -1,16 +1,14 @@
-.git
-__pycache__/
-*.pyc
-.env
-*.db
-*.log
-.DS_Store
-.vscode/
-.idea/
-node_modules/
-*.sqlite3
-*.pkl
-*.bak
-*.swp
-*.tmp
-secrets/ 
+# Ignore files not needed for the backend build
+frontend/
+frontend.Dockerfile
+cloudbuild-frontend.yaml
+
+# Ignore files not needed for the frontend build
+handlers/
+models/
+store/
+main.go
+go.mod
+go.sum
+Dockerfile
+cloudbuild-backend.yaml

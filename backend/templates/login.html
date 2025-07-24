@@ -1,0 +1,41 @@
+{{template "header.html" .}}
+
+    <div class="container mt-5 pt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Swarm Collector Login</h4>
+                    </div>
+                    <div class="card-body text-center">
+                        {{if .Error}}
+                        <div class="alert alert-danger">{{.Error}}</div>
+                        {{end}}
+                        
+                        <p class="mb-4">Sign in with your Google account to access the swarm collector dashboard.</p>
+                        
+                        <a href="/login" class="google-signin-btn">
+                            <span class="google-icon">📧</span>
+                            Sign in with Google
+                        </a>
+                        <a href="/login?role=site_admin" class="btn btn-secondary mt-2">
+                            Login as Site Admin
+                        </a>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="alert alert-info">
+                            <strong>New Collector?</strong><br>
+                            Sign in with Google to create your account. Your access will need to be approved by a UTBA administrator.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <small class="text-muted">UTBA Swarm Map v{{.Version}}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{template "footer.html" .}} 

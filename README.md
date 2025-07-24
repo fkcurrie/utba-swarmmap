@@ -27,6 +27,19 @@ A web application for tracking and managing bee swarms in the Greater Toronto Ar
 - Hosting: Google Cloud Run
 - Maps: OpenStreetMap with Leaflet.js
 
+## Configuration
+
+The application is configured via environment variables.
+
+| Variable                | Description                                                                 | Default Value             |
+|-------------------------|-----------------------------------------------------------------------------|---------------------------|
+| `PORT`                  | The port the web server listens on.                                         | `8080`                    |
+| `GCP_PROJECT_ID`        | Your Google Cloud Platform project ID.                                      | `utba-swarmmap`           |
+| `GCS_BUCKET_NAME`       | The name of the Google Cloud Storage bucket for media uploads.              | `utba-swarmmap-media`     |
+| `GOOGLE_CLIENT_ID`      | The Client ID for Google OAuth2 authentication.                             | (none)                    |
+| `GOOGLE_CLIENT_SECRET`  | The Client Secret for Google OAuth2 authentication.                         | (none)                    |
+| `GOOGLE_REDIRECT_URL`   | The OAuth2 redirect URL configured in your Google Cloud credentials.        | (none)                    |
+
 ## Setup
 
 1. Clone the repository:
@@ -40,17 +53,21 @@ cd utba-swarmmap
 go mod download
 ```
 
-3. Set up Google Cloud:
+3. Install frontend dependencies:
+```bash
+npm install
+```
+
+4. Set up Google Cloud:
    - Create a new project
    - Enable Firestore
    - Create a Cloud Storage bucket
    - Set up Cloud Run
 
-4. Configure environment variables:
-   - Set up Google Cloud credentials
-   - Configure project ID and bucket name
+5. Configure environment variables:
+   - Set the environment variables listed in the "Configuration" section above. For local development, you can create a `.env` file and use a tool like `godotenv`.
 
-5. Build and deploy:
+6. Build and deploy:
 ```bash
 gcloud builds submit --tag gcr.io/[PROJECT_ID]/utba-swarmmap
 gcloud run deploy utba-swarmmap --image gcr.io/[PROJECT_ID]/utba-swarmmap --platform managed

@@ -1,0 +1,36 @@
+:root {
+    --header-height: 56px;
+}
+
+body {
+    padding-top: var(--header-height); /* Push content down to account for fixed header */
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
+    height: var(--header-height);
+    background-image: linear-gradient(to right, #4A00E0, #8E2DE2);
+}
+
+.main-content {
+    padding: 1.5rem;
+}
+
+#map {
+    /* Calculate height to fill most of the remaining viewport */
+    height: calc(95vh - var(--header-height)); 
+    width: 100%;
+    border-radius: 0.75rem;
+}
+
+footer {
+    background-image: linear-gradient(to right, #4A00E0, #8E2DE2);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}

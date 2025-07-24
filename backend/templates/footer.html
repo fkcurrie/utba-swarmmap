@@ -1,0 +1,20 @@
+    </div> <!-- closes main-content -->
+    <footer class="container-fluid text-center fixed-bottom">
+        <p class="text-muted small mb-0">
+            Made with 🐝❤️🐝 with <a href="https://github.com/google/gemini-cli" target="_blank">gemini-cli</a>
+        </p>
+        <p class="text-muted mb-0">
+            {{if and .User (eq .User.Role "site_admin")}}
+                <a href="/admin">Site Administration</a>
+            {{else}}
+                <a href="/login?role=site_admin">Site Admin Login</a>
+            {{end}}
+        </p>
+    </footer>
+
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/jquery/jquery.slim.min.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/popper/popper.min.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/js/main.js"></script>
+</body>
+</html>

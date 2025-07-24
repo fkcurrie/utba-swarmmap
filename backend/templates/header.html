@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}} - UTBA Swarm Map</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/leaflet/css/leaflet.css" />
+    <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="/">UTBA Swarm Map</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                {{if .User}}
+                    <li class="nav-item">
+                        <span class="navbar-text mr-3">Welcome, {{.User.Username}}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                {{else}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Swarm Collectors</a>
+                    </li>
+                {{end}}
+            </ul>
+        </div>
+    </nav>
+    <div class="main-content">

@@ -1,0 +1,130 @@
+{{template "header.html" .}}
+
+    <div class="container-fluid mt-5 pt-3">
+        <h2>Collector Administrator Dashboard</h2>
+        <p class="text-muted">Manage swarm collector registrations and accounts</p>
+        
+        <!-- Pending User Approvals -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Pending Collector Approvals</h5>
+                        <small class="text-muted">New collector registrations waiting for approval</small>
+                    </div>
+                    <div class="card-body">
+                        {{if .PendingUsers}}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Location</th>
+                                            <th>Registered</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{range .PendingUsers}}
+                                        <tr>
+                                            <td>{{.Name}}</td>
+                                            <td>{{.Email}}</td>
+                                            <td>{{.Phone}}</td>
+                                            <td>{{.Location}}</td>
+                                            <td>{{.CreatedAt.Format "Jan 02, 2006"}}</td>
+                                            <td>
+                                                <form method="POST" action="/admin/approve_user" style="display: inline;">
+                                                    <input type="hidden" name="userID" value="{{.ID}}">
+                                                    <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                                </form>
+                                                <form method="POST" action="/admin/reject_user" style="display: inline;">
+                                                    <input type="hidden" name="userID" value="{{.ID}}">
+                                                    <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {{end}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {{else}}
+                            <p class="text-muted">No pending collector approvals.</p>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approved Collectors -->
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Active Collectors</h5>
+                        <small class="text-muted">Approved swarm collectors</small>
+                    </div>
+                    <div class="card-body">
+                        {{if .AllCollectors}}
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Location</th>
+                                            <th>Role</th>
+                                            <th>Joined</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{range .AllCollectors}}
+                                        <tr>
+                                            <td>{{.Name}}</td>
+                                            <td>{{.Email}}</td>
+                                            <td>{{.Phone}}</td>
+                                            <td>{{.Location}}</td>
+                                            <td>
+                                                <span class="badge badge-{{if eq .Role "collector_admin"}}warning{{else if eq .Role "site_admin"}}danger{{else}}primary{{end}}">
+                                                    {{if eq .Role "collector_admin"}}Collector Admin{{else if eq .Role "site_admin"}}Site Admin{{else}}Collector{{end}}
+                                                </span>
+                                            </td>
+                                            <td>{{.CreatedAt.Format "Jan 02, 2006"}}</td>
+                                        </tr>
+                                        {{end}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {{else}}
+                            <p class="text-muted">No approved collectors yet.</p>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4>{{len .PendingUsers}}</h4>
+                        <p class="text-muted">Pending Approvals</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4>{{len .AllCollectors}}</h4>
+                        <p class="text-muted">Active Collectors</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{{template "footer.html" .}}
+ 

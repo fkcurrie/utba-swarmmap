@@ -1,0 +1,69 @@
+# cloudbuild-backend.yaml
+# Use this for backend deployments.
+# Command: gcloud builds submit --config cloudbuild-backend.yaml .
+
+steps:
+  # Get the URL of the already-deployed frontend service
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Get Frontend URL'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - >
+        gcloud run services describe utba-swarmmap-frontend
+        --platform=managed --region=northamerica-northeast2
+        --format='value(status.url)' --quiet > /workspace/frontend-url.txt
+
+  # Build and deploy the backend service
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build Backend'
+    args: ['build', '-t', 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest', '.']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push Backend'
+    args: ['push', 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Deploy Backend'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - >
+        gcloud run deploy utba-swarmmap-backend
+        --image=gcr.io/utba-swarmmap/utba-swarmmap-backend:latest
+        --region=northamerica-northeast2
+        --platform=managed
+        --allow-unauthenticated
+        --port=8080
+        --memory=512Mi
+        --cpu=1
+        --set-env-vars=FRONTEND_ASSETS_URL=$(cat /workspace/frontend-url.txt),GOOGLE_REDIRECT_URL=https://utba-swarmmap-backend-rcemytjnza-pd.a.run.app/auth/google/callback
+        --update-secrets=GOOGLE_CLIENT_ID=google-oauth-client-id:latest,GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest
+        --quiet
+
+  # Get the URL of the deployed service and write it to a file
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Get Service URL'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - >
+        gcloud run services describe utba-swarmmap-backend
+        --platform=managed --region=northamerica-northeast2
+        --format='value(status.url)' --quiet > /workspace/service-url
+
+  # Verify the deployment by curling the URL from the file
+  - name: 'gcr.io/cloud-builders/curl'
+    id: 'Verify Deployment'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - 'curl -I --fail --silent --show-error "$(cat /workspace/service-url)"'
+
+images:
+  - 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8' # Use a faster machine for building
+
