@@ -243,9 +243,9 @@ document.addEventListener('DOMContentLoaded', function () {
   let mediaURLs = [];
 
   const updateMediaViewer = () => {
-    const imgViewer = document.getElementById('mediaViewer');
-    const videoViewer = document.getElementById('videoViewer');
-    const counter = document.getElementById('mediaCounter');
+    const imgViewer = document.getElementById('media-viewer');
+    const videoViewer = document.getElementById('video-viewer');
+    const counter = document.getElementById('media-counter');
     const url = mediaURLs[currentMediaIndex];
 
     imgViewer.style.display = 'none';
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function () {
     currentMediaIndex = 0;
     updateMediaViewer();
     const mediaModal = new bootstrap.Modal(
-      document.getElementById('mediaViewerModal'),
+      document.getElementById('media-viewer-modal'),
     );
     mediaModal.show();
   };
