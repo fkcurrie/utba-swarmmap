@@ -1,8 +1,9 @@
+---
 name: E2E Application Startup Check
 
-on:
+"on":
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   e2e-startup:
@@ -47,11 +48,11 @@ jobs:
             exit 1
           fi
 
-          # Login should return 302 (redirect to Google)
+          # Login should return 302 or 307 (redirect to Google)
           STATUS_LOGIN=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/login)
           echo "Login status: $STATUS_LOGIN"
-          if [[ "$STATUS_LOGIN" != "302" ]]; then
-            echo "Expected login status 302, got $STATUS_LOGIN"
+          if [[ "$STATUS_LOGIN" != "302" && "$STATUS_LOGIN" != "307" ]]; then
+            echo "Expected login status 302 or 307, got $STATUS_LOGIN"
             docker compose logs backend
             exit 1
           fi

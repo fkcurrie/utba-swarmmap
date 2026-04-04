@@ -1,10 +1,11 @@
+---
 name: PR Checks
 
-on:
+"on":
   push:
-    branches: [ main, issue-12-NPJh ]
+    branches: [main, issue-12-NPJh]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   backend:
@@ -27,7 +28,7 @@ jobs:
         run: go fmt ./...
 
       - name: Go Vet
-        run: go vet ./...
+        run: go fmt ./... && go vet ./...
 
       - name: GolangCI-Lint
         uses: golangci/golangci-lint-action@v4

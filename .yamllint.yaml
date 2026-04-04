@@ -8,3 +8,8 @@ rules:
     spaces: 2
   truthy:
     allowed-values: ["true", "false", "yes", "no"]
+
+ignore: |
+  node_modules/
+  vendor/
+  .git/

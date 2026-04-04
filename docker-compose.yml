@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   firestore-emulator:
     image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
