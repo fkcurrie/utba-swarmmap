@@ -8,6 +8,14 @@ import (
 	"time"
 )
 
+// getEnv reads an environment variable with a fallback value.
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
+
 func main() {
 	portStr := os.Getenv("PORT")
 	if portStr == "" {
@@ -19,21 +27,25 @@ func main() {
 	// is a strong way to ensure no malicious characters are present.
 	portInt, err := strconv.Atoi(portStr)
 	if err != nil {
-		// If port is invalid, we fallback to 8080 or fatal out.
-		// Since this is a simple frontend, we'll fatal for clarity on configuration error.
+		// If port is invalid, we fatal for clarity on configuration error.
 		log.Fatalf("Invalid PORT environment variable: %v", err)
 	}
+
+	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("./static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	log.Printf("Listening on port %d", portInt)
+
 	srv := &http.Server{
 		Addr:         ":" + strconv.Itoa(portInt),
-		Handler:      nil,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
+		Handler:      mux,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
 	}
-	if err := srv.ListenAndServe(); err != nil {
-		log.Fatal(err)
+
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("Server failed to start: %v", err)
 	}
 }
