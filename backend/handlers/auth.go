@@ -21,7 +21,7 @@ func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session")
 	if err == nil && cookie.Value != "" {
-		h.Store.DeleteSession(r.Context(), cookie.Value)
+		_ = h.Store.DeleteSession(r.Context(), cookie.Value)
 	}
 
 	http.SetCookie(w, &http.Cookie{
@@ -41,12 +41,12 @@ func (h *Handlers) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	session := h.getSession(r)
 	if session == nil {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]interface{}{"authenticated": false})
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{"authenticated": false})
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{
 		"authenticated": true,
 		"user":          session,
 	})
@@ -77,7 +77,7 @@ func (h *Handlers) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Failed to get user info", http.StatusInternalServerError)
 		return
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	var userInfo struct {
 		Email string `json:"email"`
@@ -165,5 +165,5 @@ func showPendingApprovalPage(w http.ResponseWriter, name string) {
 </div>
 <a href="/" class="btn btn-primary">Return to Map</a></div></div></div></div></div></body></html>`
 	w.Header().Set("Content-Type", "text/html")
-	w.Write([]byte(html))
+	_, _ = w.Write([]byte(html))
 }

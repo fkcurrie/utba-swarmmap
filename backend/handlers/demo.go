@@ -34,7 +34,7 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	log.Printf("Generating sample swarms for session: %s", sessionID)
+	log.Printf("Generating sample swarms for session: %q", sessionID)
 
 	now := time.Now()
 	sampleSwarms := []models.SwarmReport{
@@ -63,7 +63,7 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 	var createdSwarms []models.SwarmReport
 	for _, swarm := range sampleSwarms {
 		if err := h.Store.CreateSwarm(r.Context(), swarm); err != nil {
-			log.Printf("Failed to create sample swarm %s: %v", swarm.ID, err)
+			log.Printf("Failed to create sample swarm %q: %v", swarm.ID, err)
 			continue
 		}
 		createdSwarms = append(createdSwarms, swarm)
@@ -76,5 +76,5 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	_ = json.NewEncoder(w).Encode(response)
 }

@@ -73,7 +73,7 @@ func (h *Handlers) getSession(r *http.Request) *models.Session {
 
 	// Check if session is expired
 	if session.ExpiresAt.Before(time.Now()) {
-		h.Store.DeleteSession(r.Context(), cookie.Value)
+		_ = h.Store.DeleteSession(r.Context(), cookie.Value)
 		return nil
 	}
 

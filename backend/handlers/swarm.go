@@ -92,7 +92,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Return the summary and UUID (no saving yet)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	_ = json.NewEncoder(w).Encode(map[string]interface{}{
 		"referenceID":         swarmID,
 		"description":         description,
 		"latitude":            lat,
@@ -174,7 +174,7 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(report)
+	_ = json.NewEncoder(w).Encode(report)
 }
 
 func validateCoordinates(lat, lon string) (float64, float64, error) {
@@ -225,7 +225,7 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: currentTime})
 
 	if err := h.Store.UpdateSwarm(r.Context(), updateReq.ID, updates); err != nil {
-		log.Printf("Failed to update report %s in Firestore: %v", updateReq.ID, err)
+		log.Printf("Failed to update report %q in Firestore: %v", updateReq.ID, err)
 		http.Error(w, "Error updating report", http.StatusInternalServerError)
 		return
 	}
@@ -287,7 +287,7 @@ func validateFile(file *multipart.FileHeader) error {
 	}
 
 	if allowedExtensions[ext] {
-		log.Printf("File %s accepted by extension %s (MIME type was %s)", file.Filename, ext, contentType)
+		log.Printf("File %q accepted by extension %q (MIME type was %q)", file.Filename, ext, contentType)
 		return nil
 	}
 

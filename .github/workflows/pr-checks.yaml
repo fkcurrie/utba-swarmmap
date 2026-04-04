@@ -1,10 +1,11 @@
+---
 name: PR Checks
 
-on:
+"on":
   push:
-    branches: [ main, issue-12-NPJh ]
+    branches: [main, issue-12-NPJh]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   backend:
@@ -20,7 +21,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version: '1.25'
           cache-dependency-path: backend/go.mod
 
       - name: Go Format
@@ -30,10 +31,11 @@ jobs:
         run: go vet ./...
 
       - name: GolangCI-Lint
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@v6
         with:
           version: latest
           working-directory: backend
+          install-mode: goinstall
 
       - name: Unit Tests
         run: go test -v ./...
@@ -108,7 +110,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version: '1.25'
 
       - name: Install Dependencies
         run: npm ci
@@ -146,4 +148,4 @@ jobs:
           reporter: github-pr-review
 
       - name: Commitlint
-        uses: wagoid/commitlint-github-action@v5
+        uses: wagoid/commitlint-github-action@v6.2.1

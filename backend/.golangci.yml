@@ -1,3 +1,4 @@
+---
 linters:
   enable:
     - errcheck
@@ -14,4 +15,3 @@ linters:
 
 run:
   timeout: 5m
-  working-directory: backend
