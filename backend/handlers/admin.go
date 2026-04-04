@@ -90,7 +90,7 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 		"AllSwarms":         allSwarms,
 		"ReportedSwarms":    reportedSwarms,
 		"CapturedSwarms":    capturedSwarms,
-		"VisitsJSON":        template.JS(visitsJSON), // Pass as JavaScript-safe string
+		"VisitsJSON":        template.JS(visitsJSON), // #nosec G203 - Pass as JavaScript-safe string
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 		"CurrentRange":      rangeStr,
 	})

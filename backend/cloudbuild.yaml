@@ -1,3 +1,4 @@
+---
 # cloudbuild-backend.yaml
 # Use this for backend deployments.
 # Command: gcloud builds submit --config cloudbuild-backend.yaml .
@@ -11,13 +12,18 @@ steps:
       - '-c'
       - >
         gcloud run services describe utba-swarmmap-frontend
-        --platform=managed --region=northamerica-northeast2
+        --platform=managed
+        --region=northamerica-northeast2
         --format='value(status.url)' --quiet > /workspace/frontend-url.txt
 
   # Build and deploy the backend service
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Backend'
-    args: ['build', '-t', 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest', '.']
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest'
+      - '.'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Backend'

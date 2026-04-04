@@ -39,64 +39,65 @@ footer {
 }
 /* Media Viewer Styles */
 .media-modal .modal-content {
-    background-color: #000;
-    color: #fff;
-    border: none;
+  background-color: #000;
+  color: #fff;
+  border: none;
 }
 
 .media-modal .modal-header {
-    border-bottom: 1px solid #333;
+  border-bottom: 1px solid #333;
 }
 
 .media-modal .close {
-    color: #fff;
+  color: #fff;
 }
 
 .media-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 400px;
-    max-height: 80vh;
-    overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  max-height: 80vh;
+  overflow: hidden;
 }
 
-#mediaViewer, #videoViewer {
-    max-width: 100%;
-    max-height: 70vh;
-    object-fit: contain;
+#mediaViewer,
+#videoViewer {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
 }
 
 .media-nav {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: none;
-    padding: 15px;
-    font-size: 24px;
-    cursor: pointer;
-    border-radius: 50%;
-    transition: background 0.3s;
-    z-index: 10;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s;
+  z-index: 10;
 }
 
 .media-nav:hover {
-    background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.4);
 }
 
 .media-nav.prev {
-    left: 20px;
+  left: 20px;
 }
 
 .media-nav.next {
-    right: 20px;
+  right: 20px;
 }
 
 .media-counter {
-    text-align: center;
-    margin-top: 15px;
-    color: #ccc;
-    font-size: 14px;
+  text-align: center;
+  margin-top: 15px;
+  color: #ccc;
+  font-size: 14px;
 }
