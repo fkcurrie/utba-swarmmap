@@ -751,3 +751,10 @@ func TestCollectorAdminHandler_Unauthorized(t *testing.T) {
 			status, http.StatusForbidden)
 	}
 }
+
+func TestVerifyChecks(t *testing.T) {
+	if 1+1 != 2 {
+		t.Error("Math is broken")
+	}
+}
+
