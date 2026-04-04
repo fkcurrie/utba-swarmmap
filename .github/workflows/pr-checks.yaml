@@ -35,6 +35,7 @@ jobs:
         with:
           version: latest
           working-directory: backend
+          install-mode: goinstall
 
       - name: Unit Tests
         run: go test -v ./...
@@ -147,4 +148,4 @@ jobs:
           reporter: github-pr-review
 
       - name: Commitlint
-        uses: wagoid/commitlint-github-action@v5
+        uses: wagoid/commitlint-github-action@v6.2.1
