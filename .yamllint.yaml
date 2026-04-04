@@ -11,6 +11,7 @@ rules:
     allowed-values: ["true", "false", "yes", "no"]
   document-start: disable
 
-ignore: |
-  node_modules/
-  vendor/
+ignore:
+  - "node_modules/"
+  - "vendor/"
+  - "backend/vendor/"

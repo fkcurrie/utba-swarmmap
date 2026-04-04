@@ -52,7 +52,7 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 	sessionID := r.URL.Query().Get("sessionId")
 
 	if sessionID != "" {
-		log.Printf("Fetching swarms for public user session: %s", sessionID)
+		log.Printf("Fetching swarms for public user session: %q", sessionID)
 		currentReports, err = h.Store.GetSwarmsBySessionID(ctx, sessionID)
 	} else {
 		log.Printf("Fetching all swarms")

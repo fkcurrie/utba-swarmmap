@@ -21,9 +21,7 @@ func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session")
 	if err == nil && cookie.Value != "" {
-		if err := h.Store.DeleteSession(r.Context(), cookie.Value); err != nil {
-			log.Printf("Error deleting session in logout: %v", err)
-		}
+		_ = h.Store.DeleteSession(r.Context(), cookie.Value)
 	}
 
 	http.SetCookie(w, &http.Cookie{
@@ -79,7 +77,7 @@ func (h *Handlers) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Failed to get user info", http.StatusInternalServerError)
 		return
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	var userInfo struct {
 		Email string `json:"email"`

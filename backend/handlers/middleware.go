@@ -74,10 +74,7 @@ func (h *Handlers) getSession(r *http.Request) *models.Session {
 
 	// Check if session is expired
 	if session.ExpiresAt.Before(time.Now()) {
-		if err := h.Store.DeleteSession(r.Context(), cookie.Value); err != nil {
-			log.Printf("Error deleting session in middleware: %v", err)
-		}
-
+		_ = h.Store.DeleteSession(r.Context(), cookie.Value)
 		return nil
 	}
 

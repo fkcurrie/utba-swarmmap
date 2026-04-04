@@ -148,6 +148,6 @@ jobs:
           reporter: github-pr-review
 
       - name: Commitlint
-        uses: wagoid/commitlint-github-action@v6
+        uses: wagoid/commitlint-github-action@v6.2.1
         with:
           configFile: 'commitlint.config.mjs'

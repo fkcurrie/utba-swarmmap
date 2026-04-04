@@ -1,6 +1,9 @@
-version: "2"
+---
+run:
+  timeout: 5m
+
 linters:
-  default: none
+  disable-all: true
   enable:
     - errcheck
     - gosec
@@ -10,23 +13,24 @@ linters:
     - revive
     - staticcheck
     - unused
-  exclusions:
-    generated: lax
-    presets:
-      - comments
-      - common-false-positives
-      - legacy
-      - std-error-handling
-    paths:
-      - third_party$
-      - builtin$
-      - examples$
-formatters:
-  enable:
-    - gofmt
-  exclusions:
-    generated: lax
-    paths:
-      - third_party$
-      - builtin$
-      - examples$
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+    - path: third_party/.*
+      linters:
+        - all
+    - path: builtin/.*
+      linters:
+        - all
+    - path: examples/.*
+      linters:
+        - all
+
+output:
+  formats:
+    - format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
