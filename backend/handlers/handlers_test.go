@@ -182,7 +182,6 @@ func (m *MockStore) UploadToGCS(_ context.Context, _ string, _ io.Reader, filena
 	return "https://mock-storage.com/" + filename, nil
 }
 
-
 func (m *MockStore) GetAllSwarms(_ context.Context) ([]models.SwarmReport, error) {
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout // Simulate a database error
