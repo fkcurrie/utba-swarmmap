@@ -197,7 +197,6 @@ func validateCoordinates(lat, lon string) (float64, float64, error) {
 	return latitude, longitude, nil
 }
 
-
 func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
@@ -283,8 +282,8 @@ func validateFile(file *multipart.FileHeader) error {
 
 	ext := strings.ToLower(filepath.Ext(file.Filename))
 	allowedExtensions := map[string]bool{
-		".jpg":  true, ".jpeg": true, ".png": true, ".gif": true, ".heic": true, ".heif": true,
-		".mp4":  true, ".webm": true, ".mov": true, ".avi": true, ".3gp": true,
+		".jpg": true, ".jpeg": true, ".png": true, ".gif": true, ".heic": true, ".heif": true,
+		".mp4": true, ".webm": true, ".mov": true, ".avi": true, ".3gp": true,
 	}
 
 	if allowedExtensions[ext] {
