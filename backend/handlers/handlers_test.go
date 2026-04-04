@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -151,18 +152,17 @@ func (m *MockStore) UpdateUser(ctx context.Context, userID string, updates []fir
 	return nil // User not found
 }
 
-func (m *MockStore) GetAllUsers(ctx context.Context) ([]models.User, error) {
+func (m *MockStore) UploadToGCS(ctx context.Context, swarmID string, file io.Reader, filename string) (string, error) {
 	if m.ReturnError {
-		return nil, http.ErrHandlerTimeout
+		return "", http.ErrHandlerTimeout
 	}
-	return m.Users, nil
+	return "https://storage.googleapis.com/test-bucket/" + swarmID + "/" + filename, nil
 }
 
 func (m *MockStore) TrackVisit(ctx context.Context, visitorID string) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
-	// Simplified mock implementation
 	return nil
 }
 
@@ -170,8 +170,14 @@ func (m *MockStore) GetVisitCounts(ctx context.Context, days int) (map[string]in
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout
 	}
-	// Simplified mock implementation
-	return map[string]int{"2025-07-23": 1}, nil
+	return map[string]int{"2026-04-04": 1}, nil
+}
+
+func (m *MockStore) GetAllUsers(ctx context.Context) ([]models.User, error) {
+	if m.ReturnError {
+		return nil, http.ErrHandlerTimeout
+	}
+	return m.Users, nil
 }
 
 func (m *MockStore) GetAllSwarms(ctx context.Context) ([]models.SwarmReport, error) {
@@ -372,7 +378,8 @@ func TestAuthHandler_Authenticated(t *testing.T) {
 }
 
 func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
-	h := &Handlers{} // No store needed for this handler
+	mockStore := &MockStore{}
+	h := &Handlers{Store: mockStore}
 
 	// Create a multipart form request
 	body := new(bytes.Buffer)

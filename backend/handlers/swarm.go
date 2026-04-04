@@ -16,7 +16,7 @@ import (
 	"github.com/google/uuid"
 )
 
-var maxFileSize = int64(10 << 20) // 10MB
+var maxFileSize = int64(50 << 20) // 50MB
 
 var (
 	allowedImageTypes = map[string]bool{
@@ -35,6 +35,10 @@ var (
 		"video/mov":       true,
 		"video/3gpp":      true,
 		"video/3gp":       true,
+		"video/mpeg":      true,
+		"video/ogg":       true,
+		"video/mp2t":      true, // .ts files
+		"video/hevc":      true,
 	}
 )
 
@@ -90,6 +94,26 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 
 	swarmID := uuid.New().String()
 
+	mediaURLs := []string{}
+	for _, files := range form.File {
+		for _, fileHeader := range files {
+			file, err := fileHeader.Open()
+			if err != nil {
+				http.Error(w, fmt.Sprintf("Failed to open file: %v", err), http.StatusInternalServerError)
+				return
+			}
+			defer file.Close()
+
+			url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
+			if err != nil {
+				log.Printf("Failed to upload file to GCS: %v", err)
+				http.Error(w, "Failed to upload file to storage", http.StatusInternalServerError)
+				return
+			}
+			mediaURLs = append(mediaURLs, url)
+		}
+	}
+
 	// Return the summary and UUID (no saving yet)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
@@ -99,6 +123,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		"longitude":           lon,
 		"nearestIntersection": nearestIntersection,
 		"mediaFilenames":      mediaFilenames,
+		"mediaURLs":           mediaURLs,
 	})
 }
 
@@ -146,6 +171,7 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	reporterEmail := r.FormValue("reporterEmail")
 	reporterPhone := r.FormValue("reporterPhone")
 	reporterSessionID := r.FormValue("reporterSessionId")
+	mediaURLs := r.Form["mediaURLs"]
 
 	now := time.Now()
 	report := models.SwarmReport{
@@ -158,15 +184,12 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		NearestIntersection:  nearestIntersection,
 		ReportedTimestamp:    now,
 		LastUpdatedTimestamp: now,
-		ReportedMediaURLs:    []string{},
+		ReportedMediaURLs:    mediaURLs,
 		ReporterName:         reporterName,
 		ReporterEmail:        reporterEmail,
 		ReporterPhone:        reporterPhone,
 		ReporterSessionID:    reporterSessionID,
 	}
-
-	// In a real implementation, we would handle file uploads here.
-	// For now, we'll just save the report.
 
 	if err := h.Store.CreateSwarm(r.Context(), report); err != nil {
 		http.Error(w, "Failed to save report", http.StatusInternalServerError)
@@ -284,7 +307,8 @@ func validateFile(file *multipart.FileHeader) error {
 	ext := strings.ToLower(filepath.Ext(file.Filename))
 	allowedExtensions := map[string]bool{
 		".jpg":  true, ".jpeg": true, ".png": true, ".gif": true, ".heic": true, ".heif": true,
-		".mp4":  true, ".webm": true, ".mov": true, ".avi": true, ".3gp": true,
+		".mp4":  true, ".webm": true, ".mov": true, ".avi": true, ".3gp": true, ".mpeg": true,
+		".ogv":  true, ".ts": true, ".mkv": true, ".m4v": true,
 	}
 
 	if allowedExtensions[ext] {

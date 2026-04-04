@@ -1,7 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     const mapElement = document.getElementById('map');
     const reportSwarmBtn = document.getElementById('reportSwarmBtn');
+    const reportSwarmForm = document.getElementById('reportSwarmForm');
+    const galleryInput = document.getElementById('gallery-input');
+    const cameraInput = document.getElementById('camera-input');
+    const selectedFilesList = document.getElementById('selectedFilesList');
+    const fileManagementArea = document.getElementById('fileManagementArea');
+    const totalFileCount = document.getElementById('totalFileCount');
+    const clearAllFilesBtn = document.getElementById('clearAllFilesBtn');
+    
     let map;
+    let selectedFiles = [];
 
     if (mapElement) {
         // Use setTimeout to ensure the map container is fully rendered
@@ -52,6 +61,148 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (reportSwarmBtn) {
         reportSwarmBtn.addEventListener('click', () => locateUser(true));
+    }
+
+    // File Management
+    const updateFileList = () => {
+        if (selectedFiles.length > 0) {
+            fileManagementArea.style.display = 'block';
+            selectedFilesList.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'd-flex justify-content-between align-items-center mb-2 p-2 border-bottom';
+                fileItem.innerHTML = `
+                    <div class="text-truncate mr-2" style="max-width: 200px;">
+                        <i class="${file.type.startsWith('image/') ? 'fas fa-image' : 'fas fa-video'} mr-2"></i>
+                        ${file.name} <small class="text-muted">(${(file.size / (1024 * 1024)).toFixed(2)} MB)</small>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-file-btn" data-index="${index}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                selectedFilesList.appendChild(fileItem);
+            });
+            totalFileCount.textContent = selectedFiles.length;
+            
+            document.querySelectorAll('.remove-file-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.currentTarget.getAttribute('data-index'));
+                    selectedFiles.splice(index, 1);
+                    updateFileList();
+                });
+            });
+        } else {
+            fileManagementArea.style.display = 'none';
+        }
+    };
+
+    if (galleryInput) {
+        galleryInput.addEventListener('change', (e) => {
+            for (let i = 0; i < e.target.files.length; i++) {
+                selectedFiles.push(e.target.files[i]);
+            }
+            updateFileList();
+            galleryInput.value = ''; // Reset for next selection
+        });
+    }
+
+    if (cameraInput) {
+        cameraInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                selectedFiles.push(e.target.files[0]);
+                updateFileList();
+            }
+            cameraInput.value = ''; // Reset
+        });
+    }
+
+    if (clearAllFilesBtn) {
+        clearAllFilesBtn.addEventListener('click', () => {
+            selectedFiles = [];
+            updateFileList();
+        });
+    }
+
+    // Form Submission
+    if (reportSwarmForm) {
+        reportSwarmForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = reportSwarmForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+
+            try {
+                // 1. Prepare Swarm (Upload Files)
+                const formData = new FormData(reportSwarmForm);
+                // Remove existing media fields from formData if any (though there shouldn't be since they are not in the form)
+                formData.delete('media');
+                selectedFiles.forEach(file => {
+                    formData.append('media', file);
+                });
+
+                const prepareResponse = await fetch('/prepare_swarm', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!prepareResponse.ok) {
+                    const errorText = await prepareResponse.text();
+                    throw new Error(errorText || 'Failed to prepare report');
+                }
+
+                const prepareData = await prepareResponse.json();
+
+                // 2. Confirm Swarm
+                const confirmFormData = new URLSearchParams();
+                confirmFormData.append('referenceID', prepareData.referenceID);
+                confirmFormData.append('description', prepareData.description);
+                confirmFormData.append('latitude', prepareData.latitude);
+                confirmFormData.append('longitude', prepareData.longitude);
+                confirmFormData.append('intersection', prepareData.nearestIntersection);
+                confirmFormData.append('reporterName', document.getElementById('reporterName').value);
+                confirmFormData.append('reporterEmail', document.getElementById('reporterEmail').value);
+                confirmFormData.append('reporterPhone', document.getElementById('reporterPhone').value);
+                
+                // Add media URLs
+                if (prepareData.mediaURLs) {
+                    prepareData.mediaURLs.forEach(url => {
+                        confirmFormData.append('mediaURLs', url);
+                    });
+                }
+
+                const confirmResponse = await fetch('/confirm_swarm', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: confirmFormData
+                });
+
+                if (!confirmResponse.ok) {
+                    const errorText = await confirmResponse.text();
+                    throw new Error(errorText || 'Failed to confirm report');
+                }
+
+                alert('Swarm report submitted successfully!');
+                reportSwarmForm.reset();
+                selectedFiles = [];
+                updateFileList();
+                const reportModal = bootstrap.Modal.getInstance(document.getElementById('reportSwarmModal'));
+                reportModal.hide();
+                
+                // Refresh page or update map (optional)
+                window.location.reload();
+
+            } catch (error) {
+                console.error('Error submitting report:', error);
+                alert('Error: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        });
     }
 
     locateUser(false);
