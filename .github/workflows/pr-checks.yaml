@@ -85,16 +85,16 @@ jobs:
         run: npm ci
 
       - name: ESLint
-        run: npx eslint "frontend/static/js/**/*.js" --debug
+        run: npx eslint "frontend/static/js/**/*.js"
 
       - name: Prettier
-        run: npx prettier --check "frontend/static/**/*.{js,css}" "backend/templates/**/*.html" --loglevel debug
+        run: npx prettier --check "frontend/static/**/*.{js,css}" "backend/templates/**/*.html"
 
       - name: HTMLHint
         run: npx htmlhint "backend/templates/**/*.html"
 
       - name: Stylelint
-        run: npx stylelint "frontend/static/css/**/*.css" --debug
+        run: npx stylelint "frontend/static/css/**/*.css"
 
   general:
     name: General & Infrastructure
@@ -139,7 +139,7 @@ jobs:
           config_file: .yamllint.yaml
 
       - name: Markdown Lint
-        run: npx markdownlint "**/*.md" --ignore node_modules --verbose
+        run: npx markdownlint "**/*.md" --ignore node_modules
 
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@master
