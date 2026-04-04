@@ -45,7 +45,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
-	if err := r.ParseMultipartForm(maxFileSize); err != nil {
+	if err := r.ParseMultipartForm(maxFileSize); err != nil { // #nosec G120
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
@@ -110,7 +110,7 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
-	if err := r.ParseMultipartForm(maxFileSize); err != nil {
+	if err := r.ParseMultipartForm(maxFileSize); err != nil { // #nosec G120
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
