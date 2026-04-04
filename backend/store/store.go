@@ -34,6 +34,7 @@ type Storer interface {
 	GetAllUsers(ctx context.Context) ([]models.User, error)
 	TrackVisit(ctx context.Context, visitorID string) error
 	GetVisitCounts(ctx context.Context, days int) (map[string]int, error)
+	UploadToGCS(ctx context.Context, swarmID string, file io.Reader, filename string) (string, error)
 	// Add other methods here as we refactor handlers
 }
 
@@ -65,7 +66,7 @@ func (s *Store) TrackVisit(ctx context.Context, visitorID string) error {
 	today := time.Now().UTC().Format("2006-01-02")
 	docRef := s.FirestoreClient.Collection(visitsCollection).Doc(today)
 
-	return s.FirestoreClient.RunTransaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+	return s.FirestoreClient.RunTransaction(ctx, func(_ context.Context, tx *firestore.Transaction) error {
 		doc, err := tx.Get(docRef)
 		if err != nil && status.Code(err) != codes.NotFound {
 			return err
@@ -73,7 +74,8 @@ func (s *Store) TrackVisit(ctx context.Context, visitorID string) error {
 
 		if !doc.Exists() {
 			return tx.Set(docRef, map[string]interface{}{
-				"visitors": []string{visitorID},
+				"visitors":  []string{visitorID},
+				"timestamp": time.Now().UTC(),
 			})
 		}
 
@@ -105,13 +107,19 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 			return nil, fmt.Errorf("failed to iterate visits: %v", err)
 		}
 		docCount++
-		timestamp, ok := doc.Data()["timestamp"].(time.Time)
+		data := doc.Data()
+		timestamp, ok := data["timestamp"].(time.Time)
 		if !ok {
 			log.Printf("Skipping visit document with invalid timestamp: %s", doc.Ref.ID)
 			continue
 		}
 		dateStr := timestamp.Format("2006-01-02")
-		visitCounts[dateStr]++
+		visitors, ok := data["visitors"].([]interface{})
+		if ok {
+			visitCounts[dateStr] = len(visitors)
+		} else {
+			visitCounts[dateStr] = 0
+		}
 	}
 	log.Printf("Found %d visit documents in the date range.", docCount)
 
