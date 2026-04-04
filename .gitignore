@@ -1,1 +1,11 @@
 node_modules/
+backend/utba-swarmmap
+*.log
+.env
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+backend/backend

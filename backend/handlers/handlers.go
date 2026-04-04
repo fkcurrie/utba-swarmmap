@@ -15,6 +15,7 @@ import (
 type Handlers struct {
 	Store             store.Storer
 	GoogleOAuthConfig *oauth2.Config
+	AppleOAuthConfig  *oauth2.Config
 	Version           string
 	Templates         *template.Template
 	FrontendAssetsURL string

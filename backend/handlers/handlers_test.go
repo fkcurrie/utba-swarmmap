@@ -38,6 +38,56 @@ func (m *MockStore) GetUserByEmail(_ context.Context, email string) (*models.Use
 	return nil, nil // Not found
 }
 
+func (m *MockStore) GetUserByVerificationToken(_ context.Context, token string) (*models.User, error) {
+	if m.ReturnError {
+		return nil, http.ErrHandlerTimeout
+	}
+	for _, user := range m.Users {
+		if user.VerificationToken == token {
+			return &user, nil
+		}
+	}
+	return nil, nil
+}
+
+func (m *MockStore) GetUserByResetToken(_ context.Context, token string) (*models.User, error) {
+	if m.ReturnError {
+		return nil, http.ErrHandlerTimeout
+	}
+	for _, user := range m.Users {
+		if user.ResetToken == token {
+			return &user, nil
+		}
+	}
+	return nil, nil
+}
+
+func (m *MockStore) UpdateUserFields(_ context.Context, userID string, fields map[string]interface{}) error {
+	if m.ReturnError {
+		return http.ErrHandlerTimeout
+	}
+	for i, user := range m.Users {
+		if user.ID == userID {
+			for k, v := range fields {
+				switch k {
+				case "email_verified":
+					m.Users[i].EmailVerified = v.(bool)
+				case "verification_token":
+					m.Users[i].VerificationToken = v.(string)
+				case "password_hash":
+					m.Users[i].PasswordHash = v.(string)
+				case "reset_token":
+					m.Users[i].ResetToken = v.(string)
+				case "reset_token_expires_at":
+					m.Users[i].ResetTokenExpiresAt = v.(time.Time)
+				}
+			}
+			return nil
+		}
+	}
+	return nil
+}
+
 func (m *MockStore) CreateUser(_ context.Context, user models.User) (string, error) {
 	if m.ReturnError {
 		return "", http.ErrHandlerTimeout
@@ -757,6 +807,43 @@ func TestCollectorAdminHandler_Unauthorized(t *testing.T) {
 	if status := rr.Code; status != http.StatusForbidden {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusForbidden)
+	}
+}
+
+func TestUsernameRegisterHandler(t *testing.T) {
+	mockStore := &MockStore{}
+	h := &Handlers{Store: mockStore}
+
+	body := strings.NewReader("email=test@example.com&password=password123&name=Test+User&phone=123456789&location=London")
+	req, err := http.NewRequest("POST", "/auth/register", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.UsernameRegisterHandler)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	if len(mockStore.Users) != 1 {
+		t.Errorf("expected 1 user to be created, got %d", len(mockStore.Users))
+	}
+
+	if mockStore.Users[0].Email != "test@example.com" {
+		t.Errorf("expected email to be test@example.com, got %s", mockStore.Users[0].Email)
+	}
+
+	if mockStore.Users[0].EmailVerified {
+		t.Error("expected email_verified to be false")
+	}
+
+	if mockStore.Users[0].VerificationToken == "" {
+		t.Error("expected verification_token to be set")
 	}
 }
 
