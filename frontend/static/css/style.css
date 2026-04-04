@@ -3,10 +3,7 @@
 }
 
 body {
-  padding-top: var(
-    --header-height
-  ); /* Push content down to account for fixed header */
-
+  padding-top: var(--header-height); /* Push content down to account for fixed header */
   margin: 0;
   font-family: Inter, sans-serif;
 }

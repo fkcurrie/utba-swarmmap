@@ -317,9 +317,9 @@ func validateFile(file *multipart.FileHeader) error {
 
 	ext := strings.ToLower(filepath.Ext(file.Filename))
 	allowedExtensions := map[string]bool{
-		".jpg":  true, ".jpeg": true, ".png": true, ".gif": true, ".heic": true, ".heif": true,
-		".mp4":  true, ".webm": true, ".mov": true, ".avi": true, ".3gp": true, ".mpeg": true,
-		".ogv":  true, ".ts": true, ".mkv": true, ".m4v": true,
+		".jpg": true, ".jpeg": true, ".png": true, ".gif": true, ".heic": true, ".heif": true,
+		".mp4": true, ".webm": true, ".mov": true, ".avi": true, ".3gp": true, ".mpeg": true,
+		".ogv": true, ".ts": true, ".mkv": true, ".m4v": true,
 	}
 
 	if allowedExtensions[ext] {

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -109,6 +110,10 @@ func main() {
 	// Add other routes here as they are refactored
 
 	port := getEnv("PORT", "8080")
+	// Validate port to prevent log injection and ensure it's a valid port number
+	if _, err := strconv.Atoi(port); err != nil {
+		log.Fatalf("Invalid PORT: %s", port)
+	}
 	log.Printf("Starting server on port %s", port)
 	log.Printf("Server version: %s", version)
 
