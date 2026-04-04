@@ -18,6 +18,7 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	// Sanitize port for logging to prevent log injection
+	// #nosec G706
 	log.Printf("Listening on port %s", strings.ReplaceAll(strings.ReplaceAll(port, "\n", ""), "\r", ""))
 	server := &http.Server{
 		Addr:         ":" + port,

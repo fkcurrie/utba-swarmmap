@@ -10,5 +10,5 @@ rules:
   truthy:
     allowed-values: ["true", "false", "yes", "no"]
 
-ignore: |
-  node_modules/
+ignore:
+  - node_modules/

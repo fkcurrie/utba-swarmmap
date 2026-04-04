@@ -111,6 +111,7 @@ func main() {
 
 	port := getEnv("PORT", "8080")
 	// Sanitize port for logging to prevent log injection
+	// #nosec G706
 	log.Printf("Starting server on port %s", strings.ReplaceAll(strings.ReplaceAll(port, "\n", ""), "\r", ""))
 	log.Printf("Server version: %s", version)
 
