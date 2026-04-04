@@ -25,7 +25,7 @@ type MockStore struct {
 	ReturnError bool
 }
 
-func (m *MockStore) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
+func (m *MockStore) GetUserByEmail(_ context.Context, email string) (*models.User, error) {
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout
 	}
@@ -37,7 +37,7 @@ func (m *MockStore) GetUserByEmail(ctx context.Context, email string) (*models.U
 	return nil, nil // Not found
 }
 
-func (m *MockStore) CreateUser(ctx context.Context, user models.User) (string, error) {
+func (m *MockStore) CreateUser(_ context.Context, user models.User) (string, error) {
 	if m.ReturnError {
 		return "", http.ErrHandlerTimeout
 	}
@@ -46,7 +46,7 @@ func (m *MockStore) CreateUser(ctx context.Context, user models.User) (string, e
 	return user.ID, nil
 }
 
-func (m *MockStore) GetSession(ctx context.Context, sessionID string) (*models.Session, error) {
+func (m *MockStore) GetSession(_ context.Context, sessionID string) (*models.Session, error) {
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout
 	}
@@ -57,7 +57,7 @@ func (m *MockStore) GetSession(ctx context.Context, sessionID string) (*models.S
 	return &session, nil
 }
 
-func (m *MockStore) CreateSession(ctx context.Context, session models.Session) (string, error) {
+func (m *MockStore) CreateSession(_ context.Context, session models.Session) (string, error) {
 	if m.ReturnError {
 		return "", http.ErrHandlerTimeout
 	}
@@ -69,7 +69,7 @@ func (m *MockStore) CreateSession(ctx context.Context, session models.Session) (
 	return sessionID, nil
 }
 
-func (m *MockStore) DeleteSession(ctx context.Context, sessionID string) error {
+func (m *MockStore) DeleteSession(_ context.Context, sessionID string) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
@@ -77,7 +77,7 @@ func (m *MockStore) DeleteSession(ctx context.Context, sessionID string) error {
 	return nil
 }
 
-func (m *MockStore) CreateSwarm(ctx context.Context, swarm models.SwarmReport) error {
+func (m *MockStore) CreateSwarm(_ context.Context, swarm models.SwarmReport) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
@@ -85,7 +85,7 @@ func (m *MockStore) CreateSwarm(ctx context.Context, swarm models.SwarmReport) e
 	return nil
 }
 
-func (m *MockStore) DeleteSwarm(ctx context.Context, swarmID string) error {
+func (m *MockStore) DeleteSwarm(_ context.Context, swarmID string) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
@@ -98,7 +98,7 @@ func (m *MockStore) DeleteSwarm(ctx context.Context, swarmID string) error {
 	return nil // Swarm not found
 }
 
-func (m *MockStore) DeleteUser(ctx context.Context, userID string) error {
+func (m *MockStore) DeleteUser(_ context.Context, userID string) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
@@ -111,7 +111,7 @@ func (m *MockStore) DeleteUser(ctx context.Context, userID string) error {
 	return nil // User not found
 }
 
-func (m *MockStore) UpdateSwarm(ctx context.Context, swarmID string, updates []firestore.Update) error {
+func (m *MockStore) UpdateSwarm(_ context.Context, swarmID string, updates []firestore.Update) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
@@ -131,7 +131,7 @@ func (m *MockStore) UpdateSwarm(ctx context.Context, swarmID string, updates []f
 	return nil // Swarm not found
 }
 
-func (m *MockStore) UpdateUser(ctx context.Context, userID string, updates []firestore.Update) error {
+func (m *MockStore) UpdateUser(_ context.Context, userID string, updates []firestore.Update) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
@@ -151,14 +151,14 @@ func (m *MockStore) UpdateUser(ctx context.Context, userID string, updates []fir
 	return nil // User not found
 }
 
-func (m *MockStore) GetAllUsers(ctx context.Context) ([]models.User, error) {
+func (m *MockStore) GetAllUsers(_ context.Context) ([]models.User, error) {
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout
 	}
 	return m.Users, nil
 }
 
-func (m *MockStore) TrackVisit(ctx context.Context, visitorID string) error {
+func (m *MockStore) TrackVisit(_ context.Context, _ string) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
@@ -166,7 +166,7 @@ func (m *MockStore) TrackVisit(ctx context.Context, visitorID string) error {
 	return nil
 }
 
-func (m *MockStore) GetVisitCounts(ctx context.Context, days int) (map[string]int, error) {
+func (m *MockStore) GetVisitCounts(_ context.Context, _ int) (map[string]int, error) {
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout
 	}
@@ -174,14 +174,14 @@ func (m *MockStore) GetVisitCounts(ctx context.Context, days int) (map[string]in
 	return map[string]int{"2025-07-23": 1}, nil
 }
 
-func (m *MockStore) GetAllSwarms(ctx context.Context) ([]models.SwarmReport, error) {
+func (m *MockStore) GetAllSwarms(_ context.Context) ([]models.SwarmReport, error) {
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout // Simulate a database error
 	}
 	return m.Swarms, nil
 }
 
-func (m *MockStore) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]models.SwarmReport, error) {
+func (m *MockStore) GetSwarmsBySessionID(_ context.Context, sessionID string) ([]models.SwarmReport, error) {
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout
 	}
@@ -375,13 +375,13 @@ func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
 	// Create a multipart form request
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	writer.WriteField("description", "A test swarm")
-	writer.WriteField("latitude", "43.6532")
-	writer.WriteField("longitude", "-79.3832")
-	writer.WriteField("intersection", "Yonge & Bloor")
+	_ = writer.WriteField("description", "A test swarm")
+	_ = writer.WriteField("latitude", "43.6532")
+	_ = writer.WriteField("longitude", "-79.3832")
+	_ = writer.WriteField("intersection", "Yonge & Bloor")
 	// Create a dummy file part
 	part, _ := writer.CreateFormFile("media", "test.jpg")
-	part.Write([]byte("dummy image data"))
+	_, _ = part.Write([]byte("dummy image data"))
 	writer.Close()
 
 	req, err := http.NewRequest("POST", "/prepare_swarm", body)
@@ -416,13 +416,13 @@ func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	// Create a multipart form request
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	writer.WriteField("referenceID", "test-swarm-id")
-	writer.WriteField("description", "A test swarm")
-	writer.WriteField("latitude", "43.6532")
-	writer.WriteField("longitude", "-79.3832")
-	writer.WriteField("intersection", "Yonge & Bloor")
+	_ = writer.WriteField("referenceID", "test-swarm-id")
+	_ = writer.WriteField("description", "A test swarm")
+	_ = writer.WriteField("latitude", "43.6532")
+	_ = writer.WriteField("longitude", "-79.3832")
+	_ = writer.WriteField("intersection", "Yonge & Bloor")
 	part, _ := writer.CreateFormFile("media", "test.jpg")
-	part.Write([]byte("dummy image data"))
+	_, _ = part.Write([]byte("dummy image data"))
 	writer.Close()
 
 	req, err := http.NewRequest("POST", "/confirm_swarm", body)

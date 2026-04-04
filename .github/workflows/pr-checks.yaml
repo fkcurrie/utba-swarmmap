@@ -1,10 +1,11 @@
+---
 name: PR Checks
 
-on:
+"on":
   push:
-    branches: [ main, issue-12-NPJh ]
+    branches: [main, issue-12-NPJh]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   backend:

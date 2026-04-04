@@ -37,7 +37,7 @@ func (h *Handlers) VisitsAPIHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(visitsJSON)
+	_, _ = w.Write(visitsJSON)
 }
 
 func (h *Handlers) TrackVisitHandler(w http.ResponseWriter, r *http.Request) {

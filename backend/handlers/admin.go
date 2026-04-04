@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
-	"html/template"
 	"log"
 	"net/http"
 
@@ -73,14 +71,6 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 		visits = make(map[string]int)
 	}
 
-	// Convert map to JSON for easy use in JavaScript
-	visitsJSON, err := json.Marshal(visits)
-	if err != nil {
-		log.Printf("Error marshalling visits to JSON: %v", err)
-		http.Error(w, "Failed to process visit data", http.StatusInternalServerError)
-		return
-	}
-
 	err = h.Templates.ExecuteTemplate(w, "admin.html", map[string]interface{}{
 		"Title":             "Admin Dashboard",
 		"Version":           h.Version,
@@ -90,7 +80,7 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 		"AllSwarms":         allSwarms,
 		"ReportedSwarms":    reportedSwarms,
 		"CapturedSwarms":    capturedSwarms,
-		"VisitsJSON":        template.JS(visitsJSON), // Pass as JavaScript-safe string
+		"VisitCounts":       visits,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 		"CurrentRange":      rangeStr,
 	})
