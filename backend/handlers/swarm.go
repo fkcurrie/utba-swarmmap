@@ -147,6 +147,29 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	reporterPhone := r.FormValue("reporterPhone")
 	reporterSessionID := r.FormValue("reporterSessionId")
 
+	// Handle file uploads
+	mediaURLs := []string{}
+	form := r.MultipartForm
+	if form != nil && form.File != nil {
+		for _, files := range form.File {
+			for _, fileHeader := range files {
+				file, err := fileHeader.Open()
+				if err != nil {
+					log.Printf("Error opening uploaded file %s: %v", fileHeader.Filename, err)
+					continue
+				}
+				defer file.Close()
+
+				url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
+				if err != nil {
+					log.Printf("Error uploading file %s to GCS: %v", fileHeader.Filename, err)
+					continue
+				}
+				mediaURLs = append(mediaURLs, url)
+			}
+		}
+	}
+
 	now := time.Now()
 	report := models.SwarmReport{
 		ID:                   swarmID,
@@ -158,17 +181,15 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		NearestIntersection:  nearestIntersection,
 		ReportedTimestamp:    now,
 		LastUpdatedTimestamp: now,
-		ReportedMediaURLs:    []string{},
+		ReportedMediaURLs:    mediaURLs,
 		ReporterName:         reporterName,
 		ReporterEmail:        reporterEmail,
 		ReporterPhone:        reporterPhone,
 		ReporterSessionID:    reporterSessionID,
 	}
 
-	// In a real implementation, we would handle file uploads here.
-	// For now, we'll just save the report.
-
 	if err := h.Store.CreateSwarm(r.Context(), report); err != nil {
+		log.Printf("Error creating swarm in store: %v", err)
 		http.Error(w, "Failed to save report", http.StatusInternalServerError)
 		return
 	}

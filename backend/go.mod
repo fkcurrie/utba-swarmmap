@@ -1,6 +1,6 @@
 module github.com/fkcurrie/utba-swarmmap
 
-go 1.25.0
+go 1.25.8
 
 require (
 	cloud.google.com/go/firestore v1.21.0
@@ -56,5 +56,3 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260401024825-9d38bb4040a9 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 )
-
-// Transitive dependencies will be filled in by `

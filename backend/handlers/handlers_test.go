@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -172,6 +173,13 @@ func (m *MockStore) GetVisitCounts(_ context.Context, _ int) (map[string]int, er
 	}
 	// Simplified mock implementation
 	return map[string]int{"2025-07-23": 1}, nil
+}
+
+func (m *MockStore) UploadToGCS(_ context.Context, _ string, _ io.Reader, filename string) (string, error) {
+	if m.ReturnError {
+		return "", http.ErrHandlerTimeout
+	}
+	return "https://mock-storage.com/" + filename, nil
 }
 
 func (m *MockStore) GetAllSwarms(_ context.Context) ([]models.SwarmReport, error) {
@@ -757,4 +765,3 @@ func TestVerifyChecks(t *testing.T) {
 		t.Error("Math is broken")
 	}
 }
-
