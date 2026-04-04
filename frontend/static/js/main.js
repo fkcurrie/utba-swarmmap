@@ -38,6 +38,41 @@ document.addEventListener('DOMContentLoaded', function () {
         );
         reportModal.show();
       });
+
+      // Fetch and display swarms
+      const fetchSwarms = async () => {
+        try {
+          const response = await fetch('/get_swarms');
+          const swarms = await response.json();
+
+          swarms.forEach((swarm) => {
+            let color = '#ff0000'; // Default Red for Reported
+            if (swarm.displayStatus === 'Verified') color = '#ff69b4'; // Pink
+            if (swarm.displayStatus === 'Captured') color = '#00ff00'; // Green
+            if (swarm.displayStatus === 'Archived') color = '#0000ff'; // Blue
+
+            const marker = L.circleMarker([swarm.latitude, swarm.longitude], {
+              radius: 10,
+              fillColor: color,
+              color: '#fff',
+              weight: 2,
+              opacity: 1,
+              fillOpacity: 0.8,
+            }).addTo(map);
+
+            marker.bindPopup(`
+              <strong>${swarm.displayStatus}</strong><br>
+              ${swarm.nearestIntersection}<br>
+              <small>${new Date(swarm.reportedTimestamp).toLocaleString()}</small><br>
+              <p>${swarm.description}</p>
+            `);
+          });
+        } catch (error) {
+          console.error('Error fetching swarms:', error);
+        }
+      };
+
+      fetchSwarms();
     }, 0);
   }
 
@@ -196,6 +231,11 @@ document.addEventListener('DOMContentLoaded', function () {
           'reporterPhone',
           document.getElementById('reporterPhone').value,
         );
+        // Add session ID for tracking (from upstream improvement)
+        confirmFormData.append(
+          'reporterSessionId',
+          localStorage.getItem('utba_visitor_id'),
+        );
 
         // Add media URLs
         if (prepareData.mediaURLs) {
@@ -250,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     imgViewer.style.display = 'none';
     videoViewer.style.display = 'none';
-    videoViewer.pause();
+    if (videoViewer.pause) videoViewer.pause();
 
     const isVideo =
       url
@@ -313,6 +353,25 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   locateUser(false);
+
+  // Visit tracking
+  (function trackVisit() {
+    let visitorId = localStorage.getItem('utba_visitor_id');
+    if (!visitorId) {
+      visitorId =
+        Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('utba_visitor_id', visitorId);
+    }
+
+    fetch('/api/track_visit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ visitorId: visitorId }),
+    }).catch((err) => console.error('Failed to track visit:', err));
+  })();
 });
 
 async function getNearestIntersection(lat, lng) {

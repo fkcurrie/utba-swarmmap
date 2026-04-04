@@ -1,7 +1,5 @@
+---
 extends: default
-
-ignore: |
-  node_modules/
 
 rules:
   line-length:
@@ -12,3 +10,8 @@ rules:
   truthy:
     allowed-values: ["true", "false", "yes", "no"]
   document-start: disable
+
+ignore:
+  - "node_modules/"
+  - "vendor/"
+  - "backend/vendor/"

@@ -1,3 +1,4 @@
+---
 # cloudbuild-frontend.yaml
 # Use this for fast frontend-only deployments.
 # Command: gcloud builds submit --config cloudbuild-frontend.yaml .

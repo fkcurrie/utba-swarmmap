@@ -1,17 +1,36 @@
-linters:
-  enable:
-    - errcheck
-    - gosimple
-    - govet
-    - ineffassign
-    - staticcheck
-    - unused
-    - gofmt
-    - gosec
-    - misspell
-    - revive
-  disable-all: true
-
+---
 run:
   timeout: 5m
-  working-directory: backend
+
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - gosec
+    - govet
+    - ineffassign
+    - misspell
+    - revive
+    - staticcheck
+    - unused
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+    - path: third_party/.*
+      linters:
+        - all
+    - path: builtin/.*
+      linters:
+        - all
+    - path: examples/.*
+      linters:
+        - all
+
+output:
+  formats:
+    - format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
