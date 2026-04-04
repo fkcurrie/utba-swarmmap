@@ -10,7 +10,7 @@ rules:
   truthy:
     allowed-values: ["true", "false", "yes", "no"]
 
-ignore: |
-  node_modules/
-  vendor/
-  backend/vendor/
+ignore:
+  - "node_modules/"
+  - "vendor/"
+  - "backend/vendor/"
