@@ -8,6 +8,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 	"time"
@@ -207,6 +208,7 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 	mockSwarms := []models.SwarmReport{
 		{ID: "1", Description: "Swarm 1", Status: "Reported", ReportedTimestamp: time.Now()},
 		{ID: "2", Description: "Swarm 2", Status: "Captured", ReportedTimestamp: time.Now().Add(-25 * time.Hour)},
+		{ID: "3", Description: "Swarm 3", Status: "Reported", ReportedTimestamp: time.Now().Add(-25 * time.Hour)},
 	}
 	mockStore := &MockStore{Swarms: mockSwarms}
 
@@ -236,8 +238,8 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 		t.Fatalf("could not decode response body: %v", err)
 	}
 
-	if len(returnedSwarms) != 2 {
-		t.Errorf("handler returned wrong number of swarms: got %d want %d", len(returnedSwarms), 2)
+	if len(returnedSwarms) != 3 {
+		t.Errorf("handler returned wrong number of swarms: got %d want %d", len(returnedSwarms), 3)
 	}
 
 	// Check the dynamic DisplayStatus logic
@@ -246,6 +248,9 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 	}
 	if returnedSwarms[1].DisplayStatus != "Captured" {
 		t.Errorf("expected DisplayStatus to be 'Captured', got '%s'", returnedSwarms[1].DisplayStatus)
+	}
+	if returnedSwarms[2].DisplayStatus != "Archived" {
+		t.Errorf("expected DisplayStatus to be 'Archived', got '%s'", returnedSwarms[2].DisplayStatus)
 	}
 }
 
@@ -418,6 +423,38 @@ func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
 	}
 }
 
+func TestPrepareSwarmHandler_VideoRequest(t *testing.T) {
+	mockStore := &MockStore{}
+	h := &Handlers{Store: mockStore}
+
+	// Create a multipart form request with a video
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	writer.WriteField("description", "A test swarm with video")
+	writer.WriteField("latitude", "43.6532")
+	writer.WriteField("longitude", "-79.3832")
+	writer.WriteField("intersection", "Yonge & Bloor")
+	// Create a dummy video file part
+	part, _ := writer.CreateFormFile("media", "test.mp4")
+	part.Write([]byte("dummy video data"))
+	writer.Close()
+
+	req, err := http.NewRequest("POST", "/prepare_swarm", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.PrepareSwarmHandler)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v, body: %s",
+			status, http.StatusOK, rr.Body.String())
+	}
+}
+
 func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	mockStore := &MockStore{}
 	h := &Handlers{Store: mockStore}
@@ -447,6 +484,35 @@ func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
+	}
+}
+
+func TestConfirmSwarmHandler_URLEncoded(t *testing.T) {
+	mockStore := &MockStore{}
+	h := &Handlers{Store: mockStore}
+
+	// Create a URL encoded request (like the frontend does)
+	form := url.Values{}
+	form.Set("referenceID", "test-swarm-id")
+	form.Set("description", "A test swarm")
+	form.Set("latitude", "43.6532")
+	form.Set("longitude", "-79.3832")
+	form.Set("intersection", "Yonge & Bloor")
+	form.Add("mediaURLs", "https://storage.googleapis.com/test-bucket/test-swarm-id/test.jpg")
+
+	req, err := http.NewRequest("POST", "/confirm_swarm", strings.NewReader(form.Encode()))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.ConfirmSwarmHandler)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v, body: %s",
+			status, http.StatusOK, rr.Body.String())
 	}
 }
 

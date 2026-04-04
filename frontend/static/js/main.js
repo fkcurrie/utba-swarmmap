@@ -208,6 +208,64 @@ document.addEventListener('DOMContentLoaded', function() {
     locateUser(false);
 });
 
+// Media Viewer Functionality
+let currentMediaIndex = 0;
+let mediaURLs = [];
+
+function openMediaViewer(urls) {
+    mediaURLs = urls;
+    currentMediaIndex = 0;
+    updateMediaViewer();
+    const mediaModal = new bootstrap.Modal(document.getElementById('mediaViewerModal'));
+    mediaModal.show();
+}
+
+function updateMediaViewer() {
+    const imgViewer = document.getElementById('mediaViewer');
+    const videoViewer = document.getElementById('videoViewer');
+    const counter = document.getElementById('mediaCounter');
+    const url = mediaURLs[currentMediaIndex];
+    
+    imgViewer.style.display = 'none';
+    videoViewer.style.display = 'none';
+    videoViewer.pause();
+    
+    const isVideo = url.toLowerCase().match(/\.(mp4|webm|mov|avi|3gp|mpeg|ogv|ts|mkv|m4v)$/) || 
+                   url.includes('video'); // Basic check
+
+    if (isVideo) {
+        videoViewer.src = url;
+        videoViewer.style.display = 'block';
+    } else {
+        imgViewer.src = url;
+        imgViewer.style.display = 'block';
+    }
+    
+    counter.textContent = `${currentMediaIndex + 1} of ${mediaURLs.length}`;
+    
+    // Hide nav buttons if only one item
+    const navButtons = document.querySelectorAll('.media-nav');
+    navButtons.forEach(btn => btn.style.display = mediaURLs.length > 1 ? 'block' : 'none');
+}
+
+function navigateMedia(step) {
+    currentMediaIndex = (currentMediaIndex + step + mediaURLs.length) % mediaURLs.length;
+    updateMediaViewer();
+}
+
+// Event delegation for dynamically (or statically) rendered view-media-btns
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.view-media-btn');
+    if (btn) {
+        try {
+            const urls = JSON.parse(btn.getAttribute('data-media-urls'));
+            openMediaViewer(urls);
+        } catch (err) {
+            console.error('Error parsing media URLs:', err);
+        }
+    }
+});
+
 async function getNearestIntersection(lat, lng) {
     try {
         const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);

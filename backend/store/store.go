@@ -74,7 +74,8 @@ func (s *Store) TrackVisit(ctx context.Context, visitorID string) error {
 
 		if !doc.Exists() {
 			return tx.Set(docRef, map[string]interface{}{
-				"visitors": []string{visitorID},
+				"visitors":  []string{visitorID},
+				"timestamp": time.Now().UTC(),
 			})
 		}
 
@@ -112,7 +113,12 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 			continue
 		}
 		dateStr := timestamp.Format("2006-01-02")
-		visitCounts[dateStr]++
+		visitors, ok := doc.Data()["visitors"].([]interface{})
+		if ok {
+			visitCounts[dateStr] = len(visitors)
+		} else {
+			visitCounts[dateStr] = 0
+		}
 	}
 	log.Printf("Found %d visit documents in the date range.", docCount)
 
