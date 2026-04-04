@@ -1,3 +1,4 @@
+---
 # cloudbuild-backend.yaml
 # Use this for backend deployments.
 # Command: gcloud builds submit --config cloudbuild-backend.yaml .

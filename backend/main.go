@@ -111,7 +111,15 @@ func main() {
 	log.Printf("Starting server on port %s", port)
 	log.Printf("Server version: %s", version)
 
-	if err := http.ListenAndServe(":"+port, mux); err != nil {
+	srv := &http.Server{
+		Addr:         ":" + port,
+		Handler:      mux,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
+
+	if err := srv.ListenAndServe(); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
 }

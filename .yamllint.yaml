@@ -1,3 +1,4 @@
+---
 extends: default
 
 rules:
@@ -9,7 +10,7 @@ rules:
   truthy:
     allowed-values: ["true", "false", "yes", "no"]
 
-ignore: |
-  node_modules/
-  vendor/
-  .git/
+ignore:
+  - node_modules/
+  - vendor/
+  - .git/

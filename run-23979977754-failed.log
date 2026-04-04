@@ -1,0 +1,234 @@
+Backend (Go)	GolangCI-Lint	﻿2026-04-04T13:36:42.2996938Z ##[group]Run golangci/golangci-lint-action@v4
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.2997240Z with:
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.2997407Z   version: latest
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.2997594Z   working-directory: backend
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.2997962Z   github-token: ***
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.2998155Z   only-new-issues: false
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.2998356Z   skip-cache: false
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.2998540Z   skip-pkg-cache: false
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.2998744Z   skip-build-cache: false
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.2998958Z   install-mode: binary
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.2999143Z ##[endgroup]
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.4543400Z ##[group]prepare environment
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.4547790Z Checking for go.mod: backend/go.mod
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.5781821Z ##[warning]Failed to restore: Cache service responded with 400
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.5790478Z Cache not found for input keys: golangci-lint.cache-2935-666b7a7e1dfa6b5b3fe79062f075597ee19b9909, golangci-lint.cache-2935-
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.5791268Z Finding needed golangci-lint version...
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.6021540Z Requested golangci-lint 'latest', using 'v1.64.8', calculation took 25ms
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.6022213Z Installation mode: binary
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.6023030Z Installing golangci-lint binary v1.64.8...
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.6025425Z Downloading binary https://github.com/golangci/golangci-lint/releases/download/v1.64.8/golangci-lint-1.64.8-linux-amd64.tar.gz ...
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:42.7997140Z [command]/usr/bin/tar xz --overwrite --warning=no-unknown-keyword --overwrite -C /home/runner -f /home/runner/work/_temp/db730e06-efbe-4b06-b1eb-03682ea74b52
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:43.0314793Z Installed golangci-lint into /home/runner/golangci-lint-1.64.8-linux-amd64/golangci-lint in 429ms
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:43.0315489Z Prepared env in 577ms
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:43.0316117Z ##[endgroup]
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:43.0318458Z ##[group]run golangci-lint
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:43.0326042Z Running [/home/runner/golangci-lint-1.64.8-linux-amd64/golangci-lint run --out-format=github-actions --path-prefix=backend] in [/home/runner/work/utba-swarmmap/utba-swarmmap/backend] ...
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6915401Z ##[error]Error return value of `w.Write` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6917238Z ##[error]Error return value of `h.Store.DeleteSession` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6919119Z ##[error]Error return value of `(*encoding/json.Encoder).Encode` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6920987Z ##[error]Error return value of `(*encoding/json.Encoder).Encode` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6922400Z ##[error]Error return value of `w.Write` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6923825Z ##[error]Error return value of `(*encoding/json.Encoder).Encode` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6925250Z ##[error]Error return value of `w.Write` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6926622Z ##[error]Error return value of `writer.WriteField` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6928038Z ##[error]Error return value of `writer.WriteField` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6929449Z ##[error]Error return value of `writer.WriteField` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6931207Z ##[error]Error return value of `part.Write` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6932617Z ##[error]Error return value of `part.Write` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6934066Z ##[error]Error return value of `h.Store.DeleteSession` is not checked (errcheck)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6935732Z ::medium file=backend/handlers/admin.go,line=93,col=24::G203: The used method does not auto-escape HTML. This can potentially lead to 'Cross-site Scripting' vulnerabilities, in case the attacker controls the input. (gosec)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6937088Z ::medium file=backend/main.go,line=114,col=12::G114: Use of net/http serve function that has no support for setting timeouts (gosec)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6938810Z ##[warning]unused-parameter: parameter 'ctx' seems to be unused, consider removing or renaming it as _ (revive)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6941498Z ##[warning]unused-parameter: parameter 'ctx' seems to be unused, consider removing or renaming it as _ (revive)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6944044Z ##[warning]unused-parameter: parameter 'ctx' seems to be unused, consider removing or renaming it as _ (revive)
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6945094Z 
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6945520Z level=warning msg="[config_reader] The output format `github-actions` is deprecated, please use `colored-line-number`"
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6945975Z 
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6946552Z ##[error]issues found
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6947995Z Ran golangci-lint in 8658ms
+Backend (Go)	GolangCI-Lint	2026-04-04T13:36:51.6948637Z ##[endgroup]
+General & Infrastructure	YAML Lint (yamllint)	﻿2026-04-04T13:40:07.8738564Z ##[group]Run ibiqlik/action-yamllint@v3
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8738863Z with:
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8739037Z   file_or_dir: .
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8739234Z   config_file: .yamllint.yaml
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8739456Z   format: parsable
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8739644Z   strict: false
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8739822Z   no_warnings: false
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8740022Z ##[endgroup]
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8835157Z ##[group]Run # export LOGFILE=$(mktemp yamllint-XXXXXX)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8835578Z [36;1m# export LOGFILE=$(mktemp yamllint-XXXXXX)[0m
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8835996Z [36;1m/home/runner/work/_actions/ibiqlik/action-yamllint/v3/entrypoint.sh[0m
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8863416Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8863868Z env:
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8864039Z   INPUT_FILE_OR_DIR: .
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8864254Z   INPUT_CONFIG_FILE: .yamllint.yaml
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8864489Z   INPUT_CONFIG_DATA: 
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8864684Z   INPUT_FORMAT: parsable
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8864882Z   INPUT_STRICT: false
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8865104Z   INPUT_NO_WARNINGS: false
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:07.8865302Z ##[endgroup]
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.0135253Z ======================
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.0135776Z = Linting YAML files =
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.0136181Z ======================
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8010905Z ./.yamllint.yaml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8012154Z ./docker-compose.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8013345Z ./backend/.golangci.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8014838Z ./backend/cloudbuild.yaml:5:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8016129Z ./backend/cloudbuild.yaml:40:121: [error] line too long (172 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8017561Z ./backend/cloudbuild.yaml:68:31: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8018802Z ./backend/cloudbuild.yaml:69:1: [error] too many blank lines (1 > 0) (empty-lines)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8020093Z ./.github/workflows/e2e-startup.yaml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8021604Z ./.github/workflows/e2e-startup.yaml:3:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8023355Z ./.github/workflows/e2e-startup.yaml:5:16: [error] too many spaces inside brackets (brackets)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8024957Z ./.github/workflows/e2e-startup.yaml:5:21: [error] too many spaces inside brackets (brackets)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8026301Z ./.github/workflows/pr-checks.yaml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8027793Z ./.github/workflows/pr-checks.yaml:3:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8029193Z ./.github/workflows/pr-checks.yaml:5:16: [error] too many spaces inside brackets (brackets)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8030466Z ./.github/workflows/pr-checks.yaml:5:36: [error] too many spaces inside brackets (brackets)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8031789Z ./.github/workflows/pr-checks.yaml:7:16: [error] too many spaces inside brackets (brackets)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8033065Z ./.github/workflows/pr-checks.yaml:7:21: [error] too many spaces inside brackets (brackets)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8034771Z ./node_modules/node-sarif-builder/.mega-linter.yml:4:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8036452Z ./node_modules/node-sarif-builder/.mega-linter.yml:4:19: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8038159Z ./node_modules/node-sarif-builder/.github/FUNDING.yml:3:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8040264Z ./node_modules/node-sarif-builder/.github/workflows/deploy-RELEASE.yml:11:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8042320Z ./node_modules/node-sarif-builder/.github/workflows/test.yml:11:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8044808Z ./node_modules/node-sarif-builder/.github/workflows/test.yml:12:9: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8046621Z ./node_modules/node-sarif-builder/.github/workflows/test.yml:24:121: [error] line too long (169 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8048617Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:6:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8050632Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:8:9: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8052589Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:12:6: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8054742Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:14:20: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8056711Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:14:121: [error] line too long (145 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8058668Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:15:35: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8060604Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:15:121: [error] line too long (130 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8062537Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:16:28: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8064727Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:16:121: [error] line too long (138 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8066686Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:49:39: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8068631Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:49:121: [error] line too long (176 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8070529Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:66:121: [error] line too long (339 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8072671Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:74:121: [error] line too long (339 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8074816Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:81:121: [error] line too long (368 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8076717Z ./node_modules/node-sarif-builder/.github/workflows/mega-linter.yml:84:121: [error] line too long (368 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8078737Z ./node_modules/node-sarif-builder/.github/workflows/deploy-ALPHA.yml:11:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8080837Z ./node_modules/node-sarif-builder/.github/workflows/deploy-BETA.yml:11:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8083038Z ./node_modules/node-sarif-builder/.github/workflows/github-dependents-info.yml:7:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8085566Z ./node_modules/node-sarif-builder/.github/workflows/github-dependents-info.yml:15:25: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8087689Z ./node_modules/node-sarif-builder/.github/workflows/github-dependents-info.yml:41:121: [error] line too long (136 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8089781Z ./node_modules/node-sarif-builder/.github/workflows/github-dependents-info.yml:65:121: [error] line too long (163 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8091382Z ./node_modules/xml/.travis.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8092763Z ./node_modules/minimist/.github/FUNDING.yml:3:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8094714Z ./node_modules/minimist/.github/FUNDING.yml:4:10: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8096299Z ./node_modules/minimist/.github/FUNDING.yml:5:18: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8097867Z ./node_modules/minimist/.github/FUNDING.yml:6:8: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8099410Z ./node_modules/minimist/.github/FUNDING.yml:8:19: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8101074Z ./node_modules/minimist/.github/FUNDING.yml:9:12: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8102656Z ./node_modules/minimist/.github/FUNDING.yml:10:12: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8104409Z ./node_modules/minimist/.github/FUNDING.yml:11:10: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8106011Z ./node_modules/minimist/.github/FUNDING.yml:12:9: [warning] too few spaces before comment: expected 2 (comments)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8107532Z ./node_modules/reusify/.github/dependabot.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8109101Z ./node_modules/reusify/.github/dependabot.yml:3:1: [error] wrong indentation: expected 2 but found 0 (indentation)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8110657Z ./node_modules/reusify/.github/workflows/ci.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8112287Z ./node_modules/reusify/.github/workflows/ci.yml:3:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8114166Z ./node_modules/fast-json-stable-stringify/.travis.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8115831Z ./node_modules/fast-json-stable-stringify/.eslintrc.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8117592Z ./node_modules/fast-json-stable-stringify/.github/FUNDING.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8119163Z ./node_modules/fast-uri/.github/.stale.yml:2:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8121004Z ./node_modules/fast-uri/.github/.stale.yml:21:20: [error] no new line character at the end of file (new-line-at-end-of-file)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8122599Z ./node_modules/fast-uri/.github/dependabot.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8124374Z ./node_modules/fast-uri/.github/tests_checker.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8125964Z ./node_modules/fast-uri/.github/tests_checker.yml:3:121: [error] line too long (122 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8127677Z ./node_modules/fast-uri/.github/tests_checker.yml:8:16: [error] no new line character at the end of file (new-line-at-end-of-file)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.8129361Z ./node_modules/fast-uri/.github/workflows/ci.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9018352Z ./node_modules/fast-uri/.github/workflows/ci.yml:3:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9020162Z ./node_modules/fast-uri/.github/workflows/ci.yml:6:6: [error] wrong indentation: expected 6 but found 5 (indentation)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9021680Z ./node_modules/fast-uri/.github/workflows/ci.yml:83:1: [error] trailing spaces (trailing-spaces)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9023059Z ./node_modules/fast-uri/.github/workflows/ci.yml:90:1: [error] trailing spaces (trailing-spaces)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9024973Z ./node_modules/fast-uri/.github/workflows/package-manager-ci.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9026945Z ./node_modules/fast-uri/.github/workflows/package-manager-ci.yml:3:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9029100Z ./node_modules/fast-uri/.github/workflows/package-manager-ci.yml:6:6: [error] wrong indentation: expected 6 but found 5 (indentation)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9030792Z ./node_modules/fastest-levenshtein/.travis.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9032499Z ./node_modules/fastest-levenshtein/.travis.yml:21:27: [error] no new line character at the end of file (new-line-at-end-of-file)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9034387Z ./node_modules/json-schema-traverse/.eslintrc.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9036036Z ./node_modules/json-schema-traverse/.github/FUNDING.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9037836Z ./node_modules/json-schema-traverse/.github/workflows/publish.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9039789Z ./node_modules/json-schema-traverse/.github/workflows/publish.yml:3:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9041696Z ./node_modules/json-schema-traverse/.github/workflows/build.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9043797Z ./node_modules/json-schema-traverse/.github/workflows/build.yml:3:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9045646Z ./node_modules/json-schema-traverse/spec/.eslintrc.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9047439Z ./node_modules/eslint/node_modules/json-schema-traverse/.travis.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9049300Z ./node_modules/eslint/node_modules/json-schema-traverse/.eslintrc.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9051200Z ./node_modules/eslint/node_modules/json-schema-traverse/spec/.eslintrc.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9053025Z ./node_modules/eslint/node_modules/ajv/scripts/.eslintrc.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9055006Z ./node_modules/json-stable-stringify-without-jsonify/.travis.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9056641Z ./node_modules/run-con/.circleci/config.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9058482Z ./node_modules/run-con/.circleci/config.yml:1:13: [error] wrong new line character: expected \n (new-lines)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9059995Z ./node_modules/run-con/.github/dependabot.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9061526Z ./node_modules/run-con/.github/dependabot.yml:1:11: [error] wrong new line character: expected \n (new-lines)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9063103Z ./node_modules/run-con/.github/dependabot.yml:3:1: [error] wrong indentation: expected 2 but found 0 (indentation)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9064902Z ./node_modules/run-con/.github/FUNDING.yml:1:46: [error] wrong new line character: expected \n (new-lines)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9066377Z ./node_modules/run-con/.github/FUNDING.yml:3:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9067953Z ./node_modules/run-con/.github/workflows/coverage.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9069631Z ./node_modules/run-con/.github/workflows/coverage.yml:1:28: [error] wrong new line character: expected \n (new-lines)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9071434Z ./node_modules/run-con/.github/workflows/coverage.yml:3:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9073251Z ./node_modules/run-con/.github/workflows/coverage.yml:17:5: [error] wrong indentation: expected 6 but found 4 (indentation)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9075064Z ./node_modules/run-con/.github/workflows/coverage.yml:20:23: [error] trailing spaces (trailing-spaces)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9076687Z ./node_modules/run-con/.github/workflows/dependabot.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9078608Z ./node_modules/run-con/.github/workflows/dependabot.yml:1:28: [error] wrong new line character: expected \n (new-lines)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9080429Z ./node_modules/run-con/.github/workflows/dependabot.yml:2:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9082284Z ./node_modules/run-con/.github/workflows/dependabot.yml:24:7: [error] wrong indentation: expected 4 but found 6 (indentation)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9084226Z ./node_modules/run-con/.github/workflows/dependabot.yml:32:121: [error] line too long (138 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9085843Z ./node_modules/run-con/.github/workflows/dependabot.yml:33:1: [error] trailing spaces (trailing-spaces)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9087478Z ./node_modules/run-con/.github/workflows/dependabot.yml:35:121: [error] line too long (138 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9089069Z ./node_modules/run-con/.github/workflows/dependabot.yml:44:60: [error] trailing spaces (trailing-spaces)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9090677Z ./node_modules/run-con/.github/workflows/issuehunt.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9092362Z ./node_modules/run-con/.github/workflows/issuehunt.yml:1:30: [error] wrong new line character: expected \n (new-lines)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9094353Z ./node_modules/run-con/.github/workflows/issuehunt.yml:2:1: [warning] truthy value should be one of [false, no, true, yes] (truthy)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9096137Z ./node_modules/run-con/.github/workflows/issuehunt.yml:32:121: [error] line too long (233 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9097665Z ./node_modules/is-arrayish/.travis.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9099070Z ./node_modules/is-arrayish/.travis.yml:17:121: [error] line too long (696 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9100511Z ./node_modules/is-arrayish/.istanbul.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9101933Z ./node_modules/json-buffer/.travis.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9103390Z ./node_modules/require-directory/.travis.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9105426Z ./node_modules/markdownlint/schema/.markdownlint.yaml:4:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9107139Z ./node_modules/markdownlint/schema/.markdownlint.yaml:9:121: [error] line too long (158 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9108873Z ./node_modules/markdownlint/schema/.markdownlint.yaml:24:121: [error] line too long (150 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9110579Z ./node_modules/markdownlint/schema/.markdownlint.yaml:59:121: [error] line too long (132 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9112278Z ./node_modules/markdownlint/schema/.markdownlint.yaml:83:121: [error] line too long (158 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9114173Z ./node_modules/markdownlint/schema/.markdownlint.yaml:86:121: [error] line too long (142 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9115900Z ./node_modules/markdownlint/schema/.markdownlint.yaml:89:121: [error] line too long (150 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9117633Z ./node_modules/markdownlint/schema/.markdownlint.yaml:92:121: [error] line too long (159 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9119331Z ./node_modules/markdownlint/schema/.markdownlint.yaml:95:121: [error] line too long (167 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9121030Z ./node_modules/markdownlint/schema/.markdownlint.yaml:98:121: [error] line too long (148 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9122758Z ./node_modules/markdownlint/schema/.markdownlint.yaml:105:121: [error] line too long (148 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9124677Z ./node_modules/markdownlint/schema/.markdownlint.yaml:108:121: [error] line too long (141 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9126605Z ./node_modules/markdownlint/schema/.markdownlint.yaml:113:121: [error] line too long (152 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9128335Z ./node_modules/markdownlint/schema/.markdownlint.yaml:120:121: [error] line too long (136 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9130068Z ./node_modules/markdownlint/schema/.markdownlint.yaml:125:121: [error] line too long (149 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9131769Z ./node_modules/markdownlint/schema/.markdownlint.yaml:130:121: [error] line too long (130 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9133667Z ./node_modules/markdownlint/schema/.markdownlint.yaml:138:121: [error] line too long (124 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:08.9135439Z ./node_modules/markdownlint/schema/.markdownlint.yaml:149:121: [error] line too long (156 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4643986Z ./node_modules/markdownlint/schema/.markdownlint.yaml:154:121: [error] line too long (142 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4645689Z ./node_modules/markdownlint/schema/.markdownlint.yaml:172:121: [error] line too long (138 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4647176Z ./node_modules/markdownlint/schema/.markdownlint.yaml:177:121: [error] line too long (132 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4648644Z ./node_modules/markdownlint/schema/.markdownlint.yaml:180:121: [error] line too long (130 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4650086Z ./node_modules/markdownlint/schema/.markdownlint.yaml:183:121: [error] line too long (122 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4651508Z ./node_modules/markdownlint/schema/.markdownlint.yaml:186:121: [error] line too long (153 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4652932Z ./node_modules/markdownlint/schema/.markdownlint.yaml:193:121: [error] line too long (164 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4654540Z ./node_modules/markdownlint/schema/.markdownlint.yaml:205:121: [error] line too long (125 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4655948Z ./node_modules/markdownlint/schema/.markdownlint.yaml:212:121: [error] line too long (145 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4657348Z ./node_modules/markdownlint/schema/.markdownlint.yaml:221:121: [error] line too long (137 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4659100Z ./node_modules/markdownlint/schema/.markdownlint.yaml:229:121: [error] line too long (153 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4660700Z ./node_modules/markdownlint/schema/.markdownlint.yaml:247:121: [error] line too long (126 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4662312Z ./node_modules/markdownlint/schema/.markdownlint.yaml:254:121: [error] line too long (165 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4664126Z ./node_modules/markdownlint/schema/.markdownlint.yaml:262:121: [error] line too long (167 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4665735Z ./node_modules/markdownlint/schema/.markdownlint.yaml:291:121: [error] line too long (144 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4667263Z ./node_modules/markdownlint/schema/.markdownlint.yaml:294:121: [error] line too long (134 > 120 characters) (line-length)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4668785Z ./node_modules/@fortawesome/fontawesome-free/metadata/shims.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4670280Z ./node_modules/@fortawesome/fontawesome-free/metadata/icons.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4672007Z ./node_modules/@fortawesome/fontawesome-free/metadata/categories.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4673895Z ./node_modules/@fortawesome/fontawesome-free/metadata/sponsors.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4675445Z ./node_modules/deep-is/.travis.yml:1:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4676889Z ./frontend/cloudbuild.yaml:5:1: [warning] missing document start "---" (document-start)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4678042Z ./frontend/cloudbuild.yaml:33:1: [error] too many blank lines (1 > 0) (empty-lines)
+General & Infrastructure	YAML Lint (yamllint)	2026-04-04T13:40:11.4791462Z ##[error]Process completed with exit code 1.

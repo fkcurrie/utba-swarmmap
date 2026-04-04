@@ -1,3 +1,4 @@
+---
 services:
   firestore-emulator:
     image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
