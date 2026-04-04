@@ -1,0 +1,147 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend:
+    name: Backend (Go)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache-dependency-path: backend/go.mod
+
+      - name: Go Format
+        run: go fmt ./...
+
+      - name: Go Vet
+        run: go vet ./...
+
+      - name: GolangCI-Lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: latest
+          working-directory: backend
+
+      - name: Unit Tests
+        run: go test -v ./...
+
+      - name: Race Detector
+        run: go test -race -v ./...
+
+      - name: Test Coverage
+        run: go test -coverprofile=coverage.out ./...
+
+      - name: Go Mod Tidy Check
+        run: |
+          go mod tidy
+          git diff --exit-code go.mod go.sum
+
+      - name: Go Mod Verify
+        run: go mod verify
+
+      - name: Go Security (gosec)
+        uses: securego/gosec@master
+        with:
+          args: ./...
+
+      - name: Go Vulnerability Check (govulncheck)
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
+
+  frontend:
+    name: Frontend (JS/HTML/CSS)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: ESLint
+        run: npx eslint "frontend/static/js/**/*.js"
+
+      - name: Prettier
+        run: npx prettier --check "frontend/static/**/*.{js,css}" "backend/templates/**/*.html"
+
+      - name: HTMLHint
+        run: npx htmlhint "backend/templates/**/*.html"
+
+      - name: Stylelint
+        run: npx stylelint "frontend/static/css/**/*.css"
+
+  general:
+    name: General & Infrastructure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Secret Scanning (detect-secrets)
+        uses: reviewdog/action-detect-secrets@v0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+
+      - name: Actionlint
+        uses: reviewdog/action-actionlint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+
+      - name: YAML Lint (yamllint)
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .
+          config_file: .yamllint.yaml
+
+      - name: Markdown Lint
+        run: npx markdownlint "**/*.md" --ignore node_modules
+
+      - name: ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          ignore_paths: node_modules
+
+      - name: Misspell
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+
+      - name: Commitlint
+        uses: wagoid/commitlint-github-action@v5
