@@ -153,21 +153,21 @@ func (m *MockStore) UpdateUser(_ context.Context, userID string, updates []fires
 	return nil // User not found
 }
 
-func (m *MockStore) UploadToGCS(_ context.Context, swarmID string, file io.Reader, filename string) (string, error) {
+func (m *MockStore) UploadToGCS(_ context.Context, swarmID string, _ io.Reader, filename string) (string, error) {
 	if m.ReturnError {
 		return "", http.ErrHandlerTimeout
 	}
 	return "https://storage.googleapis.com/test-bucket/" + swarmID + "/" + filename, nil
 }
 
-func (m *MockStore) TrackVisit(_ context.Context, visitorID string) error {
+func (m *MockStore) TrackVisit(_ context.Context, _ string) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
 	return nil
 }
 
-func (m *MockStore) GetVisitCounts(_ context.Context, days int) (map[string]int, error) {
+func (m *MockStore) GetVisitCounts(_ context.Context, _ int) (map[string]int, error) {
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout
 	}
