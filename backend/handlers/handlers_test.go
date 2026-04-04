@@ -158,7 +158,7 @@ func (m *MockStore) GetAllUsers(_ context.Context) ([]models.User, error) {
 	return m.Users, nil
 }
 
-func (m *MockStore) TrackVisit(_ context.Context, visitorID string) error {
+func (m *MockStore) TrackVisit(_ context.Context, _ string) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
@@ -166,7 +166,7 @@ func (m *MockStore) TrackVisit(_ context.Context, visitorID string) error {
 	return nil
 }
 
-func (m *MockStore) GetVisitCounts(_ context.Context, days int) (map[string]int, error) {
+func (m *MockStore) GetVisitCounts(_ context.Context, _ int) (map[string]int, error) {
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout
 	}
