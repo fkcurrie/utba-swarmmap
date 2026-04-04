@@ -1,1 +1,18 @@
+# Dependency directories
 node_modules/
+
+# Binaries
+*_binary
+backend/backend
+frontend/frontend
+*.exe
+*.test
+bin/
+
+# IDE files
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.*
