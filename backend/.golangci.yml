@@ -1,5 +1,10 @@
----
+version: "2"
+
+run:
+  timeout: 5m
+
 linters:
+  default: none
   enable:
     - errcheck
     - gosimple
@@ -7,12 +12,10 @@ linters:
     - ineffassign
     - staticcheck
     - unused
-    - gofmt
     - gosec
     - misspell
     - revive
-  disable-all: true
 
-run:
-  timeout: 5m
-  working-directory: backend
+formatters:
+  enable:
+    - gofmt

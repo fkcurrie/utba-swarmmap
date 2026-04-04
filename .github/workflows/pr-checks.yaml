@@ -116,13 +116,13 @@ jobs:
         run: npm ci
 
       - name: Secret Scanning (detect-secrets)
-        uses: reviewdog/action-detect-secrets@v1
+        uses: reviewdog/action-detect-secrets@v0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
 
       - name: Actionlint
-        uses: reviewdog/action-actionlint@v3
+        uses: reviewdog/action-actionlint@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
@@ -137,12 +137,12 @@ jobs:
         run: npx markdownlint "**/*.md" --ignore node_modules
 
       - name: ShellCheck
-        uses: ludeeus/action-shellcheck@v2
+        uses: ludeeus/action-shellcheck@2.0.0
         with:
           ignore_paths: node_modules
 
       - name: Misspell
-        uses: reviewdog/action-misspell@v5
+        uses: reviewdog/action-misspell@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
