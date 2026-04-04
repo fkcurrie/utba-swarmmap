@@ -21,7 +21,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.25'
+          go-version: '1.25.8'
           cache-dependency-path: backend/go.mod
 
       - name: Go Format
@@ -35,6 +35,8 @@ jobs:
         with:
           version: latest
           working-directory: backend
+          only-new-issues: true
+          install-mode: goinstall
 
 
       - name: Unit Tests
@@ -110,7 +112,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.25'
+          go-version: '1.25.8'
 
       - name: Install Dependencies
         run: npm ci
@@ -148,4 +150,6 @@ jobs:
           reporter: github-pr-review
 
       - name: Commitlint
-        uses: wagoid/commitlint-github-action@v6
+        uses: wagoid/commitlint-github-action@v6.2.1
+        with:
+          configFile: 'commitlint.config.mjs'

@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
@@ -53,7 +52,7 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 	sessionID := r.URL.Query().Get("sessionId")
 
 	if sessionID != "" {
-		log.Printf("Fetching swarms for public user session: %s", strings.ReplaceAll(strings.ReplaceAll(sessionID, "\n", ""), "\r", "")) // #nosec G706
+		log.Printf("Fetching swarms for public user session: %q", sessionID)
 		currentReports, err = h.Store.GetSwarmsBySessionID(ctx, sessionID)
 	} else {
 		log.Printf("Fetching all swarms")
@@ -74,10 +73,10 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log.Printf("Returning %d swarms", len(currentReports)) // #nosec G706
+	log.Printf("Returning %d swarms", len(currentReports))
 	data, err := json.Marshal(currentReports)
 	if err != nil {
-		log.Printf("Error marshalling reports to JSON: %v", err) // #nosec G706
+		log.Printf("Error marshalling reports to JSON: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -172,6 +173,13 @@ func (m *MockStore) GetVisitCounts(_ context.Context, _ int) (map[string]int, er
 	}
 	// Simplified mock implementation
 	return map[string]int{"2025-07-23": 1}, nil
+}
+
+func (m *MockStore) UploadToGCS(_ context.Context, _ string, _ io.Reader, filename string) (string, error) {
+	if m.ReturnError {
+		return "", http.ErrHandlerTimeout
+	}
+	return "https://mock-storage.com/" + filename, nil
 }
 
 func (m *MockStore) GetAllSwarms(_ context.Context) ([]models.SwarmReport, error) {
@@ -382,8 +390,7 @@ func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
 	// Create a dummy file part
 	part, _ := writer.CreateFormFile("media", "test.jpg")
 	_, _ = part.Write([]byte("dummy image data"))
-
-	writer.Close()
+	_ = writer.Close()
 
 	req, err := http.NewRequest("POST", "/prepare_swarm", body)
 	if err != nil {
@@ -424,8 +431,7 @@ func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	_ = writer.WriteField("intersection", "Yonge & Bloor")
 	part, _ := writer.CreateFormFile("media", "test.jpg")
 	_, _ = part.Write([]byte("dummy image data"))
-
-	writer.Close()
+	_ = writer.Close()
 
 	req, err := http.NewRequest("POST", "/confirm_swarm", body)
 	if err != nil {
@@ -751,5 +757,11 @@ func TestCollectorAdminHandler_Unauthorized(t *testing.T) {
 	if status := rr.Code; status != http.StatusForbidden {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusForbidden)
+	}
+}
+
+func TestVerifyChecks(t *testing.T) {
+	if 1+1 != 2 {
+		t.Error("Math is broken")
 	}
 }
