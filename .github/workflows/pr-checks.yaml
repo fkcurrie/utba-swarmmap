@@ -36,6 +36,7 @@ jobs:
           version: latest
           working-directory: backend
           only-new-issues: true
+          install-mode: goinstall
 
       - name: Unit Tests
         run: go test -v ./...
