@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -108,19 +109,23 @@ func main() {
 	mux.Handle("/assign_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.AssignSwarmHandler))))
 	// Add other routes here as they are refactored
 
-	port := getEnv("PORT", "8080")
-	log.Printf("Starting server on port %s", port)
-	log.Printf("Server version: %s", version)
+	portStr := getEnv("PORT", "8080")
+	port, err := strconv.Atoi(portStr)
+	if err != nil {
+		log.Fatalf("Invalid PORT: %v", err)
+	}
+	log.Printf("Starting server on port %d", port)
+	log.Printf("Server version: %q", version)
 
 	srv := &http.Server{
-		Addr:         ":" + port,
+		Addr:         ":" + strconv.Itoa(port),
 		Handler:      mux,
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		IdleTimeout:  120 * time.Second,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
 	}
 
-	if err := srv.ListenAndServe(); err != nil {
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Server failed to start: %v", err)
 	}
 }

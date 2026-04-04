@@ -34,6 +34,7 @@ type Storer interface {
 	GetAllUsers(ctx context.Context) ([]models.User, error)
 	TrackVisit(ctx context.Context, visitorID string) error
 	GetVisitCounts(ctx context.Context, days int) (map[string]int, error)
+	UploadToGCS(ctx context.Context, swarmID string, file io.Reader, filename string) (string, error)
 	// Add other methods here as we refactor handlers
 }
 
@@ -73,7 +74,8 @@ func (s *Store) TrackVisit(ctx context.Context, visitorID string) error {
 
 		if !doc.Exists() {
 			return tx.Set(docRef, map[string]interface{}{
-				"visitors": []string{visitorID},
+				"visitors":  []string{visitorID},
+				"timestamp": time.Now().UTC(),
 			})
 		}
 
@@ -105,13 +107,19 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 			return nil, fmt.Errorf("failed to iterate visits: %v", err)
 		}
 		docCount++
-		timestamp, ok := doc.Data()["timestamp"].(time.Time)
+		data := doc.Data()
+		timestamp, ok := data["timestamp"].(time.Time)
 		if !ok {
-			log.Printf("Skipping visit document with invalid timestamp: %s", doc.Ref.ID)
+			log.Printf("Skipping visit document with invalid timestamp: %q", doc.Ref.ID)
 			continue
 		}
 		dateStr := timestamp.Format("2006-01-02")
-		visitCounts[dateStr]++
+		visitors, ok := data["visitors"].([]interface{})
+		if ok {
+			visitCounts[dateStr] = len(visitors)
+		} else {
+			visitCounts[dateStr] = 0
+		}
 	}
 	log.Printf("Found %d visit documents in the date range.", docCount)
 
@@ -310,7 +318,7 @@ func (s *Store) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]m
 func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader, filename string) (string, error) {
 	ext := filepath.Ext(filename)
 	uniqueFilename := fmt.Sprintf("%s/%s%s", swarmID, uuid.New().String(), ext)
-	log.Printf("Uploading file %s to GCS as %s", filename, uniqueFilename)
+	log.Printf("Uploading file %q to GCS as %q", filename, uniqueFilename)
 
 	obj := s.StorageClient.Bucket(s.BucketName).Object(uniqueFilename)
 	writer := obj.NewWriter(ctx)
@@ -336,6 +344,6 @@ func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader,
 	}
 
 	url := fmt.Sprintf("https://storage.googleapis.com/%s/%s", s.BucketName, uniqueFilename)
-	log.Printf("Successfully uploaded %s to %s", filename, url)
+	log.Printf("Successfully uploaded %q to %q", filename, url)
 	return url, nil
 }

@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
-	"html/template"
 	"log"
 	"net/http"
 
@@ -73,14 +71,6 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 		visits = make(map[string]int)
 	}
 
-	// Convert map to JSON for easy use in JavaScript
-	visitsJSON, err := json.Marshal(visits)
-	if err != nil {
-		log.Printf("Error marshalling visits to JSON: %v", err)
-		http.Error(w, "Failed to process visit data", http.StatusInternalServerError)
-		return
-	}
-
 	err = h.Templates.ExecuteTemplate(w, "admin.html", map[string]interface{}{
 		"Title":             "Admin Dashboard",
 		"Version":           h.Version,
@@ -90,7 +80,7 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 		"AllSwarms":         allSwarms,
 		"ReportedSwarms":    reportedSwarms,
 		"CapturedSwarms":    capturedSwarms,
-		"VisitsJSON":        template.JS(visitsJSON), // #nosec G203 -- Pass as JavaScript-safe string
+		"VisitCounts":       visits,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 		"CurrentRange":      rangeStr,
 	})
@@ -117,7 +107,7 @@ func (h *Handlers) ApproveUserHandler(w http.ResponseWriter, r *http.Request) {
 		{Path: "status", Value: "approved"},
 	}
 	if err := h.Store.UpdateUser(r.Context(), userID, updates); err != nil {
-		log.Printf("Failed to approve user %s: %v", userID, err)
+		log.Printf("Failed to approve user %q: %v", userID, err)
 		http.Error(w, "Failed to approve user", http.StatusInternalServerError)
 		return
 	}
@@ -138,7 +128,7 @@ func (h *Handlers) RejectUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.DeleteUser(r.Context(), userID); err != nil {
-		log.Printf("Failed to reject user %s: %v", userID, err)
+		log.Printf("Failed to reject user %q: %v", userID, err)
 		http.Error(w, "Failed to reject user", http.StatusInternalServerError)
 		return
 	}
@@ -159,7 +149,7 @@ func (h *Handlers) DeleteSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.DeleteSwarm(r.Context(), swarmID); err != nil {
-		log.Printf("Failed to delete swarm %s: %v", swarmID, err)
+		log.Printf("Failed to delete swarm %q: %v", swarmID, err)
 		http.Error(w, "Failed to delete swarm", http.StatusInternalServerError)
 		return
 	}
@@ -195,7 +185,7 @@ func (h *Handlers) PromoteUserHandler(w http.ResponseWriter, r *http.Request) {
 		{Path: "role", Value: newRole},
 	}
 	if err := h.Store.UpdateUser(r.Context(), userID, updates); err != nil {
-		log.Printf("Failed to promote user %s to %s: %v", userID, newRole, err)
+		log.Printf("Failed to promote user %q to %q: %v", userID, newRole, err)
 		http.Error(w, "Failed to promote user", http.StatusInternalServerError)
 		return
 	}
