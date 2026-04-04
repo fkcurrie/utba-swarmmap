@@ -1,0 +1,87 @@
+name: E2E Application Startup Check
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  e2e-startup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Start Services
+        run: |
+          docker compose up -d --build
+
+      - name: Wait for Services to be Ready
+        run: |
+          echo "Waiting for services to start..."
+          # Give it some time for emulators and services to boot
+          MAX_ATTEMPTS=30
+          ATTEMPT=0
+          until curl -s http://localhost:8080 > /dev/null; do
+            ATTEMPT=$((ATTEMPT+1))
+            if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
+              echo "Backend failed to start in time."
+              docker compose logs backend
+              exit 1
+            fi
+            echo "Attempt $ATTEMPT: Waiting for backend..."
+            sleep 2
+          done
+          echo "Backend is up!"
+
+      - name: Verify Backend Root/Login
+        run: |
+          # Root should return 200
+          STATUS_ROOT=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
+          echo "Root status: $STATUS_ROOT"
+          if [[ "$STATUS_ROOT" != "200" ]]; then
+            echo "Expected root status 200, got $STATUS_ROOT"
+            docker compose logs backend
+            exit 1
+          fi
+
+          # Login should return 302 (redirect to Google)
+          STATUS_LOGIN=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/login)
+          echo "Login status: $STATUS_LOGIN"
+          if [[ "$STATUS_LOGIN" != "302" ]]; then
+            echo "Expected login status 302, got $STATUS_LOGIN"
+            docker compose logs backend
+            exit 1
+          fi
+
+          # API should call Firestore
+          STATUS_SWARMS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/get_swarms)
+          echo "Swarms API status: $STATUS_SWARMS"
+          if [[ "$STATUS_SWARMS" != "200" ]]; then
+            echo "Expected swarms status 200, got $STATUS_SWARMS"
+            docker compose logs backend
+            exit 1
+          fi
+
+      - name: Verify Frontend
+        run: |
+          STATUS_FRONTEND=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/)
+          echo "Frontend status: $STATUS_FRONTEND"
+          # Frontend static server returns 404 for / if there is no index.html, but let's check what it has.
+          # Based on Dockerfile, it copies static/ to /app/static.
+          # main.go: http.Handle("/static/", http.StripPrefix("/static/", fs))
+          # So it ONLY serves /static/...
+          # Let's check /static/css/style.css
+          STATUS_CSS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/static/css/style.css)
+          echo "CSS status: $STATUS_CSS"
+          if [[ "$STATUS_CSS" != "200" ]]; then
+            echo "Expected CSS status 200, got $STATUS_CSS"
+            docker compose logs frontend
+            exit 1
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down
