@@ -46,15 +46,18 @@ gcloud builds submit --config cloudbuild.yaml .
 ## How It Works
 
 ### For Public Users
+
 - Can report swarms without any authentication
 - Main map remains completely open to the public
 
 ### For Swarm Collectors
+
 - Must sign in with Google
 - New users are automatically created with "pending" status
 - Require admin approval before accessing the dashboard
 
 ### For Administrators
+
 - Must sign in with Google  
 - Can approve/reject pending users
 - Can delete swarm reports
@@ -71,6 +74,7 @@ gcloud builds submit --config cloudbuild.yaml .
 ## Environment Variables
 
 The application needs these environment variables:
+
 - `GOOGLE_CLIENT_ID`: Your Google OAuth2 client ID
 - `GOOGLE_CLIENT_SECRET`: Your Google OAuth2 client secret  
-- `GOOGLE_REDIRECT_URL`: The callback URL for OAuth2 flow 
+- `GOOGLE_REDIRECT_URL`: The callback URL for OAuth2 flow
