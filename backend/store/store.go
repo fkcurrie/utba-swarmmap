@@ -65,7 +65,7 @@ func (s *Store) TrackVisit(ctx context.Context, visitorID string) error {
 	today := time.Now().UTC().Format("2006-01-02")
 	docRef := s.FirestoreClient.Collection(visitsCollection).Doc(today)
 
-	return s.FirestoreClient.RunTransaction(ctx, func(ctx context.Context, tx *firestore.Transaction) error {
+	return s.FirestoreClient.RunTransaction(ctx, func(_ context.Context, tx *firestore.Transaction) error {
 		doc, err := tx.Get(docRef)
 		if err != nil && status.Code(err) != codes.NotFound {
 			return err
