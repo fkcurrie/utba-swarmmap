@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -109,7 +110,8 @@ func main() {
 	// Add other routes here as they are refactored
 
 	port := getEnv("PORT", "8080")
-	log.Printf("Starting server on port %s", port)
+	// Sanitize port for logging to prevent log injection
+	log.Printf("Starting server on port %s", strings.ReplaceAll(strings.ReplaceAll(port, "\n", ""), "\r", ""))
 	log.Printf("Server version: %s", version)
 
 	server := &http.Server{
