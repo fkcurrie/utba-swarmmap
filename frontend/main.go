@@ -24,14 +24,12 @@ func main() {
 		// Since this is a simple frontend, we'll fatal for clarity on configuration error.
 		log.Fatalf("Invalid PORT environment variable: %v", err)
 	}
-	port := strconv.Itoa(portInt)
-
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	log.Printf("Listening on port %s", port)
+	log.Printf("Listening on port %d", portInt)
 	srv := &http.Server{
-		Addr:         ":" + port,
+		Addr:         ":" + strconv.Itoa(portInt),
 		Handler:      nil,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
