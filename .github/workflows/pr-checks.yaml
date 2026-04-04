@@ -1,6 +1,8 @@
 name: PR Checks
 
 on:
+  push:
+    branches: [ main, issue-12-NPJh ]
   pull_request:
     branches: [ main ]
 
