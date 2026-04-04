@@ -387,16 +387,29 @@ func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
 	// Create a multipart form request
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	writer.WriteField("description", "A test swarm")
-	writer.WriteField("latitude", "43.6532")
-	writer.WriteField("longitude", "-79.3832")
-	writer.WriteField("intersection", "Yonge & Bloor")
+	if err := writer.WriteField("description", "A test swarm"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("latitude", "43.6532"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("longitude", "-79.3832"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("intersection", "Yonge & Bloor"); err != nil {
+		t.Fatal(err)
+	}
 	// Create a dummy file part
-	part, _ := writer.CreateFormFile("media", "test.jpg")
+	part, err := writer.CreateFormFile("media", "test.jpg")
+	if err != nil {
+		t.Fatal(err)
+	}
 	if _, err := part.Write([]byte("dummy image data")); err != nil {
 		t.Fatal(err)
 	}
-	writer.Close()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
 
 	req, err := http.NewRequest("POST", "/prepare_swarm", body)
 	if err != nil {
@@ -430,16 +443,29 @@ func TestPrepareSwarmHandler_VideoRequest(t *testing.T) {
 	// Create a multipart form request with a video
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	writer.WriteField("description", "A test swarm with video")
-	writer.WriteField("latitude", "43.6532")
-	writer.WriteField("longitude", "-79.3832")
-	writer.WriteField("intersection", "Yonge & Bloor")
+	if err := writer.WriteField("description", "A test swarm with video"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("latitude", "43.6532"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("longitude", "-79.3832"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("intersection", "Yonge & Bloor"); err != nil {
+		t.Fatal(err)
+	}
 	// Create a dummy video file part
-	part, _ := writer.CreateFormFile("media", "test.mp4")
+	part, err := writer.CreateFormFile("media", "test.mp4")
+	if err != nil {
+		t.Fatal(err)
+	}
 	if _, err := part.Write([]byte("dummy video data")); err != nil {
 		t.Fatal(err)
 	}
-	writer.Close()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
 
 	req, err := http.NewRequest("POST", "/prepare_swarm", body)
 	if err != nil {
@@ -464,16 +490,31 @@ func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	// Create a multipart form request
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	writer.WriteField("referenceID", "test-swarm-id")
-	writer.WriteField("description", "A test swarm")
-	writer.WriteField("latitude", "43.6532")
-	writer.WriteField("longitude", "-79.3832")
-	writer.WriteField("intersection", "Yonge & Bloor")
-	part, _ := writer.CreateFormFile("media", "test.jpg")
+	if err := writer.WriteField("referenceID", "test-swarm-id"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("description", "A test swarm"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("latitude", "43.6532"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("longitude", "-79.3832"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("intersection", "Yonge & Bloor"); err != nil {
+		t.Fatal(err)
+	}
+	part, err := writer.CreateFormFile("media", "test.jpg")
+	if err != nil {
+		t.Fatal(err)
+	}
 	if _, err := part.Write([]byte("dummy image data")); err != nil {
 		t.Fatal(err)
 	}
-	writer.Close()
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
 
 	req, err := http.NewRequest("POST", "/confirm_swarm", body)
 	if err != nil {
