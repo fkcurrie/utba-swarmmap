@@ -8,6 +8,7 @@ name: E2E Application Startup Check
 jobs:
   e2e-startup:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -15,9 +16,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and Start Services
-        run: |
-          docker compose up -d --build
+      - name: Build Services
+        run: docker compose build --progress=plain
+
+      - name: Start Services
+        run: docker compose up -d
+
+      - name: Check Container Status
+        run: docker compose ps
 
       - name: Wait for Services to be Ready
         run: |
@@ -39,7 +45,7 @@ jobs:
 
       - name: Verify Backend Root/Login
         run: |
-          # Root should return 200
+          echo "Verifying Backend Root..."
           STATUS_ROOT=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
           echo "Root status: $STATUS_ROOT"
           if [[ "$STATUS_ROOT" != "200" ]]; then
@@ -48,7 +54,7 @@ jobs:
             exit 1
           fi
 
-          # Login should return 302 or 307 (redirect to Google)
+          echo "Verifying Backend Login..."
           STATUS_LOGIN=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/login)
           echo "Login status: $STATUS_LOGIN"
           if [[ "$STATUS_LOGIN" != "302" && "$STATUS_LOGIN" != "307" ]]; then
@@ -57,7 +63,7 @@ jobs:
             exit 1
           fi
 
-          # API should call Firestore
+          echo "Verifying Swarms API..."
           STATUS_SWARMS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/get_swarms)
           echo "Swarms API status: $STATUS_SWARMS"
           if [[ "$STATUS_SWARMS" != "200" ]]; then
@@ -68,13 +74,7 @@ jobs:
 
       - name: Verify Frontend
         run: |
-          STATUS_FRONTEND=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/)
-          echo "Frontend status: $STATUS_FRONTEND"
-          # Frontend static server returns 404 for / if there is no index.html, but let's check what it has.
-          # Based on Dockerfile, it copies static/ to /app/static.
-          # main.go: http.Handle("/static/", http.StripPrefix("/static/", fs))
-          # So it ONLY serves /static/...
-          # Let's check /static/css/style.css
+          echo "Verifying Frontend CSS..."
           STATUS_CSS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/static/css/style.css)
           echo "CSS status: $STATUS_CSS"
           if [[ "$STATUS_CSS" != "200" ]]; then
@@ -82,6 +82,10 @@ jobs:
             docker compose logs frontend
             exit 1
           fi
+
+      - name: Show Logs on Failure
+        if: failure()
+        run: docker compose logs
 
       - name: Cleanup
         if: always()
