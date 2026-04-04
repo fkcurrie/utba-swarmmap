@@ -134,7 +134,6 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 	return visitCounts, nil
 }
 
-
 // GetUserByEmail finds a user by their email address.
 func (s *Store) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
 	iter := s.FirestoreClient.Collection(usersCollection).Where("email", "==", email).Documents(ctx)
@@ -289,7 +288,6 @@ func (s *Store) GetAllSwarms(ctx context.Context) ([]models.SwarmReport, error) 
 	}
 	return reports, nil
 }
-
 
 // GetSwarmsBySessionID retrieves swarm reports for a specific session ID.
 func (s *Store) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]models.SwarmReport, error) {

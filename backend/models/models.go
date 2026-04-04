@@ -20,10 +20,10 @@ type SwarmReport struct {
 	NearestIntersection   string    `firestore:"nearestIntersection,omitempty" json:"nearestIntersection,omitempty"`
 	AssignedCollectorID   string    `firestore:"assignedCollectorID,omitempty" json:"assignedCollectorID,omitempty"`
 	// Contact information for public reporters
-	ReporterName          string    `firestore:"reporterName,omitempty" json:"reporterName,omitempty"`
-	ReporterEmail         string    `firestore:"reporterEmail,omitempty" json:"reporterEmail,omitempty"`
-	ReporterPhone         string    `firestore:"reporterPhone,omitempty" json:"reporterPhone,omitempty"`
-	ReporterSessionID     string    `firestore:"reporterSessionID,omitempty" json:"reporterSessionID,omitempty"` // To track public user's reports
+	ReporterName      string `firestore:"reporterName,omitempty" json:"reporterName,omitempty"`
+	ReporterEmail     string `firestore:"reporterEmail,omitempty" json:"reporterEmail,omitempty"`
+	ReporterPhone     string `firestore:"reporterPhone,omitempty" json:"reporterPhone,omitempty"`
+	ReporterSessionID string `firestore:"reporterSessionID,omitempty" json:"reporterSessionID,omitempty"` // To track public user's reports
 }
 
 // User defines the structure for swarm collectors and admins
@@ -33,8 +33,8 @@ type User struct {
 	Phone     string    `json:"phone" firestore:"phone"`
 	Name      string    `json:"name" firestore:"name"`
 	Location  string    `json:"location" firestore:"location"`
-	Role      string    `json:"role" firestore:"role"`         // "site_admin", "collector_admin", or "collector"
-	Status    string    `json:"status" firestore:"status"`     // "pending" or "approved"
+	Role      string    `json:"role" firestore:"role"`     // "site_admin", "collector_admin", or "collector"
+	Status    string    `json:"status" firestore:"status"` // "pending" or "approved"
 	CreatedAt time.Time `json:"created_at" firestore:"created_at"`
 }
 

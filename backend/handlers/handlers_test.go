@@ -188,8 +188,6 @@ func (m *MockStore) GetAllSwarms(ctx context.Context) ([]models.SwarmReport, err
 	return m.Swarms, nil
 }
 
-
-
 func (m *MockStore) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]models.SwarmReport, error) {
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout
