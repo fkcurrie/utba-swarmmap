@@ -10,14 +10,14 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/frontend:latest'
+      - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/frontend:latest'
       - '.'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Frontend Assets'
     args:
       - 'push'
-      - 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/frontend:latest'
+      - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/frontend:latest'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Frontend Assets'
@@ -33,6 +33,6 @@ steps:
       - '--quiet'
 
 images:
-  - 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/frontend:latest'
+  - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/frontend:latest'
 options:
   logging: CLOUD_LOGGING_ONLY

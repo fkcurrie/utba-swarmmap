@@ -14,53 +14,54 @@ steps:
         gcloud run services describe utba-swarmmap-frontend
         --platform=managed --region=northamerica-northeast2
         --format='value(status.url)' --quiet > /workspace/frontend-url.txt
+# Build and deploy the backend service
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build Backend'
+  args:
+    - 'build'
+    - '-t'
+    - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/backend:latest'
+    - '.'
 
-  # Build and deploy the backend service
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'Build Backend'
-    args:
-      - 'build'
-      - '-t'
-      - 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/backend:latest'
-      - '.'
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push Backend'
+  args:
+    - 'push'
+    - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/backend:latest'
 
-  - name: 'gcr.io/cloud-builders/docker'
-    id: 'Push Backend'
-    args:
-      - 'push'
-      - 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/backend:latest'
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  id: 'Deploy Backend'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - >
+      BACKEND_URL=$(gcloud run services describe utba-swarmmap-backend
+      --platform=managed --region=northamerica-northeast2
+      --format='value(status.url)' 2>/dev/null || echo "");
 
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    id: 'Deploy Backend'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - >
-        BACKEND_URL=$(gcloud run services describe utba-swarmmap-backend
-        --platform=managed --region=northamerica-northeast2
-        --format='value(status.url)' 2>/dev/null || echo "");
+      if [ -z "$BACKEND_URL" ]; then
+        PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID
+        --format='value(projectNumber)');
+        BACKEND_URL="https://utba-swarmmap-backend-${PROJECT_NUMBER}.northamerica-northeast2.run.app";
+      fi;
 
-        if [ -z "$BACKEND_URL" ]; then
-          PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID
-          --format='value(projectNumber)');
-          BACKEND_URL="https://utba-swarmmap-backend-${PROJECT_NUMBER}.northamerica-northeast2.run.app";
-        fi;
+      gcloud run deploy utba-swarmmap-backend
+      --image=northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/backend:latest
+      --region=northamerica-northeast2
+      --platform=managed
+      --allow-unauthenticated
+      --port=8080
+      --memory=512Mi
+      --cpu=1
+      --set-env-vars=FRONTEND_ASSETS_URL=$(cat /workspace/frontend-url.txt)
+      --set-env-vars=GOOGLE_REDIRECT_URL=${BACKEND_URL}/auth/google/callback
+      --update-secrets=GOOGLE_CLIENT_ID=google-oauth-client-id:latest
+      --update-secrets=GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest
+      --quiet
+...
+images:
+- 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/backend:latest'
 
-        gcloud run deploy utba-swarmmap-backend
-        --image=northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/backend:latest
-        --region=northamerica-northeast2
-        --platform=managed
-        --allow-unauthenticated
-        --port=8080
-        --memory=512Mi
-        --cpu=1
-        --set-env-vars=FRONTEND_ASSETS_URL=$(cat /workspace/frontend-url.txt)
-        --set-env-vars=GOOGLE_REDIRECT_URL=${BACKEND_URL}/auth/google/callback
-        --update-secrets=GOOGLE_CLIENT_ID=google-oauth-client-id:latest
-        --update-secrets=GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest
-        --quiet
-
-  # Get the URL of the deployed service and write it to a file
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Get Service URL'
     entrypoint: 'bash'

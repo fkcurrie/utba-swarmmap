@@ -11,8 +11,8 @@ env:
   SERVICE_BACKEND: 'utba-swarmmap-backend-staging'
   SERVICE_FRONTEND: 'utba-swarmmap-frontend-staging'
   AR_REPO: 'swarmmap-repo'
-  IMAGE_BACKEND: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/backend'
-  IMAGE_FRONTEND: '${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/frontend'
+  IMAGE_BACKEND: 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/backend'
+  IMAGE_FRONTEND: 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/frontend'
 
 jobs:
   deploy-staging:
