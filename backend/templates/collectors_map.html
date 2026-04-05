@@ -136,14 +136,6 @@
     
     <!-- TODO: Add a separate modal for UTBA members to update status -->
 
-    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/leaflet/js/leaflet.js"></script>
-    <script>
-        var map = L.map('map').setView([43.6532, -79.3832], 10);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-    </script>
     {{template "footer.html" .}}
 </body>
 </html> 

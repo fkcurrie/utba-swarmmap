@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let map;
   let selectedFiles = [];
+  let swarmLayerGroup;
 
   if (mapElement) {
     // Use setTimeout to ensure the map container is fully rendered
@@ -20,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function () {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
+
+      swarmLayerGroup = L.layerGroup().addTo(map);
 
       map.on('click', async function (e) {
         document.getElementById('latitude').value = e.latlng.lat;
@@ -45,6 +48,10 @@ document.addEventListener('DOMContentLoaded', function () {
           const response = await fetch('/get_swarms');
           const swarms = await response.json();
 
+          swarmLayerGroup.clearLayers();
+          const debugSwarms = document.getElementById('debugSwarms');
+          if (debugSwarms) debugSwarms.innerHTML = '';
+
           swarms.forEach((swarm) => {
             let color = '#ff0000'; // Default Red for Reported
             if (swarm.displayStatus === 'Verified') color = '#ff69b4'; // Pink
@@ -58,21 +65,59 @@ document.addEventListener('DOMContentLoaded', function () {
               weight: 2,
               opacity: 1,
               fillOpacity: 0.8,
-            }).addTo(map);
+            }).addTo(swarmLayerGroup);
 
-            marker.bindPopup(`
+            let popupContent = `
               <strong>${swarm.displayStatus}</strong><br>
               ${swarm.nearestIntersection}<br>
               <small>${new Date(swarm.reportedTimestamp).toLocaleString()}</small><br>
               <p>${swarm.description}</p>
-            `);
+            `;
+
+            // Add contact info for collectors if available
+            if (
+              swarm.reporterName ||
+              swarm.reporterPhone ||
+              swarm.reporterEmail
+            ) {
+              popupContent += '<hr><small><strong>Reporter Contact:</strong><br>';
+              if (swarm.reporterName)
+                popupContent += `Name: ${swarm.reporterName}<br>`;
+              if (swarm.reporterPhone)
+                popupContent += `Phone: ${swarm.reporterPhone}<br>`;
+              if (swarm.reporterEmail)
+                popupContent += `Email: ${swarm.reporterEmail}<br>`;
+              popupContent += '</small>';
+            }
+
+            marker.bindPopup(popupContent);
+
+            if (debugSwarms) {
+              const swarmDiv = document.createElement('div');
+              swarmDiv.className = 'border-bottom mb-1 pb-1';
+              swarmDiv.innerHTML = `
+                    <strong>${swarm.displayStatus}</strong>: ${swarm.nearestIntersection} 
+                    <small class="text-muted">(${new Date(swarm.reportedTimestamp).toLocaleTimeString()})</small>
+                    <br><span class="text-truncate d-inline-block" style="max-width: 100%">${swarm.description}</span>
+                `;
+              debugSwarms.appendChild(swarmDiv);
+            }
           });
         } catch (error) {
           console.error('Error fetching swarms:', error);
+          if (debugSwarms) debugSwarms.innerHTML = '<span class="text-danger">Error loading swarms.</span>';
         }
       };
 
       fetchSwarms();
+
+      // Hook up refresh button if it exists
+      const refreshMapBtn = document.getElementById('refreshMapBtn');
+      if (refreshMapBtn) {
+        refreshMapBtn.addEventListener('click', () => {
+          fetchSwarms();
+        });
+      }
     }, 0);
   }
 
