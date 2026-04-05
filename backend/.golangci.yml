@@ -1,4 +1,3 @@
-version: "2"
 output:
   formats:
     text:
@@ -16,8 +15,6 @@ linters:
     - revive
     - staticcheck
     - unused
-  disable:
-    - gosimple
   exclusions:
     generated: lax
     presets:
