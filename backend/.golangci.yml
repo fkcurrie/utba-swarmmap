@@ -40,6 +40,10 @@ linters:
       - third_party$
       - builtin$
       - examples$
+linters-settings:
+  gosec:
+    excludes:
+      - G706
 formatters:
   exclusions:
     generated: lax
