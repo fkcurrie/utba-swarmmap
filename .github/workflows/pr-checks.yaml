@@ -39,7 +39,6 @@ jobs:
           only-new-issues: true
           install-mode: goinstall
           args: --verbose
-
       - name: Unit Tests
         run: go test -v ./...
 
@@ -177,4 +176,4 @@ jobs:
       - name: Commitlint
         uses: wagoid/commitlint-github-action@v6.2.1
         with:
-          configFile: 'commitlint.config.mjs'
+          token: ${{ secrets.GITHUB_TOKEN }}

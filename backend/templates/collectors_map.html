@@ -100,11 +100,15 @@
                         <div class="form-group">
                             <label for="media">📸 Upload Photo(s) and/or Video(s) (Optional)</label>
                             <div class="file-upload-section">
-                                <input type="file" class="form-control-file" id="media" name="media" accept="image/*,video/*" capture="environment" style="display: none;">
-                                <button type="button" class="btn btn-outline-primary" id="addFileBtn">
+                                <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
+                                <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
+                                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('gallery-input').click();">
                                     <i class="fas fa-plus"></i> Add Photo/Video
                                 </button>
-                                <small class="form-text text-muted">Supported: JPG, PNG, HEIC, MP4, MOV, AVI, 3GP (max 10MB each)</small>
+                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('camera-input').click();">
+                                    <i class="fas fa-camera"></i> Take Photo/Video
+                                </button>
+                                <small class="form-text text-muted">Supported: JPG, PNG, HEIC, MP4, MOV, AVI, 3GP (max 50MB each)</small>
                             </div>
                             
                             <!-- File management area -->
@@ -132,14 +136,6 @@
     
     <!-- TODO: Add a separate modal for UTBA members to update status -->
 
-    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/leaflet/js/leaflet.js"></script>
-    <script>
-        var map = L.map('map').setView([43.6532, -79.3832], 10);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-    </script>
     {{template "footer.html" .}}
 </body>
 </html> 

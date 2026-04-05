@@ -128,22 +128,23 @@ func main() {
 	mux.Handle("GET /collector_admin", h.RequireAuth(h.RequireRole("collector_admin", http.HandlerFunc(h.CollectorAdminHandler))))
 	mux.Handle("POST /update_swarm_status", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.UpdateSwarmStatusHandler))))
 	mux.Handle("POST /assign_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.AssignSwarmHandler))))
+	mux.Handle("POST /claim_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.ClaimSwarmHandler))))
 	// Add other routes here as they are refactored
 
-	portStr := getEnv("PORT", "8080")
-	port, err := strconv.Atoi(portStr)
-	if err != nil {
-		log.Fatalf("Invalid PORT: %v", err)
+	port := getEnv("PORT", "8080")
+	// Validate port to prevent log injection and ensure it's a valid port number
+	if _, err := strconv.Atoi(port); err != nil {
+		log.Fatalf("Invalid PORT: %s", port)
 	}
-	log.Printf("Starting server on port %d", port)
+	log.Printf("Starting server on port %s", port)
 	log.Printf("Server version: %q", version) //nolint:gosec // G706: version is quoted and safe for logging
 
 	srv := &http.Server{
-		Addr:         ":" + strconv.Itoa(port),
+		Addr:         ":" + port,
 		Handler:      mux,
 		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 15 * time.Second,
-		IdleTimeout:  60 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		IdleTimeout:  120 * time.Second,
 	}
 
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

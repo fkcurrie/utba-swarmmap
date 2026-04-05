@@ -97,6 +97,7 @@ func (h *Handlers) ApproveUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
 	userID := r.FormValue("userID")
 	if userID == "" {
 		http.Error(w, "User ID required", http.StatusBadRequest)
@@ -121,6 +122,7 @@ func (h *Handlers) RejectUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
 	userID := r.FormValue("userID")
 	if userID == "" {
 		http.Error(w, "User ID required", http.StatusBadRequest)
@@ -142,6 +144,7 @@ func (h *Handlers) DeleteSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
 	swarmID := r.FormValue("swarmID")
 	if swarmID == "" {
 		http.Error(w, "User ID required", http.StatusBadRequest)
@@ -163,6 +166,7 @@ func (h *Handlers) PromoteUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
 	userID := r.FormValue("userID")
 	newRole := r.FormValue("role")
 

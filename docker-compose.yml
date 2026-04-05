@@ -26,21 +26,26 @@ services:
     build:
       context: ./backend
     environment:
-      - PORT=8080
+      - PORT=8085
       - GCP_PROJECT_ID=utba-swarmmap
       - GCS_BUCKET_NAME=utba-swarmmap-media
       - FIRESTORE_EMULATOR_HOST=firestore-emulator:8081
       - STORAGE_EMULATOR_HOST=gcs-emulator:4443
       - GOOGLE_CLIENT_ID=fake-id
       - GOOGLE_CLIENT_SECRET=fake-secret
-      - GOOGLE_REDIRECT_URL=http://localhost:8080/auth/google/callback
+      - GOOGLE_REDIRECT_URL=http://localhost:8085/auth/google/callback
     ports:
-      - "8080:8080"
+      - "8085:8085"
     depends_on:
       firestore-emulator:
         condition: service_healthy
       gcs-emulator:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8085/ || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   frontend:
     build:
