@@ -16,7 +16,7 @@ import (
 	"github.com/google/uuid"
 )
 
-var maxFileSize = int64(10 << 20) // 10MB
+var maxFileSize = int64(50 << 20) // 50MB
 
 var (
 	allowedImageTypes = map[string]bool{
@@ -35,6 +35,10 @@ var (
 		"video/mov":       true,
 		"video/3gpp":      true,
 		"video/3gp":       true,
+		"video/mpeg":      true,
+		"video/ogg":       true,
+		"video/mp2t":      true, // .ts files
+		"video/hevc":      true,
 	}
 )
 
@@ -91,6 +95,27 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 
 	swarmID := uuid.New().String()
 
+	mediaURLs := []string{}
+	for _, files := range form.File {
+		for _, fileHeader := range files {
+			file, err := fileHeader.Open()
+			if err != nil {
+				http.Error(w, fmt.Sprintf("Failed to open file: %v", err), http.StatusInternalServerError)
+				return
+			}
+			url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
+			if closeErr := file.Close(); closeErr != nil {
+				log.Printf("Failed to close file: %v", closeErr)
+			}
+			if err != nil {
+				log.Printf("Failed to upload file to GCS: %v", err)
+				http.Error(w, "Failed to upload file to storage", http.StatusInternalServerError)
+				return
+			}
+			mediaURLs = append(mediaURLs, url)
+		}
+	}
+
 	// Return the summary and UUID (no saving yet)
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(map[string]interface{}{
@@ -100,6 +125,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		"longitude":           lon,
 		"nearestIntersection": nearestIntersection,
 		"mediaFilenames":      mediaFilenames,
+		"mediaURLs":           mediaURLs,
 	}); err != nil {
 		log.Printf("Failed to encode swarm summary: %v", err)
 	}
@@ -112,7 +138,7 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
-	if err := r.ParseMultipartForm(maxFileSize); err != nil { // #nosec G120
+	if err := r.ParseMultipartForm(maxFileSize); err != nil && err != http.ErrNotMultipart { // #nosec G120
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
@@ -150,9 +176,9 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	reporterEmail := r.FormValue("reporterEmail")
 	reporterPhone := r.FormValue("reporterPhone")
 	reporterSessionID := r.FormValue("reporterSessionId")
+	mediaURLs := r.Form["mediaURLs"]
 
 	// Handle file uploads
-	mediaURLs := []string{}
 	form := r.MultipartForm
 	if form != nil && form.File != nil {
 		for _, files := range form.File {
@@ -162,9 +188,10 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 					log.Printf("Error opening uploaded file %s: %v", strconv.Quote(fileHeader.Filename), err)
 					continue
 				}
-				defer func() { _ = file.Close() }()
-
 				url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
+				if closeErr := file.Close(); closeErr != nil {
+					log.Printf("Failed to close file: %v", closeErr)
+				}
 				if err != nil {
 					log.Printf("Error uploading file %s to GCS: %v", strconv.Quote(fileHeader.Filename), err)
 					continue
@@ -300,7 +327,7 @@ func (h *Handlers) AssignSwarmHandler(w http.ResponseWriter, r *http.Request) {
 
 func validateFile(file *multipart.FileHeader) error {
 	if file.Size > maxFileSize {
-		return fmt.Errorf("file %s is too large (max size is 10MB)", file.Filename)
+		return fmt.Errorf("file %s is too large (max size is 50MB)", file.Filename)
 	}
 
 	contentType := file.Header.Get("Content-Type")
@@ -312,7 +339,8 @@ func validateFile(file *multipart.FileHeader) error {
 	ext := strings.ToLower(filepath.Ext(file.Filename))
 	allowedExtensions := map[string]bool{
 		".jpg": true, ".jpeg": true, ".png": true, ".gif": true, ".heic": true, ".heif": true,
-		".mp4": true, ".webm": true, ".mov": true, ".avi": true, ".3gp": true,
+		".mp4": true, ".webm": true, ".mov": true, ".avi": true, ".3gp": true, ".mpeg": true,
+		".ogv": true, ".ts": true, ".mkv": true, ".m4v": true,
 	}
 
 	if allowedExtensions[ext] {

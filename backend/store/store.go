@@ -387,7 +387,24 @@ func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader,
 		writer.ContentType = "image/jpeg"
 	case ".png":
 		writer.ContentType = "image/png"
-	// Add other content types as needed
+	case ".gif":
+		writer.ContentType = "image/gif"
+	case ".mp4":
+		writer.ContentType = "video/mp4"
+	case ".webm":
+		writer.ContentType = "video/webm"
+	case ".mov":
+		writer.ContentType = "video/quicktime"
+	case ".avi":
+		writer.ContentType = "video/x-msvideo"
+	case ".mpeg", ".mpg":
+		writer.ContentType = "video/mpeg"
+	case ".ogv":
+		writer.ContentType = "video/ogg"
+	case ".ts":
+		writer.ContentType = "video/mp2t"
+	case ".3gp":
+		writer.ContentType = "video/3gpp"
 	default:
 		writer.ContentType = "application/octet-stream"
 	}

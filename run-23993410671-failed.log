@@ -1,0 +1,296 @@
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	﻿2026-04-05T03:29:17.5163888Z Current runner version: '2.333.1'
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5199591Z ##[group]Runner Image Provisioner
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5200760Z Hosted Compute Agent
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5201659Z Version: 20260213.493
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5202630Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5203656Z Build Date: 2026-02-13T00:28:41Z
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5204886Z Worker ID: {50b6541a-8030-490c-906a-b2db70bd26b1}
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5206272Z Azure Region: eastus
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5207094Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5209420Z ##[group]Operating System
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5210333Z Ubuntu
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5211084Z 24.04.4
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5211866Z LTS
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5212589Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5213286Z ##[group]Runner Image
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5214209Z Image: ubuntu-24.04
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5214996Z Version: 20260329.72.1
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5217305Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260329.72/images/ubuntu/Ubuntu2404-Readme.md
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5219876Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260329.72
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5221419Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5223160Z ##[group]GITHUB_TOKEN Permissions
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5226132Z Contents: read
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5227174Z Metadata: read
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5227963Z Packages: read
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5228747Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5231701Z Secret source: None
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5232704Z Prepare workflow directory
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5701704Z Prepare all required actions
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.5758905Z Getting action download info
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.8393518Z Download action repository 'actions/checkout@v6' (SHA:de0fac2e4500dabe0009e67214ff5f5447ce83dd)
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:17.9750503Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2101713Z Complete job name: Frontend (JS/HTML/CSS)
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2812240Z ##[group]Run actions/checkout@v6
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2813101Z with:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2813523Z   repository: fkcurrie/utba-swarmmap
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2814221Z   token: ***
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2814602Z   ssh-strict: true
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2815013Z   ssh-user: git
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2815642Z   persist-credentials: true
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2816093Z   clean: true
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2816498Z   sparse-checkout-cone-mode: true
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2816985Z   fetch-depth: 1
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2817369Z   fetch-tags: false
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2817773Z   show-progress: true
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2818179Z   lfs: false
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2818561Z   submodules: false
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2818971Z   set-safe-directory: true
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.2819654Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3749044Z Syncing repository: fkcurrie/utba-swarmmap
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3750856Z ##[group]Getting Git version info
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3751685Z Working directory is '/home/runner/work/utba-swarmmap/utba-swarmmap'
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3752687Z [command]/usr/bin/git version
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3806365Z git version 2.53.0
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3860521Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3874590Z Temporarily overriding HOME='/home/runner/work/_temp/172ef6ca-ac78-47ab-bc1b-4a4df540faa6' before making global git config changes
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3876979Z Adding repository directory to the temporary git global config as a safe directory
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3879804Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/utba-swarmmap/utba-swarmmap
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3913892Z Deleting the contents of '/home/runner/work/utba-swarmmap/utba-swarmmap'
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3918242Z ##[group]Initializing the repository
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.3923190Z [command]/usr/bin/git init /home/runner/work/utba-swarmmap/utba-swarmmap
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4009307Z hint: Using 'master' as the name for the initial branch. This default branch name
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4011788Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4012772Z hint: to use in all of your new repositories, which will suppress this warning,
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4013758Z hint: call:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4014119Z hint:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4014787Z hint: 	git config --global init.defaultBranch <name>
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4015851Z hint:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4016441Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4017320Z hint: 'development'. The just-created branch can be renamed via this command:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4018040Z hint:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4018455Z hint: 	git branch -m <name>
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4018893Z hint:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4019481Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4020649Z Initialized empty Git repository in /home/runner/work/utba-swarmmap/utba-swarmmap/.git/
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4022638Z [command]/usr/bin/git remote add origin https://github.com/fkcurrie/utba-swarmmap
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4056501Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4057226Z ##[group]Disabling automatic garbage collection
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4061430Z [command]/usr/bin/git config --local gc.auto 0
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4090751Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4091953Z ##[group]Setting up auth
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4092843Z Removing SSH command configuration
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4098717Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4130703Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4417321Z Removing HTTP extra header
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4423511Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4457246Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4672963Z Removing includeIf entries pointing to credentials config files
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4679420Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4710703Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4947847Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.4986368Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/utba-swarmmap/utba-swarmmap/.git.path /home/runner/work/_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.5018060Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/utba-swarmmap/utba-swarmmap/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.5050465Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.5088142Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.5117604Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.5119384Z ##[group]Fetching the repository
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:18.5128688Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +95f2e79de23b9bee03c44de5959a0de339c62eaf:refs/remotes/pull/11/merge
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.1444698Z From https://github.com/fkcurrie/utba-swarmmap
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.1446644Z  * [new ref]         95f2e79de23b9bee03c44de5959a0de339c62eaf -> pull/11/merge
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.1481717Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.1483325Z ##[group]Determining the checkout info
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.1485021Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.1489432Z [command]/usr/bin/git sparse-checkout disable
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.1530318Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.1561974Z ##[group]Checking out the ref
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.1567161Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/11/merge
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3294949Z Note: switching to 'refs/remotes/pull/11/merge'.
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3296155Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3296728Z You are in 'detached HEAD' state. You can look around, make experimental
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3297930Z changes and commit them, and you can discard any commits you make in this
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3299125Z state without impacting any branches by switching back to a branch.
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3299825Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3300337Z If you want to create a new branch to retain commits you create, you may
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3301584Z do so (now or later) by using -c with the switch command. Example:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3302302Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3302618Z   git switch -c <new-branch-name>
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3303120Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3303420Z Or undo this operation with:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3303867Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3304120Z   git switch -
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3304582Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3305626Z Turn off this advice by setting config variable advice.detachedHead to false
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3306636Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3307885Z HEAD is now at 95f2e79 Merge 28d97a4874650a5dc098a4d0129334a035bc2cd9 into 863c8fc3f03abbad48bd820d5edee10a6b505402
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3312574Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3349953Z [command]/usr/bin/git log -1 --format=%H
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3374293Z 95f2e79de23b9bee03c44de5959a0de339c62eaf
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3725639Z ##[group]Run actions/setup-node@v5
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3726735Z with:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3727523Z   node-version: 24
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3728368Z   cache: npm
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3729174Z   always-auth: false
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3730073Z   check-latest: false
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3731266Z   token: ***
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3732160Z   package-manager-cache: true
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.3733144Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.5216092Z Found in cache @ /opt/hostedtoolcache/node/24.14.1/x64
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.5220426Z (node:2313) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.5223273Z (Use `node --trace-deprecation ...` to show where the warning was created)
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:19.5225645Z ##[group]Environment details
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:22.5360923Z node: v24.14.1
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:22.5362347Z npm: 11.11.0
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:22.5362766Z yarn: 1.22.22
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:22.5364074Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:22.5384949Z [command]/opt/hostedtoolcache/node/24.14.1/x64/bin/npm config get cache
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:22.7099147Z /home/runner/.npm
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:22.7719683Z Cache hit for: node-cache-Linux-x64-npm-cadd0e37c54b4179e13c1b7ce2245c9ff293dc0649a339b47d6a36ba2bf00bb6
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:22.7825663Z (node:2313) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:23.0610096Z Received 25535846 of 25535846 (100.0%), 102.3 MBs/sec
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:23.0610836Z Cache Size: ~24 MB (25535846 B)
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:23.0641611Z [command]/usr/bin/tar -xf /home/runner/work/_temp/03899ffd-d626-4250-9aa1-09579902c806/cache.tzst -P -C /home/runner/work/utba-swarmmap/utba-swarmmap --use-compress-program unzstd
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:23.1529243Z Cache restored successfully
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:23.1545902Z Cache restored from key: node-cache-Linux-x64-npm-cadd0e37c54b4179e13c1b7ce2245c9ff293dc0649a339b47d6a36ba2bf00bb6
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:23.1715769Z ##[group]Run npm ci
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:23.1716079Z [36;1mnpm ci[0m
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:23.1754722Z shell: /usr/bin/bash -e {0}
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:23.1754986Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:25.4479812Z npm warn deprecated git-raw-commits@4.0.0: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:26.1712997Z npm warn deprecated popper.js@1.16.1: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.1994077Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.1994895Z added 354 packages, and audited 355 packages in 4s
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.1995602Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.1995927Z 122 packages are looking for funding
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.2003502Z   run `npm fund` for details
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.2013149Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.2013815Z found 0 vulnerabilities
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.2619667Z ##[group]Run npx eslint "frontend/static/js/**/*.js"
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.2620301Z [36;1mnpx eslint "frontend/static/js/**/*.js"[0m
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.2657023Z shell: /usr/bin/bash -e {0}
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.2657435Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.9566185Z ##[group]Run npx prettier --check "frontend/static/**/*.{js,css}" "backend/templates/**/*.html"
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.9566883Z [36;1mnpx prettier --check "frontend/static/**/*.{js,css}" "backend/templates/**/*.html"[0m
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.9594224Z shell: /usr/bin/bash -e {0}
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:27.9594484Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:28.3161198Z Checking formatting...
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:28.5590326Z All matched files use Prettier code style!
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:28.5971624Z ##[group]Run npx htmlhint "backend/templates/**/*.html"
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:28.5972036Z [36;1mnpx htmlhint "backend/templates/**/*.html"[0m
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:28.6000265Z shell: /usr/bin/bash -e {0}
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:28.6000510Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:28.9593504Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:28.9617838Z    Config loaded: /home/runner/work/utba-swarmmap/utba-swarmmap/.htmlhintrc
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:28.9620004Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:28.9826657Z Scanned 12 files, no errors found (25 ms).
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.0031556Z ##[group]Run npx stylelint "frontend/static/css/**/*.css"
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.0031977Z [36;1mnpx stylelint "frontend/static/css/**/*.css"[0m
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.0058639Z shell: /usr/bin/bash -e {0}
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.0058881Z ##[endgroup]
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.8275118Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.8276125Z frontend/static/css/style.css
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.8277790Z   [2m9:3[22m  [31m[31m✖[39m  Expected empty line before declaration  [2mdeclaration-empty-line-before[22m
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.8278502Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.8279048Z [31m✖[39m 1 problem ([31m1 error[39m, [33m0 warnings[39m)
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.8279744Z   1 error potentially fixable with the "--fix" option.
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.8280118Z 
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.8498279Z ##[error]Process completed with exit code 2.
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.8610230Z Post job cleanup.
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9382616Z [command]/usr/bin/git version
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9419229Z git version 2.53.0
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9459434Z Temporarily overriding HOME='/home/runner/work/_temp/7be349a7-282f-4429-bba3-6d86273d9b75' before making global git config changes
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9461002Z Adding repository directory to the temporary git global config as a safe directory
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9465692Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/utba-swarmmap/utba-swarmmap
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9497014Z Removing SSH command configuration
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9502957Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9537842Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9757466Z Removing HTTP extra header
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9761706Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:29.9794076Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0007918Z Removing includeIf entries pointing to credentials config files
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0013850Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0067612Z includeif.gitdir:/home/runner/work/utba-swarmmap/utba-swarmmap/.git.path
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0068771Z includeif.gitdir:/home/runner/work/utba-swarmmap/utba-swarmmap/.git/worktrees/*.path
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0069645Z includeif.gitdir:/github/workspace/.git.path
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0070451Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0078092Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/utba-swarmmap/utba-swarmmap/.git.path
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0099375Z /home/runner/work/_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0110160Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/utba-swarmmap/utba-swarmmap/.git.path /home/runner/work/_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0144017Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/utba-swarmmap/utba-swarmmap/.git/worktrees/*.path
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0165979Z /home/runner/work/_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0178029Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/utba-swarmmap/utba-swarmmap/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0210338Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0231847Z /github/runner_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0239817Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0269504Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0289458Z /github/runner_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0298215Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0329509Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0539289Z Removing credentials config '/home/runner/work/_temp/git-credentials-005264af-24b3-41a1-8e46-159b0e0699df.config'
+Frontend (JS/HTML/CSS)	UNKNOWN STEP	2026-04-05T03:29:30.0674056Z Cleaning up orphan processes
+Backend (Go)	Unit Tests	﻿2026-04-05T03:30:01.2757825Z ##[group]Run go test -v ./...
+Backend (Go)	Unit Tests	2026-04-05T03:30:01.2809602Z [36;1mgo test -v ./...[0m
+Backend (Go)	Unit Tests	2026-04-05T03:30:01.2836809Z shell: /usr/bin/bash -e {0}
+Backend (Go)	Unit Tests	2026-04-05T03:30:01.2837063Z env:
+Backend (Go)	Unit Tests	2026-04-05T03:30:01.2837237Z   GOTOOLCHAIN: local
+Backend (Go)	Unit Tests	2026-04-05T03:30:01.2837448Z ##[endgroup]
+Backend (Go)	Unit Tests	2026-04-05T03:30:01.7299517Z ?   	github.com/fkcurrie/utba-swarmmap	[no test files]
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7667864Z === RUN   TestGetSwarmsHandler_WithSwarms
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7668590Z 2026/04/05 03:30:02 Fetching all swarms
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7669130Z 2026/04/05 03:30:02 Returning 3 swarms
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7670404Z --- PASS: TestGetSwarmsHandler_WithSwarms (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7671002Z === RUN   TestLoginHandler
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7671512Z 2026/04/05 03:30:02 GoogleLoginHandler hit: GET /login
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7672532Z     handlers_test.go:326: handler returned wrong status code: got 302 want 307
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7673304Z --- FAIL: TestLoginHandler (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7673910Z === RUN   TestGoogleCallbackHandler_InvalidState
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7674755Z --- PASS: TestGoogleCallbackHandler_InvalidState (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7675481Z === RUN   TestDashboardHandler_Unauthenticated
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7676126Z --- PASS: TestDashboardHandler_Unauthenticated (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7676589Z === RUN   TestLogoutHandler
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7676940Z --- PASS: TestLogoutHandler (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7677330Z === RUN   TestAuthHandler_Authenticated
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7677757Z --- PASS: TestAuthHandler_Authenticated (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7678250Z === RUN   TestPrepareSwarmHandler_ValidRequest
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7678985Z 2026/04/05 03:30:02 File "test.jpg" accepted by extension ".jpg" (MIME type was "application/octet-stream")
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7679754Z --- PASS: TestPrepareSwarmHandler_ValidRequest (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7680585Z === RUN   TestPrepareSwarmHandler_VideoRequest
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7681380Z 2026/04/05 03:30:02 File "test.mp4" accepted by extension ".mp4" (MIME type was "application/octet-stream")
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7682145Z --- PASS: TestPrepareSwarmHandler_VideoRequest (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7682634Z === RUN   TestConfirmSwarmHandler_ValidRequest
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7683117Z --- PASS: TestConfirmSwarmHandler_ValidRequest (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7683591Z === RUN   TestConfirmSwarmHandler_URLEncoded
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7684060Z --- PASS: TestConfirmSwarmHandler_URLEncoded (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7684536Z === RUN   TestSwarmListHandler_Unauthenticated
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7685012Z --- PASS: TestSwarmListHandler_Unauthenticated (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7685523Z === RUN   TestCollectorsMapHandler_Unauthenticated
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7686019Z --- PASS: TestCollectorsMapHandler_Unauthenticated (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7686372Z === RUN   TestAdminHandler_Unauthorized
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7686684Z --- PASS: TestAdminHandler_Unauthorized (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7687005Z === RUN   TestGenerateSampleDataHandler
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7687386Z 2026/04/05 03:30:02 Generating sample swarms for session: "test-session-id"
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7687795Z --- PASS: TestGenerateSampleDataHandler (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7688100Z === RUN   TestApproveUserHandler
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7688374Z --- PASS: TestApproveUserHandler (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7688644Z === RUN   TestRejectUserHandler
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7688900Z --- PASS: TestRejectUserHandler (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7689187Z === RUN   TestDeleteSwarmHandler
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7689455Z --- PASS: TestDeleteSwarmHandler (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7689770Z === RUN   TestPromoteUserHandler
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7690040Z --- PASS: TestPromoteUserHandler (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7690601Z === RUN   TestUpdateSwarmStatusHandler
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7690930Z --- PASS: TestUpdateSwarmStatusHandler (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7691227Z === RUN   TestAssignSwarmHandler
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7691488Z --- PASS: TestAssignSwarmHandler (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7691795Z === RUN   TestCollectorAdminHandler_Unauthorized
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7692153Z --- PASS: TestCollectorAdminHandler_Unauthorized (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7692786Z === RUN   TestUsernameRegisterHandler
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7693395Z 2026/04/05 03:30:02 USER CREATED: "test@example.com". VERIFICATION LINK: /auth/verify-email?token="bef1fb6f-8983-4bd8-9065-79cfa3d2613c"
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7693992Z --- PASS: TestUsernameRegisterHandler (0.07s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7694459Z === RUN   TestVerifyChecks
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7694703Z --- PASS: TestVerifyChecks (0.00s)
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7694942Z FAIL
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7695183Z FAIL	github.com/fkcurrie/utba-swarmmap/handlers	0.077s
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7695732Z ?   	github.com/fkcurrie/utba-swarmmap/models	[no test files]
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7696127Z ?   	github.com/fkcurrie/utba-swarmmap/store	[no test files]
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7696420Z FAIL
+Backend (Go)	Unit Tests	2026-04-05T03:30:02.7943069Z ##[error]Process completed with exit code 1.
