@@ -146,7 +146,7 @@ func main() {
 	port := getEnv("PORT", "8080")
 	// Validate port to prevent log injection and ensure it's a valid port number
 	if _, err := strconv.Atoi(port); err != nil {
-		slog.Error("Invalid PORT", "port", port)
+		slog.Error("Invalid PORT", "error", err)
 		os.Exit(1)
 	}
 	slog.Info("Starting server", "port", port, "version", version)
