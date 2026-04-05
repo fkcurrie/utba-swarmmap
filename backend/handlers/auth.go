@@ -44,7 +44,7 @@ func (h *Handlers) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	if session == nil {
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(map[string]interface{}{"authenticated": false}); err != nil {
-			log.Printf("Failed to encode response: %v", err)
+			log.Printf("Failed to encode auth response: %v", err)
 		}
 		return
 	}
@@ -54,7 +54,7 @@ func (h *Handlers) AuthHandler(w http.ResponseWriter, r *http.Request) {
 		"authenticated": true,
 		"user":          session,
 	}); err != nil {
-		log.Printf("Failed to encode response: %v", err)
+		log.Printf("Failed to encode auth response: %v", err)
 	}
 }
 

@@ -124,7 +124,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		"mediaFilenames":      mediaFilenames,
 		"mediaURLs":           mediaURLs,
 	}); err != nil {
-		log.Printf("Failed to encode response: %v", err)
+		log.Printf("Failed to encode swarm summary: %v", err)
 	}
 }
 
@@ -221,7 +221,7 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(report); err != nil {
-		log.Printf("Failed to encode response: %v", err)
+		log.Printf("Failed to encode swarm report: %v", err)
 	}
 }
 
