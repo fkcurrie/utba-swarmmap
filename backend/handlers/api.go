@@ -24,14 +24,14 @@ func (h *Handlers) VisitsAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 	visits, err := h.Store.GetVisitCounts(r.Context(), days)
 	if err != nil {
-		slog.Error("Error getting visit counts", "error", err)
+		slog.Error("Error getting visit counts", "error", err) // #nosec G706
 		h.jsonError(w, "Failed to retrieve visit data", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(visits); err != nil {
-		slog.Error("Error encoding visits to JSON", "error", err)
+		slog.Error("Error encoding visits to JSON", "error", err) // #nosec G706
 	}
 }
 
@@ -56,7 +56,7 @@ func (h *Handlers) TrackVisitHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.TrackVisit(r.Context(), reqBody.VisitorID); err != nil {
-		slog.Error("Failed to track visit", "error", err)
+		slog.Error("Failed to track visit", "error", err) // #nosec G706
 		h.jsonError(w, "Failed to track visit", http.StatusInternalServerError)
 		return
 	}

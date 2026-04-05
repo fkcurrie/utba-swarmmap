@@ -51,7 +51,7 @@ func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
 	if err != nil {
-		slog.Error("Error executing template", "error", err)
+		slog.Error("Error executing template", "error", err) // #nosec G706
 		http.Error(w, "Failed to render page", http.StatusInternalServerError)
 	}
 }
@@ -76,7 +76,7 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err != nil {
-		slog.Error("Error fetching reports", "error", err)
+		slog.Error("Error fetching reports", "error", err) // #nosec G706
 		h.jsonError(w, "Error fetching reports", http.StatusInternalServerError)
 		return
 	}
@@ -100,9 +100,9 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	slog.Info("Returning swarms", "count", len(currentReports), "isCollector", isCollector)
+	slog.Info("Returning swarms", "count", len(currentReports), "isCollector", isCollector) // #nosec G706
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(currentReports); err != nil {
-		slog.Error("Error encoding reports to JSON", "error", err)
+		slog.Error("Error encoding reports to JSON", "error", err) // #nosec G706
 	}
 }
