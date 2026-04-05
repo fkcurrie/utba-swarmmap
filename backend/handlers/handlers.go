@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
@@ -24,7 +25,13 @@ type Handlers struct {
 func (h *Handlers) jsonError(w http.ResponseWriter, message string, code int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(map[string]string{"error": message})
+	if err := json.NewEncoder(w).Encode(map[string]string{"error": message}); err != nil {
+		slog.Error("Failed to encode JSON error response", "error", err, "message", h.sanitize(message))
+	}
+}
+
+func (h *Handlers) sanitize(s string) string {
+	return strings.ReplaceAll(strings.ReplaceAll(s, "\n", ""), "\r", "")
 }
 
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {

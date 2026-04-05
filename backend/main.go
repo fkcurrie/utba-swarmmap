@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -52,9 +53,9 @@ func main() {
 	}
 
 	// Initialize Firestore client
-	slog.Info("Initializing Firestore client", "projectID", projectID)
+	slog.Info("Initializing Firestore client", "projectID", strings.ReplaceAll(strings.ReplaceAll(projectID, "\n", ""), "\r", ""))
 	if host := os.Getenv("FIRESTORE_EMULATOR_HOST"); host != "" {
-		slog.Info("Using Firestore Emulator", "host", host)
+		slog.Info("Using Firestore Emulator", "host", strings.ReplaceAll(strings.ReplaceAll(host, "\n", ""), "\r", ""))
 	}
 	firestoreClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
@@ -66,7 +67,7 @@ func main() {
 	// Initialize Storage client
 	slog.Info("Initializing Storage client")
 	if host := os.Getenv("STORAGE_EMULATOR_HOST"); host != "" {
-		slog.Info("Using Storage Emulator", "host", host)
+		slog.Info("Using Storage Emulator", "host", strings.ReplaceAll(strings.ReplaceAll(host, "\n", ""), "\r", ""))
 	}
 	storageClient, err := storage.NewClient(ctx)
 	if err != nil {
@@ -143,7 +144,7 @@ func main() {
 	port := getEnv("PORT", "8080")
 	// Validate port to prevent log injection and ensure it's a valid port number
 	if _, err := strconv.Atoi(port); err != nil {
-		slog.Error("Invalid PORT", "port", port)
+		slog.Error("Invalid PORT", "port", strings.ReplaceAll(strings.ReplaceAll(port, "\n", ""), "\r", ""))
 		os.Exit(1)
 	}
 	slog.Info("Starting server", "port", port, "version", version)
