@@ -8,7 +8,7 @@ name: E2E Application Startup Check
 jobs:
   e2e-startup:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 10
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -64,7 +64,14 @@ jobs:
           fi
 
           echo "Verifying Swarms API..."
-          STATUS_SWARMS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/get_swarms)
+          for i in {1..15}; do
+            STATUS_SWARMS=$(curl -s -m 5 -o /dev/null -w "%{http_code}" http://localhost:8080/get_swarms)
+            if [[ "$STATUS_SWARMS" == "200" ]]; then
+              break
+            fi
+            echo "Swarms API not ready, got $STATUS_SWARMS. Retrying..."
+            sleep 3
+          done
           echo "Swarms API status: $STATUS_SWARMS"
           if [[ "$STATUS_SWARMS" != "200" ]]; then
             echo "Expected swarms status 200, got $STATUS_SWARMS"

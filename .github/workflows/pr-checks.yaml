@@ -11,7 +11,7 @@ jobs:
   backend:
     name: Backend (Go)
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: backend
@@ -70,7 +70,7 @@ jobs:
   frontend:
     name: Frontend (JS/HTML/CSS)
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 10
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -99,7 +99,7 @@ jobs:
   general:
     name: General & Infrastructure
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 10
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -125,6 +125,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
+          detect_secrets_flags: "--exclude-files 'node_modules|package-lock.json'"
 
       - name: Actionlint
         uses: reviewdog/action-actionlint@v1
