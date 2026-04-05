@@ -17,6 +17,28 @@
     "url": "https://github.com/fkcurrie/utba-swarmmap/issues"
   },
   "homepage": "https://github.com/fkcurrie/utba-swarmmap#readme",
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "body-max-line-length": [
+        0,
+        "always"
+      ],
+      "subject-empty": [
+        0,
+        "always"
+      ],
+      "type-empty": [
+        0,
+        "always"
+      ]
+    },
+    "ignores": [
+      "(message) => message.includes('Agent iteration: Apply changes')"
+    ]
+  },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@popperjs/core": "^2.5.3",

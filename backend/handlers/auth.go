@@ -76,7 +76,7 @@ func (h *Handlers) UsernameLoginHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if user.Status != "approved" {
-		showPendingApprovalPage(w, user.Name)
+		h.showPendingApprovalPage(w, user.Name)
 		return
 	}
 
@@ -228,14 +228,28 @@ func (h *Handlers) renderRegisterPageWithError(w http.ResponseWriter, errorMsg s
 }
 
 func (h *Handlers) renderMessagePage(w http.ResponseWriter, title, message string) {
-	html := `<!DOCTYPE html><html><head><title>` + title + ` - UTBA Swarm Map</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"></head>
-<body><div class="container mt-5"><div class="row justify-content-center"><div class="col-md-6">
-<div class="card"><div class="card-header"><h4>` + title + `</h4></div>
-<div class="card-body"><div class="alert alert-info"><p>` + message + `</p></div>
-<a href="/login" class="btn btn-primary">Return to Login</a></div></div></div></div></div></body></html>`
-	w.Header().Set("Content-Type", "text/html")
-	_, _ = w.Write([]byte(html))
+	err := h.Templates.ExecuteTemplate(w, "message.html", map[string]interface{}{
+		"Title":             title,
+		"Message":           message,
+		"Version":           h.Version,
+		"FrontendAssetsURL": h.FrontendAssetsURL,
+	})
+	if err != nil {
+		log.Printf("Error rendering message page: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
+
+func (h *Handlers) showPendingApprovalPage(w http.ResponseWriter, name string) {
+	err := h.Templates.ExecuteTemplate(w, "pending-approval.html", map[string]interface{}{
+		"Name":              name,
+		"Version":           h.Version,
+		"FrontendAssetsURL": h.FrontendAssetsURL,
+	})
+	if err != nil {
+		log.Printf("Error rendering pending approval page: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
 }
 
 // GoogleLoginHandler initiates the Google OAuth2 login flow.
@@ -393,8 +407,8 @@ func (h *Handlers) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	if session == nil {
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(map[string]interface{}{"authenticated": false}); err != nil {
-		log.Printf("Failed to encode auth response: %v", err)
-	}
+			log.Printf("Failed to encode auth response: %v", err)
+		}
 		return
 	}
 
@@ -468,33 +482,14 @@ func (h *Handlers) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		showPendingApprovalPage(w, userInfo.Name)
+		h.showPendingApprovalPage(w, userInfo.Name)
 		return
 	}
 
 	if existingUser.Status != "approved" {
-		showPendingApprovalPage(w, existingUser.Name)
+		h.showPendingApprovalPage(w, existingUser.Name)
 		return
 	}
 
 	h.createSessionAndRedirect(w, r, existingUser)
-}
-
-func showPendingApprovalPage(w http.ResponseWriter, name string) {
-	html := `<!DOCTYPE html>
-<html><head><title>Pending Approval - UTBA Swarm Map</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"></head>
-<body><div class="container mt-5"><div class="row justify-content-center"><div class="col-md-6">
-<div class="card"><div class="card-header"><h4>Account Pending Approval</h4></div>
-<div class="card-body"><div class="alert alert-info">
-<h6>Hello ` + name + `!</h6>
-<p>Your account has been created and is pending administrator approval.</p>
-<p>A UTBA administrator will review your request and approve your access to the swarm collector dashboard.</p>
-<p>You'll be able to log in once your account has been approved.</p>
-</div>
-<a href="/" class="btn btn-primary">Return to Map</a></div></div></div></div></div></body></html>`
-	w.Header().Set("Content-Type", "text/html")
-	if _, err := w.Write([]byte(html)); err != nil {
-		log.Printf("Failed to write response: %v", err)
-	}
 }

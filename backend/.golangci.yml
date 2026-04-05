@@ -16,6 +16,8 @@ linters:
     - revive
     - staticcheck
     - unused
+  disable:
+    - gosimple
   exclusions:
     generated: lax
     presets:
