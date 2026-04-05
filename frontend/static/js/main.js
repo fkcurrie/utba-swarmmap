@@ -178,8 +178,8 @@ document.addEventListener('DOMContentLoaded', function () {
         fileItem.className =
           'd-flex justify-content-between align-items-center mb-2 p-2 border-bottom';
         fileItem.innerHTML = `
-                    <div class="text-truncate mr-2" style="max-width: 200px;">
-                        <i class="${file.type.startsWith('image/') ? 'fas fa-image' : 'fas fa-video'} mr-2"></i>
+                    <div class="text-truncate me-2" style="max-width: 200px;">
+                        <i class="${file.type.startsWith('image/') ? 'fas fa-image' : 'fas fa-video'} me-2"></i>
                         ${file.name} <small class="text-muted">(${(file.size / (1024 * 1024)).toFixed(2)} MB)</small>
                     </div>
                     <button type="button" class="btn btn-sm btn-outline-danger remove-file-btn" data-index="${index}">

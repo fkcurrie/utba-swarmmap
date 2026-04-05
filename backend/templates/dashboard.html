@@ -11,10 +11,10 @@
                         <h5>Quick Actions</h5>
                     </div>
                     <div class="card-body d-flex flex-wrap">
-                        <a href="/collectorsmap" class="btn btn-primary mr-2 mb-2">View Collector Map</a>
-                        <a href="/swarmlist" class="btn btn-secondary mr-2 mb-2">View All Swarms (List)</a>
+                        <a href="/collectorsmap" class="btn btn-primary me-2 mb-2">View Collector Map</a>
+                        <a href="/swarmlist" class="btn btn-secondary me-2 mb-2">View All Swarms (List)</a>
                         {{if .ShowSiteAdmin}}
-                            <a href="/admin" class="btn btn-danger mr-2 mb-2">Site Admin Dashboard</a>
+                            <a href="/admin" class="btn btn-danger me-2 mb-2">Site Admin Dashboard</a>
                         {{end}}
                         {{if .ShowCollectorAdmin}}
                             <a href="/collector_admin" class="btn btn-warning mb-2">Collector Admin Dashboard</a>
@@ -52,7 +52,7 @@
                                             <td>{{if gt (len .Description) 30}}{{slice .Description 0 30}}...{{else}}{{.Description}}{{end}}</td>
                                             <td>
                                                 {{if .AssignedCollectorID}}
-                                                    <span class="badge badge-warning">Assigned to you</span>
+                                                    <span class="badge bg-warning text-dark">Assigned to you</span>
                                                     <form method="POST" action="/assign_swarm" style="display: inline;">
                                                         <input type="hidden" name="swarmID" value="{{.ID}}">
                                                         <input type="hidden" name="action" value="unassign">
@@ -102,7 +102,7 @@
                                         <tr>
                                             <td>{{.NearestIntersection}}</td>
                                             <td>
-                                                <span class="badge badge-{{if eq .Status "Reported"}}danger{{else if eq .Status "Verified"}}warning{{else if eq .Status "Captured"}}success{{else}}secondary{{end}}">
+                                                <span class="badge bg-{{if eq .Status "Reported"}}danger{{else if eq .Status "Verified"}}warning text-dark{{else if eq .Status "Captured"}}success{{else}}secondary{{end}}">
                                                     {{.Status}}
                                                 </span>
                                             </td>

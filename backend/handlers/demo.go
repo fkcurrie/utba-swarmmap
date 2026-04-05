@@ -3,9 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
@@ -35,7 +34,7 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	log.Printf("Generating sample swarms for session: %s", strconv.Quote(sessionID))
+	slog.Info("Generating sample swarms for session", "sessionID", sessionID)
 
 	now := time.Now()
 	sampleSwarms := []models.SwarmReport{
@@ -64,7 +63,7 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 	var createdSwarms []models.SwarmReport
 	for _, swarm := range sampleSwarms {
 		if err := h.Store.CreateSwarm(r.Context(), swarm); err != nil {
-			log.Printf("Failed to create sample swarm %q: %v", swarm.ID, err)
+			slog.Error("Failed to create sample swarm", "swarmID", swarm.ID, "error", err)
 			continue
 		}
 		createdSwarms = append(createdSwarms, swarm)
@@ -78,6 +77,6 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(response); err != nil {
-		log.Printf("Failed to encode demo response: %v", err)
+		slog.Error("Failed to encode demo response", "error", err)
 	}
 }

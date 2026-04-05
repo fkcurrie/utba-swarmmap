@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
+	"log/slog"
 	"net/http"
 )
 
@@ -24,21 +24,21 @@ func (h *Handlers) VisitsAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 	visits, err := h.Store.GetVisitCounts(r.Context(), days)
 	if err != nil {
-		log.Printf("Error getting visit counts: %v", err)
+		slog.Error("Error getting visit counts", "error", err)
 		http.Error(w, "Failed to retrieve visit data", http.StatusInternalServerError)
 		return
 	}
 
 	visitsJSON, err := json.Marshal(visits)
 	if err != nil {
-		log.Printf("Error marshalling visits to JSON: %v", err)
+		slog.Error("Error marshalling visits to JSON", "error", err)
 		http.Error(w, "Failed to process visit data", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	if _, err := w.Write(visitsJSON); err != nil {
-		log.Printf("Failed to write visits response: %v", err)
+		slog.Error("Failed to write visits response", "error", err)
 	}
 }
 
@@ -63,7 +63,7 @@ func (h *Handlers) TrackVisitHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.TrackVisit(r.Context(), reqBody.VisitorID); err != nil {
-		log.Printf("Failed to track visit: %v", err)
+		slog.Error("Failed to track visit", "error", err)
 		http.Error(w, "Failed to track visit", http.StatusInternalServerError)
 		return
 	}

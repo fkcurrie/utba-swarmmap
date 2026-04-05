@@ -32,12 +32,12 @@
                                         <td>{{.Name}}</td>
                                         <td>{{.Email}}</td>
                                         <td>
-                                            <span class="badge badge-{{if eq .Role "site_admin"}}danger{{else if eq .Role "collector_admin"}}warning{{else}}primary{{end}}">
+                                            <span class="badge bg-{{if eq .Role "site_admin"}}danger{{else if eq .Role "collector_admin"}}warning text-dark{{else}}primary{{end}}">
                                                 {{if eq .Role "site_admin"}}Site Admin{{else if eq .Role "collector_admin"}}Collector Admin{{else}}Collector{{end}}
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="badge badge-{{if eq .Status "approved"}}success{{else}}warning{{end}}">
+                                            <span class="badge bg-{{if eq .Status "approved"}}success{{else}}warning text-dark{{end}}">
                                                 {{.Status}}
                                             </span>
                                         </td>
@@ -46,12 +46,12 @@
                                             {{if ne .Role "site_admin"}}
                                                 <form method="POST" action="/admin/promote_user" style="display: inline;">
                                                     <input type="hidden" name="userID" value="{{.ID}}">
-                                                    <select name="role" class="form-control form-control-sm d-inline-block" style="width: auto;">
+                                                    <select name="role" class="form-select form-select-sm d-inline-block" style="width: auto;">
                                                         <option value="collector" {{if eq .Role "collector"}}selected{{end}}>Collector</option>
                                                         <option value="collector_admin" {{if eq .Role "collector_admin"}}selected{{end}}>Collector Admin</option>
                                                         <option value="site_admin">Site Admin</option>
                                                     </select>
-                                                    <button type="submit" class="btn btn-sm btn-primary ml-1">Update Role</button>
+                                                    <button type="submit" class="btn btn-sm btn-primary ms-1">Update Role</button>
                                                 </form>
                                             {{else}}
                                                 <small class="text-muted">Site Admin</small>
@@ -150,7 +150,7 @@
                                             <td>{{slice .ID 0 8}}...</td>
                                             <td>{{.NearestIntersection}}</td>
                                             <td>
-                                                <span class="badge badge-{{if eq .Status "Reported"}}danger{{else if eq .Status "Verified"}}warning{{else if eq .Status "Captured"}}success{{else}}secondary{{end}}">
+                                                <span class="badge bg-{{if eq .Status "Reported"}}danger{{else if eq .Status "Verified"}}warning text-dark{{else if eq .Status "Captured"}}success{{else}}secondary{{end}}">
                                                     {{.Status}}
                                                 </span>
                                             </td>

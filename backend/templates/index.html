@@ -20,21 +20,21 @@
                     <div class="card-body py-2">
                         <h6 class="card-title mb-2">Pin Color Legend:</h6>
                         <div class="d-flex flex-wrap justify-content-center">
-                            <span class="mr-3 mb-1">
+                            <span class="me-3 mb-1">
                                 <span style="display: inline-block; width: 20px; height: 20px; background-color: #ff0000; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Red = Reported (new)</small>
+                                <small class="ms-1">Red = Reported (new)</small>
                             </span>
-                            <span class="mr-3 mb-1">
+                            <span class="me-3 mb-1">
                                 <span style="display: inline-block; width: 20px; height: 20px; background-color: #ff69b4; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Pink = Verified</small>
+                                <small class="ms-1">Pink = Verified</small>
                             </span>
-                            <span class="mr-3 mb-1">
+                            <span class="me-3 mb-1">
                                 <span style="display: inline-block; width: 20px; height: 20px; background-color: #00ff00; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Green = Captured</small>
+                                <small class="ms-1">Green = Captured</small>
                             </span>
-                            <span class="mr-3 mb-1">
+                            <span class="me-3 mb-1">
                                 <span style="display: inline-block; width: 20px; height: 20px; background-color: #0000ff; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Blue = Archived (24h+)</small>
+                                <small class="ms-1">Blue = Archived (24h+)</small>
                             </span>
                         </div>
                     </div>
@@ -51,17 +51,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="reportSwarmModalLabel">Report Bee Swarm</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="reportSwarmForm">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="description">Description (e.g., size of swarm, height from ground, on a tree branch)</label>
                             <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="intersection">Nearest Major Intersection</label>
                             <input type="text" class="form-control" id="intersection" name="intersection" placeholder="e.g., Yonge & Bloor" required>
                         </div>
@@ -71,20 +69,20 @@
                             <h6 class="mb-3">📞 Contact Information (Optional but Recommended)</h6>
                             <p class="small text-muted mb-3">Providing your contact details helps beekeepers reach you for additional information or to coordinate swarm collection.</p>
                             
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label for="reporterName">Your Name</label>
                                 <input type="text" class="form-control" id="reporterName" name="reporterName" placeholder="e.g., John Smith">
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label for="reporterEmail">Email Address</label>
                                 <input type="email" class="form-control" id="reporterEmail" name="reporterEmail" placeholder="e.g., john@example.com">
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label for="reporterPhone">Phone Number</label>
                                 <input type="tel" class="form-control" id="reporterPhone" name="reporterPhone" placeholder="e.g., (416) 555-0123">
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="media">📸 Upload Photo(s) and/or Video(s) (Optional)</label>
                             <div class="file-upload-section">
                                 <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">

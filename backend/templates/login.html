@@ -13,15 +13,15 @@
                     {{end}}
                     
                     <form action="/auth/login" method="POST">
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="email">Email address</label>
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             <label for="password">Password</label>
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
                     </form>
                     
                     <div class="text-center mt-3">
@@ -32,10 +32,10 @@
                     
                     <div class="text-center">
                         <p class="mb-3">Or sign in with:</p>
-                        <a href="/auth/google" class="google-signin-btn btn btn-outline-danger btn-block">
+                        <a href="/auth/google" class="google-signin-btn btn btn-outline-danger w-100">
                             Sign in with Google
                         </a>
-                        <a href="/auth/apple" class="btn btn-outline-dark btn-block mt-2">
+                        <a href="/auth/apple" class="btn btn-outline-dark w-100 mt-2">
                             Sign in with Apple
                         </a>
                     </div>

@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
@@ -34,7 +34,7 @@ func (h *Handlers) DashboardHandler(w http.ResponseWriter, r *http.Request) {
 		"FrontendAssetsURL":  h.FrontendAssetsURL,
 	})
 	if err != nil {
-		log.Printf("Error executing dashboard template: %v", err)
+		slog.Error("Error executing dashboard template", "error", err)
 		http.Error(w, "Failed to parse dashboard template", http.StatusInternalServerError)
 		return
 	}

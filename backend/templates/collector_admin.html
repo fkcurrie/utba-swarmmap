@@ -87,7 +87,7 @@
                                             <td>{{.Phone}}</td>
                                             <td>{{.Location}}</td>
                                             <td>
-                                                <span class="badge badge-{{if eq .Role "collector_admin"}}warning{{else if eq .Role "site_admin"}}danger{{else}}primary{{end}}">
+                                                <span class="badge {{if eq .Role "collector_admin"}}bg-warning text-dark{{else if eq .Role "site_admin"}}bg-danger{{else}}bg-primary{{end}}">
                                                     {{if eq .Role "collector_admin"}}Collector Admin{{else if eq .Role "site_admin"}}Site Admin{{else}}Collector{{end}}
                                                 </span>
                                             </td>
