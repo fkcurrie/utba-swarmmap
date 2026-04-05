@@ -1,11 +1,31 @@
+# Dependency directories
 node_modules/
+
+# Binaries
+*_binary
+*_bin
+backend/backend
+frontend/frontend
+backend/backend_bin
+frontend/frontend_bin
+backend_bin
+frontend_bin
 backend/utba-swarmmap
-*.log
-.env
 *.exe
 *.dll
 *.so
 *.dylib
 *.test
 *.out
-backend/backend
+bin/
+
+# IDE files
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+*.log
