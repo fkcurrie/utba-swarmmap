@@ -46,7 +46,7 @@ jobs:
       - name: Verify Backend Root/Login
         run: |
           echo "Verifying Backend Root..."
-          STATUS_ROOT=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
+          STATUS_ROOT=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/ || echo "000")
           echo "Root status: $STATUS_ROOT"
           if [[ "$STATUS_ROOT" != "200" ]]; then
             echo "Expected root status 200, got $STATUS_ROOT"
@@ -55,7 +55,7 @@ jobs:
           fi
 
           echo "Verifying Backend Login..."
-          STATUS_LOGIN=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/login)
+          STATUS_LOGIN=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/login || echo "000")
           echo "Login status: $STATUS_LOGIN"
           if [[ "$STATUS_LOGIN" != "302" && "$STATUS_LOGIN" != "307" ]]; then
             echo "Expected login status 302 or 307, got $STATUS_LOGIN"
@@ -65,7 +65,7 @@ jobs:
 
           echo "Verifying Swarms API..."
           for i in {1..15}; do
-            STATUS_SWARMS=$(curl -s -m 5 -o /dev/null -w "%{http_code}" http://localhost:8080/get_swarms)
+            STATUS_SWARMS=$(curl -s -m 5 -o /dev/null -w "%{http_code}" http://localhost:8080/get_swarms || echo "000")
             if [[ "$STATUS_SWARMS" == "200" ]]; then
               break
             fi
@@ -82,7 +82,7 @@ jobs:
       - name: Verify Frontend
         run: |
           echo "Verifying Frontend CSS..."
-          STATUS_CSS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/static/css/style.css)
+          STATUS_CSS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/static/css/style.css || echo "000")
           echo "CSS status: $STATUS_CSS"
           if [[ "$STATUS_CSS" != "200" ]]; then
             echo "Expected CSS status 200, got $STATUS_CSS"
