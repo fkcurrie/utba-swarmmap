@@ -44,12 +44,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Fetch and display swarms
       const fetchSwarms = async () => {
+        const debugSwarms = document.getElementById('debugSwarms');
         try {
           const response = await fetch('/get_swarms');
           const swarms = await response.json();
 
           swarmLayerGroup.clearLayers();
-          const debugSwarms = document.getElementById('debugSwarms');
           if (debugSwarms) debugSwarms.innerHTML = '';
 
           swarms.forEach((swarm) => {
@@ -80,7 +80,8 @@ document.addEventListener('DOMContentLoaded', function () {
               swarm.reporterPhone ||
               swarm.reporterEmail
             ) {
-              popupContent += '<hr><small><strong>Reporter Contact:</strong><br>';
+              popupContent +=
+                '<hr><small><strong>Reporter Contact:</strong><br>';
               if (swarm.reporterName)
                 popupContent += `Name: ${swarm.reporterName}<br>`;
               if (swarm.reporterPhone)
@@ -105,7 +106,9 @@ document.addEventListener('DOMContentLoaded', function () {
           });
         } catch (error) {
           console.error('Error fetching swarms:', error);
-          if (debugSwarms) debugSwarms.innerHTML = '<span class="text-danger">Error loading swarms.</span>';
+          if (debugSwarms)
+            debugSwarms.innerHTML =
+              '<span class="text-danger">Error loading swarms.</span>';
         }
       };
 
