@@ -102,9 +102,8 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, fmt.Sprintf("Failed to open file: %v", err), http.StatusInternalServerError)
 				return
 			}
-			defer file.Close()
-
 			url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
+			_ = file.Close()
 			if err != nil {
 				log.Printf("Failed to upload file to GCS: %v", err)
 				http.Error(w, "Failed to upload file to storage", http.StatusInternalServerError)
@@ -135,7 +134,7 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := r.ParseMultipartForm(maxFileSize); err != nil { // #nosec G120
+	if err := r.ParseMultipartForm(maxFileSize); err != nil && err != http.ErrNotMultipart { // #nosec G120
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
@@ -185,9 +184,8 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 					log.Printf("Error opening uploaded file %s: %v", fileHeader.Filename, err)
 					continue
 				}
-				defer file.Close()
-
 				url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
+				_ = file.Close()
 				if err != nil {
 					log.Printf("Error uploading file %s to GCS: %v", fileHeader.Filename, err)
 					continue
