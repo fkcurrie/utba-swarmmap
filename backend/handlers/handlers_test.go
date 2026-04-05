@@ -272,9 +272,9 @@ func TestLoginHandler(t *testing.T) {
 	handler := http.HandlerFunc(h.GoogleLoginHandler)
 	handler.ServeHTTP(rr, req)
 
-	if status := rr.Code; status != http.StatusTemporaryRedirect {
+	if status := rr.Code; status != http.StatusFound {
 		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusTemporaryRedirect)
+			status, http.StatusFound)
 	}
 }
 
