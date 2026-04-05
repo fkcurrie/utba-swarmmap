@@ -1,0 +1,98 @@
+---
+name: E2E Application Startup Check
+
+"on":
+  pull_request:
+    branches: [main]
+
+jobs:
+  e2e-startup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Services
+        run: docker compose build --progress=plain
+
+      - name: Start Services
+        run: docker compose up -d
+
+      - name: Check Container Status
+        run: docker compose ps
+
+      - name: Wait for Services to be Ready
+        run: |
+          echo "Waiting for backend service to start..."
+          MAX_ATTEMPTS=60
+          ATTEMPT=0
+          until curl -s http://localhost:8080 > /dev/null; do
+            ATTEMPT=$((ATTEMPT+1))
+            if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
+              echo "Backend failed to start in time."
+              docker compose logs backend
+              exit 1
+            fi
+            echo "Attempt $ATTEMPT: Waiting for backend..."
+            sleep 2
+          done
+          echo "Backend is up!"
+
+      - name: Verify Backend Root/Login
+        run: |
+          echo "Verifying Backend Root..."
+          STATUS_ROOT=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/ || echo "000")
+          echo "Root status: $STATUS_ROOT"
+          if [[ "$STATUS_ROOT" != "200" ]]; then
+            echo "Expected root status 200, got $STATUS_ROOT"
+            docker compose logs backend
+            exit 1
+          fi
+
+          echo "Verifying Backend Login..."
+          STATUS_LOGIN=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/login || echo "000")
+          echo "Login status: $STATUS_LOGIN"
+          if [[ "$STATUS_LOGIN" != "302" && "$STATUS_LOGIN" != "307" ]]; then
+            echo "Expected login status 302 or 307, got $STATUS_LOGIN"
+            docker compose logs backend
+            exit 1
+          fi
+
+          echo "Verifying Swarms API..."
+          for i in {1..20}; do
+            STATUS_SWARMS=$(curl -s -m 5 -o /dev/null -w "%{http_code}" http://localhost:8080/get_swarms || echo "000")
+            if [[ "$STATUS_SWARMS" == "200" ]]; then
+              break
+            fi
+            echo "Swarms API not ready, got $STATUS_SWARMS. Retrying ($i/20)..."
+            sleep 3
+          done
+          echo "Swarms API status: $STATUS_SWARMS"
+          if [[ "$STATUS_SWARMS" != "200" ]]; then
+            echo "Expected swarms status 200, got $STATUS_SWARMS"
+            docker compose logs backend
+            exit 1
+          fi
+
+      - name: Verify Frontend
+        run: |
+          echo "Verifying Frontend CSS..."
+          STATUS_CSS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8082/static/css/style.css || echo "000")
+          echo "CSS status: $STATUS_CSS"
+          if [[ "$STATUS_CSS" != "200" ]]; then
+            echo "Expected CSS status 200, got $STATUS_CSS"
+            docker compose logs frontend
+            exit 1
+          fi
+
+      - name: Show Logs on Failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down

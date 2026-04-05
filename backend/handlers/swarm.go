@@ -93,14 +93,16 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Return the summary and UUID (no saving yet)
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(map[string]interface{}{
+	if err := json.NewEncoder(w).Encode(map[string]interface{}{
 		"referenceID":         swarmID,
 		"description":         description,
 		"latitude":            lat,
 		"longitude":           lon,
 		"nearestIntersection": nearestIntersection,
 		"mediaFilenames":      mediaFilenames,
-	})
+	}); err != nil {
+		log.Printf("Failed to encode swarm summary: %v", err)
+	}
 }
 
 func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
@@ -197,7 +199,9 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(report)
+	if err := json.NewEncoder(w).Encode(report); err != nil {
+		log.Printf("Failed to encode swarm report: %v", err)
+	}
 }
 
 func validateCoordinates(lat, lon string) (float64, float64, error) {
