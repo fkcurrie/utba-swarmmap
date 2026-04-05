@@ -159,14 +159,14 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 			for _, fileHeader := range files {
 				file, err := fileHeader.Open()
 				if err != nil {
-					log.Printf("Error opening uploaded file %s: %v", fileHeader.Filename, err)
+					log.Printf("Error opening uploaded file %s: %v", strconv.Quote(fileHeader.Filename), err)
 					continue
 				}
 				defer file.Close()
 
 				url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
 				if err != nil {
-					log.Printf("Error uploading file %s to GCS: %v", fileHeader.Filename, err)
+					log.Printf("Error uploading file %s to GCS: %v", strconv.Quote(fileHeader.Filename), err)
 					continue
 				}
 				mediaURLs = append(mediaURLs, url)
@@ -252,7 +252,7 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: currentTime})
 
 	if err := h.Store.UpdateSwarm(r.Context(), updateReq.ID, updates); err != nil {
-		log.Printf("Failed to update report %q in Firestore: %v", updateReq.ID, err)
+		log.Printf("Failed to update report %s in Firestore: %v", strconv.Quote(updateReq.ID), err)
 		http.Error(w, "Error updating report", http.StatusInternalServerError)
 		return
 	}
@@ -314,7 +314,7 @@ func validateFile(file *multipart.FileHeader) error {
 	}
 
 	if allowedExtensions[ext] {
-		log.Printf("File %q accepted by extension %q (MIME type was %q)", file.Filename, ext, contentType)
+		log.Printf("File %s accepted by extension %q (MIME type was %q)", strconv.Quote(file.Filename), ext, contentType)
 		return nil
 	}
 
