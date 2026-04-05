@@ -6,10 +6,10 @@ services:
     ports:
       - "8081:8081"
     healthcheck:
-      test: ["CMD-SHELL", "curl -s http://127.0.0.1:8081 || exit 1"]
+      test: ["CMD", "python3", "-c", "import socket; s = socket.socket(); s.connect(('127.0.0.1', 8081))"]
       interval: 10s
       timeout: 5s
-      retries: 20
+      retries: 15
 
   gcs-emulator:
     image: fsouza/fake-gcs-server
