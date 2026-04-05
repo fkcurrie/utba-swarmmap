@@ -20,6 +20,8 @@ import (
 
 var version = "dev"
 
+// Add a comment to trigger and verify the new CI/CD checks.
+// Add another comment to trigger and verify the new CI/CD checks.
 // getEnv reads an environment variable with a fallback value.
 func getEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
@@ -130,20 +132,20 @@ func main() {
 	mux.Handle("POST /assign_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.AssignSwarmHandler))))
 	// Add other routes here as they are refactored
 
-	portStr := getEnv("PORT", "8080")
-	port, err := strconv.Atoi(portStr)
-	if err != nil {
-		log.Fatalf("Invalid PORT: %v", err)
+	port := getEnv("PORT", "8080")
+	// Validate port to prevent log injection and ensure it's a valid port number
+	if _, err := strconv.Atoi(port); err != nil {
+		log.Fatalf("Invalid PORT: %s", port)
 	}
-	log.Printf("Starting server on port %d", port)
+	log.Printf("Starting server on port %s", port)
 	log.Printf("Server version: %q", version) //nolint:gosec // G706: version is quoted and safe for logging
 
 	srv := &http.Server{
-		Addr:         ":" + strconv.Itoa(port),
+		Addr:         ":" + port,
 		Handler:      mux,
 		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 15 * time.Second,
-		IdleTimeout:  60 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		IdleTimeout:  120 * time.Second,
 	}
 
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {

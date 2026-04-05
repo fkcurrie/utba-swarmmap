@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"html/template"
 	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 	"time"
@@ -202,18 +204,17 @@ func (m *MockStore) UpdateUser(_ context.Context, userID string, updates []fires
 	return nil // User not found
 }
 
-func (m *MockStore) GetAllUsers(_ context.Context) ([]models.User, error) {
+func (m *MockStore) UploadToGCS(_ context.Context, swarmID string, _ io.Reader, filename string) (string, error) {
 	if m.ReturnError {
-		return nil, http.ErrHandlerTimeout
+		return "", http.ErrHandlerTimeout
 	}
-	return m.Users, nil
+	return "https://storage.googleapis.com/test-bucket/" + swarmID + "/" + filename, nil
 }
 
 func (m *MockStore) TrackVisit(_ context.Context, _ string) error {
 	if m.ReturnError {
 		return http.ErrHandlerTimeout
 	}
-	// Simplified mock implementation
 	return nil
 }
 
@@ -221,15 +222,14 @@ func (m *MockStore) GetVisitCounts(_ context.Context, _ int) (map[string]int, er
 	if m.ReturnError {
 		return nil, http.ErrHandlerTimeout
 	}
-	// Simplified mock implementation
-	return map[string]int{"2025-07-23": 1}, nil
+	return map[string]int{"2026-04-04": 1}, nil
 }
 
-func (m *MockStore) UploadToGCS(_ context.Context, _ string, _ io.Reader, filename string) (string, error) {
+func (m *MockStore) GetAllUsers(_ context.Context) ([]models.User, error) {
 	if m.ReturnError {
-		return "", http.ErrHandlerTimeout
+		return nil, http.ErrHandlerTimeout
 	}
-	return "https://mock-storage.com/" + filename, nil
+	return m.Users, nil
 }
 
 func (m *MockStore) GetAllSwarms(_ context.Context) ([]models.SwarmReport, error) {
@@ -257,6 +257,7 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 	mockSwarms := []models.SwarmReport{
 		{ID: "1", Description: "Swarm 1", Status: "Reported", ReportedTimestamp: time.Now()},
 		{ID: "2", Description: "Swarm 2", Status: "Captured", ReportedTimestamp: time.Now().Add(-25 * time.Hour)},
+		{ID: "3", Description: "Swarm 3", Status: "Reported", ReportedTimestamp: time.Now().Add(-25 * time.Hour)},
 	}
 	mockStore := &MockStore{Swarms: mockSwarms}
 
@@ -286,8 +287,8 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 		t.Fatalf("could not decode response body: %v", err)
 	}
 
-	if len(returnedSwarms) != 2 {
-		t.Errorf("handler returned wrong number of swarms: got %d want %d", len(returnedSwarms), 2)
+	if len(returnedSwarms) != 3 {
+		t.Errorf("handler returned wrong number of swarms: got %d want %d", len(returnedSwarms), 3)
 	}
 
 	// Check the dynamic DisplayStatus logic
@@ -296,6 +297,9 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 	}
 	if returnedSwarms[1].DisplayStatus != "Captured" {
 		t.Errorf("expected DisplayStatus to be 'Captured', got '%s'", returnedSwarms[1].DisplayStatus)
+	}
+	if returnedSwarms[2].DisplayStatus != "Archived" {
+		t.Errorf("expected DisplayStatus to be 'Archived', got '%s'", returnedSwarms[2].DisplayStatus)
 	}
 }
 
@@ -428,19 +432,34 @@ func TestAuthHandler_Authenticated(t *testing.T) {
 }
 
 func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
-	h := &Handlers{} // No store needed for this handler
+	mockStore := &MockStore{}
+	h := &Handlers{Store: mockStore}
 
 	// Create a multipart form request
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	_ = writer.WriteField("description", "A test swarm")
-	_ = writer.WriteField("latitude", "43.6532")
-	_ = writer.WriteField("longitude", "-79.3832")
-	_ = writer.WriteField("intersection", "Yonge & Bloor")
+	if err := writer.WriteField("description", "A test swarm"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("latitude", "43.6532"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("longitude", "-79.3832"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("intersection", "Yonge & Bloor"); err != nil {
+		t.Fatal(err)
+	}
 	// Create a dummy file part
-	part, _ := writer.CreateFormFile("media", "test.jpg")
-	_, _ = part.Write([]byte("dummy image data"))
-	_ = writer.Close()
+	part, err := writer.CreateFormFile("media", "test.jpg")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := part.Write([]byte("dummy image data")); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+t.Errorf("Error closing writer: %v", err)	}
 
 	req, err := http.NewRequest("POST", "/prepare_swarm", body)
 	if err != nil {
@@ -467,6 +486,53 @@ func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
 	}
 }
 
+func TestPrepareSwarmHandler_VideoRequest(t *testing.T) {
+	mockStore := &MockStore{}
+	h := &Handlers{Store: mockStore}
+
+	// Create a multipart form request with a video
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	if err := writer.WriteField("description", "A test swarm with video"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("latitude", "43.6532"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("longitude", "-79.3832"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("intersection", "Yonge & Bloor"); err != nil {
+		t.Fatal(err)
+	}
+	// Create a dummy video file part
+	part, err := writer.CreateFormFile("media", "test.mp4")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := part.Write([]byte("dummy video data")); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	req, err := http.NewRequest("POST", "/prepare_swarm", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.PrepareSwarmHandler)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v, body: %s",
+			status, http.StatusOK, rr.Body.String())
+	}
+}
+
 func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	mockStore := &MockStore{}
 	h := &Handlers{Store: mockStore}
@@ -474,14 +540,30 @@ func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	// Create a multipart form request
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	_ = writer.WriteField("referenceID", "test-swarm-id")
-	_ = writer.WriteField("description", "A test swarm")
-	_ = writer.WriteField("latitude", "43.6532")
-	_ = writer.WriteField("longitude", "-79.3832")
-	_ = writer.WriteField("intersection", "Yonge & Bloor")
-	part, _ := writer.CreateFormFile("media", "test.jpg")
-	_, _ = part.Write([]byte("dummy image data"))
-	_ = writer.Close()
+	if err := writer.WriteField("referenceID", "test-swarm-id"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("description", "A test swarm"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("latitude", "43.6532"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("longitude", "-79.3832"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("intersection", "Yonge & Bloor"); err != nil {
+		t.Fatal(err)
+	}
+	part, err := writer.CreateFormFile("media", "test.jpg")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := part.Write([]byte("dummy image data")); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+t.Errorf("Error closing writer: %v", err)	}
 
 	req, err := http.NewRequest("POST", "/confirm_swarm", body)
 	if err != nil {
@@ -496,6 +578,35 @@ func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
+	}
+}
+
+func TestConfirmSwarmHandler_URLEncoded(t *testing.T) {
+	mockStore := &MockStore{}
+	h := &Handlers{Store: mockStore}
+
+	// Create a URL encoded request (like the frontend does)
+	form := url.Values{}
+	form.Set("referenceID", "test-swarm-id")
+	form.Set("description", "A test swarm")
+	form.Set("latitude", "43.6532")
+	form.Set("longitude", "-79.3832")
+	form.Set("intersection", "Yonge & Bloor")
+	form.Add("mediaURLs", "https://storage.googleapis.com/test-bucket/test-swarm-id/test.jpg")
+
+	req, err := http.NewRequest("POST", "/confirm_swarm", strings.NewReader(form.Encode()))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.ConfirmSwarmHandler)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v, body: %s",
+			status, http.StatusOK, rr.Body.String())
 	}
 }
 
@@ -810,9 +921,46 @@ func TestCollectorAdminHandler_Unauthorized(t *testing.T) {
 	}
 }
 
+func TestLoginRouting(t *testing.T) {
+	h := &Handlers{
+		GoogleOAuthConfig: &oauth2.Config{
+			RedirectURL:  "http://localhost/auth/google/callback",
+			ClientID:     "test-client-id",
+			ClientSecret: "test-client-secret",
+			Scopes:       []string{"email", "profile"},
+			Endpoint:     google.Endpoint,
+		},
+	}
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/login", h.GoogleLoginHandler)
+
+	req, err := http.NewRequest("GET", "/login", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	mux.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusTemporaryRedirect {
+		t.Errorf("mux returned wrong status code: got %v want %v",
+			status, http.StatusTemporaryRedirect)
+	}
+}
+
 func TestUsernameRegisterHandler(t *testing.T) {
 	mockStore := &MockStore{}
-	h := &Handlers{Store: mockStore}
+	templateFuncs := template.FuncMap{
+		"add": func(a, b int) int {
+			return a + b
+		},
+	}
+	tmpl, err := template.New("").Funcs(templateFuncs).ParseGlob("../templates/*.html")
+	if err != nil {
+		t.Fatalf("Error parsing templates: %v", err)
+	}
+	h := &Handlers{Store: mockStore, Templates: tmpl}
 
 	body := strings.NewReader("email=test@example.com&password=password123&name=Test+User&phone=123456789&location=London")
 	req, err := http.NewRequest("POST", "/auth/register", body)

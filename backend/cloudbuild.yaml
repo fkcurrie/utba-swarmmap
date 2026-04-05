@@ -2,7 +2,6 @@
 # cloudbuild-backend.yaml
 # Use this for backend deployments.
 # Command: gcloud builds submit --config cloudbuild-backend.yaml .
-
 steps:
   # Get the URL of the already-deployed frontend service
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -12,18 +11,20 @@ steps:
       - '-c'
       - >
         gcloud run services describe utba-swarmmap-frontend
-        --platform=managed --region=northamerica-northeast2
+        --platform=managed
+        --region=northamerica-northeast2
         --format='value(status.url)' --quiet > /workspace/frontend-url.txt
-
   # Build and deploy the backend service
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Backend'
-    args: ['build', '-t', 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest', '.']
-
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest'
+      - '.'
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Backend'
     args: ['push', 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest']
-
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Backend'
     entrypoint: 'bash'
@@ -43,7 +44,6 @@ steps:
         --update-secrets=GOOGLE_CLIENT_ID=google-oauth-client-id:latest
         --update-secrets=GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest
         --quiet
-
   # Get the URL of the deployed service and write it to a file
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Get Service URL'
@@ -54,7 +54,6 @@ steps:
         gcloud run services describe utba-swarmmap-backend
         --platform=managed --region=northamerica-northeast2
         --format='value(status.url)' --quiet > /workspace/service-url
-
   # Verify the deployment by curling the URL from the file
   - name: 'gcr.io/cloud-builders/curl'
     id: 'Verify Deployment'
@@ -62,7 +61,6 @@ steps:
     args:
       - '-c'
       - 'curl -I --fail --silent --show-error "$(cat /workspace/service-url)"'
-
 images:
   - 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest'
 options:

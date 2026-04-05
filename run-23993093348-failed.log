@@ -1,0 +1,50 @@
+e2e-startup	Verify Backend Root/Login	﻿2026-04-05T03:09:13.3032881Z ##[group]Run echo "Verifying Backend Root..."
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3033234Z [36;1mecho "Verifying Backend Root..."[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3033679Z [36;1mSTATUS_ROOT=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/ || echo "000")[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3034118Z [36;1mecho "Root status: $STATUS_ROOT"[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3034676Z [36;1mif [[ "$STATUS_ROOT" != "200" ]]; then[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3034997Z [36;1m  echo "Expected root status 200, got $STATUS_ROOT"[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3035297Z [36;1m  docker compose logs backend[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3035530Z [36;1m  exit 1[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3035698Z [36;1mfi[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3035860Z [36;1m[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3036034Z [36;1mecho "Verifying Backend Login..."[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3036464Z [36;1mSTATUS_LOGIN=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/login || echo "000")[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3036921Z [36;1mecho "Login status: $STATUS_LOGIN"[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3037249Z [36;1mif [[ "$STATUS_LOGIN" != "302" && "$STATUS_LOGIN" != "307" ]]; then[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3037675Z [36;1m  echo "Expected login status 302 or 307, got $STATUS_LOGIN"[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3038005Z [36;1m  docker compose logs backend[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3038237Z [36;1m  exit 1[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3038409Z [36;1mfi[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3038564Z [36;1m[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3038734Z [36;1mecho "Verifying Swarms API..."[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3038974Z [36;1mfor i in {1..20}; do[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3039391Z [36;1m  STATUS_SWARMS=$(curl -s -m 5 -o /dev/null -w "%{http_code}" http://localhost:8080/get_swarms || echo "000")[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3039900Z [36;1m  if [[ "$STATUS_SWARMS" == "200" ]]; then[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3040154Z [36;1m    break[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3040332Z [36;1m  fi[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3040600Z [36;1m  echo "Swarms API not ready, got $STATUS_SWARMS. Retrying ($i/20)..."[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3040945Z [36;1m  sleep 3[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3041126Z [36;1mdone[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3041336Z [36;1mecho "Swarms API status: $STATUS_SWARMS"[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3041632Z [36;1mif [[ "$STATUS_SWARMS" != "200" ]]; then[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3041956Z [36;1m  echo "Expected swarms status 200, got $STATUS_SWARMS"[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3042404Z [36;1m  docker compose logs backend[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3042693Z [36;1m  exit 1[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3042867Z [36;1mfi[0m
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3066685Z shell: /usr/bin/bash -e {0}
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3066943Z ##[endgroup]
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3107549Z Verifying Backend Root...
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3170652Z Root status: 200
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3171025Z Verifying Backend Login...
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3230268Z Login status: 200
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3230655Z Expected login status 302 or 307, got 200
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3906636Z backend-1  | 2026/04/05 03:09:13 Initializing Firestore client (Project: "utba-swarmmap")...
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3908430Z backend-1  | 2026/04/05 03:09:13 Using Firestore Emulator at firestore-emulator:8081
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3909135Z backend-1  | 2026/04/05 03:09:13 Firestore client initialized successfully
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3909557Z backend-1  | 2026/04/05 03:09:13 Initializing Storage client...
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3909960Z backend-1  | 2026/04/05 03:09:13 Using Storage Emulator at gcs-emulator:4443
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3910378Z backend-1  | 2026/04/05 03:09:13 Storage client initialized successfully
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3910760Z backend-1  | 2026/04/05 03:09:13 Starting server on port 8080
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3911081Z backend-1  | 2026/04/05 03:09:13 Server version: dev
+e2e-startup	Verify Backend Root/Login	2026-04-05T03:09:13.3947991Z ##[error]Process completed with exit code 1.

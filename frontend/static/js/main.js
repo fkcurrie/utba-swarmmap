@@ -1,7 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
   const mapElement = document.getElementById('map');
   const reportSwarmBtn = document.getElementById('reportSwarmBtn');
+  const reportSwarmForm = document.getElementById('reportSwarmForm');
+  const galleryInput = document.getElementById('gallery-input');
+  const cameraInput = document.getElementById('camera-input');
+  const selectedFilesList = document.getElementById('selectedFilesList');
+  const fileManagementArea = document.getElementById('fileManagementArea');
+  const totalFileCount = document.getElementById('totalFileCount');
+  const clearAllFilesBtn = document.getElementById('clearAllFilesBtn');
+
   let map;
+  let selectedFiles = [];
 
   if (mapElement) {
     // Use setTimeout to ensure the map container is fully rendered
@@ -111,60 +120,57 @@ document.addEventListener('DOMContentLoaded', function () {
     reportSwarmBtn.addEventListener('click', () => locateUser(true));
   }
 
-  // Form submission and file management
-  const reportSwarmForm = document.getElementById('reportSwarmForm');
-  const galleryInput = document.getElementById('gallery-input');
-  const cameraInput = document.getElementById('camera-input');
-  const selectedFilesList = document.getElementById('selectedFilesList');
-  const fileManagementArea = document.getElementById('fileManagementArea');
-  const totalFileCount = document.getElementById('totalFileCount');
-  const clearAllFilesBtn = document.getElementById('clearAllFilesBtn');
-
-  let selectedFiles = [];
-
+  // File Management
   const updateFileList = () => {
-    selectedFilesList.innerHTML = '';
-    if (selectedFiles.length === 0) {
-      fileManagementArea.style.display = 'none';
-      return;
-    }
-
-    fileManagementArea.style.display = 'block';
-    totalFileCount.textContent = selectedFiles.length;
-
-    selectedFiles.forEach((file, index) => {
-      const div = document.createElement('div');
-      div.className =
-        'd-flex justify-content-between align-items-center mb-1 p-1 border-bottom';
-      div.innerHTML = `
-        <small class="text-truncate" style="max-width: 200px;">${file.name}</small>
-        <button type="button" class="btn btn-sm btn-link text-danger remove-file-btn" data-index="${index}">
-          <i class="fas fa-times"></i>
-        </button>
-      `;
-      selectedFilesList.appendChild(div);
-    });
-
-    document.querySelectorAll('.remove-file-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const index = parseInt(e.currentTarget.dataset.index);
-        selectedFiles.splice(index, 1);
-        updateFileList();
+    if (selectedFiles.length > 0) {
+      fileManagementArea.style.display = 'block';
+      selectedFilesList.innerHTML = '';
+      selectedFiles.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className =
+          'd-flex justify-content-between align-items-center mb-2 p-2 border-bottom';
+        fileItem.innerHTML = `
+                    <div class="text-truncate mr-2" style="max-width: 200px;">
+                        <i class="${file.type.startsWith('image/') ? 'fas fa-image' : 'fas fa-video'} mr-2"></i>
+                        ${file.name} <small class="text-muted">(${(file.size / (1024 * 1024)).toFixed(2)} MB)</small>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-file-btn" data-index="${index}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+        selectedFilesList.appendChild(fileItem);
       });
-    });
+      totalFileCount.textContent = selectedFiles.length;
+
+      document.querySelectorAll('.remove-file-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.currentTarget.getAttribute('data-index'));
+          selectedFiles.splice(index, 1);
+          updateFileList();
+        });
+      });
+    } else {
+      fileManagementArea.style.display = 'none';
+    }
   };
 
   if (galleryInput) {
     galleryInput.addEventListener('change', (e) => {
-      selectedFiles = [...selectedFiles, ...Array.from(e.target.files)];
+      for (let i = 0; i < e.target.files.length; i++) {
+        selectedFiles.push(e.target.files[i]);
+      }
       updateFileList();
+      galleryInput.value = ''; // Reset for next selection
     });
   }
 
   if (cameraInput) {
     cameraInput.addEventListener('change', (e) => {
-      selectedFiles = [...selectedFiles, ...Array.from(e.target.files)];
-      updateFileList();
+      if (e.target.files.length > 0) {
+        selectedFiles.push(e.target.files[0]);
+        updateFileList();
+      }
+      cameraInput.value = ''; // Reset
     });
   }
 
@@ -176,53 +182,175 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   if (reportSwarmForm) {
-    reportSwarmForm.addEventListener('submit', async (e) => {
+    reportSwarmForm.addEventListener('submit', async function (e) {
       e.preventDefault();
+
       const submitBtn = reportSwarmForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.textContent;
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting...';
-
-      const formData = new FormData(reportSwarmForm);
-      // Add a unique reference ID
-      formData.append(
-        'referenceID',
-        Math.random().toString(36).substring(2, 15) +
-          Math.random().toString(36).substring(2, 15),
-      );
-
-      // Add files
-      selectedFiles.forEach((file) => {
-        formData.append('media', file);
-      });
-
-      // Add session ID for tracking
-      formData.append(
-        'reporterSessionId',
-        localStorage.getItem('utba_visitor_id'),
-      );
+      submitBtn.innerHTML =
+        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
 
       try {
-        const response = await fetch('/confirm_swarm', {
+        // 1. Prepare Swarm (Upload Files)
+        const formData = new FormData(reportSwarmForm);
+        // Remove existing media fields from formData if any (though there shouldn't be since they are not in the form)
+        formData.delete('media');
+        selectedFiles.forEach((file) => {
+          formData.append('media', file);
+        });
+
+        const prepareResponse = await fetch('/prepare_swarm', {
           method: 'POST',
           body: formData,
         });
 
-        if (response.ok) {
-          alert('Swarm report submitted successfully!');
-          location.reload();
-        } else {
-          const errorText = await response.text();
-          alert('Failed to submit report: ' + errorText);
+        if (!prepareResponse.ok) {
+          const errorText = await prepareResponse.text();
+          throw new Error(errorText || 'Failed to prepare report');
         }
+
+        const prepareData = await prepareResponse.json();
+
+        // 2. Confirm Swarm
+        const confirmFormData = new URLSearchParams();
+        confirmFormData.append('referenceID', prepareData.referenceID);
+        confirmFormData.append('description', prepareData.description);
+        confirmFormData.append('latitude', prepareData.latitude);
+        confirmFormData.append('longitude', prepareData.longitude);
+        confirmFormData.append('intersection', prepareData.nearestIntersection);
+        confirmFormData.append(
+          'reporterName',
+          document.getElementById('reporterName').value,
+        );
+        confirmFormData.append(
+          'reporterEmail',
+          document.getElementById('reporterEmail').value,
+        );
+        confirmFormData.append(
+          'reporterPhone',
+          document.getElementById('reporterPhone').value,
+        );
+        // Add session ID for tracking (from upstream improvement)
+        confirmFormData.append(
+          'reporterSessionId',
+          localStorage.getItem('utba_visitor_id'),
+        );
+
+        // Add media URLs
+        if (prepareData.mediaURLs) {
+          prepareData.mediaURLs.forEach((url) => {
+            confirmFormData.append('mediaURLs', url);
+          });
+        }
+
+        const confirmResponse = await fetch('/confirm_swarm', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: confirmFormData,
+        });
+
+        if (!confirmResponse.ok) {
+          const errorText = await confirmResponse.text();
+          throw new Error(errorText || 'Failed to confirm report');
+        }
+
+        alert('Swarm report submitted successfully!');
+        reportSwarmForm.reset();
+        selectedFiles = [];
+        updateFileList();
+        const reportModal = bootstrap.Modal.getInstance(
+          document.getElementById('reportSwarmModal'),
+        );
+        reportModal.hide();
+
+        // Refresh page or update map (optional)
+        window.location.reload();
       } catch (error) {
         console.error('Error submitting report:', error);
-        alert('An error occurred while submitting the report.');
+        alert('Error: ' + error.message);
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Report';
+        submitBtn.textContent = originalBtnText;
       }
     });
   }
+
+  // Media Viewer Functionality
+  let currentMediaIndex = 0;
+  let mediaURLs = [];
+
+  const updateMediaViewer = () => {
+    const imgViewer = document.getElementById('media-viewer');
+    const videoViewer = document.getElementById('video-viewer');
+    const counter = document.getElementById('media-counter');
+    const url = mediaURLs[currentMediaIndex];
+
+    imgViewer.style.display = 'none';
+    videoViewer.style.display = 'none';
+    if (videoViewer.pause) videoViewer.pause();
+
+    const isVideo =
+      url
+        .toLowerCase()
+        .match(/\.(mp4|webm|mov|avi|3gp|mpeg|ogv|ts|mkv|m4v)$/) ||
+      url.includes('video'); // Basic check
+
+    if (isVideo) {
+      videoViewer.src = url;
+      videoViewer.style.display = 'block';
+    } else {
+      imgViewer.src = url;
+      imgViewer.style.display = 'block';
+    }
+
+    counter.textContent = `${currentMediaIndex + 1} of ${mediaURLs.length}`;
+
+    // Hide nav buttons if only one item
+    const navButtons = document.querySelectorAll('.media-nav');
+    navButtons.forEach(
+      (btn) => (btn.style.display = mediaURLs.length > 1 ? 'block' : 'none'),
+    );
+  };
+
+  const navigateMedia = (step) => {
+    currentMediaIndex =
+      (currentMediaIndex + step + mediaURLs.length) % mediaURLs.length;
+    updateMediaViewer();
+  };
+
+  const openMediaViewer = (urls) => {
+    mediaURLs = urls;
+    currentMediaIndex = 0;
+    updateMediaViewer();
+    const mediaModal = new bootstrap.Modal(
+      document.getElementById('media-viewer-modal'),
+    );
+    mediaModal.show();
+  };
+
+  // Media navigation buttons
+  document.querySelectorAll('.media-nav.prev').forEach((btn) => {
+    btn.addEventListener('click', () => navigateMedia(-1));
+  });
+  document.querySelectorAll('.media-nav.next').forEach((btn) => {
+    btn.addEventListener('click', () => navigateMedia(1));
+  });
+
+  // Event delegation for dynamically (or statically) rendered view-media-btns
+  document.addEventListener('click', function (e) {
+    const btn = e.target.closest('.view-media-btn');
+    if (btn) {
+      try {
+        const urls = JSON.parse(btn.getAttribute('data-media-urls'));
+        openMediaViewer(urls);
+      } catch (err) {
+        console.error('Error parsing media URLs:', err);
+      }
+    }
+  });
 
   locateUser(false);
 
