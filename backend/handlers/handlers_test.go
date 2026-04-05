@@ -872,6 +872,34 @@ func TestCollectorAdminHandler_Unauthorized(t *testing.T) {
 	}
 }
 
+func TestLoginRouting(t *testing.T) {
+	h := &Handlers{
+		GoogleOAuthConfig: &oauth2.Config{
+			RedirectURL:  "http://localhost/auth/google/callback",
+			ClientID:     "test-client-id",
+			ClientSecret: "test-client-secret",
+			Scopes:       []string{"email", "profile"},
+			Endpoint:     google.Endpoint,
+		},
+	}
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/login", h.GoogleLoginHandler)
+
+	req, err := http.NewRequest("GET", "/login", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	mux.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusFound {
+		t.Errorf("mux returned wrong status code: got %v want %v",
+			status, http.StatusFound)
+	}
+}
+
 func TestVerifyChecks(t *testing.T) {
 	if 1+1 != 2 {
 		t.Error("Math is broken")

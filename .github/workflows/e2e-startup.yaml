@@ -30,7 +30,7 @@ jobs:
           echo "Waiting for backend service to start..."
           MAX_ATTEMPTS=60
           ATTEMPT=0
-          until curl -s http://localhost:8080 | grep "UTBA Swarm Map" > /dev/null; do
+          until curl -s http://localhost:8085 | grep "UTBA Swarm Map" > /dev/null; do
             ATTEMPT=$((ATTEMPT+1))
             if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
               echo "Backend failed to start in time or returned unexpected content."
@@ -45,7 +45,7 @@ jobs:
       - name: Verify Backend Root/Login
         run: |
           echo "Verifying Backend Root..."
-          STATUS_ROOT=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/ || echo "000")
+          STATUS_ROOT=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8085/ || echo "000")
           echo "Root status: $STATUS_ROOT"
           if [[ "$STATUS_ROOT" != "200" ]]; then
             echo "Expected root status 200, got $STATUS_ROOT"
@@ -54,7 +54,7 @@ jobs:
           fi
 
           echo "Verifying Backend Login..."
-          STATUS_LOGIN=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/login || echo "000")
+          STATUS_LOGIN=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8085/login || echo "000")
           echo "Login status: $STATUS_LOGIN"
           if [[ "$STATUS_LOGIN" != "302" && "$STATUS_LOGIN" != "307" ]]; then
             echo "Expected login status 302 or 307, got $STATUS_LOGIN"
@@ -64,7 +64,7 @@ jobs:
 
           echo "Verifying Swarms API..."
           for i in {1..20}; do
-            STATUS_SWARMS=$(curl -s -m 5 -o /dev/null -w "%{http_code}" http://localhost:8080/get_swarms || echo "000")
+            STATUS_SWARMS=$(curl -s -m 5 -o /dev/null -w "%{http_code}" http://localhost:8085/get_swarms || echo "000")
             if [[ "$STATUS_SWARMS" == "200" ]]; then
               break
             fi
