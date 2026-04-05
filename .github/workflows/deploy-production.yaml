@@ -1,0 +1,74 @@
+name: Promote to Production
+
+on:
+  release:
+    types: [published]
+
+env:
+  PROJECT_ID: 'utba-swarmmap'
+  REGION: 'northamerica-northeast2'
+  SERVICE_BACKEND: 'utba-swarmmap-backend'
+  SERVICE_FRONTEND: 'utba-swarmmap-frontend'
+  IMAGE_BACKEND: 'gcr.io/utba-swarmmap/utba-swarmmap-backend'
+  IMAGE_FRONTEND: 'gcr.io/utba-swarmmap/utba-swarmmap-frontend'
+
+jobs:
+  deploy-production:
+    name: Promote Release to Production
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/18499119240/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
+          service_account: 'github-actions-deployer@utba-swarmmap.iam.gserviceaccount.com'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker
+
+      - name: Tag Release Images
+        run: |
+          # The exact code was already built when merged into main (from deploy-staging.yaml).
+          # We just re-tag the existing commit hash image with the new release tag.
+          gcloud container images add-tag ${{ env.IMAGE_BACKEND }}:${{ github.sha }} ${{ env.IMAGE_BACKEND }}:${{ github.event.release.tag_name }} --quiet
+          gcloud container images add-tag ${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${{ env.IMAGE_FRONTEND }}:${{ github.event.release.tag_name }} --quiet
+
+      - name: Deploy Backend to Production
+        run: |
+          gcloud run deploy ${{ env.SERVICE_BACKEND }} \
+            --image ${{ env.IMAGE_BACKEND }}:${{ github.event.release.tag_name }} \
+            --region ${{ env.REGION }} \
+            --project ${{ env.PROJECT_ID }} \
+            --allow-unauthenticated \
+            --set-env-vars GOOGLE_REDIRECT_URL=https://${{ env.SERVICE_BACKEND }}-18499119240.${{ env.REGION }}.run.app/auth/google/callback,FRONTEND_ASSETS_URL=https://${{ env.SERVICE_FRONTEND }}-18499119240.${{ env.REGION }}.run.app \
+            --set-secrets GOOGLE_CLIENT_ID=google-oauth-client-id:latest,GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest \
+            --service-account 18499119240-compute@developer.gserviceaccount.com
+
+      - name: Deploy Frontend to Production
+        run: |
+          gcloud run deploy ${{ env.SERVICE_FRONTEND }} \
+            --image ${{ env.IMAGE_FRONTEND }}:${{ github.event.release.tag_name }} \
+            --region ${{ env.REGION }} \
+            --project ${{ env.PROJECT_ID }} \
+            --allow-unauthenticated \
+            --service-account 18499119240-compute@developer.gserviceaccount.com
+
+      - name: Verify Live Production
+        run: |
+          echo "Production deployment complete for Release ${{ github.event.release.tag_name }}"
+          echo "Live Backend: https://${{ env.SERVICE_BACKEND }}-18499119240.${{ env.REGION }}.run.app"
+          echo "Live Frontend: https://${{ env.SERVICE_FRONTEND }}-18499119240.${{ env.REGION }}.run.app"

@@ -1,0 +1,93 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: 'utba-swarmmap'
+  REGION: 'northamerica-northeast2'
+  SERVICE_BACKEND: 'utba-swarmmap-backend-staging'
+  SERVICE_FRONTEND: 'utba-swarmmap-frontend-staging'
+  IMAGE_BACKEND: 'gcr.io/utba-swarmmap/utba-swarmmap-backend'
+  IMAGE_FRONTEND: 'gcr.io/utba-swarmmap/utba-swarmmap-frontend'
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging Cloud Run
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: 'projects/18499119240/locations/global/workloadIdentityPools/github-actions-pool/providers/github-actions-provider'
+          service_account: 'github-actions-deployer@utba-swarmmap.iam.gserviceaccount.com'
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker
+
+      - name: Build and Push Backend Image
+        run: |
+          docker build -t ${{ env.IMAGE_BACKEND }}:${{ github.sha }} ./backend
+          docker push ${{ env.IMAGE_BACKEND }}:${{ github.sha }}
+
+      - name: Build and Push Frontend Image
+        run: |
+          docker build -t ${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ./frontend
+          docker push ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
+
+      - name: Deploy Backend to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE_BACKEND }} \
+            --image ${{ env.IMAGE_BACKEND }}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --project ${{ env.PROJECT_ID }} \
+            --allow-unauthenticated \
+            --set-env-vars GOOGLE_REDIRECT_URL=https://${{ env.SERVICE_BACKEND }}-18499119240.${{ env.REGION }}.run.app/auth/google/callback,FRONTEND_ASSETS_URL=https://${{ env.SERVICE_FRONTEND }}-18499119240.${{ env.REGION }}.run.app \
+            --set-secrets GOOGLE_CLIENT_ID=google-oauth-client-id:latest,GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest \
+            --service-account 18499119240-compute@developer.gserviceaccount.com
+
+      - name: Deploy Frontend to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE_FRONTEND }} \
+            --image ${{ env.IMAGE_FRONTEND }}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --project ${{ env.PROJECT_ID }} \
+            --allow-unauthenticated \
+            --service-account 18499119240-compute@developer.gserviceaccount.com
+
+      - name: Run Smoke Tests against Staging
+        run: |
+          echo "Staging backend deployed to: https://${{ env.SERVICE_BACKEND }}-18499119240.${{ env.REGION }}.run.app"
+          echo "Staging frontend deployed to: https://${{ env.SERVICE_FRONTEND }}-18499119240.${{ env.REGION }}.run.app"
+          
+          echo "Testing backend health..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.SERVICE_BACKEND }}-18499119240.${{ env.REGION }}.run.app/)
+          if [ "$STATUS" != "200" ]; then
+            echo "Backend returned $STATUS"
+            exit 1
+          fi
+          
+          echo "Testing frontend health..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.SERVICE_FRONTEND }}-18499119240.${{ env.REGION }}.run.app/)
+          if [ "$STATUS" != "200" ]; then
+            echo "Frontend returned $STATUS"
+            exit 1
+          fi
+          
+          echo "Staging validation complete!"
