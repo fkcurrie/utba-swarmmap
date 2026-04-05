@@ -37,7 +37,9 @@ func (h *Handlers) VisitsAPIHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	_, _ = w.Write(visitsJSON)
+	if _, err := w.Write(visitsJSON); err != nil {
+		log.Printf("Failed to write visits response: %v", err)
+	}
 }
 
 func (h *Handlers) TrackVisitHandler(w http.ResponseWriter, r *http.Request) {

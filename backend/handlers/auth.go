@@ -21,7 +21,9 @@ func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session")
 	if err == nil && cookie.Value != "" {
-		_ = h.Store.DeleteSession(r.Context(), cookie.Value)
+		if err := h.Store.DeleteSession(r.Context(), cookie.Value); err != nil {
+			log.Printf("Failed to delete session: %v", err)
+		}
 	}
 
 	http.SetCookie(w, &http.Cookie{
@@ -41,15 +43,19 @@ func (h *Handlers) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	session := h.getSession(r)
 	if session == nil {
 		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(map[string]interface{}{"authenticated": false})
+		if err := json.NewEncoder(w).Encode(map[string]interface{}{"authenticated": false}); err != nil {
+			log.Printf("Failed to encode auth response: %v", err)
+		}
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	_ = json.NewEncoder(w).Encode(map[string]interface{}{
+	if err := json.NewEncoder(w).Encode(map[string]interface{}{
 		"authenticated": true,
 		"user":          session,
-	})
+	}); err != nil {
+		log.Printf("Failed to encode auth response: %v", err)
+	}
 }
 
 func (h *Handlers) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -165,5 +171,7 @@ func showPendingApprovalPage(w http.ResponseWriter, name string) {
 </div>
 <a href="/" class="btn btn-primary">Return to Map</a></div></div></div></div></div></body></html>`
 	w.Header().Set("Content-Type", "text/html")
-	_, _ = w.Write([]byte(html))
+	if _, err := w.Write([]byte(html)); err != nil {
+		log.Printf("Failed to write response: %v", err)
+	}
 }
