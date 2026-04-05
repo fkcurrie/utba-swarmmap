@@ -1,0 +1,596 @@
+Frontend (Go Server)	UNKNOWN STEP	﻿2026-04-04T15:39:41.4325790Z Current runner version: '2.333.1'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4345981Z ##[group]Runner Image Provisioner
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4346738Z Hosted Compute Agent
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4347199Z Version: 20260213.493
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4347761Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4348394Z Build Date: 2026-02-13T00:28:41Z
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4348941Z Worker ID: {8d548e75-3754-4e32-b205-c70517028382}
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4349554Z Azure Region: westus3
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4350042Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4351245Z ##[group]Operating System
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4351712Z Ubuntu
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4352180Z 24.04.4
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4352553Z LTS
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4353079Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4353585Z ##[group]Runner Image
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4354040Z Image: ubuntu-24.04
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4354478Z Version: 20260329.72.1
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4355525Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260329.72/images/ubuntu/Ubuntu2404-Readme.md
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4356752Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260329.72
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4357585Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4358519Z ##[group]GITHUB_TOKEN Permissions
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4360239Z Contents: read
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4360661Z Metadata: read
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4361111Z Packages: read
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4361550Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4363564Z Secret source: None
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4364111Z Prepare workflow directory
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4664215Z Prepare all required actions
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.4717962Z Getting action download info
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.9033747Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:41.9762569Z Download action repository 'actions/setup-go@v5' (SHA:40f1582b2485089dde7abd97c1529aa768e1baff)
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:42.9837301Z Download action repository 'securego/gosec@master' (SHA:1af5d582f8fa08ac6621ccc1168b4d3d9d2b2eec)
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:43.9192205Z Complete job name: Frontend (Go Server)
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:43.9544776Z ##[group]Pull down action image 'ghcr.io/securego/gosec:2.25.0'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:43.9602608Z ##[command]/usr/bin/docker pull ghcr.io/securego/gosec:2.25.0
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:44.8013311Z 2.25.0: Pulling from securego/gosec
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0074874Z 589002ba0eae: Already exists
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0099078Z 644a983862e3: Pulling fs layer
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0099755Z 6fbff1d4eb7e: Pulling fs layer
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0103961Z 13ee208a3600: Pulling fs layer
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0104444Z 4f4fb700ef54: Pulling fs layer
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0105140Z 8e4ca6825065: Pulling fs layer
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0105660Z 2de8f3bc93bb: Pulling fs layer
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0106181Z 19c9efa60884: Pulling fs layer
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0106750Z 8e4ca6825065: Waiting
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0107195Z 2de8f3bc93bb: Waiting
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0107628Z 4f4fb700ef54: Waiting
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.0108027Z 19c9efa60884: Waiting
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.3009464Z 13ee208a3600: Verifying Checksum
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.3011652Z 13ee208a3600: Download complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.4194123Z 644a983862e3: Pull complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.5206696Z 4f4fb700ef54: Verifying Checksum
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.5208561Z 4f4fb700ef54: Download complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:45.9776074Z 2de8f3bc93bb: Verifying Checksum
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:46.2538871Z 2de8f3bc93bb: Download complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:46.2539364Z 19c9efa60884: Download complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:46.5913293Z 6fbff1d4eb7e: Verifying Checksum
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:46.5918710Z 6fbff1d4eb7e: Download complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:46.9944685Z 8e4ca6825065: Verifying Checksum
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:46.9947890Z 8e4ca6825065: Download complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:50.7705642Z 6fbff1d4eb7e: Pull complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:50.7800310Z 13ee208a3600: Pull complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:50.7871607Z 4f4fb700ef54: Pull complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.2579568Z 8e4ca6825065: Pull complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4121306Z 2de8f3bc93bb: Pull complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4324734Z 19c9efa60884: Pull complete
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4326106Z Digest: sha256:a735b6eedb06d3bc95d196b4320d1f3829caa0ee009e4b4749917cdd070ab026
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4326930Z Status: Downloaded newer image for ghcr.io/securego/gosec:2.25.0
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4329085Z ghcr.io/securego/gosec:2.25.0
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4338362Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4588749Z ##[group]Run actions/checkout@v4
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4589222Z with:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4589429Z   repository: fkcurrie/utba-swarmmap
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4589813Z   token: ***
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4589984Z   ssh-strict: true
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4590159Z   ssh-user: git
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4590355Z   persist-credentials: true
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4590569Z   clean: true
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4590756Z   sparse-checkout-cone-mode: true
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4590985Z   fetch-depth: 1
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4591166Z   fetch-tags: false
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4591353Z   show-progress: true
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4591529Z   lfs: false
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4591693Z   submodules: false
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4591873Z   set-safe-directory: true
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.4592234Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5564531Z Syncing repository: fkcurrie/utba-swarmmap
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5565784Z ##[group]Getting Git version info
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5566256Z Working directory is '/home/runner/work/utba-swarmmap/utba-swarmmap'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5566832Z [command]/usr/bin/git version
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5604530Z git version 2.53.0
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5626350Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5638815Z Temporarily overriding HOME='/home/runner/work/_temp/b0b60b14-6677-459f-8bae-73781d7c09a6' before making global git config changes
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5640187Z Adding repository directory to the temporary git global config as a safe directory
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5643831Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/utba-swarmmap/utba-swarmmap
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5669517Z Deleting the contents of '/home/runner/work/utba-swarmmap/utba-swarmmap'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5672631Z ##[group]Initializing the repository
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5676595Z [command]/usr/bin/git init /home/runner/work/utba-swarmmap/utba-swarmmap
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5727826Z hint: Using 'master' as the name for the initial branch. This default branch name
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5728533Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5729054Z hint: to use in all of your new repositories, which will suppress this warning,
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5729406Z hint: call:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5729582Z hint:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5729835Z hint: 	git config --global init.defaultBranch <name>
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5730113Z hint:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5730394Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5731039Z hint: 'development'. The just-created branch can be renamed via this command:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5731622Z hint:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5731820Z hint: 	git branch -m <name>
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5732043Z hint:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5732350Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5733136Z Initialized empty Git repository in /home/runner/work/utba-swarmmap/utba-swarmmap/.git/
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5739150Z [command]/usr/bin/git remote add origin https://github.com/fkcurrie/utba-swarmmap
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5761271Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5761883Z ##[group]Disabling automatic garbage collection
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5765162Z [command]/usr/bin/git config --local gc.auto 0
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5786755Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5787297Z ##[group]Setting up auth
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5793355Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.5816205Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.6038419Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.6060130Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.6221634Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.6251264Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.6416142Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.6441875Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.6442494Z ##[group]Fetching the repository
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:52.6450848Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +593cbde23de341b3f956746e1b7dd3caaf03b84d:refs/remotes/pull/27/merge
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.5953762Z From https://github.com/fkcurrie/utba-swarmmap
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.5954524Z  * [new ref]         593cbde23de341b3f956746e1b7dd3caaf03b84d -> pull/27/merge
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.5978694Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.5979029Z ##[group]Determining the checkout info
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.5980759Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.5986015Z [command]/usr/bin/git sparse-checkout disable
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6013796Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6033099Z ##[group]Checking out the ref
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6036950Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/27/merge
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6233832Z Note: switching to 'refs/remotes/pull/27/merge'.
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6234180Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6234451Z You are in 'detached HEAD' state. You can look around, make experimental
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6235123Z changes and commit them, and you can discard any commits you make in this
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6235807Z state without impacting any branches by switching back to a branch.
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6236252Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6236540Z If you want to create a new branch to retain commits you create, you may
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6237219Z do so (now or later) by using -c with the switch command. Example:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6237619Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6237785Z   git switch -c <new-branch-name>
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6238050Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6238183Z Or undo this operation with:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6238398Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6238520Z   git switch -
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6238727Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6239041Z Turn off this advice by setting config variable advice.detachedHead to false
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6239467Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6240022Z HEAD is now at 593cbde Merge 427e0a7dc386e79f5d84b6120587047602a6d0bf into ce8c646a1e1a3155ecfdd83f5a8af5e375dad3a3
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6241569Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6268598Z [command]/usr/bin/git log -1 --format=%H
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6285771Z 593cbde23de341b3f956746e1b7dd3caaf03b84d
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6469497Z ##[group]Run actions/setup-go@v5
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6469739Z with:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6469918Z   go-version-file: backend/go.mod
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6470134Z   check-latest: false
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6470478Z   token: ***
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6470642Z   cache: true
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.6470802Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.7967465Z Setup go version spec 1.25.8
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.7986304Z Found in cache @ /opt/hostedtoolcache/go/1.25.8/x64
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.7989655Z Added go to the path
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.7992855Z Successfully set up Go version 1.25.8
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.8272641Z [command]/opt/hostedtoolcache/go/1.25.8/x64/bin/go env GOMODCACHE
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.8298309Z [command]/opt/hostedtoolcache/go/1.25.8/x64/bin/go env GOCACHE
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.8323201Z /home/runner/go/pkg/mod
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.8344219Z /home/runner/.cache/go-build
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.8386394Z ##[warning]Restore cache failed: Dependencies file is not found in /home/runner/work/utba-swarmmap/utba-swarmmap. Supported file pattern: go.sum
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.8413097Z go version go1.25.8 linux/amd64
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.8413302Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.8413612Z ##[group]go env
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9373960Z AR='ar'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9374269Z CC='gcc'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9374491Z CGO_CFLAGS='-O2 -g'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9374696Z CGO_CPPFLAGS=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9374886Z CGO_CXXFLAGS='-O2 -g'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9375081Z CGO_ENABLED='1'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9375263Z CGO_FFLAGS='-O2 -g'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9375445Z CGO_LDFLAGS='-O2 -g'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9375633Z CXX='g++'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9375796Z GCCGO='gccgo'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9375973Z GO111MODULE=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9376140Z GOAMD64='v1'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9376310Z GOARCH='amd64'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9376480Z GOAUTH='netrc'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9376682Z GOBIN=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9376904Z GOCACHE='/home/runner/.cache/go-build'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9377155Z GOCACHEPROG=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9377331Z GODEBUG=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9377539Z GOENV='/home/runner/.config/go/env'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9377776Z GOEXE=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9377937Z GOEXPERIMENT=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9378142Z GOFIPS140='off'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9378317Z GOFLAGS=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9378922Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build578191841=/tmp/go-build -gno-record-gcc-switches'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9379527Z GOHOSTARCH='amd64'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9379705Z GOHOSTOS='linux'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9379884Z GOINSECURE=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9380080Z GOMOD='/dev/null'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9380288Z GOMODCACHE='/home/runner/go/pkg/mod'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9380513Z GONOPROXY=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9380708Z GONOSUMDB=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9380893Z GOOS='linux'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9381105Z GOPATH='/home/runner/go'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9381347Z GOPRIVATE=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9381613Z GOPROXY='https://proxy.golang.org,direct'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9382110Z GOROOT='/opt/hostedtoolcache/go/1.25.8/x64'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9382429Z GOSUMDB='sum.golang.org'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9382672Z GOTELEMETRY='local'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9383210Z GOTELEMETRYDIR='/home/runner/.config/go/telemetry'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9383530Z GOTMPDIR=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9383756Z GOTOOLCHAIN='auto'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9384107Z GOTOOLDIR='/opt/hostedtoolcache/go/1.25.8/x64/pkg/tool/linux_amd64'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9384478Z GOVCS=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9384680Z GOVERSION='go1.25.8'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9384890Z GOWORK=''
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9385216Z PKG_CONFIG='pkg-config'
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9385377Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9385844Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9461647Z ##[group]Run go fmt frontend/main.go
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9462027Z [36;1mgo fmt frontend/main.go[0m
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9483060Z shell: /usr/bin/bash -e {0}
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:53.9483310Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.5706899Z ##[group]Run securego/gosec@master
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.5707145Z with:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.5707316Z   args: frontend/main.go
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.5707522Z ##[endgroup]
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.5811924Z ##[command]/usr/bin/docker run --name ghcriosecuregogosec2250_525aa8 --label ad1aa5 --workdir /github/workspace --rm -e "INPUT_ARGS" -e "HOME" -e "GITHUB_JOB" -e "GITHUB_REF" -e "GITHUB_SHA" -e "GITHUB_REPOSITORY" -e "GITHUB_REPOSITORY_OWNER" -e "GITHUB_REPOSITORY_OWNER_ID" -e "GITHUB_RUN_ID" -e "GITHUB_RUN_NUMBER" -e "GITHUB_RETENTION_DAYS" -e "GITHUB_RUN_ATTEMPT" -e "GITHUB_ACTOR_ID" -e "GITHUB_ACTOR" -e "GITHUB_WORKFLOW" -e "GITHUB_HEAD_REF" -e "GITHUB_BASE_REF" -e "GITHUB_EVENT_NAME" -e "GITHUB_SERVER_URL" -e "GITHUB_API_URL" -e "GITHUB_GRAPHQL_URL" -e "GITHUB_REF_NAME" -e "GITHUB_REF_PROTECTED" -e "GITHUB_REF_TYPE" -e "GITHUB_WORKFLOW_REF" -e "GITHUB_WORKFLOW_SHA" -e "GITHUB_REPOSITORY_ID" -e "GITHUB_TRIGGERING_ACTOR" -e "GITHUB_WORKSPACE" -e "GITHUB_ACTION" -e "GITHUB_EVENT_PATH" -e "GITHUB_ACTION_REPOSITORY" -e "GITHUB_ACTION_REF" -e "GITHUB_PATH" -e "GITHUB_ENV" -e "GITHUB_STEP_SUMMARY" -e "GITHUB_STATE" -e "GITHUB_OUTPUT" -e "RUNNER_OS" -e "RUNNER_ARCH" -e "RUNNER_NAME" -e "RUNNER_ENVIRONMENT" -e "RUNNER_TOOL_CACHE" -e "RUNNER_TEMP" -e "RUNNER_WORKSPACE" -e "ACTIONS_RUNTIME_URL" -e "ACTIONS_RUNTIME_TOKEN" -e "ACTIONS_CACHE_URL" -e "ACTIONS_RESULTS_URL" -e "ACTIONS_ORCHESTRATION_ID" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work/_temp":"/github/runner_temp" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" -v "/home/runner/work/_temp/_runner_file_commands":"/github/file_commands" -v "/home/runner/work/utba-swarmmap/utba-swarmmap":"/github/workspace" ghcr.io/securego/gosec:2.25.0  "frontend/main.go"
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7640272Z [gosec] 2026/04/04 15:39:54 Including rules: default
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7641188Z [gosec] 2026/04/04 15:39:54 Excluding rules: default
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7641736Z [gosec] 2026/04/04 15:39:54 Including analyzers: default
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7642315Z [gosec] 2026/04/04 15:39:54 Excluding analyzers: default
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7647081Z [gosec] 2026/04/04 15:39:54 Import directory: /github/workspace/frontend/main.go
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7650148Z Results:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7650330Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7650621Z Golang errors in file: [frontend/main.go]:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7650936Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7651447Z   > [line 0 : column 0] - importing dir "frontend/main.go": cannot find package "." in:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7652118Z 	frontend/main.go
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7652313Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7652324Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7652333Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7652451Z Summary:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7652734Z   Gosec  : dev
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7653123Z   Files  : 0
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7653327Z   Lines  : 0
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7653502Z   Nosec  : 0
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7653675Z   Issues : 0
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.7653769Z 
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.8320065Z Post job cleanup.
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9168516Z [command]/usr/bin/git version
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9198571Z git version 2.53.0
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9242000Z Temporarily overriding HOME='/home/runner/work/_temp/cd6fec50-7c87-4103-90fb-1aad5d88d35c' before making global git config changes
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9243120Z Adding repository directory to the temporary git global config as a safe directory
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9246825Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/utba-swarmmap/utba-swarmmap
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9275131Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9299973Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9467618Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9483346Z http.https://github.com/.extraheader
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9492949Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9515832Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9676287Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9700017Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:54.9950875Z Cleaning up orphan processes
+Frontend (Go Server)	UNKNOWN STEP	2026-04-04T15:39:55.0291954Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-go@v5. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Backend (Go)	UNKNOWN STEP	﻿2026-04-04T15:39:41.6148301Z Current runner version: '2.333.1'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6171953Z ##[group]Runner Image Provisioner
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6172833Z Hosted Compute Agent
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6173389Z Version: 20260213.493
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6173937Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6174664Z Build Date: 2026-02-13T00:28:41Z
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6175302Z Worker ID: {6292c677-ee3b-4f3a-bc3d-7c2fe566dfe9}
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6175943Z Azure Region: northcentralus
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6177013Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6178924Z ##[group]Operating System
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6179541Z Ubuntu
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6180031Z 24.04.4
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6180501Z LTS
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6180910Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6181496Z ##[group]Runner Image
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6182049Z Image: ubuntu-24.04
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6182534Z Version: 20260329.72.1
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6183709Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260329.72/images/ubuntu/Ubuntu2404-Readme.md
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6185136Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260329.72
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6186108Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6187390Z ##[group]GITHUB_TOKEN Permissions
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6189704Z Contents: read
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6190380Z Metadata: read
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6190841Z Packages: read
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6191366Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6193351Z Secret source: None
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6194380Z Prepare workflow directory
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6604598Z Prepare all required actions
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:41.6641666Z Getting action download info
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:42.0421359Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:42.1820513Z Download action repository 'actions/setup-go@v5' (SHA:40f1582b2485089dde7abd97c1529aa768e1baff)
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:42.6006029Z Download action repository 'golangci/golangci-lint-action@v4' (SHA:d6238b002a20823d52840fda27e2d4891c5952dc)
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:43.1391914Z Download action repository 'securego/gosec@master' (SHA:1af5d582f8fa08ac6621ccc1168b4d3d9d2b2eec)
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:43.6675225Z Complete job name: Backend (Go)
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:43.7225449Z ##[group]Pull down action image 'ghcr.io/securego/gosec:2.25.0'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:43.7318389Z ##[command]/usr/bin/docker pull ghcr.io/securego/gosec:2.25.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.1494363Z 2.25.0: Pulling from securego/gosec
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2483159Z 589002ba0eae: Already exists
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2517609Z 644a983862e3: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2518123Z 6fbff1d4eb7e: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2518417Z 13ee208a3600: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2518680Z 4f4fb700ef54: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2518950Z 8e4ca6825065: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2519207Z 2de8f3bc93bb: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2519465Z 19c9efa60884: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2519706Z 8e4ca6825065: Waiting
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2519922Z 2de8f3bc93bb: Waiting
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2520159Z 19c9efa60884: Waiting
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.2520344Z 4f4fb700ef54: Waiting
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.3399881Z 644a983862e3: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.3411075Z 13ee208a3600: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.3412169Z 13ee208a3600: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.4445628Z 4f4fb700ef54: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.4451939Z 4f4fb700ef54: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.5509771Z 644a983862e3: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.6541579Z 6fbff1d4eb7e: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.6542146Z 6fbff1d4eb7e: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.6546330Z 2de8f3bc93bb: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.6548730Z 2de8f3bc93bb: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.7375342Z 19c9efa60884: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.7376129Z 19c9efa60884: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:44.8153973Z 8e4ca6825065: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:50.4144296Z 6fbff1d4eb7e: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:50.4352859Z 13ee208a3600: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:50.4461996Z 4f4fb700ef54: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.0283282Z 8e4ca6825065: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2001004Z 2de8f3bc93bb: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2102839Z 19c9efa60884: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2142758Z Digest: sha256:a735b6eedb06d3bc95d196b4320d1f3829caa0ee009e4b4749917cdd070ab026
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2155611Z Status: Downloaded newer image for ghcr.io/securego/gosec:2.25.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2163389Z ghcr.io/securego/gosec:2.25.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2182755Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2463072Z ##[group]Run actions/checkout@v4
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2463621Z with:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2463834Z   repository: fkcurrie/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2464251Z   token: ***
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2464437Z   ssh-strict: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2464640Z   ssh-user: git
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2464841Z   persist-credentials: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2465061Z   clean: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2465244Z   sparse-checkout-cone-mode: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2465487Z   fetch-depth: 1
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2465680Z   fetch-tags: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2465865Z   show-progress: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2466048Z   lfs: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2466212Z   submodules: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2466402Z   set-safe-directory: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.2467083Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3559205Z Syncing repository: fkcurrie/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3560707Z ##[group]Getting Git version info
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3561203Z Working directory is '/home/runner/work/utba-swarmmap/utba-swarmmap'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3561802Z [command]/usr/bin/git version
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3610814Z git version 2.53.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3636674Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3649506Z Temporarily overriding HOME='/home/runner/work/_temp/e4cdea48-a8f2-46c0-9a72-c27e4558bb98' before making global git config changes
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3650318Z Adding repository directory to the temporary git global config as a safe directory
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3654455Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/utba-swarmmap/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3686049Z Deleting the contents of '/home/runner/work/utba-swarmmap/utba-swarmmap'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3689595Z ##[group]Initializing the repository
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3693665Z [command]/usr/bin/git init /home/runner/work/utba-swarmmap/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3798326Z hint: Using 'master' as the name for the initial branch. This default branch name
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3799388Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3800362Z hint: to use in all of your new repositories, which will suppress this warning,
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3801050Z hint: call:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3801363Z hint:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3801853Z hint: 	git config --global init.defaultBranch <name>
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3802404Z hint:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3802925Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3803841Z hint: 'development'. The just-created branch can be renamed via this command:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3804535Z hint:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3804879Z hint: 	git branch -m <name>
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3805277Z hint:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3805939Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3807249Z Initialized empty Git repository in /home/runner/work/utba-swarmmap/utba-swarmmap/.git/
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3813371Z [command]/usr/bin/git remote add origin https://github.com/fkcurrie/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3933554Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3934207Z ##[group]Disabling automatic garbage collection
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3935051Z [command]/usr/bin/git config --local gc.auto 0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3936684Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3937286Z ##[group]Setting up auth
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3937875Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.3940064Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.4215919Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.4244146Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.4460135Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.4497121Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.4714038Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.4747578Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.4755645Z ##[group]Fetching the repository
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.4757335Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +593cbde23de341b3f956746e1b7dd3caaf03b84d:refs/remotes/pull/27/merge
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9373230Z From https://github.com/fkcurrie/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9374450Z  * [new ref]         593cbde23de341b3f956746e1b7dd3caaf03b84d -> pull/27/merge
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9404764Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9405309Z ##[group]Determining the checkout info
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9408159Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9412878Z [command]/usr/bin/git sparse-checkout disable
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9456794Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9486279Z ##[group]Checking out the ref
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9490437Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/27/merge
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9761660Z Note: switching to 'refs/remotes/pull/27/merge'.
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9762065Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9762341Z You are in 'detached HEAD' state. You can look around, make experimental
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9762939Z changes and commit them, and you can discard any commits you make in this
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9763600Z state without impacting any branches by switching back to a branch.
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9764032Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9764239Z If you want to create a new branch to retain commits you create, you may
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9764801Z do so (now or later) by using -c with the switch command. Example:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9765174Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9765345Z   git switch -c <new-branch-name>
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9765636Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9765781Z Or undo this operation with:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9766000Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9766099Z   git switch -
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9766310Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9766732Z Turn off this advice by setting config variable advice.detachedHead to false
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9767132Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9767680Z HEAD is now at 593cbde Merge 427e0a7dc386e79f5d84b6120587047602a6d0bf into ce8c646a1e1a3155ecfdd83f5a8af5e375dad3a3
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9770716Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9810294Z [command]/usr/bin/git log -1 --format=%H
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:52.9833189Z 593cbde23de341b3f956746e1b7dd3caaf03b84d
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.0041724Z ##[group]Run actions/setup-go@v5
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.0041973Z with:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.0042250Z   go-version-file: backend/go.mod
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.0042502Z   cache-dependency-path: backend/go.mod
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.0042745Z   check-latest: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.0043078Z   token: ***
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.0043243Z   cache: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.0043500Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.1888764Z Setup go version spec 1.25.8
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.1916418Z Found in cache @ /opt/hostedtoolcache/go/1.25.8/x64
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.1919440Z Added go to the path
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.1923235Z Successfully set up Go version 1.25.8
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.4869063Z [command]/opt/hostedtoolcache/go/1.25.8/x64/bin/go env GOMODCACHE
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.4901018Z [command]/opt/hostedtoolcache/go/1.25.8/x64/bin/go env GOCACHE
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.4923079Z /home/runner/go/pkg/mod
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.4952194Z /home/runner/.cache/go-build
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.6316912Z Cache is not found
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.6335611Z go version go1.25.8 linux/amd64
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.6335804Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.6336088Z ##[group]go env
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7545843Z AR='ar'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7546217Z CC='gcc'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7546757Z CGO_CFLAGS='-O2 -g'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7547113Z CGO_CPPFLAGS=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7547459Z CGO_CXXFLAGS='-O2 -g'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7547775Z CGO_ENABLED='1'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7548071Z CGO_FFLAGS='-O2 -g'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7548374Z CGO_LDFLAGS='-O2 -g'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7548674Z CXX='g++'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7548936Z GCCGO='gccgo'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7549228Z GO111MODULE=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7549518Z GOAMD64='v1'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7549805Z GOARCH='amd64'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7550078Z GOAUTH='netrc'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7550344Z GOBIN=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7550655Z GOCACHE='/home/runner/.cache/go-build'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7550952Z GOCACHEPROG=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7551151Z GODEBUG=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7551336Z GOENV='/home/runner/.config/go/env'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7551577Z GOEXE=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7551740Z GOEXPERIMENT=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7551923Z GOFIPS140='off'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7552092Z GOFLAGS=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7552728Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build2999372294=/tmp/go-build -gno-record-gcc-switches'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7553362Z GOHOSTARCH='amd64'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7553551Z GOHOSTOS='linux'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7553722Z GOINSECURE=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7553895Z GOMOD='/dev/null'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7554098Z GOMODCACHE='/home/runner/go/pkg/mod'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7554330Z GONOPROXY=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7554493Z GONOSUMDB=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7554647Z GOOS='linux'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7554816Z GOPATH='/home/runner/go'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7555004Z GOPRIVATE=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7555229Z GOPROXY='https://proxy.golang.org,direct'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7555523Z GOROOT='/opt/hostedtoolcache/go/1.25.8/x64'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7555788Z GOSUMDB='sum.golang.org'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7556007Z GOTELEMETRY='local'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7556283Z GOTELEMETRYDIR='/home/runner/.config/go/telemetry'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7556898Z GOTMPDIR=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7557111Z GOTOOLCHAIN='auto'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7557410Z GOTOOLDIR='/opt/hostedtoolcache/go/1.25.8/x64/pkg/tool/linux_amd64'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7557726Z GOVCS=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7557890Z GOVERSION='go1.25.8'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7558065Z GOWORK=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7558243Z PKG_CONFIG='pkg-config'
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7558369Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7558720Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7658581Z ##[group]Run go fmt ./...
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7658861Z [36;1mgo fmt ./...[0m
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7689969Z shell: /usr/bin/bash -e {0}
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7690223Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7860790Z go: downloading cloud.google.com/go/firestore v1.14.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.7863008Z go: downloading cloud.google.com/go/storage v1.36.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.8066174Z go: downloading github.com/google/uuid v1.5.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.8354804Z go: downloading google.golang.org/api v0.155.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.8366287Z go: downloading google.golang.org/grpc v1.60.1
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:53.8884907Z go: downloading cloud.google.com/go v0.110.10
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:54.1119258Z go: downloading golang.org/x/oauth2 v0.15.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:54.7489863Z go: downloading cloud.google.com/go/compute/metadata v0.2.3
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:54.7559995Z go: downloading cloud.google.com/go/compute v1.23.3
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:54.7752189Z go: downloading cloud.google.com/go/iam v1.1.5
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:54.9410372Z go: downloading github.com/googleapis/gax-go/v2 v2.12.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:56.2228229Z go: downloading google.golang.org/genproto v0.0.0-20231211222908-989df2bf70f3
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:56.2230873Z go: downloading google.golang.org/protobuf v1.36.11
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:56.5207572Z go: downloading github.com/golang/protobuf v1.5.3
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:56.5564642Z go: downloading golang.org/x/time v0.5.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:56.8284055Z go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20231212172506-995d672761c0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:57.9332202Z go: downloading google.golang.org/genproto/googleapis/api v0.0.0-20231211222908-989df2bf70f3
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.0285557Z go: downloading go.opencensus.io v0.24.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.0350985Z go: downloading golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.3027638Z go: downloading go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.46.1
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.3224079Z go: downloading golang.org/x/net v0.52.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.3634841Z go: downloading cloud.google.com/go/longrunning v0.5.4
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.3756103Z go: downloading golang.org/x/sync v0.20.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.3935125Z go: downloading golang.org/x/sys v0.42.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.6314857Z go: downloading go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.46.1
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.6338545Z go: downloading github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.6532420Z go: downloading github.com/google/s2a-go v0.1.7
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.6751056Z go: downloading github.com/felixge/httpsnoop v1.0.4
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.6892912Z go: downloading go.opentelemetry.io/otel v1.21.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.7104522Z go: downloading go.opentelemetry.io/otel/metric v1.21.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.7794094Z go: downloading go.opentelemetry.io/otel/trace v1.21.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.7796922Z go: downloading github.com/googleapis/enterprise-certificate-proxy v0.3.2
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.8915245Z go: downloading github.com/go-logr/logr v1.3.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.9743046Z go: downloading golang.org/x/text v0.35.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.9763041Z go: downloading github.com/go-logr/stdr v1.2.2
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:58.9870450Z go: downloading golang.org/x/crypto v0.49.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:59.8592537Z ##[group]Run go vet ./...
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:59.8592818Z [36;1mgo vet ./...[0m
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:59.8618983Z shell: /usr/bin/bash -e {0}
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:39:59.8619207Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5737720Z ##[group]Run golangci/golangci-lint-action@v4
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5738022Z with:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5738186Z   version: latest
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5738371Z   working-directory: backend
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5738740Z   github-token: ***
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5738936Z   only-new-issues: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5739130Z   skip-cache: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5739317Z   skip-pkg-cache: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5739512Z   skip-build-cache: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5739717Z   install-mode: binary
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.5739899Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.7275241Z ##[group]prepare environment
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.7279729Z Checking for go.mod: backend/go.mod
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.8137792Z ##[warning]Failed to restore: Cache service responded with 400
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.8148811Z Cache not found for input keys: golangci-lint.cache-2935-5bcab4a83f4ba8ee1f593f65c75494296d4a36ed, golangci-lint.cache-2935-
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.8149691Z Finding needed golangci-lint version...
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.8275834Z Requested golangci-lint 'latest', using 'v1.64.8', calculation took 14ms
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.8276750Z Installation mode: binary
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.8277282Z Installing golangci-lint binary v1.64.8...
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:24.8280053Z Downloading binary https://github.com/golangci/golangci-lint/releases/download/v1.64.8/golangci-lint-1.64.8-linux-amd64.tar.gz ...
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.0446787Z [command]/usr/bin/tar xz --overwrite --warning=no-unknown-keyword --overwrite -C /home/runner -f /home/runner/work/_temp/285546b3-908b-46e1-a1d4-d07f5fd77274
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.2604280Z Installed golangci-lint into /home/runner/golangci-lint-1.64.8-linux-amd64/golangci-lint in 433ms
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.2605211Z Prepared env in 533ms
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.2606240Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.2607336Z ##[group]run golangci-lint
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.2613112Z Running [/home/runner/golangci-lint-1.64.8-linux-amd64/golangci-lint run --out-format=github-actions --path-prefix=backend] in [/home/runner/work/utba-swarmmap/utba-swarmmap/backend] ...
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.3530679Z level=warning msg="[config_reader] The output format `github-actions` is deprecated, please use `colored-line-number`"
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.3532008Z Error: can't load config: the Go language version (go1.24) used to build golangci-lint is lower than the targeted Go version (1.25.8)
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.3532955Z Failed executing command with error: can't load config: the Go language version (go1.24) used to build golangci-lint is lower than the targeted Go version (1.25.8)
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.3533509Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.3535896Z ##[error]golangci-lint exit with code 3
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.3537214Z Ran golangci-lint in 92ms
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.3537623Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.3722177Z Post job cleanup.
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:25.5563052Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/utba-swarmmap/utba-swarmmap --files-from manifest.txt --use-compress-program zstdmt
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.0964691Z ##[warning]Failed to save: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>06zDRaQAAAAAhgVsC+a0rT4pb81mXwtoKQ0hHRURHRTE5MTAARWRnZQ==
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.1099308Z Saved cache for golangci-lint from paths '/home/runner/.cache/golangci-lint, /home/runner/.cache/go-build, /home/runner/go/pkg' in 1583ms
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.1233177Z Post job cleanup.
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2173054Z [command]/usr/bin/git version
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2225434Z git version 2.53.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2297482Z Temporarily overriding HOME='/home/runner/work/_temp/411d29b9-32e6-4ab4-874e-26455ce63882' before making global git config changes
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2298783Z Adding repository directory to the temporary git global config as a safe directory
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2304555Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/utba-swarmmap/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2344928Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2379115Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2620275Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2640314Z http.https://github.com/.extraheader
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2652863Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2685441Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2907838Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.2937529Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.3262479Z Cleaning up orphan processes
+Backend (Go)	UNKNOWN STEP	2026-04-04T15:40:27.3633381Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-go@v5, golangci/golangci-lint-action@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
