@@ -22,7 +22,7 @@ func (h *Handlers) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session")
 	if err == nil && cookie.Value != "" {
 		if err := h.Store.DeleteSession(r.Context(), cookie.Value); err != nil {
-			log.Printf("Error deleting session: %v", err)
+			log.Printf("Failed to delete session: %v", err)
 		}
 	}
 
@@ -44,8 +44,8 @@ func (h *Handlers) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	if session == nil {
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(map[string]interface{}{"authenticated": false}); err != nil {
-			log.Printf("Error encoding auth response: %v", err)
-		}
+		log.Printf("Failed to encode auth response: %v", err)
+	}
 		return
 	}
 
@@ -54,7 +54,7 @@ func (h *Handlers) AuthHandler(w http.ResponseWriter, r *http.Request) {
 		"authenticated": true,
 		"user":          session,
 	}); err != nil {
-		log.Printf("Error encoding auth response: %v", err)
+		log.Printf("Failed to encode auth response: %v", err)
 	}
 }
 
@@ -172,6 +172,6 @@ func showPendingApprovalPage(w http.ResponseWriter, name string) {
 <a href="/" class="btn btn-primary">Return to Map</a></div></div></div></div></div></body></html>`
 	w.Header().Set("Content-Type", "text/html")
 	if _, err := w.Write([]byte(html)); err != nil {
-		log.Printf("Error writing pending approval page: %v", err)
+		log.Printf("Failed to write response: %v", err)
 	}
 }

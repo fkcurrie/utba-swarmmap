@@ -28,6 +28,5 @@ steps:
 
 images:
   - 'gcr.io/utba-swarmmap/utba-swarmmap-frontend-assets:latest'
-
 options:
   logging: CLOUD_LOGGING_ONLY
