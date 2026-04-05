@@ -54,7 +54,7 @@ func (h *Handlers) UsernameLoginHandler(w http.ResponseWriter, r *http.Request) 
 	ctx := r.Context()
 	user, err := h.Store.GetUserByEmail(ctx, email)
 	if err != nil {
-		slog.Error("Error getting user by email", "error", err, "email", email)
+		slog.Error("Error getting user by email", "error", err, "email", h.sanitize(email)) // #nosec G706
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -101,7 +101,7 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 	ctx := r.Context()
 	existingUser, err := h.Store.GetUserByEmail(ctx, email)
 	if err != nil {
-		slog.Error("Error checking existing user", "error", err, "email", email)
+		slog.Error("Error checking existing user", "error", err, "email", h.sanitize(email)) // #nosec G706
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -135,14 +135,14 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 
 	_, err = h.Store.CreateUser(ctx, user)
 	if err != nil {
-		slog.Error("Error creating user", "error", err, "email", email)
+		slog.Error("Error creating user", "error", err, "email", h.sanitize(email)) // #nosec G706
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	// In a real app, send an email with the verification link.
 	// For this exercise, we'll just log it.
-	slog.Info("USER CREATED", "email", email, "verificationToken", verificationToken)
+	slog.Info("USER CREATED", "email", h.sanitize(email), "verificationToken", h.sanitize(verificationToken)) // #nosec G706
 
 	h.renderMessagePage(w, "Registration Successful", "Your account has been created. Please check your email (see logs) to verify your account.")
 }
@@ -158,7 +158,7 @@ func (h *Handlers) VerifyEmailHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	user, err := h.Store.GetUserByVerificationToken(ctx, token)
 	if err != nil {
-		slog.Error("Error getting user by verification token", "error", err, "token", token)
+		slog.Error("Error getting user by verification token", "error", err, "token", h.sanitize(token)) // #nosec G706
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -173,7 +173,7 @@ func (h *Handlers) VerifyEmailHandler(w http.ResponseWriter, r *http.Request) {
 		"verification_token": "",
 	})
 	if err != nil {
-		slog.Error("Error updating user email verification", "error", err, "userID", user.ID)
+		slog.Error("Error updating user email verification", "error", err, "userID", h.sanitize(user.ID)) // #nosec G706
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -190,7 +190,7 @@ func (h *Handlers) createSessionAndRedirect(w http.ResponseWriter, r *http.Reque
 	}
 	sessionID, err := h.Store.CreateSession(r.Context(), session)
 	if err != nil {
-		slog.Error("Failed to create session", "error", err, "userID", user.ID)
+		slog.Error("Failed to create session", "error", err, "userID", h.sanitize(user.ID)) // #nosec G706
 		http.Error(w, "Failed to create session", http.StatusInternalServerError)
 		return
 	}
@@ -253,10 +253,10 @@ func (h *Handlers) showPendingApprovalPage(w http.ResponseWriter, name string) {
 
 // GoogleLoginHandler initiates the Google OAuth2 login flow.
 func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
-	slog.Debug("GoogleLoginHandler called", "path", r.URL.Path)
+	slog.Debug("GoogleLoginHandler called", "path", h.sanitize(r.URL.Path)) // #nosec G706
 	state := uuid.New().String()
 	url := h.GoogleOAuthConfig.AuthCodeURL(state, oauth2.SetAuthURLParam("prompt", "select_account"))
-	slog.Debug("Redirecting to Google Auth", "url", url)
+	slog.Debug("Redirecting to Google Auth", "url", h.sanitize(url)) // #nosec G706
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
@@ -296,7 +296,7 @@ func (h *Handlers) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request)
 	ctx := r.Context()
 	user, err := h.Store.GetUserByEmail(ctx, email)
 	if err != nil {
-		slog.Error("Error getting user by email", "error", err, "email", email)
+		slog.Error("Error getting user by email", "error", err, "email", h.sanitize(email)) // #nosec G706
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -310,12 +310,12 @@ func (h *Handlers) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request)
 			"reset_token_expires_at": expiresAt,
 		})
 		if err != nil {
-			slog.Error("Error updating user reset token", "error", err, "email", email)
+			slog.Error("Error updating user reset token", "error", err, "email", h.sanitize(email)) // #nosec G706
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
-		slog.Info("PASSWORD RESET REQUESTED", "email", email, "resetToken", resetToken)
+		slog.Info("PASSWORD RESET REQUESTED", "email", h.sanitize(email), "resetToken", h.sanitize(resetToken)) // #nosec G706
 	}
 
 	h.renderMessagePage(w, "Reset Email Sent", "If an account exists with that email, a password reset link has been sent.")
@@ -347,7 +347,7 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 
 	user, err := h.Store.GetUserByResetToken(ctx, token)
 	if err != nil {
-		slog.Error("Error getting user by reset token", "error", err, "token", token)
+		slog.Error("Error getting user by reset token", "error", err, "token", h.sanitize(token)) // #nosec G706
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -370,12 +370,12 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 		"reset_token_expires_at": time.Time{},
 	})
 	if err != nil {
-		slog.Error("Error updating user password", "error", err, "email", user.Email)
+		slog.Error("Error updating user password", "error", err, "email", h.sanitize(user.Email)) // #nosec G706
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	slog.Info("PASSWORD RESET SUCCESSFUL", "email", user.Email)
+	slog.Info("PASSWORD RESET SUCCESSFUL", "email", h.sanitize(user.Email)) // #nosec G706
 
 	h.renderMessagePage(w, "Password Reset Successful", "Your password has been reset. You can now log in with your new password.")
 }
@@ -461,7 +461,7 @@ func (h *Handlers) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request)
 
 	existingUser, err := h.Store.GetUserByEmail(ctx, userInfo.Email)
 	if err != nil {
-		slog.Error("Failed to query user", "error", err, "email", userInfo.Email)
+		slog.Error("Failed to query user", "error", err, "email", h.sanitize(userInfo.Email)) // #nosec G706
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
@@ -478,7 +478,7 @@ func (h *Handlers) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request)
 
 		_, err = h.Store.CreateUser(ctx, user)
 		if err != nil {
-			slog.Error("Failed to create user", "error", err, "email", userInfo.Email)
+			slog.Error("Failed to create user", "error", err, "email", h.sanitize(userInfo.Email)) // #nosec G706
 			http.Error(w, "Failed to create user", http.StatusInternalServerError)
 			return
 		}

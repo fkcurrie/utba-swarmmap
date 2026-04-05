@@ -35,9 +35,9 @@ func (h *Handlers) sanitize(s string) string {
 }
 
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	slog.Debug("IndexHandler called", "path", r.URL.Path)
+	slog.Debug("IndexHandler called", "path", h.sanitize(r.URL.Path)) // #nosec G706
 	if r.URL.Path != "/" {
-		slog.Debug("Path not /, returning NotFound", "path", r.URL.Path)
+		slog.Debug("Path not /, returning NotFound", "path", h.sanitize(r.URL.Path)) // #nosec G706
 		http.NotFound(w, r)
 		return
 	}
@@ -68,7 +68,7 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 	sessionID := r.URL.Query().Get("sessionId")
 
 	if sessionID != "" {
-		slog.Info("Fetching swarms for public user session", "sessionId", sessionID)
+		slog.Info("Fetching swarms for public user session", "sessionId", h.sanitize(sessionID)) // #nosec G706
 		currentReports, err = h.Store.GetSwarmsBySessionID(ctx, sessionID)
 	} else {
 		slog.Info("Fetching all swarms")

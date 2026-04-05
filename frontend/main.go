@@ -34,7 +34,7 @@ func main() {
 	portInt, err := strconv.Atoi(portStr)
 	if err != nil {
 		// If port is invalid, we fatal for clarity on configuration error.
-		slog.Error("Invalid PORT environment variable", "error", err, "port", portStr)
+		slog.Error("Invalid PORT environment variable", "error", err, "port", strings.ReplaceAll(strings.ReplaceAll(portStr, "\n", ""), "\r", "")) // #nosec G706
 		os.Exit(1)
 	}
 
@@ -42,7 +42,7 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	slog.Info("Listening", "port", portInt)
+	slog.Info("Listening", "port", portInt) // #nosec G706
 
 	srv := &http.Server{
 		Addr:         ":" + strconv.Itoa(portInt),
