@@ -20,8 +20,6 @@ import (
 
 var version = "dev"
 
-// Add a comment to trigger and verify the new CI/CD checks.
-// Add another comment to trigger and verify the new CI/CD checks.
 // getEnv reads an environment variable with a fallback value.
 func getEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
