@@ -21,7 +21,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.24.1'
+          go-version: '1.25.7'
           cache-dependency-path: backend/go.mod
 
       - name: Go Format
@@ -31,9 +31,9 @@ jobs:
         run: go vet ./...
 
       - name: GolangCI-Lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9
         with:
-          version: v1.64.5
+          version: v2.11.4
           working-directory: backend
           only-new-issues: true
 
@@ -110,7 +110,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.24.1'
+          go-version: '1.25.7'
 
       - name: Install Dependencies
         run: npm ci
