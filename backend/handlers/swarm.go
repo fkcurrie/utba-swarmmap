@@ -103,7 +103,9 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
-			_ = file.Close()
+			if closeErr := file.Close(); closeErr != nil {
+				log.Printf("Failed to close file: %v", closeErr)
+			}
 			if err != nil {
 				log.Printf("Failed to upload file to GCS: %v", err)
 				http.Error(w, "Failed to upload file to storage", http.StatusInternalServerError)
@@ -185,7 +187,9 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 					continue
 				}
 				url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
-				_ = file.Close()
+				if closeErr := file.Close(); closeErr != nil {
+					log.Printf("Failed to close file: %v", closeErr)
+				}
 				if err != nil {
 					log.Printf("Error uploading file %s to GCS: %v", fileHeader.Filename, err)
 					continue
