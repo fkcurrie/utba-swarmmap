@@ -46,9 +46,9 @@ func main() {
 	}
 
 	// Initialize Firestore client
-	log.Printf("Initializing Firestore client (Project: %q)...", projectID)
+	log.Printf("Initializing Firestore client (Project: %q)...", projectID) //nolint:gosec // G706: projectID is quoted and safe for logging
 	if host := os.Getenv("FIRESTORE_EMULATOR_HOST"); host != "" {
-		log.Printf("Using Firestore Emulator at %q", host)
+		log.Printf("Using Firestore Emulator at %q", host) //nolint:gosec // G706: Emulator host is quoted and safe for logging
 	}
 	firestoreClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
@@ -59,7 +59,7 @@ func main() {
 	// Initialize Storage client
 	log.Printf("Initializing Storage client...")
 	if host := os.Getenv("STORAGE_EMULATOR_HOST"); host != "" {
-		log.Printf("Using Storage Emulator at %q", host)
+		log.Printf("Using Storage Emulator at %q", host) //nolint:gosec // G706: Emulator host is quoted and safe for logging
 	}
 	storageClient, err := storage.NewClient(ctx)
 	if err != nil {
@@ -136,7 +136,7 @@ func main() {
 		log.Fatalf("Invalid PORT: %v", err)
 	}
 	log.Printf("Starting server on port %d", port)
-	log.Printf("Server version: %q", version)
+	log.Printf("Server version: %q", version) //nolint:gosec // G706: version is quoted and safe for logging
 
 	srv := &http.Server{
 		Addr:         ":" + strconv.Itoa(port),
