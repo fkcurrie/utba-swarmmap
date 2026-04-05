@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"html/template"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -458,8 +459,7 @@ func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
 		t.Fatal(err)
 	}
 	if err := writer.Close(); err != nil {
-		t.Fatal(err)
-	}
+t.Errorf("Error closing writer: %v", err)	}
 
 	req, err := http.NewRequest("POST", "/prepare_swarm", body)
 	if err != nil {
@@ -563,8 +563,7 @@ func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 		t.Fatal(err)
 	}
 	if err := writer.Close(); err != nil {
-		t.Fatal(err)
-	}
+t.Errorf("Error closing writer: %v", err)	}
 
 	req, err := http.NewRequest("POST", "/confirm_swarm", body)
 	if err != nil {
@@ -952,7 +951,16 @@ func TestLoginRouting(t *testing.T) {
 
 func TestUsernameRegisterHandler(t *testing.T) {
 	mockStore := &MockStore{}
-	h := &Handlers{Store: mockStore}
+	templateFuncs := template.FuncMap{
+		"add": func(a, b int) int {
+			return a + b
+		},
+	}
+	tmpl, err := template.New("").Funcs(templateFuncs).ParseGlob("../templates/*.html")
+	if err != nil {
+		t.Fatalf("Error parsing templates: %v", err)
+	}
+	h := &Handlers{Store: mockStore, Templates: tmpl}
 
 	body := strings.NewReader("email=test@example.com&password=password123&name=Test+User&phone=123456789&location=London")
 	req, err := http.NewRequest("POST", "/auth/register", body)

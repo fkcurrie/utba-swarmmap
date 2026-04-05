@@ -293,6 +293,7 @@ func (h *Handlers) AssignSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
 	session, ok := r.Context().Value(SessionContextKey).(*models.Session)
 	if !ok {
 		http.Error(w, "Could not retrieve session from context", http.StatusInternalServerError)
@@ -308,9 +309,10 @@ func (h *Handlers) AssignSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var updates []firestore.Update
-	if action == "assign" {
+	switch action {
+	case "assign":
 		updates = append(updates, firestore.Update{Path: "assignedCollectorID", Value: session.UserID})
-	} else if action == "unassign" {
+	case "unassign":
 		updates = append(updates, firestore.Update{Path: "assignedCollectorID", Value: ""})
 	}
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: time.Now()})

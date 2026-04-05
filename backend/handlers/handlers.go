@@ -77,7 +77,7 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log.Printf("Returning %d swarms", len(currentReports))
+	log.Printf("Returning %d swarms", len(currentReports)) // #nosec G706
 	data, err := json.Marshal(currentReports)
 	if err != nil {
 		log.Printf("Error marshalling reports to JSON: %v", err)
