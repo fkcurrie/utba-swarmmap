@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -22,6 +23,8 @@ type Storer interface {
 	GetAllSwarms(ctx context.Context) ([]models.SwarmReport, error)
 	GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]models.SwarmReport, error)
 	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
+	GetUserByVerificationToken(ctx context.Context, token string) (*models.User, error)
+	GetUserByResetToken(ctx context.Context, token string) (*models.User, error)
 	CreateUser(ctx context.Context, user models.User) (string, error)
 	GetSession(ctx context.Context, sessionID string) (*models.Session, error)
 	CreateSession(ctx context.Context, session models.Session) (string, error)
@@ -29,6 +32,7 @@ type Storer interface {
 	CreateSwarm(ctx context.Context, swarm models.SwarmReport) error
 	UpdateUser(ctx context.Context, userID string, updates []firestore.Update) error
 	DeleteUser(ctx context.Context, userID string) error
+	UpdateUserFields(ctx context.Context, userID string, fields map[string]interface{}) error
 	DeleteSwarm(ctx context.Context, swarmID string) error
 	UpdateSwarm(ctx context.Context, swarmID string, updates []firestore.Update) error
 	GetAllUsers(ctx context.Context) ([]models.User, error)
@@ -110,7 +114,7 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 		data := doc.Data()
 		timestamp, ok := data["timestamp"].(time.Time)
 		if !ok {
-			log.Printf("Skipping visit document with invalid timestamp: %q", doc.Ref.ID)
+			log.Printf("Skipping visit document with invalid timestamp: %s", strconv.Quote(doc.Ref.ID))
 			continue
 		}
 		dateStr := timestamp.Format("2006-01-02")
@@ -144,6 +148,44 @@ func (s *Store) GetUserByEmail(ctx context.Context, email string) (*models.User,
 	}
 	if err != nil {
 		return nil, fmt.Errorf("failed to query user: %w", err)
+	}
+
+	var user models.User
+	if err := doc.DataTo(&user); err != nil {
+		return nil, fmt.Errorf("failed to decode user: %w", err)
+	}
+	user.ID = doc.Ref.ID
+	return &user, nil
+}
+
+// GetUserByVerificationToken finds a user by their verification token.
+func (s *Store) GetUserByVerificationToken(ctx context.Context, token string) (*models.User, error) {
+	iter := s.FirestoreClient.Collection(usersCollection).Where("verification_token", "==", token).Documents(ctx)
+	doc, err := iter.Next()
+	if err == iterator.Done {
+		return nil, nil // User not found
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to query user by verification token: %w", err)
+	}
+
+	var user models.User
+	if err := doc.DataTo(&user); err != nil {
+		return nil, fmt.Errorf("failed to decode user: %w", err)
+	}
+	user.ID = doc.Ref.ID
+	return &user, nil
+}
+
+// GetUserByResetToken finds a user by their reset token.
+func (s *Store) GetUserByResetToken(ctx context.Context, token string) (*models.User, error) {
+	iter := s.FirestoreClient.Collection(usersCollection).Where("reset_token", "==", token).Documents(ctx)
+	doc, err := iter.Next()
+	if err == iterator.Done {
+		return nil, nil // User not found
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to query user by reset token: %w", err)
 	}
 
 	var user models.User
@@ -215,11 +257,27 @@ func (s *Store) UpdateUser(ctx context.Context, userID string, updates []firesto
 	return nil
 }
 
+// UpdateUserFields updates specific fields of a user in Firestore.
+func (s *Store) UpdateUserFields(ctx context.Context, userID string, fields map[string]interface{}) error {
+	var updates []firestore.Update
+	for k, v := range fields {
+		updates = append(updates, firestore.Update{
+			Path:  k,
+			Value: v,
+		})
+	}
+	_, err := s.FirestoreClient.Collection(usersCollection).Doc(userID).Update(ctx, updates)
+	if err != nil {
+		return fmt.Errorf("failed to update user fields: %w", err)
+	}
+	return nil
+}
+
 // DeleteUser deletes a user from Firestore.
 func (s *Store) DeleteUser(ctx context.Context, userID string) error {
 	_, err := s.FirestoreClient.Collection(usersCollection).Doc(userID).Delete(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to delete user: %w", err)
+		return fmt.Errorf("failed to delete user from Firestore: %w", err)
 	}
 	return nil
 }
@@ -318,7 +376,7 @@ func (s *Store) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]m
 func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader, filename string) (string, error) {
 	ext := filepath.Ext(filename)
 	uniqueFilename := fmt.Sprintf("%s/%s%s", swarmID, uuid.New().String(), ext)
-	log.Printf("Uploading file %q to GCS as %q", filename, uniqueFilename)
+	log.Printf("Uploading file %s to GCS as %q", strconv.Quote(filename), uniqueFilename)
 
 	obj := s.StorageClient.Bucket(s.BucketName).Object(uniqueFilename)
 	writer := obj.NewWriter(ctx)
@@ -361,6 +419,6 @@ func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader,
 	}
 
 	url := fmt.Sprintf("https://storage.googleapis.com/%s/%s", s.BucketName, uniqueFilename)
-	log.Printf("Successfully uploaded %q to %q", filename, url)
+	log.Printf("Successfully uploaded %s to %q", strconv.Quote(filename), url)
 	return url, nil
 }

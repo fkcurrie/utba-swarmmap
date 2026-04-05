@@ -28,14 +28,19 @@ type SwarmReport struct {
 
 // User defines the structure for swarm collectors and admins
 type User struct {
-	ID        string    `json:"id" firestore:"-"`
-	Email     string    `json:"email" firestore:"email"`
-	Phone     string    `json:"phone" firestore:"phone"`
-	Name      string    `json:"name" firestore:"name"`
-	Location  string    `json:"location" firestore:"location"`
-	Role      string    `json:"role" firestore:"role"`     // "site_admin", "collector_admin", or "collector"
-	Status    string    `json:"status" firestore:"status"` // "pending" or "approved"
-	CreatedAt time.Time `json:"created_at" firestore:"created_at"`
+	ID                  string    `json:"id" firestore:"-"`
+	Email               string    `json:"email" firestore:"email"`
+	Phone               string    `json:"phone" firestore:"phone"`
+	Name                string    `json:"name" firestore:"name"`
+	Location            string    `json:"location" firestore:"location"`
+	Role                string    `json:"role" firestore:"role"`       // "site_admin", "collector_admin", or "collector"
+	Status              string    `json:"status" firestore:"status"`   // "pending" or "approved"
+	PasswordHash        string    `json:"-" firestore:"password_hash"` // Hashed password
+	EmailVerified       bool      `json:"email_verified" firestore:"email_verified"`
+	VerificationToken   string    `json:"-" firestore:"verification_token"`
+	ResetToken          string    `json:"-" firestore:"reset_token"`
+	ResetTokenExpiresAt time.Time `json:"-" firestore:"reset_token_expires_at"`
+	CreatedAt           time.Time `json:"created_at" firestore:"created_at"`
 }
 
 // Session defines user session structure
