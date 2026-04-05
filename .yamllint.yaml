@@ -1,6 +1,12 @@
 ---
 extends: default
 
+ignore:
+  - "node_modules/"
+  - "vendor/"
+  - "backend/vendor/"
+  - ".git/"
+
 rules:
   line-length:
     max: 160
@@ -10,8 +16,3 @@ rules:
   truthy:
     allowed-values: ["true", "false", "yes", "no"]
   document-start: disable
-
-ignore:
-  - "node_modules/"
-  - "vendor/"
-  - "backend/vendor/"

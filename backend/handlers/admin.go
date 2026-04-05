@@ -83,7 +83,6 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 		"CapturedSwarms":    capturedSwarms,
 		"VisitCounts":       visits,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
-		"CurrentRange":      rangeStr,
 	})
 	if err != nil {
 		log.Printf("Error executing admin template: %v", err)
@@ -148,7 +147,7 @@ func (h *Handlers) DeleteSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
 	swarmID := r.FormValue("swarmID")
 	if swarmID == "" {
-		http.Error(w, "Swarm ID required", http.StatusBadRequest)
+		http.Error(w, "User ID required", http.StatusBadRequest)
 		return
 	}
 

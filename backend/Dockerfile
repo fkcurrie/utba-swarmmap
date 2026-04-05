@@ -1,5 +1,5 @@
 # STAGE 1: Build the application
-FROM golang:1.25-alpine AS builder
+FROM golang:1.25.8-alpine AS builder
 
 WORKDIR /src
 COPY go.mod go.sum ./
@@ -19,4 +19,3 @@ COPY --from=builder /src/templates /app/templates/
 ENV PORT=8080
 EXPOSE 8080
 CMD ["/app/server"]
- 

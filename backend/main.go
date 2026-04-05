@@ -48,9 +48,9 @@ func main() {
 	}
 
 	// Initialize Firestore client
-	log.Printf("Initializing Firestore client (Project: %q)...", projectID)
+	log.Printf("Initializing Firestore client (Project: %q)...", projectID) //nolint:gosec // G706: projectID is quoted and safe for logging
 	if host := os.Getenv("FIRESTORE_EMULATOR_HOST"); host != "" {
-		log.Println("Using Firestore Emulator at", host) //nolint:gosec // G706
+		log.Printf("Using Firestore Emulator at %q", host) //nolint:gosec // G706: Emulator host is quoted and safe for logging
 	}
 	firestoreClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
@@ -61,7 +61,7 @@ func main() {
 	// Initialize Storage client
 	log.Printf("Initializing Storage client...")
 	if host := os.Getenv("STORAGE_EMULATOR_HOST"); host != "" {
-		log.Println("Using Storage Emulator at", host) //nolint:gosec // G706
+		log.Printf("Using Storage Emulator at %q", host) //nolint:gosec // G706: Emulator host is quoted and safe for logging
 	}
 	storageClient, err := storage.NewClient(ctx)
 	if err != nil {
@@ -95,39 +95,41 @@ func main() {
 	mux := http.NewServeMux()
 
 	// Public routes
-	mux.HandleFunc("/", h.IndexHandler)
-	mux.HandleFunc("/get_swarms", h.GetSwarmsHandler)
-	mux.HandleFunc("/login", h.LoginPageHandler)
-	mux.HandleFunc("/register", h.RegisterPageHandler)
-	mux.HandleFunc("/auth/google", h.GoogleLoginHandler)
-	mux.HandleFunc("/auth/google/callback", h.GoogleCallbackHandler)
-	mux.HandleFunc("/auth/apple", h.AppleLoginHandler)
-	mux.HandleFunc("/auth/apple/callback", h.AppleCallbackHandler)
-	mux.HandleFunc("/auth/login", h.UsernameLoginHandler)
-	mux.HandleFunc("/auth/register", h.UsernameRegisterHandler)
-	mux.HandleFunc("/auth/verify-email", h.VerifyEmailHandler)
-	mux.HandleFunc("/auth/forgot-password", h.ForgotPasswordHandler)
-	mux.HandleFunc("/auth/reset-password", h.ResetPasswordHandler)
-	mux.HandleFunc("/logout", h.LogoutHandler)
-	mux.HandleFunc("/auth", h.AuthHandler)
-	mux.HandleFunc("/prepare_swarm", h.PrepareSwarmHandler)
-	mux.HandleFunc("/confirm_swarm", h.ConfirmSwarmHandler)
-	mux.HandleFunc("/demo/generate_sample_data", h.GenerateSampleDataHandler)
-	mux.HandleFunc("/api/track_visit", h.TrackVisitHandler)
-	mux.HandleFunc("/api/visits", h.VisitsAPIHandler)
+	mux.HandleFunc("GET /{$}", h.IndexHandler)
+	mux.HandleFunc("GET /get_swarms", h.GetSwarmsHandler)
+	mux.HandleFunc("GET /login", h.LoginPageHandler)
+	mux.HandleFunc("GET /register", h.RegisterPageHandler)
+	mux.HandleFunc("GET /auth/google", h.GoogleLoginHandler)
+	mux.HandleFunc("GET /auth/google/callback", h.GoogleCallbackHandler)
+	mux.HandleFunc("GET /auth/apple", h.AppleLoginHandler)
+	mux.HandleFunc("GET /auth/apple/callback", h.AppleCallbackHandler)
+	mux.HandleFunc("POST /auth/login", h.UsernameLoginHandler)
+	mux.HandleFunc("POST /auth/register", h.UsernameRegisterHandler)
+	mux.HandleFunc("GET /auth/verify-email", h.VerifyEmailHandler)
+	mux.HandleFunc("GET /auth/forgot-password", h.ForgotPasswordHandler)
+	mux.HandleFunc("POST /auth/forgot-password", h.ForgotPasswordHandler)
+	mux.HandleFunc("GET /auth/reset-password", h.ResetPasswordHandler)
+	mux.HandleFunc("POST /auth/reset-password", h.ResetPasswordHandler)
+	mux.HandleFunc("GET /logout", h.LogoutHandler)
+	mux.HandleFunc("GET /auth", h.AuthHandler)
+	mux.HandleFunc("POST /prepare_swarm", h.PrepareSwarmHandler)
+	mux.HandleFunc("POST /confirm_swarm", h.ConfirmSwarmHandler)
+	mux.HandleFunc("POST /demo/generate_sample_data", h.GenerateSampleDataHandler)
+	mux.HandleFunc("POST /api/track_visit", h.TrackVisitHandler)
+	mux.HandleFunc("GET /api/visits", h.VisitsAPIHandler)
 
 	// Authenticated routes
-	mux.Handle("/dashboard", h.RequireAuth(http.HandlerFunc(h.DashboardHandler)))
-	mux.Handle("/swarmlist", h.RequireAuth(http.HandlerFunc(h.SwarmListHandler)))
-	mux.Handle("/collectorsmap", h.RequireAuth(http.HandlerFunc(h.CollectorsMapHandler)))
-	mux.Handle("/admin", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.AdminHandler))))
-	mux.Handle("/admin/approve_user", h.RequireAuth(h.RequireRole("collector_admin", http.HandlerFunc(h.ApproveUserHandler))))
-	mux.Handle("/admin/reject_user", h.RequireAuth(h.RequireRole("collector_admin", http.HandlerFunc(h.RejectUserHandler))))
-	mux.Handle("/admin/delete_swarm", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.DeleteSwarmHandler))))
-	mux.Handle("/admin/promote_user", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.PromoteUserHandler))))
-	mux.Handle("/collector_admin", h.RequireAuth(h.RequireRole("collector_admin", http.HandlerFunc(h.CollectorAdminHandler))))
-	mux.Handle("/update_swarm_status", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.UpdateSwarmStatusHandler))))
-	mux.Handle("/assign_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.AssignSwarmHandler))))
+	mux.Handle("GET /dashboard", h.RequireAuth(http.HandlerFunc(h.DashboardHandler)))
+	mux.Handle("GET /swarmlist", h.RequireAuth(http.HandlerFunc(h.SwarmListHandler)))
+	mux.Handle("GET /collectorsmap", h.RequireAuth(http.HandlerFunc(h.CollectorsMapHandler)))
+	mux.Handle("GET /admin", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.AdminHandler))))
+	mux.Handle("POST /admin/approve_user", h.RequireAuth(h.RequireRole("collector_admin", http.HandlerFunc(h.ApproveUserHandler))))
+	mux.Handle("POST /admin/reject_user", h.RequireAuth(h.RequireRole("collector_admin", http.HandlerFunc(h.RejectUserHandler))))
+	mux.Handle("POST /admin/delete_swarm", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.DeleteSwarmHandler))))
+	mux.Handle("POST /admin/promote_user", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.PromoteUserHandler))))
+	mux.Handle("GET /collector_admin", h.RequireAuth(h.RequireRole("collector_admin", http.HandlerFunc(h.CollectorAdminHandler))))
+	mux.Handle("POST /update_swarm_status", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.UpdateSwarmStatusHandler))))
+	mux.Handle("POST /assign_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.AssignSwarmHandler))))
 	// Add other routes here as they are refactored
 
 	port := getEnv("PORT", "8080")
@@ -136,7 +138,7 @@ func main() {
 		log.Fatalf("Invalid PORT: %s", port)
 	}
 	log.Printf("Starting server on port %s", port)
-	log.Printf("Server version: %s", version)
+	log.Printf("Server version: %q", version) //nolint:gosec // G706: version is quoted and safe for logging
 
 	srv := &http.Server{
 		Addr:         ":" + port,
