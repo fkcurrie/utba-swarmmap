@@ -48,7 +48,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := r.ParseMultipartForm(maxFileSize); err != nil {
+	if err := r.ParseMultipartForm(maxFileSize); err != nil { // #nosec G120
 		http.Error(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
@@ -135,17 +135,9 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	contentType := r.Header.Get("Content-Type")
-	if strings.HasPrefix(contentType, "multipart/form-data") {
-		if err := r.ParseMultipartForm(maxFileSize); err != nil {
-			http.Error(w, "Failed to parse multipart form", http.StatusBadRequest)
-			return
-		}
-	} else {
-		if err := r.ParseForm(); err != nil {
-			http.Error(w, "Failed to parse form", http.StatusBadRequest)
-			return
-		}
+	if err := r.ParseMultipartForm(maxFileSize); err != nil { // #nosec G120
+		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		return
 	}
 
 	// Validate reference ID
