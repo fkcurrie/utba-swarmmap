@@ -462,7 +462,8 @@ func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
 		t.Fatal(err)
 	}
 	if err := writer.Close(); err != nil {
-t.Errorf("Error closing writer: %v", err)	}
+		t.Errorf("Error closing writer: %v", err)
+	}
 
 	req, err := http.NewRequest("POST", "/prepare_swarm", body)
 	if err != nil {
@@ -566,7 +567,8 @@ func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 		t.Fatal(err)
 	}
 	if err := writer.Close(); err != nil {
-t.Errorf("Error closing writer: %v", err)	}
+		t.Errorf("Error closing writer: %v", err)
+	}
 
 	req, err := http.NewRequest("POST", "/confirm_swarm", body)
 	if err != nil {
