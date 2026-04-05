@@ -5,12 +5,22 @@ services:
     command: gcloud beta emulators firestore start --host-port=0.0.0.0:8081
     ports:
       - "8081:8081"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8081"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   gcs-emulator:
     image: fsouza/fake-gcs-server
     command: -scheme http
     ports:
       - "4443:4443"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "4443"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
     build:
@@ -27,8 +37,10 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - firestore-emulator
-      - gcs-emulator
+      firestore-emulator:
+        condition: service_healthy
+      gcs-emulator:
+        condition: service_healthy
 
   frontend:
     build:

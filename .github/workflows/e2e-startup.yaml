@@ -27,9 +27,8 @@ jobs:
 
       - name: Wait for Services to be Ready
         run: |
-          echo "Waiting for services to start..."
-          # Give it some time for emulators and services to boot
-          MAX_ATTEMPTS=30
+          echo "Waiting for backend service to start..."
+          MAX_ATTEMPTS=60
           ATTEMPT=0
           until curl -s http://localhost:8080 > /dev/null; do
             ATTEMPT=$((ATTEMPT+1))
@@ -64,12 +63,12 @@ jobs:
           fi
 
           echo "Verifying Swarms API..."
-          for i in {1..15}; do
+          for i in {1..20}; do
             STATUS_SWARMS=$(curl -s -m 5 -o /dev/null -w "%{http_code}" http://localhost:8080/get_swarms || echo "000")
             if [[ "$STATUS_SWARMS" == "200" ]]; then
               break
             fi
-            echo "Swarms API not ready, got $STATUS_SWARMS. Retrying..."
+            echo "Swarms API not ready, got $STATUS_SWARMS. Retrying ($i/20)..."
             sleep 3
           done
           echo "Swarms API status: $STATUS_SWARMS"

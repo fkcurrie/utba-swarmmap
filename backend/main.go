@@ -46,16 +46,26 @@ func main() {
 	}
 
 	// Initialize Firestore client
+	log.Printf("Initializing Firestore client (Project: %s)...", projectID)
+	if host := os.Getenv("FIRESTORE_EMULATOR_HOST"); host != "" {
+		log.Printf("Using Firestore Emulator at %s", host)
+	}
 	firestoreClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
 		log.Fatalf("Failed to create Firestore client: %v", err)
 	}
+	log.Printf("Firestore client initialized successfully")
 
 	// Initialize Storage client
+	log.Printf("Initializing Storage client...")
+	if host := os.Getenv("STORAGE_EMULATOR_HOST"); host != "" {
+		log.Printf("Using Storage Emulator at %s", host)
+	}
 	storageClient, err := storage.NewClient(ctx)
 	if err != nil {
 		log.Fatalf("Failed to create Storage client: %v", err)
 	}
+	log.Printf("Storage client initialized successfully")
 
 	// Parse templates
 	templateFuncs := template.FuncMap{
