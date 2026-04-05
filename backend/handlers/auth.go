@@ -12,9 +12,11 @@ import (
 )
 
 func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("DEBUG: GoogleLoginHandler called for %s", r.URL.Path)
 	state := uuid.New().String()
 	// Add prompt=select_account to force Google account chooser
 	url := h.GoogleOAuthConfig.AuthCodeURL(state, oauth2.SetAuthURLParam("prompt", "select_account"))
+	log.Printf("DEBUG: Redirecting to %s", url)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
