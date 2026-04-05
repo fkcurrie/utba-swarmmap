@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
@@ -15,6 +16,7 @@ import (
 type Handlers struct {
 	Store             store.Storer
 	GoogleOAuthConfig *oauth2.Config
+	AppleOAuthConfig  *oauth2.Config
 	Version           string
 	Templates         *template.Template
 	FrontendAssetsURL string
@@ -52,7 +54,7 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 	sessionID := r.URL.Query().Get("sessionId")
 
 	if sessionID != "" {
-		log.Printf("Fetching swarms for public user session: %q", sessionID)
+		log.Printf("Fetching swarms for public user session: %s", strconv.Quote(sessionID))
 		currentReports, err = h.Store.GetSwarmsBySessionID(ctx, sessionID)
 	} else {
 		log.Printf("Fetching all swarms")

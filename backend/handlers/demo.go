@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
@@ -34,7 +35,7 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	log.Printf("Generating sample swarms for session: %q", sessionID)
+	log.Printf("Generating sample swarms for session: %s", strconv.Quote(sessionID))
 
 	now := time.Now()
 	sampleSwarms := []models.SwarmReport{
