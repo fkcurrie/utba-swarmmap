@@ -12,6 +12,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
+// LoginPageHandler renders the login page.
 func (h *Handlers) LoginPageHandler(w http.ResponseWriter, _ *http.Request) {
 	err := h.Templates.ExecuteTemplate(w, "login.html", map[string]interface{}{
 		"Title":             "Login",
@@ -24,6 +25,7 @@ func (h *Handlers) LoginPageHandler(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
+// RegisterPageHandler renders the registration page.
 func (h *Handlers) RegisterPageHandler(w http.ResponseWriter, _ *http.Request) {
 	err := h.Templates.ExecuteTemplate(w, "register.html", map[string]interface{}{
 		"Title":             "Register",
@@ -36,11 +38,15 @@ func (h *Handlers) RegisterPageHandler(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
+// UsernameLoginHandler handles login requests with username and password.
 func (h *Handlers) UsernameLoginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
+	// Limit request body size to prevent memory exhaustion
+	r.Body = http.MaxBytesReader(w, r.Body, 1048576) // 1MB
 
 	email := r.FormValue("email")
 	password := r.FormValue("password")
@@ -48,7 +54,7 @@ func (h *Handlers) UsernameLoginHandler(w http.ResponseWriter, r *http.Request) 
 	ctx := r.Context()
 	user, err := h.Store.GetUserByEmail(ctx, email)
 	if err != nil {
-		log.Printf("Error getting user by email: %v", err)
+		log.Printf("Error getting user by email %q: %v", email, err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -76,11 +82,15 @@ func (h *Handlers) UsernameLoginHandler(w http.ResponseWriter, r *http.Request) 
 	h.createSessionAndRedirect(w, r, user)
 }
 
+// UsernameRegisterHandler handles registration requests with username and password.
 func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
+	// Limit request body size to prevent memory exhaustion
+	r.Body = http.MaxBytesReader(w, r.Body, 1048576) // 1MB
 
 	email := r.FormValue("email")
 	password := r.FormValue("password")
@@ -91,7 +101,7 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 	ctx := r.Context()
 	existingUser, err := h.Store.GetUserByEmail(ctx, email)
 	if err != nil {
-		log.Printf("Error checking existing user: %v", err)
+		log.Printf("Error checking existing user %q: %v", email, err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -125,18 +135,19 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 
 	_, err = h.Store.CreateUser(ctx, user)
 	if err != nil {
-		log.Printf("Error creating user: %v", err)
+		log.Printf("Error creating user %q: %v", email, err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	// In a real app, send an email with the verification link.
 	// For this exercise, we'll just log it.
-	log.Printf("USER CREATED: %s. VERIFICATION LINK: /auth/verify-email?token=%s", email, verificationToken)
+	log.Printf("USER CREATED: %q. VERIFICATION LINK: /auth/verify-email?token=%s", email, verificationToken)
 
 	h.renderMessagePage(w, "Registration Successful", "Your account has been created. Please check your email (see logs) to verify your account.")
 }
 
+// VerifyEmailHandler handles email verification with a token.
 func (h *Handlers) VerifyEmailHandler(w http.ResponseWriter, r *http.Request) {
 	token := r.URL.Query().Get("token")
 	if token == "" {
@@ -147,7 +158,7 @@ func (h *Handlers) VerifyEmailHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	user, err := h.Store.GetUserByVerificationToken(ctx, token)
 	if err != nil {
-		log.Printf("Error getting user by verification token: %v", err)
+		log.Printf("Error getting user by verification token %q: %v", token, err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -226,12 +237,14 @@ func (h *Handlers) renderMessagePage(w http.ResponseWriter, title, message strin
 	_, _ = w.Write([]byte(html))
 }
 
+// GoogleLoginHandler initiates the Google OAuth2 login flow.
 func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 	state := uuid.New().String()
 	url := h.GoogleOAuthConfig.AuthCodeURL(state, oauth2.SetAuthURLParam("prompt", "select_account"))
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
+// AppleLoginHandler initiates the Apple OAuth2 login flow.
 func (h *Handlers) AppleLoginHandler(w http.ResponseWriter, r *http.Request) {
 	if h.AppleOAuthConfig == nil {
 		http.Error(w, "Apple Sign-in not configured", http.StatusNotImplemented)
@@ -242,11 +255,13 @@ func (h *Handlers) AppleLoginHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
+// AppleCallbackHandler handles the callback from Apple OAuth2.
 func (h *Handlers) AppleCallbackHandler(w http.ResponseWriter, _ *http.Request) {
 	// Simplified Apple Callback for now
 	http.Error(w, "Apple Callback not fully implemented", http.StatusNotImplemented)
 }
 
+// ForgotPasswordHandler handles password reset requests.
 func (h *Handlers) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		_ = h.Templates.ExecuteTemplate(w, "forgot-password.html", map[string]interface{}{
@@ -257,11 +272,14 @@ func (h *Handlers) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	// Limit request body size to prevent memory exhaustion
+	r.Body = http.MaxBytesReader(w, r.Body, 1048576) // 1MB
+
 	email := r.FormValue("email")
 	ctx := r.Context()
 	user, err := h.Store.GetUserByEmail(ctx, email)
 	if err != nil {
-		log.Printf("Error getting user by email: %v", err)
+		log.Printf("Error getting user by email %q: %v", email, err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -275,17 +293,18 @@ func (h *Handlers) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request)
 			"reset_token_expires_at": expiresAt,
 		})
 		if err != nil {
-			log.Printf("Error updating user reset token: %v", err)
+			log.Printf("Error updating user reset token for %q: %v", email, err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
-		log.Printf("PASSWORD RESET REQUESTED: %s. RESET LINK: /auth/reset-password?token=%s", email, resetToken)
+		log.Printf("PASSWORD RESET REQUESTED: %q. RESET LINK: /auth/reset-password?token=%s", email, resetToken)
 	}
 
 	h.renderMessagePage(w, "Reset Email Sent", "If an account exists with that email, a password reset link has been sent.")
 }
 
+// ResetPasswordHandler handles the actual password reset.
 func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) {
 	token := r.URL.Query().Get("token")
 	if token == "" {
@@ -303,11 +322,14 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	// Limit request body size to prevent memory exhaustion
+	r.Body = http.MaxBytesReader(w, r.Body, 1048576) // 1MB
+
 	password := r.FormValue("password")
 	ctx := r.Context()
 	user, err := h.Store.GetUserByResetToken(ctx, token)
 	if err != nil {
-		log.Printf("Error getting user by reset token: %v", err)
+		log.Printf("Error getting user by reset token %q: %v", token, err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -330,16 +352,17 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 		"reset_token_expires_at": time.Time{},
 	})
 	if err != nil {
-		log.Printf("Error updating user password: %v", err)
+		log.Printf("Error updating user password for %q: %v", user.Email, err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	log.Printf("PASSWORD RESET SUCCESSFUL for %s", user.Email)
+	log.Printf("PASSWORD RESET SUCCESSFUL for %q", user.Email)
 
 	h.renderMessagePage(w, "Password Reset Successful", "Your password has been reset. You can now log in with your new password.")
 }
 
+// LogoutHandler logs out the user by deleting their session.
 func (h *Handlers) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session")
 	if err == nil && cookie.Value != "" {
@@ -359,6 +382,7 @@ func (h *Handlers) LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+// AuthHandler checks the user's authentication status and returns it as JSON.
 func (h *Handlers) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	session := h.getSession(r)
 	if session == nil {
@@ -374,6 +398,7 @@ func (h *Handlers) AuthHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// GoogleCallbackHandler handles the callback from Google OAuth2.
 func (h *Handlers) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	code := r.URL.Query().Get("code")
 	state := r.URL.Query().Get("state")
