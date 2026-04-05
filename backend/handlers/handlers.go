@@ -40,6 +40,7 @@ func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		slog.Error("Error executing template", "error", err)
 		http.Error(w, "Failed to render page", http.StatusInternalServerError)
+		return
 	}
 }
 
