@@ -69,15 +69,26 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Dynamic DisplayStatus logic
+	// Dynamic DisplayStatus logic and privacy filtering
+	session := h.getSession(r)
+	isCollector := session != nil && (session.Role == "collector" || session.Role == "collector_admin" || session.Role == "site_admin")
+
 	for i := range currentReports {
 		currentReports[i].DisplayStatus = currentReports[i].Status
 		if currentReports[i].Status != "Captured" && time.Since(currentReports[i].ReportedTimestamp).Hours() > 24 {
 			currentReports[i].DisplayStatus = "Archived"
 		}
+
+		// Privacy: Clear reporter details if not a collector/admin
+		if !isCollector {
+			currentReports[i].ReporterName = ""
+			currentReports[i].ReporterEmail = ""
+			currentReports[i].ReporterPhone = ""
+			currentReports[i].ReporterSessionID = ""
+		}
 	}
 
-	log.Printf("Returning %d swarms", len(currentReports)) // #nosec G706
+	log.Printf("Returning %d swarms (isCollector: %v)", len(currentReports), isCollector) // #nosec G706
 	data, err := json.Marshal(currentReports)
 	if err != nil {
 		log.Printf("Error marshalling reports to JSON: %v", err)
