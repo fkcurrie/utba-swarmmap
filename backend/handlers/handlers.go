@@ -23,9 +23,9 @@ type Handlers struct {
 }
 
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("DEBUG: IndexHandler called for %s", r.URL.Path) //nolint:gosec // G706
+	log.Printf("DEBUG: IndexHandler called for %q", r.URL.Path)
 	if r.URL.Path != "/" {
-		log.Printf("DEBUG: Path not /, returning NotFound for %s", r.URL.Path) //nolint:gosec // G706
+		log.Printf("DEBUG: Path not /, returning NotFound for %q", r.URL.Path)
 		http.NotFound(w, r)
 		return
 	}

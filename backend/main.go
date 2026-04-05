@@ -48,7 +48,7 @@ func main() {
 	// Initialize Firestore client
 	log.Printf("Initializing Firestore client (Project: %q)...", projectID)
 	if host := os.Getenv("FIRESTORE_EMULATOR_HOST"); host != "" {
-		log.Println("Using Firestore Emulator at", host) //nolint:gosec // G706
+		log.Printf("Using Firestore Emulator at %q", host)
 	}
 	firestoreClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
@@ -59,7 +59,7 @@ func main() {
 	// Initialize Storage client
 	log.Printf("Initializing Storage client...")
 	if host := os.Getenv("STORAGE_EMULATOR_HOST"); host != "" {
-		log.Println("Using Storage Emulator at", host) //nolint:gosec // G706
+		log.Printf("Using Storage Emulator at %q", host)
 	}
 	storageClient, err := storage.NewClient(ctx)
 	if err != nil {

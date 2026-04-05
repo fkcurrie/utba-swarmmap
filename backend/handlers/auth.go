@@ -240,10 +240,10 @@ func (h *Handlers) renderMessagePage(w http.ResponseWriter, title, message strin
 
 // GoogleLoginHandler initiates the Google OAuth2 login flow.
 func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("DEBUG: GoogleLoginHandler called for %s", r.URL.Path) //nolint:gosec // G706
+	log.Printf("DEBUG: GoogleLoginHandler called for %q", r.URL.Path)
 	state := uuid.New().String()
 	url := h.GoogleOAuthConfig.AuthCodeURL(state, oauth2.SetAuthURLParam("prompt", "select_account"))
-	log.Printf("DEBUG: Redirecting to %s", url)
+	log.Printf("DEBUG: Redirecting to %q", url)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
