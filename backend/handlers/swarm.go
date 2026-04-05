@@ -312,8 +312,10 @@ func (h *Handlers) AssignSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	switch action {
 	case "assign":
 		updates = append(updates, firestore.Update{Path: "assignedCollectorID", Value: session.UserID})
+		updates = append(updates, firestore.Update{Path: "assignedCollectorEmail", Value: session.Username})
 	case "unassign":
 		updates = append(updates, firestore.Update{Path: "assignedCollectorID", Value: ""})
+		updates = append(updates, firestore.Update{Path: "assignedCollectorEmail", Value: ""})
 	}
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: time.Now()})
 
@@ -323,6 +325,39 @@ func (h *Handlers) AssignSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+}
+
+func (h *Handlers) ClaimSwarmHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
+	session, ok := r.Context().Value(SessionContextKey).(*models.Session)
+	if !ok {
+		http.Error(w, "Could not retrieve session from context", http.StatusInternalServerError)
+		return
+	}
+
+	swarmID := r.FormValue("swarmID")
+	if swarmID == "" {
+		http.Error(w, "Swarm ID required", http.StatusBadRequest)
+		return
+	}
+
+	var updates []firestore.Update
+	updates = append(updates, firestore.Update{Path: "assignedCollectorID", Value: session.UserID})
+	updates = append(updates, firestore.Update{Path: "assignedCollectorEmail", Value: session.Username})
+	updates = append(updates, firestore.Update{Path: "status", Value: "Collection in Progress"})
+	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: time.Now()})
+
+	if err := h.Store.UpdateSwarm(r.Context(), swarmID, updates); err != nil {
+		http.Error(w, "Failed to update swarm", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/swarmlist", http.StatusSeeOther)
 }
 
 func validateFile(file *multipart.FileHeader) error {
