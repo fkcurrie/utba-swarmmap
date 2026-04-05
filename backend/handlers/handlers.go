@@ -26,7 +26,7 @@ func (h *Handlers) jsonError(w http.ResponseWriter, message string, code int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	if err := json.NewEncoder(w).Encode(map[string]string{"error": message}); err != nil {
-		slog.Error("Failed to encode JSON error response", "error", err, "message", h.sanitize(message))
+		slog.Error("Failed to encode JSON error response", "error", err, "message", h.sanitize(message)) // #nosec G706
 	}
 }
 

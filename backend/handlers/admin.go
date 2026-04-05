@@ -108,7 +108,7 @@ func (h *Handlers) ApproveUserHandler(w http.ResponseWriter, r *http.Request) {
 		{Path: "status", Value: "approved"},
 	}
 	if err := h.Store.UpdateUser(r.Context(), userID, updates); err != nil {
-		slog.Error("Failed to approve user", "error", err, "userID", h.sanitize(userID))
+		slog.Error("Failed to approve user", "error", err, "userID", h.sanitize(userID)) // #nosec G706
 		http.Error(w, "Failed to approve user", http.StatusInternalServerError)
 		return
 	}
@@ -130,7 +130,7 @@ func (h *Handlers) RejectUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.DeleteUser(r.Context(), userID); err != nil {
-		slog.Error("Failed to reject user", "error", err, "userID", h.sanitize(userID))
+		slog.Error("Failed to reject user", "error", err, "userID", h.sanitize(userID)) // #nosec G706
 		http.Error(w, "Failed to reject user", http.StatusInternalServerError)
 		return
 	}
@@ -152,7 +152,7 @@ func (h *Handlers) DeleteSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.DeleteSwarm(r.Context(), swarmID); err != nil {
-		slog.Error("Failed to delete swarm", "error", err, "swarmID", h.sanitize(swarmID))
+		slog.Error("Failed to delete swarm", "error", err, "swarmID", h.sanitize(swarmID)) // #nosec G706
 		http.Error(w, "Failed to delete swarm", http.StatusInternalServerError)
 		return
 	}
@@ -189,7 +189,7 @@ func (h *Handlers) PromoteUserHandler(w http.ResponseWriter, r *http.Request) {
 		{Path: "role", Value: newRole},
 	}
 	if err := h.Store.UpdateUser(r.Context(), userID, updates); err != nil {
-		slog.Error("Failed to promote user", "error", err, "userID", h.sanitize(userID), "newRole", h.sanitize(newRole))
+		slog.Error("Failed to promote user", "error", err, "userID", h.sanitize(userID), "newRole", h.sanitize(newRole)) // #nosec G706
 		http.Error(w, "Failed to promote user", http.StatusInternalServerError)
 		return
 	}
