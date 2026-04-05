@@ -14,6 +14,7 @@
 						<th>Reported</th>
 						<th>Last Updated</th>
 						<th>Reported Media</th>
+						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -21,7 +22,7 @@
 					<tr>
 						<td>{{.ID}}</td>
 						<td>{{.Description}}</td>
-						<td>{{.Status}}</td>
+						<td>{{.DisplayStatus}}</td>
 						<td class="location-info">
 							Lat: {{printf "%.6f" .Latitude}}<br>
 							Long: {{printf "%.6f" .Longitude}}
@@ -37,6 +38,16 @@
 								</button>
 							{{else}}
 								No media
+							{{end}}
+						</td>
+						<td>
+							{{if .AssignedCollectorEmail}}
+								<span class="badge badge-info">Claimed by {{.AssignedCollectorEmail}}</span>
+							{{else}}
+								<form action="/claim_swarm" method="POST" style="display:inline;">
+									<input type="hidden" name="swarmID" value="{{.ID}}">
+									<button type="submit" class="btn btn-sm btn-success">Offer to collect</button>
+								</form>
 							{{end}}
 						</td>
 					</tr>

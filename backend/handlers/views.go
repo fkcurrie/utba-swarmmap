@@ -20,6 +20,14 @@ func (h *Handlers) SwarmListHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Dynamic DisplayStatus logic
+	for i := range swarms {
+		swarms[i].DisplayStatus = swarms[i].Status
+		if swarms[i].Status != "Captured" && time.Since(swarms[i].ReportedTimestamp).Hours() > 24 {
+			swarms[i].DisplayStatus = "Archived"
+		}
+	}
+
 	err = h.Templates.ExecuteTemplate(w, "swarmlist.html", map[string]interface{}{
 		"Title":             "Swarm List",
 		"Swarms":            swarms,

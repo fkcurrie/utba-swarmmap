@@ -19,6 +19,7 @@ type SwarmReport struct {
 	DisplayStatus         string    `firestore:"-" json:"displayStatus,omitempty"` // Transient, for frontend logic
 	NearestIntersection   string    `firestore:"nearestIntersection,omitempty" json:"nearestIntersection,omitempty"`
 	AssignedCollectorID   string    `firestore:"assignedCollectorID,omitempty" json:"assignedCollectorID,omitempty"`
+	AssignedCollectorEmail string    `firestore:"assignedCollectorEmail,omitempty" json:"assignedCollectorEmail,omitempty"`
 	// Contact information for public reporters
 	ReporterName      string `firestore:"reporterName,omitempty" json:"reporterName,omitempty"`
 	ReporterEmail     string `firestore:"reporterEmail,omitempty" json:"reporterEmail,omitempty"`

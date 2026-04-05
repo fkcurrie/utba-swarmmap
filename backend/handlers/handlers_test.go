@@ -177,6 +177,9 @@ func (m *MockStore) UpdateSwarm(_ context.Context, swarmID string, updates []fir
 				if update.Path == "assignedCollectorID" {
 					m.Swarms[i].AssignedCollectorID = update.Value.(string)
 				}
+				if update.Path == "assignedCollectorEmail" {
+					m.Swarms[i].AssignedCollectorEmail = update.Value.(string)
+				}
 			}
 			return nil
 		}
@@ -870,7 +873,7 @@ func TestAssignSwarmHandler(t *testing.T) {
 			{ID: "test-swarm-id"},
 		},
 		Sessions: map[string]models.Session{
-			"test-session-id": {UserID: "test-user", Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)},
+			"test-session-id": {UserID: "test-user", Username: "test@example.com", Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
 	h := &Handlers{Store: mockStore}
@@ -894,6 +897,48 @@ func TestAssignSwarmHandler(t *testing.T) {
 
 	if mockStore.Swarms[0].AssignedCollectorID != "test-user" {
 		t.Error("expected swarm to be assigned to the user")
+	}
+	if mockStore.Swarms[0].AssignedCollectorEmail != "test@example.com" {
+		t.Error("expected swarm to be assigned to the user email")
+	}
+}
+
+func TestClaimSwarmHandler(t *testing.T) {
+	mockStore := &MockStore{
+		Swarms: []models.SwarmReport{
+			{ID: "test-swarm-id", Status: "Reported"},
+		},
+		Sessions: map[string]models.Session{
+			"test-session-id": {UserID: "test-user", Username: "test@example.com", Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)},
+		},
+	}
+	h := &Handlers{Store: mockStore}
+
+	body := strings.NewReader("swarmID=test-swarm-id")
+	req, err := http.NewRequest("POST", "/claim_swarm", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.AddCookie(&http.Cookie{Name: "session", Value: "test-session-id"})
+
+	rr := httptest.NewRecorder()
+	handler := h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.ClaimSwarmHandler)))
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusSeeOther {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusSeeOther)
+	}
+
+	if mockStore.Swarms[0].AssignedCollectorID != "test-user" {
+		t.Error("expected swarm to be assigned to the user ID")
+	}
+	if mockStore.Swarms[0].AssignedCollectorEmail != "test@example.com" {
+		t.Error("expected swarm to be assigned to the user email")
+	}
+	if mockStore.Swarms[0].Status != "Collection in Progress" {
+		t.Errorf("expected swarm status to be 'Collection in Progress', got '%s'", mockStore.Swarms[0].Status)
 	}
 }
 
