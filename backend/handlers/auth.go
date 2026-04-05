@@ -12,7 +12,7 @@ import (
 )
 
 func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("DEBUG: GoogleLoginHandler called for %s", r.URL.Path)
+	log.Printf("DEBUG: GoogleLoginHandler called for %s", r.URL.Path) //nolint:gosec // G706
 	state := uuid.New().String()
 	// Add prompt=select_account to force Google account chooser
 	url := h.GoogleOAuthConfig.AuthCodeURL(state, oauth2.SetAuthURLParam("prompt", "select_account"))
