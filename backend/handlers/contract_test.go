@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"bytes"
 	"encoding/json"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -58,5 +60,46 @@ func TestGetSwarms_Contract(t *testing.T) {
 }
 
 func TestPrepareSwarm_Contract(t *testing.T) {
-	// Add similar contract test for PrepareSwarm
+	mockStore := &MockStore{}
+	h := &Handlers{Store: mockStore}
+
+	// Prepare multipart form data
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	_ = writer.WriteField("description", "Test Description")
+	_ = writer.WriteField("latitude", "43.6532")
+	_ = writer.WriteField("longitude", "-79.3832")
+	_ = writer.WriteField("intersection", "Yonge & Bloor")
+	
+	// Add a dummy file
+	part, _ := writer.CreateFormFile("file", "test.jpg")
+	_, _ = part.Write([]byte("dummy image content"))
+	_ = writer.Close()
+
+	req, _ := http.NewRequest("POST", "/prepare_swarm", body)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.PrepareSwarmHandler)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Fatalf("expected status 200, got %d: %s", status, rr.Body.String())
+	}
+
+	var response map[string]interface{}
+	if err := json.NewDecoder(rr.Body).Decode(&response); err != nil {
+		t.Fatalf("failed to decode JSON: %v", err)
+	}
+
+	// Verify contract
+	expectedFields := []string{
+		"referenceID", "description", "latitude", "longitude", "nearestIntersection", "mediaFilenames", "mediaURLs",
+	}
+
+	for _, field := range expectedFields {
+		if _, ok := response[field]; !ok {
+			t.Errorf("missing field in response: %s", field)
+		}
+	}
 }

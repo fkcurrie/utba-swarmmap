@@ -12,7 +12,7 @@ type MockFirestoreClient struct {
 	MockCollection *MockCollectionRef
 }
 
-func (m *MockFirestoreClient) Collection(path string) CollectionRef {
+func (m *MockFirestoreClient) Collection(_ string) CollectionRef {
 	return m.MockCollection
 }
 
@@ -21,7 +21,7 @@ type MockCollectionRef struct {
 	MockDoc *MockDocumentRef
 }
 
-func (m *MockCollectionRef) Doc(path string) DocumentRef {
+func (m *MockCollectionRef) Doc(_ string) DocumentRef {
 	return m.MockDoc
 }
 
@@ -31,7 +31,7 @@ type MockDocumentRef struct {
 	MockID       string
 }
 
-func (m *MockDocumentRef) Get(ctx context.Context) (DocumentSnapshot, error) {
+func (m *MockDocumentRef) Get(_ context.Context) (DocumentSnapshot, error) {
 	return m.MockSnapshot, nil
 }
 

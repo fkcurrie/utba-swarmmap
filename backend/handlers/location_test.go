@@ -9,7 +9,7 @@ import (
 )
 
 func TestNominatimLocationService_GetNearestIntersection_Success(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprint(w, `{"display_name": "Yonge & Bloor, Toronto, ON"}`)
 	}))
@@ -31,7 +31,7 @@ func TestNominatimLocationService_GetNearestIntersection_Success(t *testing.T) {
 }
 
 func TestNominatimLocationService_GetNearestIntersection_Error(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}))
 	defer server.Close()

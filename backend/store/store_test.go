@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestGetVisitCounts_Empty(t *testing.T) {
+func TestGetVisitCounts_Empty(_ *testing.T) {
 	// This test will fail if it tries to call Firestore.
 	// But I can design it to test the date range logic.
 }
