@@ -7,11 +7,17 @@ steps:
   # Build and deploy the frontend assets service
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Frontend Assets'
-    args: ['build', '-t', 'gcr.io/utba-swarmmap/utba-swarmmap-frontend-assets:latest', '.']
+    args:
+      - 'build'
+      - '-t'
+      - 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/frontend:latest'
+      - '.'
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Frontend Assets'
-    args: ['push', 'gcr.io/utba-swarmmap/utba-swarmmap-frontend-assets:latest']
+    args:
+      - 'push'
+      - 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/frontend:latest'
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Frontend Assets'
@@ -20,13 +26,13 @@ steps:
       - 'run'
       - 'deploy'
       - 'utba-swarmmap-frontend'
-      - '--image=gcr.io/utba-swarmmap/utba-swarmmap-frontend-assets:latest'
+      - '--image=northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/frontend:latest'
       - '--region=northamerica-northeast2'
       - '--platform=managed'
       - '--allow-unauthenticated'
       - '--quiet'
 
 images:
-  - 'gcr.io/utba-swarmmap/utba-swarmmap-frontend-assets:latest'
+  - 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/frontend:latest'
 options:
   logging: CLOUD_LOGGING_ONLY

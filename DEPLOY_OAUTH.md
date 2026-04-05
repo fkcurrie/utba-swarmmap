@@ -8,37 +8,43 @@
 4. Click **Create Credentials** > **OAuth 2.0 Client IDs**
 5. Choose **Web application**
 6. Set these **Authorized redirect URIs**:
-   - `https://utba-swarmmap-18499119240.northamerica-northeast2.run.app/auth/google/callback`
+   - `https://[SERVICE_BACKEND]-[PROJECT_NUMBER].[REGION].run.app/auth/google/callback`
    - `http://localhost:8080/auth/google/callback` (for local testing)
 7. Save and copy the **Client ID** and **Client Secret**
 
-## Step 2: Update Cloud Build Substitutions
+## Step 2: Store Secrets in Secret Manager (Optional)
 
-Before deploying, update the substitutions in `cloudbuild.yaml`:
+If using Google Cloud Build or GitHub Actions, it is recommended to store your credentials in **Secret Manager**:
 
-```yaml
-substitutions:
-  _GOOGLE_CLIENT_ID: 'your-actual-google-client-id'
-  _GOOGLE_CLIENT_SECRET: 'your-actual-google-client-secret'  
-  _GOOGLE_REDIRECT_URL: 'https://utba-swarmmap-18499119240.northamerica-northeast2.run.app/auth/google/callback'
-```
+1. Go to **Security** > **Secret Manager**
+2. Create two secrets:
+   - `google-oauth-client-id`
+   - `google-oauth-client-secret`
+3. Add the values you copied in Step 1 as the latest versions of these secrets.
+
+For multi-environment setups (Staging/Production), use environment-specific names like `google-oauth-client-id-staging` and `google-oauth-client-id-production`.
 
 ## Step 3: Deploy the Application
 
+Using GitHub Actions (Recommended):
+Deployment is automated via the `.github/workflows/deploy-staging.yaml` and `.github/workflows/deploy-production.yaml` workflows.
+
+Alternatively, via manual Cloud Build:
+
 ```bash
-gcloud builds submit --config cloudbuild.yaml .
+gcloud builds submit --config backend/cloudbuild.yaml .
 ```
 
 ## Step 4: Create Initial Admin User
 
-1. Visit: `https://utba-swarmmap-18499119240.northamerica-northeast2.run.app/bootstrap`
+1. Visit: `https://[SERVICE_BACKEND]-[PROJECT_NUMBER].[REGION].run.app/bootstrap`
 2. Enter the email address you want to use as admin (must match the Google account you'll sign in with)
 3. Enter the full name for the admin user
 4. Click "Create Admin"
 
 ## Step 5: Test the Authentication
 
-1. Visit: `https://utba-swarmmap-18499119240.northamerica-northeast2.run.app/login`
+1. Visit: `https://[SERVICE_BACKEND]-[PROJECT_NUMBER].[REGION].run.app/login`
 2. Click "Sign in with Google"
 3. Use the same Google account email you set as admin
 4. You should be redirected to the admin dashboard

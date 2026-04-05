@@ -17,10 +17,10 @@ jobs:
         working-directory: backend
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v5
         with:
           go-version-file: backend/go.mod
           cache-dependency-path: backend/go.mod
@@ -73,7 +73,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v5
@@ -113,7 +113,7 @@ jobs:
         run: go fmt frontend/main.go
 
       - name: Go Security (gosec)
-        uses: securego/gosec@master
+        uses: securego/gosec@v2.25.0
         with:
           args: ./frontend/...
 
@@ -123,7 +123,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -134,7 +134,7 @@ jobs:
           cache: 'npm'
 
       - name: Set up Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v5
         with:
           go-version-file: backend/go.mod
 
