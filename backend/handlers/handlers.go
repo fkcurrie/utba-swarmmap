@@ -23,7 +23,7 @@ type Handlers struct {
 }
 
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("IndexHandler hit: %s %s", r.Method, r.URL.Path)
+	log.Printf("IndexHandler hit: %s %q", r.Method, r.URL.Path)
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return

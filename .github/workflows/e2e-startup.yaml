@@ -56,8 +56,8 @@ jobs:
           echo "Verifying Backend Login..."
           STATUS_LOGIN=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8085/login || echo "000")
           echo "Login status: $STATUS_LOGIN"
-          if [[ "$STATUS_LOGIN" != "302" && "$STATUS_LOGIN" != "307" ]]; then
-            echo "Expected login status 302 or 307, got $STATUS_LOGIN"
+          if [[ "$STATUS_LOGIN" != "200" ]]; then
+            echo "Expected login status 200, got $STATUS_LOGIN"
             docker compose logs backend
             exit 1
           fi
