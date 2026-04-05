@@ -1,0 +1,1074 @@
+Backend (Go)	UNKNOWN STEP	﻿2026-04-04T14:16:35.6179352Z Current runner version: '2.333.1'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6212775Z ##[group]Runner Image Provisioner
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6214178Z Hosted Compute Agent
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6215118Z Version: 20260213.493
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6216289Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6217742Z Build Date: 2026-02-13T00:28:41Z
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6218851Z Worker ID: {3603970e-3963-4bb8-ae11-6c217701ae05}
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6220106Z Azure Region: eastus2
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6221039Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6223161Z ##[group]Operating System
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6224302Z Ubuntu
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6225149Z 24.04.4
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6225893Z LTS
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6226864Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6227955Z ##[group]Runner Image
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6228816Z Image: ubuntu-24.04
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6229706Z Version: 20260329.72.1
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6231687Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260329.72/images/ubuntu/Ubuntu2404-Readme.md
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6234350Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260329.72
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6236022Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6238386Z ##[group]GITHUB_TOKEN Permissions
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6241086Z Contents: read
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6241960Z Metadata: read
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6242847Z Packages: read
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6243578Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6246686Z Secret source: None
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6248125Z Prepare workflow directory
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6795053Z Prepare all required actions
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:35.6851197Z Getting action download info
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:36.0203574Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:36.1775040Z Download action repository 'actions/setup-go@v5' (SHA:40f1582b2485089dde7abd97c1529aa768e1baff)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:36.4471843Z Download action repository 'golangci/golangci-lint-action@v4' (SHA:d6238b002a20823d52840fda27e2d4891c5952dc)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:36.7802551Z Download action repository 'securego/gosec@master' (SHA:1af5d582f8fa08ac6621ccc1168b4d3d9d2b2eec)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.1503394Z Complete job name: Backend (Go)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.2031660Z ##[group]Pull down action image 'ghcr.io/securego/gosec:2.25.0'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.2184435Z ##[command]/usr/bin/docker pull ghcr.io/securego/gosec:2.25.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.7877026Z 2.25.0: Pulling from securego/gosec
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8473564Z 589002ba0eae: Already exists
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8593989Z 644a983862e3: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8595594Z 6fbff1d4eb7e: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8596615Z 13ee208a3600: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8597976Z 4f4fb700ef54: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8599028Z 8e4ca6825065: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8599991Z 2de8f3bc93bb: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8600950Z 19c9efa60884: Pulling fs layer
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8601854Z 4f4fb700ef54: Waiting
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8603004Z 2de8f3bc93bb: Waiting
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8604194Z 8e4ca6825065: Waiting
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.8605145Z 19c9efa60884: Waiting
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.9278561Z 13ee208a3600: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.9280435Z 13ee208a3600: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.9483419Z 644a983862e3: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.9489355Z 644a983862e3: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.9908521Z 4f4fb700ef54: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:37.9912785Z 4f4fb700ef54: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:38.1613523Z 2de8f3bc93bb: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:38.1896940Z 6fbff1d4eb7e: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:38.1901069Z 6fbff1d4eb7e: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:38.2298448Z 19c9efa60884: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:38.2301024Z 19c9efa60884: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:39.2352304Z 8e4ca6825065: Verifying Checksum
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:39.2353026Z 8e4ca6825065: Download complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:41.3714759Z 644a983862e3: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:45.8406568Z 6fbff1d4eb7e: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:45.8540343Z 13ee208a3600: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:45.8635497Z 4f4fb700ef54: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.3625190Z 8e4ca6825065: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5241952Z 2de8f3bc93bb: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5336336Z 19c9efa60884: Pull complete
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5373080Z Digest: sha256:a735b6eedb06d3bc95d196b4320d1f3829caa0ee009e4b4749917cdd070ab026
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5386376Z Status: Downloaded newer image for ghcr.io/securego/gosec:2.25.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5393816Z ghcr.io/securego/gosec:2.25.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5412537Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5694685Z ##[group]Run actions/checkout@v4
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5695373Z with:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5695603Z   repository: fkcurrie/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5696004Z   token: ***
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5696180Z   ssh-strict: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5696364Z   ssh-user: git
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5696555Z   persist-credentials: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5696770Z   clean: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5696961Z   sparse-checkout-cone-mode: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5697481Z   fetch-depth: 1
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5697695Z   fetch-tags: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5697892Z   show-progress: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5698088Z   lfs: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5698252Z   submodules: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5698442Z   set-safe-directory: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.5698943Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6744866Z Syncing repository: fkcurrie/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6746112Z ##[group]Getting Git version info
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6746602Z Working directory is '/home/runner/work/utba-swarmmap/utba-swarmmap'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6747172Z [command]/usr/bin/git version
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6802248Z git version 2.53.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6831336Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6844467Z Temporarily overriding HOME='/home/runner/work/_temp/96466d97-199e-44cf-bb6b-f9ec284a4b60' before making global git config changes
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6845728Z Adding repository directory to the temporary git global config as a safe directory
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6849818Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/utba-swarmmap/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6879543Z Deleting the contents of '/home/runner/work/utba-swarmmap/utba-swarmmap'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6882551Z ##[group]Initializing the repository
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6886423Z [command]/usr/bin/git init /home/runner/work/utba-swarmmap/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6993412Z hint: Using 'master' as the name for the initial branch. This default branch name
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6994351Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6995205Z hint: to use in all of your new repositories, which will suppress this warning,
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6995861Z hint: call:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6996080Z hint:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6996373Z hint: 	git config --global init.defaultBranch <name>
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6996660Z hint:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6996935Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6997761Z hint: 'development'. The just-created branch can be renamed via this command:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6998137Z hint:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6998319Z hint: 	git branch -m <name>
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6998530Z hint:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6998826Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.6999400Z Initialized empty Git repository in /home/runner/work/utba-swarmmap/utba-swarmmap/.git/
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7005900Z [command]/usr/bin/git remote add origin https://github.com/fkcurrie/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7034422Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7100624Z ##[group]Disabling automatic garbage collection
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7101536Z [command]/usr/bin/git config --local gc.auto 0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7102888Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7103521Z ##[group]Setting up auth
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7104234Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7106438Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7411296Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7438672Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7648494Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7683542Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7896385Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7928396Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7929103Z ##[group]Fetching the repository
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:47.7937182Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f4c3f196d64181a43b1b8496f0e8aa88d7ac3f1e:refs/remotes/pull/11/merge
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.0684624Z From https://github.com/fkcurrie/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.0686682Z  * [new ref]         f4c3f196d64181a43b1b8496f0e8aa88d7ac3f1e -> pull/11/merge
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.0714275Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.0714897Z ##[group]Determining the checkout info
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.0716539Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.0721851Z [command]/usr/bin/git sparse-checkout disable
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.0758169Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.0784205Z ##[group]Checking out the ref
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.0790532Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/11/merge
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1015308Z Note: switching to 'refs/remotes/pull/11/merge'.
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1015790Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1016127Z You are in 'detached HEAD' state. You can look around, make experimental
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1016827Z changes and commit them, and you can discard any commits you make in this
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1017504Z state without impacting any branches by switching back to a branch.
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1017779Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1017968Z If you want to create a new branch to retain commits you create, you may
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1018397Z do so (now or later) by using -c with the switch command. Example:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1018654Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1018763Z   git switch -c <new-branch-name>
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1018932Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1019032Z Or undo this operation with:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1019184Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1019261Z   git switch -
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1019386Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1019604Z Turn off this advice by setting config variable advice.detachedHead to false
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1020162Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1020797Z HEAD is now at f4c3f19 Merge c9826accce9694439a4dc4a091f8f27a00928f2a into ce8c646a1e1a3155ecfdd83f5a8af5e375dad3a3
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1024928Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1057401Z [command]/usr/bin/git log -1 --format=%H
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1077869Z f4c3f196d64181a43b1b8496f0e8aa88d7ac3f1e
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1283540Z ##[group]Run actions/setup-go@v5
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1283800Z with:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1283977Z   go-version: 1.22
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1284192Z   cache-dependency-path: backend/go.mod
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1284459Z   check-latest: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1284779Z   token: ***
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1284949Z   cache: true
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.1285120Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.2866871Z Setup go version spec 1.22
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.3185364Z Found in cache @ /opt/hostedtoolcache/go/1.22.12/x64
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.3191081Z Added go to the path
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.3195467Z Successfully set up Go version 1.22
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.8412096Z [command]/opt/hostedtoolcache/go/1.22.12/x64/bin/go env GOMODCACHE
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.8442063Z [command]/opt/hostedtoolcache/go/1.22.12/x64/bin/go env GOCACHE
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.8461703Z /home/runner/go/pkg/mod
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.8485543Z /home/runner/.cache/go-build
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.9494248Z Cache is not found
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.9510208Z go version go1.22.12 linux/amd64
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.9510385Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:48.9510632Z ##[group]go env
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4080129Z GO111MODULE=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4080497Z GOARCH='amd64'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4080815Z GOBIN=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4081133Z GOCACHE='/home/runner/.cache/go-build'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4081575Z GOENV='/home/runner/.config/go/env'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4081921Z GOEXE=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4082195Z GOEXPERIMENT=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4082467Z GOFLAGS=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4082752Z GOHOSTARCH='amd64'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4083048Z GOHOSTOS='linux'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4083343Z GOINSECURE=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4083680Z GOMODCACHE='/home/runner/go/pkg/mod'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4084082Z GONOPROXY=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4084374Z GONOSUMDB=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4084658Z GOOS='linux'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4084988Z GOPATH='/home/runner/go'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4085337Z GOPRIVATE=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4085733Z GOPROXY='https://proxy.golang.org,direct'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4086279Z GOROOT='/opt/hostedtoolcache/go/1.22.12/x64'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4086732Z GOSUMDB='sum.golang.org'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4087068Z GOTMPDIR=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4087668Z GOTOOLCHAIN='auto'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4088215Z GOTOOLDIR='/opt/hostedtoolcache/go/1.22.12/x64/pkg/tool/linux_amd64'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4088808Z GOVCS=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4089091Z GOVERSION='go1.22.12'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4089388Z GCCGO='gccgo'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4089666Z GOAMD64='v1'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4089929Z AR='ar'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4090171Z CC='gcc'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4090401Z CXX='g++'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4090661Z CGO_ENABLED='1'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4090932Z GOMOD='/dev/null'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4091201Z GOWORK=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4091455Z CGO_CFLAGS='-O2 -g'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4091737Z CGO_CPPFLAGS=''
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4092037Z CGO_CXXFLAGS='-O2 -g'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4092429Z CGO_FFLAGS='-O2 -g'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4092778Z CGO_LDFLAGS='-O2 -g'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4093096Z PKG_CONFIG='pkg-config'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4094194Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build64767315=/tmp/go-build -gno-record-gcc-switches'
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4095199Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4095774Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4198470Z ##[group]Run go fmt ./...
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4198755Z [36;1mgo fmt ./...[0m
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4230151Z shell: /usr/bin/bash -e {0}
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4230395Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4341856Z go: downloading cloud.google.com/go/firestore v1.14.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.4342671Z go: downloading cloud.google.com/go/storage v1.36.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.5209126Z go: downloading github.com/google/uuid v1.5.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.5445725Z go: downloading google.golang.org/api v0.155.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.6534307Z go: downloading cloud.google.com/go v0.110.10
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:49.6994883Z go: downloading google.golang.org/grpc v1.60.1
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:50.0316498Z go: downloading golang.org/x/oauth2 v0.15.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:51.0418939Z go: downloading github.com/golang/protobuf v1.5.3
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:51.0800910Z go: downloading github.com/googleapis/gax-go/v2 v2.12.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:51.0804170Z go: downloading golang.org/x/time v0.5.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:51.9534412Z go: downloading google.golang.org/genproto v0.0.0-20231211222908-989df2bf70f3
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:51.9536242Z go: downloading google.golang.org/protobuf v1.31.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:51.9551427Z go: downloading cloud.google.com/go/compute/metadata v0.2.3
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:51.9671069Z go: downloading cloud.google.com/go/compute v1.23.3
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:52.0226601Z go: downloading cloud.google.com/go/iam v1.1.5
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:52.7164894Z go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20231212172506-995d672761c0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:53.7194669Z go: downloading cloud.google.com/go/longrunning v0.5.4
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:53.7566814Z go: downloading google.golang.org/genproto/googleapis/api v0.0.0-20231211222908-989df2bf70f3
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:53.7852247Z go: downloading go.opencensus.io v0.24.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:53.8364384Z go: downloading golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:53.8978130Z go: downloading golang.org/x/net v0.19.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:53.9285190Z go: downloading golang.org/x/sync v0.5.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:54.0987335Z go: downloading go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.46.1
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:54.3889920Z go: downloading golang.org/x/sys v0.15.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:54.6441410Z go: downloading go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.46.1
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:54.6632090Z go: downloading github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:54.6814392Z go: downloading github.com/google/s2a-go v0.1.7
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:54.7554613Z go: downloading github.com/felixge/httpsnoop v1.0.4
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:54.7566418Z go: downloading go.opentelemetry.io/otel v1.21.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:54.8024451Z go: downloading go.opentelemetry.io/otel/metric v1.21.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:54.9772150Z go: downloading go.opentelemetry.io/otel/trace v1.21.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:54.9773467Z go: downloading github.com/googleapis/enterprise-certificate-proxy v0.3.2
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:55.1264339Z go: downloading github.com/go-logr/logr v1.3.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:55.1456062Z go: downloading golang.org/x/text v0.14.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:55.4351675Z go: downloading github.com/go-logr/stdr v1.2.2
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:55.4564006Z go: downloading golang.org/x/crypto v0.17.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:56.1215118Z handlers/swarm.go
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:56.1265530Z ##[group]Run go vet ./...
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:56.1265802Z [36;1mgo vet ./...[0m
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:56.1292645Z shell: /usr/bin/bash -e {0}
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:16:56.1292869Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7372983Z ##[group]Run golangci/golangci-lint-action@v4
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7373277Z with:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7373435Z   version: latest
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7373642Z   working-directory: backend
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7373986Z   github-token: ***
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7374187Z   only-new-issues: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7374385Z   skip-cache: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7374569Z   skip-pkg-cache: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7374769Z   skip-build-cache: false
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7374971Z   install-mode: binary
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.7375157Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.8883129Z ##[group]prepare environment
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:18.8887683Z Checking for go.mod: backend/go.mod
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.0343489Z ##[warning]Failed to restore: Cache service responded with 400
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.0356130Z Cache not found for input keys: golangci-lint.cache-2935-666b7a7e1dfa6b5b3fe79062f075597ee19b9909, golangci-lint.cache-2935-
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.0356929Z Finding needed golangci-lint version...
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.2188418Z Requested golangci-lint 'latest', using 'v1.64.8', calculation took 185ms
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.2190376Z Installation mode: binary
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.2191125Z Installing golangci-lint binary v1.64.8...
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.2192272Z Downloading binary https://github.com/golangci/golangci-lint/releases/download/v1.64.8/golangci-lint-1.64.8-linux-amd64.tar.gz ...
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.4837650Z [command]/usr/bin/tar xz --overwrite --warning=no-unknown-keyword --overwrite -C /home/runner -f /home/runner/work/_temp/20bc75b0-31ae-4797-8fa4-c6fa71602375
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.6880731Z Installed golangci-lint into /home/runner/golangci-lint-1.64.8-linux-amd64/golangci-lint in 468ms
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.6881291Z Prepared env in 799ms
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.6882329Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.6883935Z ##[group]run golangci-lint
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:19.6890429Z Running [/home/runner/golangci-lint-1.64.8-linux-amd64/golangci-lint run --out-format=github-actions --path-prefix=backend] in [/home/runner/work/utba-swarmmap/utba-swarmmap/backend] ...
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5344400Z ##[error]Error return value of `writer.WriteField` is not checked (errcheck)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5347692Z ##[error]Error return value of `writer.WriteField` is not checked (errcheck)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5349924Z ##[error]Error return value of `writer.WriteField` is not checked (errcheck)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5352968Z ##[warning]unused-parameter: parameter 'ctx' seems to be unused, consider removing or renaming it as _ (revive)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5355932Z ##[warning]unused-parameter: parameter 'file' seems to be unused, consider removing or renaming it as _ (revive)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5359260Z ##[warning]unused-parameter: parameter 'visitorID' seems to be unused, consider removing or renaming it as _ (revive)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5362294Z ##[warning]unused-parameter: parameter 'days' seems to be unused, consider removing or renaming it as _ (revive)
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5363823Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5364575Z level=warning msg="[config_reader] The output format `github-actions` is deprecated, please use `colored-line-number`"
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5365378Z 
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5366130Z ##[error]issues found
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5367596Z Ran golangci-lint in 8845ms
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5368278Z ##[endgroup]
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.5533722Z Post job cleanup.
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:28.7362303Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/utba-swarmmap/utba-swarmmap --files-from manifest.txt --use-compress-program zstdmt
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.3261835Z ##[warning]Failed to save: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>0eh3RaQAAAABUIS4s1GBJSYoW/bUdkquuUEhMMzBFREdFMDQxOQBFZGdl
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.3401370Z Saved cache for golangci-lint from paths '/home/runner/.cache/golangci-lint, /home/runner/.cache/go-build, /home/runner/go/pkg' in 1636ms
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.3529496Z Post job cleanup.
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4455326Z [command]/usr/bin/git version
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4491472Z git version 2.53.0
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4540675Z Temporarily overriding HOME='/home/runner/work/_temp/2317190b-fc88-4801-91e0-89cb86bff253' before making global git config changes
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4542053Z Adding repository directory to the temporary git global config as a safe directory
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4546376Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/utba-swarmmap/utba-swarmmap
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4580468Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4612282Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4826461Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4845602Z http.https://github.com/.extraheader
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4857982Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.4885724Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.5092670Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.5119018Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.5436813Z Cleaning up orphan processes
+Backend (Go)	UNKNOWN STEP	2026-04-04T14:17:30.5932468Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-go@v5, golangci/golangci-lint-action@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+General & Infrastructure	UNKNOWN STEP	﻿2026-04-04T14:16:36.5719692Z Current runner version: '2.333.1'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5744386Z ##[group]Runner Image Provisioner
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5745161Z Hosted Compute Agent
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5745862Z Version: 20260213.493
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5746491Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5747197Z Build Date: 2026-02-13T00:28:41Z
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5748190Z Worker ID: {802654f8-d993-432f-b0d7-315cddb86a8c}
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5748872Z Azure Region: westus
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5749404Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5750947Z ##[group]Operating System
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5751570Z Ubuntu
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5751996Z 24.04.4
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5752508Z LTS
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5752976Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5753473Z ##[group]Runner Image
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5754064Z Image: ubuntu-24.04
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5754547Z Version: 20260329.72.1
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5755678Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260329.72/images/ubuntu/Ubuntu2404-Readme.md
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5757248Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260329.72
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5758415Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5759585Z ##[group]GITHUB_TOKEN Permissions
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5761390Z Contents: read
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5761929Z Metadata: read
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5762577Z Packages: read
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5763080Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5765007Z Secret source: None
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.5765818Z Prepare workflow directory
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.6093221Z Prepare all required actions
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:36.6132816Z Getting action download info
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:37.2091412Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:37.3758293Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:37.4615769Z Download action repository 'actions/setup-go@v5' (SHA:40f1582b2485089dde7abd97c1529aa768e1baff)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:38.0940854Z Download action repository 'reviewdog/action-detect-secrets@v0' (SHA:53b50179462bbe04af2f25f088b97e55e1dec3a1)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:38.5441694Z Download action repository 'reviewdog/action-actionlint@v1' (SHA:6fb7acc99f4a1008869fa8a0f09cfca740837d9d)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:39.0444878Z Download action repository 'ibiqlik/action-yamllint@v3' (SHA:2576378a8e339169678f9939646ee3ee325e845c)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:39.4257859Z Download action repository 'ludeeus/action-shellcheck@master' (SHA:00b27aa7cb85167568cb48a3838b75f4265f2bca)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:39.7814085Z Download action repository 'reviewdog/action-misspell@v1' (SHA:d6429416b12b09b4e2768307d53bef58d172e962)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:40.1720554Z Download action repository 'wagoid/commitlint-github-action@v5' (SHA:9763196e10f27aef304c9b8b660d31d97fce0f99)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:40.8455967Z Complete job name: General & Infrastructure
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:40.8892388Z ##[group]Pull down action image 'ghcr.io/reviewdog/action-actionlint:v1.72.0'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:40.8975999Z ##[command]/usr/bin/docker pull ghcr.io/reviewdog/action-actionlint:v1.72.0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.0429582Z v1.72.0: Pulling from reviewdog/action-actionlint
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2310107Z 589002ba0eae: Already exists
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2374718Z 0805a1082be0: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2379194Z 3566efde290b: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2381755Z 2800a7aef8b1: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2382201Z f420ae9f738c: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2382598Z 539ad613ffba: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2382995Z 1062eadcdc7d: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2383377Z d12341ef4ed7: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2383758Z 0180048b5c67: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2384119Z 3f242abd9c8e: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2384479Z f420ae9f738c: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2384819Z 539ad613ffba: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2385221Z 1062eadcdc7d: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2385542Z d12341ef4ed7: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2385865Z 0180048b5c67: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.2386182Z 3f242abd9c8e: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.3974318Z 0805a1082be0: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.3977939Z 0805a1082be0: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.4024761Z 2800a7aef8b1: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.4025291Z 2800a7aef8b1: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.4475671Z 3566efde290b: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.5788630Z f420ae9f738c: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.5791681Z f420ae9f738c: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.5882856Z 539ad613ffba: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.5883420Z 539ad613ffba: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.6412746Z 1062eadcdc7d: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.6413060Z 1062eadcdc7d: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.7620613Z 0180048b5c67: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.7620964Z 0180048b5c67: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.8017107Z 3f242abd9c8e: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.8017969Z 3f242abd9c8e: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.9082048Z d12341ef4ed7: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:42.9082584Z d12341ef4ed7: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:43.7355251Z 0805a1082be0: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:44.3609583Z 3566efde290b: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:44.3747122Z 2800a7aef8b1: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:44.8582323Z f420ae9f738c: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:44.9335816Z 539ad613ffba: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:45.0536776Z 1062eadcdc7d: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:45.1248167Z d12341ef4ed7: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:45.1646479Z 0180048b5c67: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:45.1739469Z 3f242abd9c8e: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:45.1785571Z Digest: sha256:918481e3b42182d1671c5807d57ed356203e11e96fa679f4f9a8a7b5a65152d9
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:45.1805869Z Status: Downloaded newer image for ghcr.io/reviewdog/action-actionlint:v1.72.0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:45.1814223Z ghcr.io/reviewdog/action-actionlint:v1.72.0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:45.1833083Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:45.1892376Z ##[group]Pull down action image 'wagoid/commitlint-github-action:5.5.1'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:45.1893354Z ##[command]/usr/bin/docker pull wagoid/commitlint-github-action:5.5.1
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0429881Z 5.5.1: Pulling from wagoid/commitlint-github-action
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0430580Z 9398808236ff: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0430994Z 68e4fb3bab38: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0431422Z 4fbc6a1c66ab: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0431829Z 94584f9afe0f: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0432195Z 909db87bbd60: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0432559Z 689f42122cf4: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0432926Z 7ecbb23e6531: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0433306Z 4399540f43c1: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0433698Z 28ad51cb529b: Pulling fs layer
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0434025Z 94584f9afe0f: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0434312Z 909db87bbd60: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0434613Z 689f42122cf4: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0435015Z 7ecbb23e6531: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0435326Z 4399540f43c1: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.0436967Z 28ad51cb529b: Waiting
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.3187575Z 4fbc6a1c66ab: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.3188123Z 4fbc6a1c66ab: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.3362694Z 9398808236ff: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.3366100Z 9398808236ff: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.4408898Z 68e4fb3bab38: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.4410737Z 68e4fb3bab38: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.4720674Z 9398808236ff: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.5669890Z 94584f9afe0f: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.5670362Z 94584f9afe0f: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.6069570Z 909db87bbd60: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.7101760Z 689f42122cf4: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.7104072Z 689f42122cf4: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.8248399Z 7ecbb23e6531: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.8249029Z 7ecbb23e6531: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.9458160Z 28ad51cb529b: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:46.9459102Z 28ad51cb529b: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:47.0199563Z 4399540f43c1: Verifying Checksum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:47.0201965Z 4399540f43c1: Download complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:47.9813233Z 68e4fb3bab38: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:48.0406413Z 4fbc6a1c66ab: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:48.0543696Z 94584f9afe0f: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:48.2273852Z 909db87bbd60: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:48.2359347Z 689f42122cf4: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:48.2481123Z 7ecbb23e6531: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.4999915Z 4399540f43c1: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.5096903Z 28ad51cb529b: Pull complete
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.5140553Z Digest: sha256:376e134b3f9f4c9674a644253b15b848d954ca7d382d4e1741133a51ab037eca
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.5152026Z Status: Downloaded newer image for wagoid/commitlint-github-action:5.5.1
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.5160338Z docker.io/wagoid/commitlint-github-action:5.5.1
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.5173461Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.5203422Z ##[group]Build container for action use: '/home/runner/work/_actions/reviewdog/action-detect-secrets/v0/Dockerfile'.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.5209643Z ##[command]/usr/bin/docker build -t ee3f1c:6c50f2ebcc8449bcbbb3aa4408c7143a -f "/home/runner/work/_actions/reviewdog/action-detect-secrets/v0/Dockerfile" "/home/runner/work/_actions/reviewdog/action-detect-secrets/v0"
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.9344508Z #0 building with "default" instance using docker driver
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.9344830Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.9344982Z #1 [internal] load build definition from Dockerfile
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.9345328Z #1 transferring dockerfile: 473B done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.9345624Z #1 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.9345741Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:52.9345972Z #2 [internal] load metadata for docker.io/library/python:3.14.0-alpine
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.1420257Z #2 ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.1420443Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.1420640Z #3 [auth] library/python:pull token for registry-1.docker.io
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.1421091Z #3 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.2923396Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.2924022Z #2 [internal] load metadata for docker.io/library/python:3.14.0-alpine
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.6036773Z #2 DONE 0.8s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7201622Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7202178Z #4 [internal] load .dockerignore
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7202728Z #4 transferring context: 2B done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7203207Z #4 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7203424Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7203532Z #5 [internal] load build context
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7203845Z #5 transferring context: 3.44kB done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7204149Z #5 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7204276Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7204773Z #6 [1/4] FROM docker.io/library/python:3.14.0-alpine@sha256:8373231e1e906ddfb457748bfc032c4c06ada8c759b7b62d9c73ec2a3c56e710
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7205925Z #6 resolve docker.io/library/python:3.14.0-alpine@sha256:8373231e1e906ddfb457748bfc032c4c06ada8c759b7b62d9c73ec2a3c56e710 done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7206958Z #6 sha256:da0af7e1f95f7612c15858b627b151edde12a97b6ae60731a82c4849bd9c5b2c 1.73kB / 1.73kB done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7208088Z #6 sha256:24ef78ff5ffe3f0b75661012741566f58f76e8109513be875a237d0a7b19b073 4.62kB / 4.62kB done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7208814Z #6 sha256:2d35ebdb57d9971fea0cac1582aa78935adf8058b2cc32db163c98822e5dfa1b 0B / 3.80MB 0.1s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7209524Z #6 sha256:86d375910f52b7c453db7c1e2135c1536210eb84825e8505b1c9e5a34faaf57a 0B / 456.92kB 0.1s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7210223Z #6 sha256:facdf984afd18f7f52714321a1e8915796191dd98798aef5d1f77a85507e830d 0B / 13.23MB 0.1s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.7210946Z #6 sha256:8373231e1e906ddfb457748bfc032c4c06ada8c759b7b62d9c73ec2a3c56e710 10.29kB / 10.29kB done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.8340549Z #6 sha256:2d35ebdb57d9971fea0cac1582aa78935adf8058b2cc32db163c98822e5dfa1b 3.80MB / 3.80MB 0.1s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.8343463Z #6 sha256:86d375910f52b7c453db7c1e2135c1536210eb84825e8505b1c9e5a34faaf57a 456.92kB / 456.92kB 0.2s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.8344203Z #6 extracting sha256:2d35ebdb57d9971fea0cac1582aa78935adf8058b2cc32db163c98822e5dfa1b 0.1s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.8344842Z #6 sha256:13839c1b2c2fc819a0ebcba5bbfcb61b3d29976827c3c86062f87186660baa70 0B / 250B 0.2s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.9477275Z #6 sha256:facdf984afd18f7f52714321a1e8915796191dd98798aef5d1f77a85507e830d 13.23MB / 13.23MB 0.3s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.9481314Z #6 sha256:13839c1b2c2fc819a0ebcba5bbfcb61b3d29976827c3c86062f87186660baa70 250B / 250B 0.3s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:53.9482284Z #6 extracting sha256:86d375910f52b7c453db7c1e2135c1536210eb84825e8505b1c9e5a34faaf57a 0.1s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:54.0830128Z #6 extracting sha256:facdf984afd18f7f52714321a1e8915796191dd98798aef5d1f77a85507e830d
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:54.8372408Z #6 extracting sha256:facdf984afd18f7f52714321a1e8915796191dd98798aef5d1f77a85507e830d 0.5s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:54.8373374Z #6 extracting sha256:13839c1b2c2fc819a0ebcba5bbfcb61b3d29976827c3c86062f87186660baa70 done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:54.8373819Z #6 DONE 1.1s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:54.8373923Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:54.8375070Z #7 [2/4] RUN apk --no-cache add git gcc musl-dev   && wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/fd59714416d6d9a1c0692d872e38e7f8448df4fc/install.sh| sh -s -- -b /usr/local/bin/ v0.21.0   && pip install detect-secrets[word_list]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:54.8376260Z #7 0.133 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.2210789Z #7 0.517 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.6487231Z #7 0.945 (1/23) Installing libgcc (14.2.0-r6)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.7553946Z #7 0.951 (2/23) Installing jansson (2.14.1-r0)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.7554457Z #7 0.953 (3/23) Installing libstdc++ (14.2.0-r6)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.7554935Z #7 0.973 (4/23) Installing binutils (2.44-r3)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.7555287Z #7 1.051 (5/23) Installing libgomp (14.2.0-r6)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.9475021Z #7 1.057 (6/23) Installing libatomic (14.2.0-r6)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.9475543Z #7 1.058 (7/23) Installing gmp (6.3.0-r3)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.9475994Z #7 1.064 (8/23) Installing isl26 (0.26-r1)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.9476679Z #7 1.083 (9/23) Installing mpfr4 (4.2.1_p1-r0)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.9477142Z #7 1.091 (10/23) Installing mpc1 (1.3.1-r1)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:55.9477795Z #7 1.093 (11/23) Installing gcc (14.2.0-r6)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.7159937Z #7 2.012 (12/23) Installing brotli-libs (1.1.0-r2)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.8352983Z #7 2.022 (13/23) Installing c-ares (1.34.6-r0)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.8353364Z #7 2.026 (14/23) Installing libunistring (1.3-r0)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.8353671Z #7 2.039 (15/23) Installing libidn2 (2.3.7-r0)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.8354273Z #7 2.042 (16/23) Installing nghttp2-libs (1.65.0-r0)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.8354569Z #7 2.045 (17/23) Installing libpsl (0.21.5-r3)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.8354835Z #7 2.047 (18/23) Installing libcurl (8.14.1-r2)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.8355101Z #7 2.055 (19/23) Installing libexpat (2.7.5-r0)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.8355380Z #7 2.058 (20/23) Installing pcre2 (10.46-r0)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.8355643Z #7 2.065 (21/23) Installing git (2.49.1-r0)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:56.8356084Z #7 2.131 (22/23) Installing git-init-template (2.49.1-r0)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:57.0278120Z #7 2.135 (23/23) Installing musl-dev (1.2.5-r10)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:57.0278790Z #7 2.201 Executing busybox-1.37.0-r19.trigger
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:57.0279174Z #7 2.209 OK: 186 MiB in 53 packages
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:57.0279514Z #7 2.324 reviewdog/reviewdog info checking GitHub for tag 'v0.21.0'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:57.3541988Z #7 2.650 reviewdog/reviewdog info found version: 0.21.0 for v0.21.0/Linux/x86_64
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:16:58.0160823Z #7 3.312 reviewdog/reviewdog info installed /usr/local/bin//reviewdog
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.4541144Z #7 5.750 Collecting detect-secrets[word_list]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.5700964Z #7 5.770   Downloading detect_secrets-1.5.0-py3-none-any.whl.metadata (23 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.5701822Z #7 5.829 Collecting pyyaml (from detect-secrets[word_list])
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.5702632Z #7 5.833   Downloading pyyaml-6.0.3-cp314-cp314-musllinux_1_2_x86_64.whl.metadata (2.4 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.5703517Z #7 5.866 Collecting requests (from detect-secrets[word_list])
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.7366083Z #7 5.869   Downloading requests-2.33.1-py3-none-any.whl.metadata (4.8 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.7366920Z #7 5.895 Collecting pyahocorasick (from detect-secrets[word_list])
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.7368552Z #7 5.901   Downloading pyahocorasick-2.3.0-cp314-cp314-musllinux_1_2_x86_64.whl.metadata (13 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.7369619Z #7 6.032 Collecting charset_normalizer<4,>=2 (from requests->detect-secrets[word_list])
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.8406425Z #7 6.036   Downloading charset_normalizer-3.4.7-cp314-cp314-musllinux_1_2_x86_64.whl.metadata (40 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.8407658Z #7 6.060 Collecting idna<4,>=2.5 (from requests->detect-secrets[word_list])
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.8408353Z #7 6.063   Downloading idna-3.11-py3-none-any.whl.metadata (8.4 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.8409095Z #7 6.097 Collecting urllib3<3,>=1.26 (from requests->detect-secrets[word_list])
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.8409848Z #7 6.100   Downloading urllib3-2.6.3-py3-none-any.whl.metadata (6.9 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.8411098Z #7 6.125 Collecting certifi>=2023.5.7 (from requests->detect-secrets[word_list])
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.8411969Z #7 6.127   Downloading certifi-2026.2.25-py3-none-any.whl.metadata (2.5 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.8412757Z #7 6.137 Downloading detect_secrets-1.5.0-py3-none-any.whl (120 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.9472035Z #7 6.147 Downloading pyahocorasick-2.3.0-cp314-cp314-musllinux_1_2_x86_64.whl (117 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.9473215Z #7 6.159 Downloading pyyaml-6.0.3-cp314-cp314-musllinux_1_2_x86_64.whl (789 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.9474441Z #7 6.170    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 789.2/789.2 kB 80.8 MB/s  0:00:00
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.9475310Z #7 6.173 Downloading requests-2.33.1-py3-none-any.whl (64 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.9476194Z #7 6.179 Downloading charset_normalizer-3.4.7-cp314-cp314-musllinux_1_2_x86_64.whl (217 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.9476869Z #7 6.186 Downloading idna-3.11-py3-none-any.whl (71 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.9477673Z #7 6.191 Downloading urllib3-2.6.3-py3-none-any.whl (131 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.9478182Z #7 6.197 Downloading certifi-2026.2.25-py3-none-any.whl (153 kB)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:00.9479001Z #7 6.243 Installing collected packages: urllib3, pyyaml, pyahocorasick, idna, charset_normalizer, certifi, requests, detect-secrets
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.5864807Z #7 6.882 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.7989429Z #7 6.885 Successfully installed certifi-2026.2.25 charset_normalizer-3.4.7 detect-secrets-1.5.0 idna-3.11 pyahocorasick-2.3.0 pyyaml-6.0.3 requests-2.33.1 urllib3-2.6.3
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.8003410Z #7 6.885 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.8005830Z #7 6.948 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.8006308Z #7 6.948 [notice] A new release of pip is available: 25.2 -> 26.0.1
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.8006961Z #7 6.948 [notice] To update, run: pip install --upgrade pip
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.8007693Z #7 DONE 7.1s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.9865475Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.9866444Z #8 [3/4] COPY baseline2rdf.py /usr/local/bin/baseline2rdf
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.9867054Z #8 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.9867235Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.9869753Z #9 [4/4] COPY entrypoint.sh /entrypoint.sh
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.9870218Z #9 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.9870397Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.9870524Z #10 exporting to image
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:01.9870857Z #10 exporting layers
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.6172684Z #10 exporting layers 0.8s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.6382179Z #10 writing image sha256:7c3c01f5ebc47c22f53300b5812d29e19d480d0658eaad05092f3ff6da7225ba done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.6383231Z #10 naming to docker.io/library/ee3f1c:6c50f2ebcc8449bcbbb3aa4408c7143a done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.6383795Z #10 DONE 0.8s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.6432910Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.6445239Z ##[group]Build container for action use: '/home/runner/work/_actions/reviewdog/action-misspell/v1/Dockerfile'.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.6447042Z ##[command]/usr/bin/docker build -t ee3f1c:145dc01f85b148c5abc86faef8026974 -f "/home/runner/work/_actions/reviewdog/action-misspell/v1/Dockerfile" "/home/runner/work/_actions/reviewdog/action-misspell/v1"
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.9009844Z #0 building with "default" instance using docker driver
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.9010406Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.9010609Z #1 [internal] load build definition from Dockerfile
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.9011052Z #1 transferring dockerfile: 649B done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.9011332Z #1 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.9011461Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:02.9011667Z #2 [internal] load metadata for docker.io/library/debian:bullseye-slim
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.1242064Z #2 ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.1242288Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.1242572Z #3 [auth] library/debian:pull token for registry-1.docker.io
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.1243070Z #3 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.2744051Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.2744637Z #2 [internal] load metadata for docker.io/library/debian:bullseye-slim
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.4985110Z #2 DONE 0.7s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6168387Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6168851Z #4 [internal] load .dockerignore
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6169391Z #4 transferring context: 2B done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6169772Z #4 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6169962Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6170667Z #5 [internal] load build context
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6171048Z #5 transferring context: 1.18kB done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6171418Z #5 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6171580Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6172050Z #6 [1/5] FROM docker.io/library/debian:bullseye-slim@sha256:95a3884fee36b8f33bf32a6bbffa8dffe6cab6089b841cec45fb47c581a2709d
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6172926Z #6 resolve docker.io/library/debian:bullseye-slim@sha256:95a3884fee36b8f33bf32a6bbffa8dffe6cab6089b841cec45fb47c581a2709d done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6173694Z #6 sha256:95a3884fee36b8f33bf32a6bbffa8dffe6cab6089b841cec45fb47c581a2709d 4.54kB / 4.54kB done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6174336Z #6 sha256:040964add8da2d945de53cd2b29aa3fd2aa402b6d6de437aca2edbeb9d1cf3f4 1.02kB / 1.02kB done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6174950Z #6 sha256:fa549c2c1e9dc41640ca6b8cc341cb54b21800e7a8824ab3ee0765ed52b65bfb 453B / 453B done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.6175538Z #6 sha256:2def39ba61d018877eab029bb49f5312188fcf3f564be382981f921d932f625f 0B / 30.26MB 0.1s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.7171433Z #6 sha256:2def39ba61d018877eab029bb49f5312188fcf3f564be382981f921d932f625f 29.36MB / 30.26MB 0.2s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.8348772Z #6 sha256:2def39ba61d018877eab029bb49f5312188fcf3f564be382981f921d932f625f 30.26MB / 30.26MB 0.2s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:03.8349942Z #6 extracting sha256:2def39ba61d018877eab029bb49f5312188fcf3f564be382981f921d932f625f 0.1s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:04.9921558Z #6 extracting sha256:2def39ba61d018877eab029bb49f5312188fcf3f564be382981f921d932f625f 1.3s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:05.1615387Z #6 DONE 1.5s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:05.1616857Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:05.1618281Z #7 [2/5] RUN apt-get update     && apt-get install -y --no-install-recommends         ca-certificates         git         wget     && apt-get clean     && rm -rf /var/lib/apt/lists/*
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:05.1619481Z #7 0.141 Get:1 http://deb.debian.org/debian bullseye InRelease [75.1 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:05.3395290Z #7 0.148 Get:2 http://deb.debian.org/debian-security bullseye-security InRelease [27.2 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:05.3396964Z #7 0.148 Get:3 http://deb.debian.org/debian bullseye-updates InRelease [44.0 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:05.3398125Z #7 0.231 Get:4 http://deb.debian.org/debian bullseye/main amd64 Packages [8066 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:05.3399305Z #7 0.319 Get:5 http://deb.debian.org/debian-security bullseye-security/main amd64 Packages [446 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:05.5732245Z #7 0.402 Get:6 http://deb.debian.org/debian bullseye-updates/main amd64 Packages [18.8 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:06.1445445Z #7 1.124 Fetched 8677 kB in 1s (8770 kB/s)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:06.4894193Z #7 1.124 Reading package lists...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:06.8626479Z #7 1.486 Reading package lists...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.0303496Z #7 1.851 Building dependency tree...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.0306112Z #7 1.930 Reading state information...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.0308653Z #7 2.010 The following additional packages will be installed:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.0309604Z #7 2.010   git-man libbrotli1 libcurl3-gnutls liberror-perl libexpat1 libgdbm-compat4
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1360340Z #7 2.010   libgdbm6 libldap-2.4-2 libnghttp2-14 libperl5.32 libpsl5 librtmp1 libsasl2-2
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1361243Z #7 2.010   libsasl2-modules-db libssh2-1 openssl perl perl-modules-5.32
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1361882Z #7 2.011 Suggested packages:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1362518Z #7 2.011   gettext-base git-daemon-run | git-daemon-sysvinit git-doc git-el git-email
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1363425Z #7 2.011   git-gui gitk gitweb git-cvs git-mediawiki git-svn gdbm-l10n sensible-utils
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1364329Z #7 2.011   perl-doc libterm-readline-gnu-perl | libterm-readline-perl-perl make
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1365033Z #7 2.011   libtap-harness-archive-perl
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1365540Z #7 2.011 Recommended packages:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1366164Z #7 2.011   patch less ssh-client libldap-common publicsuffix libsasl2-modules netbase
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1367140Z #7 2.073 The following NEW packages will be installed:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1368100Z #7 2.073   ca-certificates git git-man libbrotli1 libcurl3-gnutls liberror-perl
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1368948Z #7 2.074   libexpat1 libgdbm-compat4 libgdbm6 libldap-2.4-2 libnghttp2-14 libperl5.32
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1369794Z #7 2.074   libpsl5 librtmp1 libsasl2-2 libsasl2-modules-db libssh2-1 openssl perl
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1370439Z #7 2.074   perl-modules-5.32 wget
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1370985Z #7 2.099 0 upgraded, 21 newly installed, 0 to remove and 0 not upgraded.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1371584Z #7 2.099 Need to get 18.3 MB of archives.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1372208Z #7 2.099 After this operation, 94.5 MB of additional disk space will be used.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1373419Z #7 2.099 Get:1 http://deb.debian.org/debian-security bullseye-security/main amd64 perl-modules-5.32 all 5.32.1-4+deb11u4 [2824 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.1374888Z #7 2.116 Get:2 http://deb.debian.org/debian bullseye/main amd64 libgdbm6 amd64 1.19-2 [64.9 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2876423Z #7 2.117 Get:3 http://deb.debian.org/debian bullseye/main amd64 libgdbm-compat4 amd64 1.19-2 [44.7 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2877729Z #7 2.117 Get:4 http://deb.debian.org/debian-security bullseye-security/main amd64 libperl5.32 amd64 5.32.1-4+deb11u4 [4132 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2878752Z #7 2.135 Get:5 http://deb.debian.org/debian-security bullseye-security/main amd64 perl amd64 5.32.1-4+deb11u4 [293 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2879736Z #7 2.136 Get:6 http://deb.debian.org/debian-security bullseye-security/main amd64 openssl amd64 1.1.1w-0+deb11u5 [859 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2880786Z #7 2.142 Get:7 http://deb.debian.org/debian-security bullseye-security/main amd64 ca-certificates all 20230311+deb12u1~deb11u1 [169 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2881730Z #7 2.143 Get:8 http://deb.debian.org/debian bullseye/main amd64 libpsl5 amd64 0.21.0-1.2 [57.3 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2882572Z #7 2.146 Get:9 http://deb.debian.org/debian-security bullseye-security/main amd64 wget amd64 1.21-1+deb11u2 [964 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2883424Z #7 2.150 Get:10 http://deb.debian.org/debian bullseye/main amd64 libbrotli1 amd64 1.0.9-2+b2 [279 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2884271Z #7 2.152 Get:11 http://deb.debian.org/debian bullseye/main amd64 libsasl2-modules-db amd64 2.1.27+dfsg-2.1+deb11u1 [69.1 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2885105Z #7 2.152 Get:12 http://deb.debian.org/debian bullseye/main amd64 libsasl2-2 amd64 2.1.27+dfsg-2.1+deb11u1 [106 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2886249Z #7 2.153 Get:13 http://deb.debian.org/debian bullseye/main amd64 libldap-2.4-2 amd64 2.4.57+dfsg-3+deb11u1 [232 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2887823Z #7 2.155 Get:14 http://deb.debian.org/debian-security bullseye-security/main amd64 libnghttp2-14 amd64 1.43.0-1+deb11u2 [77.0 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2889423Z #7 2.156 Get:15 http://deb.debian.org/debian bullseye/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2+b2 [60.8 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2890601Z #7 2.156 Get:16 http://deb.debian.org/debian bullseye/main amd64 libssh2-1 amd64 1.9.0-2+deb11u1 [156 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2891838Z #7 2.157 Get:17 http://deb.debian.org/debian-security bullseye-security/main amd64 libcurl3-gnutls amd64 7.74.0-1.3+deb11u16 [344 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2893429Z #7 2.159 Get:18 http://deb.debian.org/debian-security bullseye-security/main amd64 libexpat1 amd64 2.2.10-2+deb11u7 [99.2 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2894608Z #7 2.160 Get:19 http://deb.debian.org/debian bullseye/main amd64 liberror-perl all 0.17029-1 [31.0 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2895802Z #7 2.160 Get:20 http://deb.debian.org/debian-security bullseye-security/main amd64 git-man all 1:2.30.2-1+deb11u5 [1831 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2897097Z #7 2.167 Get:21 http://deb.debian.org/debian-security bullseye-security/main amd64 git amd64 1:2.30.2-1+deb11u5 [5568 kB]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.2898281Z #7 2.267 debconf: delaying package configuration, since apt-utils is not installed
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4733996Z #7 2.284 Fetched 18.3 MB in 0s (168 MB/s)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4734672Z #7 2.294 Selecting previously unselected package perl-modules-5.32.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4735265Z #7 2.294 (Reading database ... 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4735665Z (Reading database ... 5%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4736009Z (Reading database ... 10%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4736368Z (Reading database ... 15%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4736710Z (Reading database ... 20%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4737043Z (Reading database ... 25%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4737565Z (Reading database ... 30%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4737881Z (Reading database ... 35%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4738215Z (Reading database ... 40%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4738540Z (Reading database ... 45%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4738859Z (Reading database ... 50%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4739194Z (Reading database ... 55%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4739544Z (Reading database ... 60%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4739883Z (Reading database ... 65%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4740227Z (Reading database ... 70%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4740589Z (Reading database ... 75%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4740936Z (Reading database ... 80%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4741280Z (Reading database ... 85%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4741616Z (Reading database ... 90%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4741952Z (Reading database ... 95%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4742297Z (Reading database ... 100%
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4742830Z (Reading database ... 6673 files and directories currently installed.)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4743637Z #7 2.302 Preparing to unpack .../00-perl-modules-5.32_5.32.1-4+deb11u4_all.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.4744371Z #7 2.303 Unpacking perl-modules-5.32 (5.32.1-4+deb11u4) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.6246960Z #7 2.604 Selecting previously unselected package libgdbm6:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.8160285Z #7 2.606 Preparing to unpack .../01-libgdbm6_1.19-2_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.8162569Z #7 2.608 Unpacking libgdbm6:amd64 (1.19-2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.8163532Z #7 2.625 Selecting previously unselected package libgdbm-compat4:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.8165756Z #7 2.627 Preparing to unpack .../02-libgdbm-compat4_1.19-2_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.8167103Z #7 2.628 Unpacking libgdbm-compat4:amd64 (1.19-2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.8168582Z #7 2.642 Selecting previously unselected package libperl5.32:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.8169525Z #7 2.644 Preparing to unpack .../03-libperl5.32_5.32.1-4+deb11u4_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:07.8170399Z #7 2.645 Unpacking libperl5.32:amd64 (5.32.1-4+deb11u4) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.0129055Z #7 2.992 Selecting previously unselected package perl.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.1144746Z #7 2.995 Preparing to unpack .../04-perl_5.32.1-4+deb11u4_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.1146409Z #7 2.999 Unpacking perl (5.32.1-4+deb11u4) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.1148196Z #7 3.033 Selecting previously unselected package openssl.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.1149987Z #7 3.035 Preparing to unpack .../05-openssl_1.1.1w-0+deb11u5_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.1150381Z #7 3.036 Unpacking openssl (1.1.1w-0+deb11u5) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.1151002Z #7 3.094 Selecting previously unselected package ca-certificates.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.2329318Z #7 3.096 Preparing to unpack .../06-ca-certificates_20230311+deb12u1~deb11u1_all.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.2329844Z #7 3.097 Unpacking ca-certificates (20230311+deb12u1~deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.2330482Z #7 3.133 Selecting previously unselected package libpsl5:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.2330877Z #7 3.135 Preparing to unpack .../07-libpsl5_0.21.0-1.2_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.2331210Z #7 3.136 Unpacking libpsl5:amd64 (0.21.0-1.2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.2331513Z #7 3.150 Selecting previously unselected package wget.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.2331862Z #7 3.152 Preparing to unpack .../08-wget_1.21-1+deb11u2_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.2332184Z #7 3.153 Unpacking wget (1.21-1+deb11u2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.2332500Z #7 3.212 Selecting previously unselected package libbrotli1:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3422639Z #7 3.214 Preparing to unpack .../09-libbrotli1_1.0.9-2+b2_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3423384Z #7 3.215 Unpacking libbrotli1:amd64 (1.0.9-2+b2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3423949Z #7 3.244 Selecting previously unselected package libsasl2-modules-db:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3424517Z #7 3.246 Preparing to unpack .../10-libsasl2-modules-db_2.1.27+dfsg-2.1+deb11u1_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3425088Z #7 3.247 Unpacking libsasl2-modules-db:amd64 (2.1.27+dfsg-2.1+deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3425546Z #7 3.265 Selecting previously unselected package libsasl2-2:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3426010Z #7 3.267 Preparing to unpack .../11-libsasl2-2_2.1.27+dfsg-2.1+deb11u1_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3426460Z #7 3.268 Unpacking libsasl2-2:amd64 (2.1.27+dfsg-2.1+deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3426871Z #7 3.287 Selecting previously unselected package libldap-2.4-2:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3427702Z #7 3.289 Preparing to unpack .../12-libldap-2.4-2_2.4.57+dfsg-3+deb11u1_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3428207Z #7 3.290 Unpacking libldap-2.4-2:amd64 (2.4.57+dfsg-3+deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.3428657Z #7 3.322 Selecting previously unselected package libnghttp2-14:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4585726Z #7 3.324 Preparing to unpack .../13-libnghttp2-14_1.43.0-1+deb11u2_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4586515Z #7 3.326 Unpacking libnghttp2-14:amd64 (1.43.0-1+deb11u2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4587213Z #7 3.343 Selecting previously unselected package librtmp1:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4588260Z #7 3.344 Preparing to unpack .../14-librtmp1_2.4+20151223.gitfa8646d.1-2+b2_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4589060Z #7 3.345 Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4589737Z #7 3.361 Selecting previously unselected package libssh2-1:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4590444Z #7 3.363 Preparing to unpack .../15-libssh2-1_1.9.0-2+deb11u1_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4591087Z #7 3.364 Unpacking libssh2-1:amd64 (1.9.0-2+deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4591722Z #7 3.385 Selecting previously unselected package libcurl3-gnutls:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4592522Z #7 3.387 Preparing to unpack .../16-libcurl3-gnutls_7.74.0-1.3+deb11u16_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4593255Z #7 3.388 Unpacking libcurl3-gnutls:amd64 (7.74.0-1.3+deb11u16) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4593898Z #7 3.418 Selecting previously unselected package libexpat1:amd64.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4595053Z #7 3.420 Preparing to unpack .../17-libexpat1_2.2.10-2+deb11u7_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4595740Z #7 3.421 Unpacking libexpat1:amd64 (2.2.10-2+deb11u7) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.4596320Z #7 3.438 Selecting previously unselected package liberror-perl.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.5698563Z #7 3.440 Preparing to unpack .../18-liberror-perl_0.17029-1_all.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.5699961Z #7 3.441 Unpacking liberror-perl (0.17029-1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.5700536Z #7 3.453 Selecting previously unselected package git-man.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.5701191Z #7 3.455 Preparing to unpack .../19-git-man_1%3a2.30.2-1+deb11u5_all.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.5701588Z #7 3.456 Unpacking git-man (1:2.30.2-1+deb11u5) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.5702212Z #7 3.534 Selecting previously unselected package git.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.5702599Z #7 3.536 Preparing to unpack .../20-git_1%3a2.30.2-1+deb11u5_amd64.deb ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.5702969Z #7 3.549 Unpacking git (1:2.30.2-1+deb11u5) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:08.9950299Z #7 3.974 Setting up libexpat1:amd64 (2.2.10-2+deb11u7) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0975779Z #7 3.977 Setting up libpsl5:amd64 (0.21.0-1.2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0976165Z #7 3.979 Setting up wget (1.21-1+deb11u2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0976512Z #7 3.982 Setting up perl-modules-5.32 (5.32.1-4+deb11u4) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0976853Z #7 3.985 Setting up libbrotli1:amd64 (1.0.9-2+b2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0977187Z #7 3.987 Setting up libnghttp2-14:amd64 (1.43.0-1+deb11u2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0977872Z #7 3.989 Setting up libsasl2-modules-db:amd64 (2.1.27+dfsg-2.1+deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0978304Z #7 3.992 Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0978721Z #7 3.994 Setting up libsasl2-2:amd64 (2.1.27+dfsg-2.1+deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0979059Z #7 3.997 Setting up git-man (1:2.30.2-1+deb11u5) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0979375Z #7 3.999 Setting up libssh2-1:amd64 (1.9.0-2+deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0979676Z #7 4.001 Setting up openssl (1.1.1w-0+deb11u5) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0979971Z #7 4.005 Setting up libgdbm6:amd64 (1.19-2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0980299Z #7 4.008 Setting up libldap-2.4-2:amd64 (2.4.57+dfsg-3+deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0980682Z #7 4.010 Setting up libcurl3-gnutls:amd64 (7.74.0-1.3+deb11u16) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0981056Z #7 4.012 Setting up ca-certificates (20230311+deb12u1~deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0981405Z #7 4.077 debconf: unable to initialize frontend: Dialog
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0981783Z #7 4.077 debconf: (TERM is not set, so the dialog frontend is not usable.)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.0982147Z #7 4.077 debconf: falling back to frontend: Readline
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.4540250Z #7 4.433 Updating certificates in /etc/ssl/certs...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:09.9574856Z #7 4.937 142 added, 0 removed; done.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.1764194Z #7 4.951 Setting up libgdbm-compat4:amd64 (1.19-2) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.1764633Z #7 4.953 Setting up libperl5.32:amd64 (5.32.1-4+deb11u4) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.1764980Z #7 4.956 Setting up perl (5.32.1-4+deb11u4) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.1765321Z #7 4.964 Setting up liberror-perl (0.17029-1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.1765771Z #7 4.967 Setting up git (1:2.30.2-1+deb11u5) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.1766184Z #7 4.991 Processing triggers for libc-bin (2.31-13+deb11u13) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.1766942Z #7 5.002 Processing triggers for ca-certificates (20230311+deb12u1~deb11u1) ...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.1767873Z #7 5.005 Updating certificates in /etc/ssl/certs...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.4463224Z #7 5.426 0 added, 0 removed; done.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.4463624Z #7 5.426 Running hooks in /etc/ca-certificates/update.d...
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.5978486Z #7 5.427 done.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.6349413Z #7 DONE 5.6s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.7734548Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.7736076Z #8 [3/5] RUN wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/fd59714416d6d9a1c0692d872e38e7f8448df4fc/install.sh| sh -s -- -b /usr/local/bin/ v0.21.0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.9456354Z #8 0.138 reviewdog/reviewdog info checking GitHub for tag 'v0.21.0'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:10.9457045Z #8 0.310 reviewdog/reviewdog info found version: 0.21.0 for v0.21.0/Linux/x86_64
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:11.3661135Z #8 0.730 reviewdog/reviewdog info installed /usr/local/bin//reviewdog
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:11.5293642Z #8 DONE 0.7s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:11.5293881Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:11.5294521Z #9 [4/5] RUN wget -O - -q https://raw.githubusercontent.com/golangci/misspell/master/install-misspell.sh | sh -s -- -b /usr/local/bin/
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:11.5295228Z #9 0.150 golangci/misspell info checking GitHub for latest tag
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:12.0134192Z #9 0.634 golangci/misspell info found version: 0.8.0 for v0.8.0/linux/amd64
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:12.6344366Z #9 1.255 golangci/misspell info installed /usr/local/bin//misspell
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:12.8228482Z #9 DONE 1.3s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:12.8228763Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:12.8228940Z #10 [5/5] COPY entrypoint.sh /entrypoint.sh
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:12.8229405Z #10 DONE 0.0s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:12.8229579Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:12.8229692Z #11 exporting to image
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:12.8230036Z #11 exporting layers
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3422820Z #11 exporting layers 0.7s done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3619819Z #11 writing image sha256:9ae372bbe55e70d0d0a2c9a19182bbc161e3d06cf308ecd54835b95bd4618c0e done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3624130Z #11 naming to docker.io/library/ee3f1c:145dc01f85b148c5abc86faef8026974 done
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3624782Z #11 DONE 0.7s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3672774Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3956105Z ##[group]Run actions/checkout@v4
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3956648Z with:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3956829Z   fetch-depth: 0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3957040Z   repository: fkcurrie/utba-swarmmap
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3957737Z   token: ***
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3957931Z   ssh-strict: true
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3958108Z   ssh-user: git
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3958301Z   persist-credentials: true
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3958507Z   clean: true
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3958697Z   sparse-checkout-cone-mode: true
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3958929Z   fetch-tags: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3959106Z   show-progress: true
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3959301Z   lfs: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3959458Z   submodules: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3959646Z   set-safe-directory: true
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.3960103Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5086822Z Syncing repository: fkcurrie/utba-swarmmap
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5088522Z ##[group]Getting Git version info
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5089041Z Working directory is '/home/runner/work/utba-swarmmap/utba-swarmmap'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5089608Z [command]/usr/bin/git version
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5109488Z git version 2.53.0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5135681Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5152833Z Temporarily overriding HOME='/home/runner/work/_temp/f863de25-5b00-4cd2-9dd2-8b804c700328' before making global git config changes
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5154205Z Adding repository directory to the temporary git global config as a safe directory
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5159621Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/utba-swarmmap/utba-swarmmap
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5192098Z Deleting the contents of '/home/runner/work/utba-swarmmap/utba-swarmmap'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5196221Z ##[group]Initializing the repository
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5201368Z [command]/usr/bin/git init /home/runner/work/utba-swarmmap/utba-swarmmap
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5310141Z hint: Using 'master' as the name for the initial branch. This default branch name
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5311186Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5312157Z hint: to use in all of your new repositories, which will suppress this warning,
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5312930Z hint: call:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5313252Z hint:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5313686Z hint: 	git config --global init.defaultBranch <name>
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5314264Z hint:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5332274Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5333163Z hint: 'development'. The just-created branch can be renamed via this command:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5333743Z hint:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5334064Z hint: 	git branch -m <name>
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5334426Z hint:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5334960Z hint: Disable this message with "git config set advice.defaultBranchName false"
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5335706Z Initialized empty Git repository in /home/runner/work/utba-swarmmap/utba-swarmmap/.git/
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5336653Z [command]/usr/bin/git remote add origin https://github.com/fkcurrie/utba-swarmmap
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5354724Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5355333Z ##[group]Disabling automatic garbage collection
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5359686Z [command]/usr/bin/git config --local gc.auto 0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5387243Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5388159Z ##[group]Setting up auth
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5395059Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5424968Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5717827Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5747233Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.5983329Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.6024324Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.6266222Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.6303621Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.6304022Z ##[group]Fetching the repository
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:13.6315105Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/* +f4c3f196d64181a43b1b8496f0e8aa88d7ac3f1e:refs/remotes/pull/11/merge
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3276210Z From https://github.com/fkcurrie/utba-swarmmap
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3276809Z  * [new branch]      issue-10-qMX0                            -> origin/issue-10-qMX0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3277281Z  * [new branch]      main                                     -> origin/main
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3278046Z  * [new tag]         v0.5                                     -> v0.5
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3278438Z  * [new tag]         v0.5-alpha                               -> v0.5-alpha
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3278883Z  * [new ref]         f4c3f196d64181a43b1b8496f0e8aa88d7ac3f1e -> pull/11/merge
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3312256Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3312827Z ##[group]Determining the checkout info
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3313699Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3319030Z [command]/usr/bin/git sparse-checkout disable
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3354191Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3377982Z ##[group]Checking out the ref
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3381847Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/11/merge
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3614479Z Note: switching to 'refs/remotes/pull/11/merge'.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3614896Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3615202Z You are in 'detached HEAD' state. You can look around, make experimental
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3615794Z changes and commit them, and you can discard any commits you make in this
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3616340Z state without impacting any branches by switching back to a branch.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3616661Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3616878Z If you want to create a new branch to retain commits you create, you may
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3617543Z do so (now or later) by using -c with the switch command. Example:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3617842Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3617952Z   git switch -c <new-branch-name>
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3618207Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3618313Z Or undo this operation with:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3618499Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3618596Z   git switch -
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3618721Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3618966Z Turn off this advice by setting config variable advice.detachedHead to false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3619429Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3620070Z HEAD is now at f4c3f19 Merge c9826accce9694439a4dc4a091f8f27a00928f2a into ce8c646a1e1a3155ecfdd83f5a8af5e375dad3a3
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3625861Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3662691Z [command]/usr/bin/git log -1 --format=%H
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3684080Z f4c3f196d64181a43b1b8496f0e8aa88d7ac3f1e
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3902243Z ##[group]Run actions/setup-node@v4
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3902512Z with:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3902683Z   node-version: 20
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3902864Z   cache: npm
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3903032Z   always-auth: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3903229Z   check-latest: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3903523Z   token: ***
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.3903704Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.5649514Z Found in cache @ /opt/hostedtoolcache/node/20.20.2/x64
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:14.5655894Z ##[group]Environment details
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:17.4248198Z node: v20.20.2
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:17.4248611Z npm: 10.8.2
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:17.4248933Z yarn: 1.22.22
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:17.4250355Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:17.4271185Z [command]/opt/hostedtoolcache/node/20.20.2/x64/bin/npm config get cache
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:17.6168229Z /home/runner/.npm
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:17.9067886Z Cache hit for: node-cache-Linux-x64-npm-6c84bea60747005d4032d9ad1ac33a0328c1a7001d73c6f703872a43e2b231b4
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.1715323Z Received 4348455 of 25319975 (17.2%), 4.2 MBs/sec
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.5392571Z Received 25319975 of 25319975 (100.0%), 17.7 MBs/sec
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.5393083Z Cache Size: ~24 MB (25319975 B)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.5423335Z [command]/usr/bin/tar -xf /home/runner/work/_temp/e0cb2eb7-40a2-453e-86a6-fe0743851bc1/cache.tzst -P -C /home/runner/work/utba-swarmmap/utba-swarmmap --use-compress-program unzstd
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.6351053Z Cache restored successfully
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.6368955Z Cache restored from key: node-cache-Linux-x64-npm-6c84bea60747005d4032d9ad1ac33a0328c1a7001d73c6f703872a43e2b231b4
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.6524475Z ##[group]Run actions/setup-go@v5
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.6524741Z with:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.6524909Z   go-version: 1.22
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.6525106Z   check-latest: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.6525410Z   token: ***
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.6525580Z   cache: true
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.6525758Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.8190003Z Setup go version spec 1.22
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.8557068Z Found in cache @ /opt/hostedtoolcache/go/1.22.12/x64
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.8557872Z Added go to the path
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:19.8561429Z Successfully set up Go version 1.22
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.1496833Z [command]/opt/hostedtoolcache/go/1.22.12/x64/bin/go env GOMODCACHE
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.1528765Z [command]/opt/hostedtoolcache/go/1.22.12/x64/bin/go env GOCACHE
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.1551740Z /home/runner/go/pkg/mod
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.1579533Z /home/runner/.cache/go-build
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.1603507Z ##[warning]Restore cache failed: Dependencies file is not found in /home/runner/work/utba-swarmmap/utba-swarmmap. Supported file pattern: go.sum
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.1614175Z go version go1.22.12 linux/amd64
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.1614370Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.1614615Z ##[group]go env
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2770729Z GO111MODULE=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2771169Z GOARCH='amd64'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2771512Z GOBIN=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2771988Z GOCACHE='/home/runner/.cache/go-build'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2772576Z GOENV='/home/runner/.config/go/env'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2773000Z GOEXE=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2773344Z GOEXPERIMENT=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2773745Z GOFLAGS=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2774150Z GOHOSTARCH='amd64'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2774380Z GOHOSTOS='linux'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2774621Z GOINSECURE=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2774889Z GOMODCACHE='/home/runner/go/pkg/mod'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2775161Z GONOPROXY=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2775360Z GONOSUMDB=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2775562Z GOOS='linux'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2775793Z GOPATH='/home/runner/go'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2776036Z GOPRIVATE=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2776398Z GOPROXY='https://proxy.golang.org,direct'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2776828Z GOROOT='/opt/hostedtoolcache/go/1.22.12/x64'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2777175Z GOSUMDB='sum.golang.org'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2777744Z GOTMPDIR=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2777979Z GOTOOLCHAIN='auto'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2778415Z GOTOOLDIR='/opt/hostedtoolcache/go/1.22.12/x64/pkg/tool/linux_amd64'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2778801Z GOVCS=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2779091Z GOVERSION='go1.22.12'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2779322Z GCCGO='gccgo'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2779527Z GOAMD64='v1'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2779712Z AR='ar'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2779898Z CC='gcc'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2780066Z CXX='g++'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2780265Z CGO_ENABLED='1'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2780487Z GOMOD='/dev/null'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2780671Z GOWORK=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2780893Z CGO_CFLAGS='-O2 -g'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2781114Z CGO_CPPFLAGS=''
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2781332Z CGO_CXXFLAGS='-O2 -g'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2781574Z CGO_FFLAGS='-O2 -g'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2782114Z CGO_LDFLAGS='-O2 -g'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2782377Z PKG_CONFIG='pkg-config'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2783259Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build1950610207=/tmp/go-build -gno-record-gcc-switches'
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2783838Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2784150Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2884448Z ##[group]Run npm ci
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2884714Z [36;1mnpm ci[0m
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2919855Z shell: /usr/bin/bash -e {0}
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:20.2920110Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:23.4504489Z npm warn deprecated popper.js@1.16.1: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.0751852Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.0752731Z added 337 packages, and audited 338 packages in 4s
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.0753179Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.0753454Z 116 packages are looking for funding
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.0753961Z   run `npm fund` for details
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.0763322Z 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.0763717Z found 0 vulnerabilities
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1035445Z ##[group]Run reviewdog/action-detect-secrets@v0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1035764Z with:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1036139Z   github_token: ***
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1036351Z   reporter: github-pr-review
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1036584Z   name: detect-secrets
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1036787Z   workdir: .
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1036964Z   filter_mode: added
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1037158Z   fail_level: none
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1037856Z   fail_on_error: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1038089Z   level: error
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1038382Z   detect_secrets_flags: --all-files --force-use-all-plugins
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1038708Z   skip_audited: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1038906Z   verbose: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1039080Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.1134339Z ##[command]/usr/bin/docker run --name ee3f1c6c50f2ebcc8449bcbbb3aa4408c7143a_cdc2e9 --label ee3f1c --workdir /github/workspace --rm -e "INPUT_GITHUB_TOKEN" -e "INPUT_REPORTER" -e "INPUT_NAME" -e "INPUT_WORKDIR" -e "INPUT_FILTER_MODE" -e "INPUT_FAIL_LEVEL" -e "INPUT_FAIL_ON_ERROR" -e "INPUT_LEVEL" -e "INPUT_REVIEWDOG_FLAGS" -e "INPUT_DETECT_SECRETS_FLAGS" -e "INPUT_BASELINE_PATH" -e "INPUT_SKIP_AUDITED" -e "INPUT_VERBOSE" -e "HOME" -e "GITHUB_JOB" -e "GITHUB_REF" -e "GITHUB_SHA" -e "GITHUB_REPOSITORY" -e "GITHUB_REPOSITORY_OWNER" -e "GITHUB_REPOSITORY_OWNER_ID" -e "GITHUB_RUN_ID" -e "GITHUB_RUN_NUMBER" -e "GITHUB_RETENTION_DAYS" -e "GITHUB_RUN_ATTEMPT" -e "GITHUB_ACTOR_ID" -e "GITHUB_ACTOR" -e "GITHUB_WORKFLOW" -e "GITHUB_HEAD_REF" -e "GITHUB_BASE_REF" -e "GITHUB_EVENT_NAME" -e "GITHUB_SERVER_URL" -e "GITHUB_API_URL" -e "GITHUB_GRAPHQL_URL" -e "GITHUB_REF_NAME" -e "GITHUB_REF_PROTECTED" -e "GITHUB_REF_TYPE" -e "GITHUB_WORKFLOW_REF" -e "GITHUB_WORKFLOW_SHA" -e "GITHUB_REPOSITORY_ID" -e "GITHUB_TRIGGERING_ACTOR" -e "GITHUB_WORKSPACE" -e "GITHUB_ACTION" -e "GITHUB_EVENT_PATH" -e "GITHUB_ACTION_REPOSITORY" -e "GITHUB_ACTION_REF" -e "GITHUB_PATH" -e "GITHUB_ENV" -e "GITHUB_STEP_SUMMARY" -e "GITHUB_STATE" -e "GITHUB_OUTPUT" -e "RUNNER_OS" -e "RUNNER_ARCH" -e "RUNNER_NAME" -e "RUNNER_ENVIRONMENT" -e "RUNNER_TOOL_CACHE" -e "RUNNER_TEMP" -e "RUNNER_WORKSPACE" -e "ACTIONS_RUNTIME_URL" -e "ACTIONS_RUNTIME_TOKEN" -e "ACTIONS_CACHE_URL" -e "ACTIONS_RESULTS_URL" -e "ACTIONS_ORCHESTRATION_ID" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work/_temp":"/github/runner_temp" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" -v "/home/runner/work/_temp/_runner_file_commands":"/github/file_commands" -v "/home/runner/work/utba-swarmmap/utba-swarmmap":"/github/workspace" ee3f1c:6c50f2ebcc8449bcbbb3aa4408c7143a
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:17:24.8312618Z 1.5.0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6569514Z ##[group]Run reviewdog/action-actionlint@v1
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6569818Z with:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6570172Z   github_token: ***
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6570386Z   reporter: github-pr-review
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6570617Z   tool_name: actionlint
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6570809Z   level: error
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6571183Z   filter_mode: file
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6571369Z   fail_level: none
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6571551Z   fail_on_error: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6571737Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:52.6584312Z ##[command]/usr/bin/docker run --name ghcrioreviewdogactionactionlintv1720_9e75cf --label ee3f1c --workdir /github/workspace --rm -e "INPUT_GITHUB_TOKEN" -e "INPUT_REPORTER" -e "INPUT_TOOL_NAME" -e "INPUT_LEVEL" -e "INPUT_FILTER_MODE" -e "INPUT_FAIL_LEVEL" -e "INPUT_FAIL_ON_ERROR" -e "INPUT_REVIEWDOG_FLAGS" -e "INPUT_ACTIONLINT_FLAGS" -e "HOME" -e "GITHUB_JOB" -e "GITHUB_REF" -e "GITHUB_SHA" -e "GITHUB_REPOSITORY" -e "GITHUB_REPOSITORY_OWNER" -e "GITHUB_REPOSITORY_OWNER_ID" -e "GITHUB_RUN_ID" -e "GITHUB_RUN_NUMBER" -e "GITHUB_RETENTION_DAYS" -e "GITHUB_RUN_ATTEMPT" -e "GITHUB_ACTOR_ID" -e "GITHUB_ACTOR" -e "GITHUB_WORKFLOW" -e "GITHUB_HEAD_REF" -e "GITHUB_BASE_REF" -e "GITHUB_EVENT_NAME" -e "GITHUB_SERVER_URL" -e "GITHUB_API_URL" -e "GITHUB_GRAPHQL_URL" -e "GITHUB_REF_NAME" -e "GITHUB_REF_PROTECTED" -e "GITHUB_REF_TYPE" -e "GITHUB_WORKFLOW_REF" -e "GITHUB_WORKFLOW_SHA" -e "GITHUB_REPOSITORY_ID" -e "GITHUB_TRIGGERING_ACTOR" -e "GITHUB_WORKSPACE" -e "GITHUB_ACTION" -e "GITHUB_EVENT_PATH" -e "GITHUB_ACTION_REPOSITORY" -e "GITHUB_ACTION_REF" -e "GITHUB_PATH" -e "GITHUB_ENV" -e "GITHUB_STEP_SUMMARY" -e "GITHUB_STATE" -e "GITHUB_OUTPUT" -e "RUNNER_OS" -e "RUNNER_ARCH" -e "RUNNER_NAME" -e "RUNNER_ENVIRONMENT" -e "RUNNER_TOOL_CACHE" -e "RUNNER_TEMP" -e "RUNNER_WORKSPACE" -e "ACTIONS_RUNTIME_URL" -e "ACTIONS_RUNTIME_TOKEN" -e "ACTIONS_CACHE_URL" -e "ACTIONS_RESULTS_URL" -e "ACTIONS_ORCHESTRATION_ID" -e GITHUB_ACTIONS=true -e CI=true --entrypoint "/entrypoint.sh" -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work/_temp":"/github/runner_temp" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" -v "/home/runner/work/_temp/_runner_file_commands":"/github/file_commands" -v "/home/runner/work/utba-swarmmap/utba-swarmmap":"/github/workspace" ghcr.io/reviewdog/action-actionlint:v1.72.0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7827714Z ##[group]Run ibiqlik/action-yamllint@v3
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7828065Z with:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7828237Z   file_or_dir: .
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7828425Z   config_file: .yamllint.yaml
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7828647Z   format: parsable
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7828827Z   strict: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7828997Z   no_warnings: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7829183Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7925386Z ##[group]Run # export LOGFILE=$(mktemp yamllint-XXXXXX)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7925780Z [36;1m# export LOGFILE=$(mktemp yamllint-XXXXXX)[0m
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7926212Z [36;1m/home/runner/work/_actions/ibiqlik/action-yamllint/v3/entrypoint.sh[0m
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7953923Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7954236Z env:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7954406Z   INPUT_FILE_OR_DIR: .
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7954621Z   INPUT_CONFIG_FILE: .yamllint.yaml
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7954862Z   INPUT_CONFIG_DATA: 
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7955077Z   INPUT_FORMAT: parsable
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7955317Z   INPUT_STRICT: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7955511Z   INPUT_NO_WARNINGS: false
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.7955718Z ##[endgroup]
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.9539967Z ======================
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.9540394Z = Linting YAML files =
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:53.9540660Z ======================
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.4845438Z ./backend/cloudbuild.yaml:76:1: [error] too many blank lines (1 > 0) (empty-lines)
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.4994167Z ##[error]Process completed with exit code 1.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.5124388Z Post job cleanup.
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6077253Z [command]/usr/bin/git version
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6113075Z git version 2.53.0
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6162927Z Temporarily overriding HOME='/home/runner/work/_temp/76736400-5c59-425e-912a-e214f3219468' before making global git config changes
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6164194Z Adding repository directory to the temporary git global config as a safe directory
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6168313Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/utba-swarmmap/utba-swarmmap
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6202172Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6233637Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6452880Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6473324Z http.https://github.com/.extraheader
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6485841Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6515522Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6728665Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.6758515Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.7080656Z Cleaning up orphan processes
+General & Infrastructure	UNKNOWN STEP	2026-04-04T14:20:54.7438294Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-go@v5, actions/setup-node@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
