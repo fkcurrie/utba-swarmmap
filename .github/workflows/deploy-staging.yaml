@@ -66,18 +66,18 @@ jobs:
       - name: Get Project Number
         id: project
         run: |
-          PROJECT_NUMBER=$(gcloud projects describe ${{ env.PROJECT_ID }} --format='value(projectNumber)')
+          PROJECT_NUMBER=$(gcloud projects describe "${{ env.PROJECT_ID }}" --format='value(projectNumber)')
           echo "number=$PROJECT_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Deploy Frontend to Cloud Run
         id: deploy-frontend
         run: |
-          gcloud run deploy ${{ env.SERVICE_FRONTEND }} \
-            --image ${{ env.IMAGE_FRONTEND }}:${{ github.sha }} \
-            --region ${{ env.REGION }} \
-            --project ${{ env.PROJECT_ID }} \
+          gcloud run deploy "${{ env.SERVICE_FRONTEND }}" \
+            --image "${{ env.IMAGE_FRONTEND }}:${{ github.sha }}" \
+            --region "${{ env.REGION }}" \
+            --project "${{ env.PROJECT_ID }}" \
             --allow-unauthenticated \
-            --service-account ${{ vars.FRONTEND_SERVICE_ACCOUNT_STAGING }} \
+            --service-account "${{ vars.FRONTEND_SERVICE_ACCOUNT_STAGING }}" \
             --format 'value(status.url)' > frontend_url.txt
           echo "url=$(cat frontend_url.txt)" >> $GITHUB_OUTPUT
 
@@ -87,9 +87,9 @@ jobs:
           FRONTEND_URL="${{ steps.deploy-frontend.outputs.url }}"
 
           # Attempt to retrieve existing Backend URL, fallback to project number construction if new
-          BACKEND_URL=$(gcloud run services describe ${{ env.SERVICE_BACKEND }} \
-            --region ${{ env.REGION }} \
-            --project ${{ env.PROJECT_ID }} \
+          BACKEND_URL=$(gcloud run services describe "${{ env.SERVICE_BACKEND }}" \
+            --region "${{ env.REGION }}" \
+            --project "${{ env.PROJECT_ID }}" \
             --format 'value(status.url)' 2>/dev/null || echo "")
 
           if [ -z "$BACKEND_URL" ]; then
@@ -98,16 +98,16 @@ jobs:
             BACKEND_URL="https://${{ env.SERVICE_BACKEND }}-${PROJECT_NUMBER}.${{ env.REGION }}.run.app"
           fi
 
-          gcloud run deploy ${{ env.SERVICE_BACKEND }} \
-            --image ${{ env.IMAGE_BACKEND }}:${{ github.sha }} \
-            --region ${{ env.REGION }} \
-            --project ${{ env.PROJECT_ID }} \
+          gcloud run deploy "${{ env.SERVICE_BACKEND }}" \
+            --image "${{ env.IMAGE_BACKEND }}:${{ github.sha }}" \
+            --region "${{ env.REGION }}" \
+            --project "${{ env.PROJECT_ID }}" \
             --allow-unauthenticated \
-            --set-env-vars GOOGLE_REDIRECT_URL=${BACKEND_URL}/auth/google/callback \
-            --set-env-vars FRONTEND_ASSETS_URL=${FRONTEND_URL} \
-            --set-secrets GOOGLE_CLIENT_ID=google-oauth-client-id-staging:latest \
-            --set-secrets GOOGLE_CLIENT_SECRET=google-oauth-client-secret-staging:latest \
-            --service-account ${{ vars.BACKEND_SERVICE_ACCOUNT_STAGING }} \
+            --set-env-vars "GOOGLE_REDIRECT_URL=${BACKEND_URL}/auth/google/callback" \
+            --set-env-vars "FRONTEND_ASSETS_URL=${FRONTEND_URL}" \
+            --set-secrets "GOOGLE_CLIENT_ID=google-oauth-client-id-staging:latest" \
+            --set-secrets "GOOGLE_CLIENT_SECRET=google-oauth-client-secret-staging:latest" \
+            --service-account "${{ vars.BACKEND_SERVICE_ACCOUNT_STAGING }}" \
             --format 'value(status.url)' > backend_url.txt
           echo "url=$(cat backend_url.txt)" >> $GITHUB_OUTPUT
 
