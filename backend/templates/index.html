@@ -3,46 +3,44 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-md-12 text-center">
-                <button id="reportSwarmBtn" class="btn btn-primary btn-lg">Report a Swarm at Your Location</button>
+                <button id="reportSwarmBtn" class="btn btn-primary btn-lg" aria-label="Report a Bee Swarm at your current location">Report a Swarm at Your Location</button>
                 <p class="text-muted small mt-2">(Or click on the map to report at a specific spot)</p>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div id="map"></div>
+                <div id="map" aria-label="Bee Swarm Map" role="application"></div>
             </div>
         </div>
-        
+
         <!-- Pin Color Legend -->
-        <div class="row mt-3 mb-3">
+        <aside class="row mt-3 mb-3" aria-labelledby="legendTitle">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body py-2">
-                        <h6 class="card-title mb-2">Pin Color Legend:</h6>
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <span class="mr-3 mb-1">
-                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #ff0000; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Red = Reported (new)</small>
+                        <h6 id="legendTitle" class="card-title mb-2">Pin Color Legend:</h6>
+                        <div class="d-flex flex-wrap justify-content-center" role="list">
+                            <span class="me-3 mb-1" role="listitem">
+                                <span aria-hidden="true" style="display: inline-block; width: 20px; height: 20px; background-color: #ff0000; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
+                                <small class="ms-1">Red = Reported (new)</small>
                             </span>
-                            <span class="mr-3 mb-1">
-                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #ff69b4; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Pink = Verified</small>
+                            <span class="me-3 mb-1" role="listitem">
+                                <span aria-hidden="true" style="display: inline-block; width: 20px; height: 20px; background-color: #ff69b4; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
+                                <small class="ms-1">Pink = Verified</small>
                             </span>
-                            <span class="mr-3 mb-1">
-                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #00ff00; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Green = Captured</small>
+                            <span class="me-3 mb-1" role="listitem">
+                                <span aria-hidden="true" style="display: inline-block; width: 20px; height: 20px; background-color: #00ff00; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
+                                <small class="ms-1">Green = Captured</small>
                             </span>
-                            <span class="mr-3 mb-1">
-                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #0000ff; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Blue = Archived (24h+)</small>
+                            <span class="me-3 mb-1" role="listitem">
+                                <span aria-hidden="true" style="display: inline-block; width: 20px; height: 20px; background-color: #0000ff; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
+                                <small class="ms-1">Blue = Archived (24h+)</small>
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        
+        </aside>
     </div>
 
     <!-- Report Swarm Modal -->
@@ -51,41 +49,39 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="reportSwarmModalLabel">Report Bee Swarm</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="reportSwarmForm">
-                        <div class="form-group">
-                            <label for="description">Description (e.g., size of swarm, height from ground, on a tree branch)</label>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description (e.g., size of swarm, height from ground, on a tree branch)</label>
                             <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="intersection">Nearest Major Intersection</label>
+                        <div class="mb-3">
+                            <label for="intersection" class="form-label">Nearest Major Intersection</label>
                             <input type="text" class="form-control" id="intersection" name="intersection" placeholder="e.g., Yonge & Bloor" required>
                         </div>
-                        
+
                         <!-- Contact Information Section -->
                         <div class="form-section mt-4 p-3 border rounded" style="background-color: #f8f9fa;">
                             <h6 class="mb-3">📞 Contact Information (Optional but Recommended)</h6>
                             <p class="small text-muted mb-3">Providing your contact details helps beekeepers reach you for additional information or to coordinate swarm collection.</p>
-                            
-                            <div class="form-group">
-                                <label for="reporterName">Your Name</label>
+
+                            <div class="mb-3">
+                                <label for="reporterName" class="form-label">Your Name</label>
                                 <input type="text" class="form-control" id="reporterName" name="reporterName" placeholder="e.g., John Smith">
                             </div>
-                            <div class="form-group">
-                                <label for="reporterEmail">Email Address</label>
+                            <div class="mb-3">
+                                <label for="reporterEmail" class="form-label">Email Address</label>
                                 <input type="email" class="form-control" id="reporterEmail" name="reporterEmail" placeholder="e.g., john@example.com">
                             </div>
-                            <div class="form-group">
-                                <label for="reporterPhone">Phone Number</label>
+                            <div class="mb-3">
+                                <label for="reporterPhone" class="form-label">Phone Number</label>
                                 <input type="tel" class="form-control" id="reporterPhone" name="reporterPhone" placeholder="e.g., (416) 555-0123">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="media">📸 Upload Photo(s) and/or Video(s) (Optional)</label>
+                        <div class="mb-3">
+                            <label for="media" class="form-label">📸 Upload Photo(s) and/or Video(s) (Optional)</label>
                             <div class="file-upload-section">
                                 <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
                                 <input type="file" id="camera-input" accept="image/*,video/*" capture="environment" style="display: none;">
@@ -97,7 +93,7 @@
                                 </button>
                                 <small class="form-text text-muted">Supported: JPG, PNG, HEIC, MP4, MOV, AVI, 3GP (max 50MB each)</small>
                             </div>
-                            
+
                             <!-- File management area -->
                             <div id="fileManagementArea" style="margin-top: 15px; display: none;">
                                 <h6>Selected Files:</h6>
@@ -120,7 +116,8 @@
             </div>
         </div>
     </div>
-    
+
     <!-- TODO: Add a separate modal for UTBA members to update status -->
 
     {{template "footer.html" .}} 
+ 

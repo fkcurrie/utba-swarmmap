@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"context"
-	"log"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -34,6 +34,7 @@ func (h *Handlers) RequireRole(role string, next http.Handler) http.Handler {
 		session, ok := r.Context().Value(SessionContextKey).(*models.Session)
 		if !ok {
 			// This should not happen if RequireAuth is used first, but as a safeguard:
+			slog.Error("Could not retrieve session from context")
 			http.Error(w, "Could not retrieve session from context", http.StatusInternalServerError)
 			return
 		}
@@ -75,7 +76,7 @@ func (h *Handlers) getSession(r *http.Request) *models.Session {
 	// Check if session is expired
 	if session.ExpiresAt.Before(time.Now()) {
 		if err := h.Store.DeleteSession(r.Context(), cookie.Value); err != nil {
-			log.Printf("Failed to delete expired session: %v", err)
+			slog.Error("Failed to delete expired session", "error", err)
 		}
 		return nil
 	}
