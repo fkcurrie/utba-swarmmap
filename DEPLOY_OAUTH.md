@@ -64,7 +64,7 @@ gcloud builds submit --config backend/cloudbuild.yaml .
 
 ### For Administrators
 
-- Must sign in with Google  
+- Must sign in with Google
 - Can approve/reject pending users
 - Can delete swarm reports
 - Full access to all features
@@ -82,5 +82,5 @@ gcloud builds submit --config backend/cloudbuild.yaml .
 The application needs these environment variables:
 
 - `GOOGLE_CLIENT_ID`: Your Google OAuth2 client ID
-- `GOOGLE_CLIENT_SECRET`: Your Google OAuth2 client secret  
+- `GOOGLE_CLIENT_SECRET`: Your Google OAuth2 client secret
 - `GOOGLE_REDIRECT_URL`: The callback URL for OAuth2 flow
