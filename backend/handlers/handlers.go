@@ -23,9 +23,9 @@ type Handlers struct {
 }
 
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("DEBUG: IndexHandler called for %q", r.URL.Path) //nolint:gosec // G706: Path is quoted and safe for logging
+	log.Printf("DEBUG: IndexHandler called for %q", r.URL.Path) // #nosec G706
 	if r.URL.Path != "/" {
-		log.Printf("DEBUG: Path not /, returning NotFound for %q", r.URL.Path) //nolint:gosec // G706: Path is quoted and safe for logging
+		log.Printf("DEBUG: Path not /, returning NotFound for %q", r.URL.Path) // #nosec G706
 		http.NotFound(w, r)
 		return
 	}
@@ -56,7 +56,7 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 	sessionID := r.URL.Query().Get("sessionId")
 
 	if sessionID != "" {
-		log.Printf("Fetching swarms for public user session: %s", strconv.Quote(sessionID)) //nolint:gosec // G706: sessionID is quoted and safe for logging
+		log.Printf("Fetching swarms for public user session: %s", strconv.Quote(sessionID)) // #nosec G706
 		currentReports, err = h.Store.GetSwarmsBySessionID(ctx, sessionID)
 	} else {
 		log.Printf("Fetching all swarms")

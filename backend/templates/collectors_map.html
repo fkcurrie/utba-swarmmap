@@ -2,55 +2,63 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-12">
-                <div id="map"></div>
+            <div class="col-md-12 position-relative">
+                <div id="map" aria-label="Interactive map for collectors showing all bee swarm reports"></div>
             </div>
         </div>
-        <div class="row mt-1 mb-3">
+        <div class="row mt-3 mb-3">
             <div class="col-md-12 text-center">
-                <button id="reportSwarmBtn" class="btn btn-primary mr-2">Report Swarm at My Location</button>
-                <button id="refreshMapBtn" class="btn btn-secondary mr-2">Clear & Refresh Map</button>
-                <small class="text-muted"> (Or click on the map to report at a specific spot)</small>
+                <button id="reportSwarmBtn" class="btn btn-primary mr-2 shadow-sm" aria-label="Report a swarm at your location">
+                    <i class="fas fa-map-marker-alt mr-1"></i> Report Swarm
+                </button>
+                <button id="refreshMapBtn" class="btn btn-secondary mr-2 shadow-sm" aria-label="Refresh swarm data from server">
+                    <i class="fas fa-sync-alt mr-1"></i> Refresh Map
+                </button>
             </div>
         </div>
         
         <!-- Pin Color Legend -->
-        <div class="row mb-3">
+        <div class="row mb-4">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body py-2">
-                        <h6 class="card-title mb-2">Pin Color Legend:</h6>
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <span class="mr-3 mb-1">
-                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #ff0000; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Red = Reported (new)</small>
-                            </span>
-                            <span class="mr-3 mb-1">
-                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #ff69b4; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Pink = Verified</small>
-                            </span>
-                            <span class="mr-3 mb-1">
-                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #00ff00; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Green = Captured</small>
-                            </span>
-                            <span class="mr-3 mb-1">
-                                <span style="display: inline-block; width: 20px; height: 20px; background-color: #0000ff; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); vertical-align: middle;"></span>
-                                <small class="ml-1">Blue = Archived (24h+)</small>
-                            </span>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body py-3">
+                        <h2 class="h6 card-title mb-3"><i class="fas fa-info-circle mr-2 text-primary"></i>Pin Color Legend:</h2>
+                        <div class="d-flex flex-wrap justify-content-center" role="list">
+                            <div class="legend-item" role="listitem">
+                                <span class="legend-color" style="background-color: #ff0000;" aria-hidden="true"></span>
+                                <span class="small">Red = <span class="sr-only">Status</span> Reported (new)</span>
+                            </div>
+                            <div class="legend-item" role="listitem">
+                                <span class="legend-color" style="background-color: #ff69b4;" aria-hidden="true"></span>
+                                <span class="small">Pink = <span class="sr-only">Status</span> Verified</span>
+                            </div>
+                            <div class="legend-item" role="listitem">
+                                <span class="legend-color" style="background-color: #00ff00;" aria-hidden="true"></span>
+                                <span class="small">Green = <span class="sr-only">Status</span> Captured</span>
+                            </div>
+                            <div class="legend-item" role="listitem">
+                                <span class="legend-color" style="background-color: #0000ff;" aria-hidden="true"></span>
+                                <span class="small">Blue = <span class="sr-only">Status</span> Archived (24h+)</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Debug Section (can be removed later) -->
-        <div class="row mb-3">
+        <!-- Debug Section -->
+        <div class="row mb-4">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body py-2">
-                        <h6 class="card-title mb-2">Swarm Data (All - for Collectors):</h6>
-                        <div id="debugSwarms" style="font-size: 12px; max-height: 150px; overflow-y: auto;">
-                            <em>All swarm reports will appear here after loading.</em>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body py-3">
+                        <h2 class="h6 card-title mb-2 text-muted">Swarm List:</h2>
+                        <div id="debugSwarms" style="font-size: 13px; max-height: 200px; overflow-y: auto;">
+                            <div class="text-center p-3">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="sr-only">Loading swarms...</span>
+                                </div>
+                                <span class="ml-2">Loading swarm data...</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -59,82 +67,81 @@
     </div>
 
     <!-- Report Swarm Modal -->
-    <div class="modal fade" id="reportSwarmModal" tabindex="-1" role="dialog" aria-labelledby="reportSwarmModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reportSwarmModalLabel">Report Bee Swarm</h5>
+    <div class="modal fade" id="reportSwarmModal" tabindex="-1" role="dialog" aria-labelledby="reportSwarmModalLabel" aria-hidden="true" aria-modal="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title" id="reportSwarmModalLabel">
+                        <i class="fas fa-bug mr-2 text-primary"></i> Report Bee Swarm
+                    </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form id="reportSwarmForm">
                         <div class="form-group">
-                            <label for="description">Description (e.g., size of swarm, height from ground, on a tree branch)</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                            <label for="description" class="font-weight-bold">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required placeholder="e.g., size of swarm, height from ground..."></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="intersection">Nearest Major Intersection</label>
+                            <label for="intersection" class="font-weight-bold">Nearest Major Intersection</label>
                             <input type="text" class="form-control" id="intersection" name="intersection" placeholder="e.g., Yonge & Bloor" required>
                         </div>
                         
-                        <!-- Contact Information Section -->
-                        <div class="form-section mt-4 p-3 border rounded" style="background-color: #f8f9fa;">
-                            <h6 class="mb-3">📞 Contact Information (Optional but Recommended)</h6>
-                            <p class="small text-muted mb-3">Providing your contact details helps beekeepers reach you for additional information or to coordinate swarm collection.</p>
-                            
-                            <div class="form-group">
-                                <label for="reporterName">Your Name</label>
-                                <input type="text" class="form-control" id="reporterName" name="reporterName" placeholder="e.g., John Smith">
+                        <div class="form-section mt-4 mb-4 p-3 border rounded shadow-sm" style="background-color: #f8f9fa;">
+                            <h6 class="mb-3 font-weight-bold"><i class="fas fa-phone-alt mr-2 text-success"></i> Contact Information (Optional)</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="reporterName">Your Name</label>
+                                    <input type="text" class="form-control" id="reporterName" name="reporterName" placeholder="e.g., John Smith">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="reporterPhone">Phone Number</label>
+                                    <input type="tel" class="form-control" id="reporterPhone" name="reporterPhone" placeholder="e.g., (416) 555-0123">
+                                </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-0">
                                 <label for="reporterEmail">Email Address</label>
                                 <input type="email" class="form-control" id="reporterEmail" name="reporterEmail" placeholder="e.g., john@example.com">
                             </div>
-                            <div class="form-group">
-                                <label for="reporterPhone">Phone Number</label>
-                                <input type="tel" class="form-control" id="reporterPhone" name="reporterPhone" placeholder="e.g., (416) 555-0123">
-                            </div>
                         </div>
+
                         <div class="form-group">
-                            <label for="media">📸 Upload Photo(s) and/or Video(s) (Optional)</label>
+                            <label class="font-weight-bold mb-2"><i class="fas fa-camera-retro mr-2 text-info"></i> Upload Media</label>
                             <div class="file-upload-section">
                                 <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
                                 <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
-                                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('gallery-input').click();">
-                                    <i class="fas fa-plus"></i> Add Photo/Video
+                                <button type="button" class="btn btn-outline-primary mr-2 mb-2" onclick="document.getElementById('gallery-input').click();">
+                                    <i class="fas fa-images mr-1"></i> Gallery
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('camera-input').click();">
-                                    <i class="fas fa-camera"></i> Take Photo/Video
+                                <button type="button" class="btn btn-outline-secondary mr-2 mb-2" onclick="document.getElementById('camera-input').click();">
+                                    <i class="fas fa-camera mr-1"></i> Camera
                                 </button>
-                                <small class="form-text text-muted">Supported: JPG, PNG, HEIC, MP4, MOV, AVI, 3GP (max 50MB each)</small>
                             </div>
                             
-                            <!-- File management area -->
-                            <div id="fileManagementArea" style="margin-top: 15px; display: none;">
-                                <h6>Selected Files:</h6>
-                                <div id="selectedFilesList" class="border rounded p-3" style="max-height: 300px; overflow-y: auto; background-color: #f8f9fa;">
-                                    <!-- Selected files will be displayed here -->
-                                </div>
-                                <div class="mt-2 d-flex justify-content-between align-items-center">
-                                    <small class="text-success">✓ <span id="totalFileCount">0</span> file(s) ready to upload</small>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" id="clearAllFilesBtn">
-                                        <i class="fas fa-trash"></i> Clear All
-                                    </button>
+                            <div id="fileManagementArea" class="mt-3" style="display: none;">
+                                <h6 class="font-weight-bold">Selected Files:</h6>
+                                <div id="selectedFilesList" class="border rounded p-3 mb-2" style="max-height: 200px; overflow-y: auto; background-color: #fff;"></div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge badge-success px-3 py-2"><span id="totalFileCount">0</span> files ready</span>
+                                    <button type="button" class="btn btn-sm btn-link text-danger p-0" id="clearAllFilesBtn">Clear All</button>
                                 </div>
                             </div>
                         </div>
+                        
                         <input type="hidden" id="latitude" name="latitude">
                         <input type="hidden" id="longitude" name="longitude">
-                        <button type="submit" class="btn btn-primary">Submit Report</button>
+                        
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary px-4 font-weight-bold">Submit Report</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- TODO: Add a separate modal for UTBA members to update status -->
 
     {{template "footer.html" .}}
 </body>
