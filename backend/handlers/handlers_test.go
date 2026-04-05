@@ -322,9 +322,9 @@ func TestLoginHandler(t *testing.T) {
 	handler := http.HandlerFunc(h.GoogleLoginHandler)
 	handler.ServeHTTP(rr, req)
 
-	if status := rr.Code; status != http.StatusFound {
+	if status := rr.Code; status != http.StatusTemporaryRedirect {
 		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusFound)
+			status, http.StatusTemporaryRedirect)
 	}
 }
 
@@ -944,9 +944,9 @@ func TestLoginRouting(t *testing.T) {
 	rr := httptest.NewRecorder()
 	mux.ServeHTTP(rr, req)
 
-	if status := rr.Code; status != http.StatusFound {
+	if status := rr.Code; status != http.StatusTemporaryRedirect {
 		t.Errorf("mux returned wrong status code: got %v want %v",
-			status, http.StatusFound)
+			status, http.StatusTemporaryRedirect)
 	}
 }
 

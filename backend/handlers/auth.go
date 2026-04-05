@@ -159,7 +159,7 @@ func (h *Handlers) VerifyEmailHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	user, err := h.Store.GetUserByVerificationToken(ctx, token)
 	if err != nil {
-		log.Printf("Error getting user by verification token %s: %v", strconv.Quote(token), err)
+		log.Printf("Error getting user by verification token %s: %v", strconv.Quote(token), err) //nolint:gosec // G706: token is quoted and safe for logging
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -240,10 +240,11 @@ func (h *Handlers) renderMessagePage(w http.ResponseWriter, title, message strin
 
 // GoogleLoginHandler initiates the Google OAuth2 login flow.
 func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("GoogleLoginHandler hit: %s %s", r.Method, strconv.Quote(r.URL.Path)) //nolint:gosec // G706
+	log.Printf("DEBUG: GoogleLoginHandler called for %q", r.URL.Path) //nolint:gosec // G706: Path is quoted and safe for logging
 	state := uuid.New().String()
 	url := h.GoogleOAuthConfig.AuthCodeURL(state, oauth2.SetAuthURLParam("prompt", "select_account"))
-	http.Redirect(w, r, url, http.StatusFound)
+	log.Printf("DEBUG: Redirecting to %q", url) //nolint:gosec // G706: url is safe for logging
+	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
 // AppleLoginHandler initiates the Apple OAuth2 login flow.
@@ -333,7 +334,7 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 
 	user, err := h.Store.GetUserByResetToken(ctx, token)
 	if err != nil {
-		log.Printf("Error getting user by reset token %s: %v", strconv.Quote(token), err)
+		log.Printf("Error getting user by reset token %s: %v", strconv.Quote(token), err) //nolint:gosec // G706: token is quoted and safe for logging
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}

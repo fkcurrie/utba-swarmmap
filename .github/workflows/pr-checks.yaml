@@ -22,7 +22,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.25'
+          go-version-file: backend/go.mod
           cache-dependency-path: backend/go.mod
 
       - name: Go Format
@@ -60,7 +60,7 @@ jobs:
       - name: Go Security (gosec)
         uses: securego/gosec@v2.25.0
         with:
-          args: ./...
+          args: ./backend/...
 
       - name: Go Vulnerability Check (govulncheck)
         run: |
@@ -96,6 +96,27 @@ jobs:
       - name: Stylelint
         run: npx stylelint "frontend/static/css/**/*.css"
 
+  frontend-go:
+    name: Frontend (Go Server)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: frontend/go.mod
+          cache-dependency-path: frontend/go.mod
+
+      - name: Go Format
+        run: go fmt frontend/main.go
+
+      - name: Go Security (gosec)
+        uses: securego/gosec@master
+        with:
+          args: ./frontend/...
+
   general:
     name: General & Infrastructure
     runs-on: ubuntu-latest
@@ -115,7 +136,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.25'
+          go-version-file: backend/go.mod
 
       - name: Install Dependencies
         run: npm ci
