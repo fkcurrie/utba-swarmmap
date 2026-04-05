@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"cloud.google.com/go/firestore"
 	"github.com/fkcurrie/utba-swarmmap/models"
@@ -107,7 +108,7 @@ func (h *Handlers) ApproveUserHandler(w http.ResponseWriter, r *http.Request) {
 		{Path: "status", Value: "approved"},
 	}
 	if err := h.Store.UpdateUser(r.Context(), userID, updates); err != nil {
-		log.Printf("Failed to approve user %q: %v", userID, err)
+		log.Printf("Failed to approve user %s: %v", strconv.Quote(userID), err)
 		http.Error(w, "Failed to approve user", http.StatusInternalServerError)
 		return
 	}
@@ -128,7 +129,7 @@ func (h *Handlers) RejectUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.DeleteUser(r.Context(), userID); err != nil {
-		log.Printf("Failed to reject user %q: %v", userID, err)
+		log.Printf("Failed to reject user %s: %v", strconv.Quote(userID), err)
 		http.Error(w, "Failed to reject user", http.StatusInternalServerError)
 		return
 	}
@@ -149,7 +150,7 @@ func (h *Handlers) DeleteSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.DeleteSwarm(r.Context(), swarmID); err != nil {
-		log.Printf("Failed to delete swarm %q: %v", swarmID, err)
+		log.Printf("Failed to delete swarm %s: %v", strconv.Quote(swarmID), err)
 		http.Error(w, "Failed to delete swarm", http.StatusInternalServerError)
 		return
 	}
@@ -185,7 +186,7 @@ func (h *Handlers) PromoteUserHandler(w http.ResponseWriter, r *http.Request) {
 		{Path: "role", Value: newRole},
 	}
 	if err := h.Store.UpdateUser(r.Context(), userID, updates); err != nil {
-		log.Printf("Failed to promote user %q to %q: %v", userID, newRole, err)
+		log.Printf("Failed to promote user %s to %s: %v", strconv.Quote(userID), strconv.Quote(newRole), err)
 		http.Error(w, "Failed to promote user", http.StatusInternalServerError)
 		return
 	}

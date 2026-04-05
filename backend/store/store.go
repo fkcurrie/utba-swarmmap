@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"path/filepath"
+	"strconv"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -375,7 +376,7 @@ func (s *Store) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]m
 func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader, filename string) (string, error) {
 	ext := filepath.Ext(filename)
 	uniqueFilename := fmt.Sprintf("%s/%s%s", swarmID, uuid.New().String(), ext)
-	log.Printf("Uploading file %q to GCS as %q", filename, uniqueFilename)
+	log.Printf("Uploading file %s to GCS as %q", strconv.Quote(filename), uniqueFilename)
 
 	obj := s.StorageClient.Bucket(s.BucketName).Object(uniqueFilename)
 	writer := obj.NewWriter(ctx)
@@ -401,6 +402,6 @@ func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader,
 	}
 
 	url := fmt.Sprintf("https://storage.googleapis.com/%s/%s", s.BucketName, uniqueFilename)
-	log.Printf("Successfully uploaded %q to %q", filename, url)
+	log.Printf("Successfully uploaded %s to %q", strconv.Quote(filename), url)
 	return url, nil
 }

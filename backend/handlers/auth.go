@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strings"
+	"strconv"
 	"time"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
@@ -52,13 +52,10 @@ func (h *Handlers) UsernameLoginHandler(w http.ResponseWriter, r *http.Request) 
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 
-	// Sanitize email for logging to avoid G706
-	safeEmail := strings.ReplaceAll(strings.ReplaceAll(email, "\n", ""), "\r", "")
-
 	ctx := r.Context()
 	user, err := h.Store.GetUserByEmail(ctx, email)
 	if err != nil {
-		log.Printf("Error getting user by email %q: %v", safeEmail, err)
+		log.Printf("Error getting user by email %s: %v", strconv.Quote(email), err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -102,13 +99,10 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 	phone := r.FormValue("phone")
 	location := r.FormValue("location")
 
-	// Sanitize email for logging to avoid G706
-	safeEmail := strings.ReplaceAll(strings.ReplaceAll(email, "\n", ""), "\r", "")
-
 	ctx := r.Context()
 	existingUser, err := h.Store.GetUserByEmail(ctx, email)
 	if err != nil {
-		log.Printf("Error checking existing user %q: %v", safeEmail, err)
+		log.Printf("Error checking existing user %s: %v", strconv.Quote(email), err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -142,14 +136,14 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 
 	_, err = h.Store.CreateUser(ctx, user)
 	if err != nil {
-		log.Printf("Error creating user %q: %v", safeEmail, err)
+		log.Printf("Error creating user %s: %v", strconv.Quote(email), err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	// In a real app, send an email with the verification link.
 	// For this exercise, we'll just log it.
-	log.Printf("USER CREATED: %q. VERIFICATION LINK: /auth/verify-email?token=%s", safeEmail, verificationToken)
+	log.Printf("USER CREATED: %s. VERIFICATION LINK: /auth/verify-email?token=%s", strconv.Quote(email), strconv.Quote(verificationToken))
 
 	h.renderMessagePage(w, "Registration Successful", "Your account has been created. Please check your email (see logs) to verify your account.")
 }
@@ -162,13 +156,10 @@ func (h *Handlers) VerifyEmailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Sanitize token for logging to avoid G706
-	safeToken := strings.ReplaceAll(strings.ReplaceAll(token, "\n", ""), "\r", "")
-
 	ctx := r.Context()
 	user, err := h.Store.GetUserByVerificationToken(ctx, token)
 	if err != nil {
-		log.Printf("Error getting user by verification token %q: %v", safeToken, err)
+		log.Printf("Error getting user by verification token %s: %v", strconv.Quote(token), err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -287,13 +278,10 @@ func (h *Handlers) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request)
 
 	email := r.FormValue("email")
 
-	// Sanitize email for logging to avoid G706
-	safeEmail := strings.ReplaceAll(strings.ReplaceAll(email, "\n", ""), "\r", "")
-
 	ctx := r.Context()
 	user, err := h.Store.GetUserByEmail(ctx, email)
 	if err != nil {
-		log.Printf("Error getting user by email %q: %v", safeEmail, err)
+		log.Printf("Error getting user by email %s: %v", strconv.Quote(email), err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -307,12 +295,12 @@ func (h *Handlers) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request)
 			"reset_token_expires_at": expiresAt,
 		})
 		if err != nil {
-			log.Printf("Error updating user reset token for %q: %v", safeEmail, err)
+			log.Printf("Error updating user reset token for %s: %v", strconv.Quote(email), err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
-		log.Printf("PASSWORD RESET REQUESTED: %q. RESET LINK: /auth/reset-password?token=%s", safeEmail, resetToken)
+		log.Printf("PASSWORD RESET REQUESTED: %s. RESET LINK: /auth/reset-password?token=%s", strconv.Quote(email), strconv.Quote(resetToken))
 	}
 
 	h.renderMessagePage(w, "Reset Email Sent", "If an account exists with that email, a password reset link has been sent.")
@@ -342,12 +330,9 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 	password := r.FormValue("password")
 	ctx := r.Context()
 
-	// Sanitize token for logging to avoid G706
-	safeToken := strings.ReplaceAll(strings.ReplaceAll(token, "\n", ""), "\r", "")
-
 	user, err := h.Store.GetUserByResetToken(ctx, token)
 	if err != nil {
-		log.Printf("Error getting user by reset token %q: %v", safeToken, err)
+		log.Printf("Error getting user by reset token %s: %v", strconv.Quote(token), err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -370,16 +355,12 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 		"reset_token_expires_at": time.Time{},
 	})
 	if err != nil {
-		// Sanitize user email for logging to avoid G706
-		safeUserEmail := strings.ReplaceAll(strings.ReplaceAll(user.Email, "\n", ""), "\r", "")
-		log.Printf("Error updating user password for %q: %v", safeUserEmail, err)
+		log.Printf("Error updating user password for %s: %v", strconv.Quote(user.Email), err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	// Sanitize user email for logging to avoid G706
-	safeUserEmail := strings.ReplaceAll(strings.ReplaceAll(user.Email, "\n", ""), "\r", "")
-	log.Printf("PASSWORD RESET SUCCESSFUL for %q", safeUserEmail)
+	log.Printf("PASSWORD RESET SUCCESSFUL for %s", strconv.Quote(user.Email))
 
 	h.renderMessagePage(w, "Password Reset Successful", "Your password has been reset. You can now log in with your new password.")
 }
