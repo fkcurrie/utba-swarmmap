@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -37,7 +37,7 @@ func (h *Handlers) SwarmListHandler(w http.ResponseWriter, r *http.Request) {
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
 	if err != nil {
-		log.Printf("Error executing swarm list template: %v", err)
+		slog.Error("Error executing swarm list template", "error", err)
 		http.Error(w, "Failed to render swarm list", http.StatusInternalServerError)
 		return
 	}
@@ -60,7 +60,7 @@ func (h *Handlers) CollectorsMapHandler(w http.ResponseWriter, r *http.Request) 
 
 	err := h.Templates.ExecuteTemplate(w, "collectors_map.html", data)
 	if err != nil {
-		log.Printf("Error executing collectors_map.html template: %v", err)
+		slog.Error("Error executing collectors_map.html template", "error", err)
 		http.Error(w, "Failed to render collector map", http.StatusInternalServerError)
 	}
 }

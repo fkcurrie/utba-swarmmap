@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"html/template"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -13,6 +13,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
 	"github.com/fkcurrie/utba-swarmmap/handlers"
+	"github.com/fkcurrie/utba-swarmmap/service"
 	"github.com/fkcurrie/utba-swarmmap/store"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -29,6 +30,10 @@ func getEnv(key, fallback string) string {
 }
 
 func main() {
+	// Initialize structured logging
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+
 	ctx := context.Background()
 	projectID := getEnv("GCP_PROJECT_ID", "utba-swarmmap")
 	bucketName := getEnv("GCS_BUCKET_NAME", "utba-swarmmap-media")
@@ -46,26 +51,28 @@ func main() {
 	}
 
 	// Initialize Firestore client
-	log.Printf("Initializing Firestore client (Project: %q)...", projectID) //nolint:gosec // G706: projectID is quoted and safe for logging
+	slog.Info("Initializing Firestore client", "projectID", projectID)
 	if host := os.Getenv("FIRESTORE_EMULATOR_HOST"); host != "" {
-		log.Printf("Using Firestore Emulator at %q", host) //nolint:gosec // G706: Emulator host is quoted and safe for logging
+		slog.Info("Using Firestore Emulator", "host", host)
 	}
 	firestoreClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
-		log.Fatalf("Failed to create Firestore client: %v", err)
+		slog.Error("Failed to create Firestore client", "error", err)
+		os.Exit(1)
 	}
-	log.Printf("Firestore client initialized successfully")
+	slog.Info("Firestore client initialized successfully")
 
 	// Initialize Storage client
-	log.Printf("Initializing Storage client...")
+	slog.Info("Initializing Storage client")
 	if host := os.Getenv("STORAGE_EMULATOR_HOST"); host != "" {
-		log.Printf("Using Storage Emulator at %q", host) //nolint:gosec // G706: Emulator host is quoted and safe for logging
+		slog.Info("Using Storage Emulator", "host", host)
 	}
 	storageClient, err := storage.NewClient(ctx)
 	if err != nil {
-		log.Fatalf("Failed to create Storage client: %v", err)
+		slog.Error("Failed to create Storage client", "error", err)
+		os.Exit(1)
 	}
-	log.Printf("Storage client initialized successfully")
+	slog.Info("Storage client initialized successfully")
 
 	// Parse templates
 	templateFuncs := template.FuncMap{
@@ -75,15 +82,20 @@ func main() {
 	}
 	templates, err := template.New("").Funcs(templateFuncs).ParseGlob(filepath.Join("templates", "*.html"))
 	if err != nil {
-		log.Fatalf("Error parsing templates: %v", err)
+		slog.Error("Error parsing templates", "error", err)
+		os.Exit(1)
 	}
 
 	// Initialize our store
 	dataStore := store.NewStore(firestoreClient, storageClient, bucketName)
 
+	// Initialize services
+	swarmService := service.NewSwarmService(dataStore)
+
 	// Initialize handlers with dependencies
 	h := &handlers.Handlers{
 		Store:             dataStore,
+		SwarmService:      swarmService,
 		GoogleOAuthConfig: googleOAuthConfig,
 		Version:           version,
 		Templates:         templates,
@@ -134,10 +146,10 @@ func main() {
 	port := getEnv("PORT", "8080")
 	// Validate port to prevent log injection and ensure it's a valid port number
 	if _, err := strconv.Atoi(port); err != nil {
-		log.Fatalf("Invalid PORT: %s", port)
+		slog.Error("Invalid PORT", "port", port)
+		os.Exit(1)
 	}
-	log.Printf("Starting server on port %s", port)
-	log.Printf("Server version: %q", version) //nolint:gosec // G706: version is quoted and safe for logging
+	slog.Info("Starting server", "port", port, "version", version)
 
 	srv := &http.Server{
 		Addr:         ":" + port,
@@ -148,6 +160,7 @@ func main() {
 	}
 
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Fatalf("Server failed to start: %v", err)
+		slog.Error("Server failed to start", "error", err)
+		os.Exit(1)
 	}
 }

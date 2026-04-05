@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"mime/multipart"
 	"net/http"
 	"path/filepath"
@@ -44,20 +44,20 @@ var (
 
 func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		h.jsonError(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
 	if err := r.ParseMultipartForm(maxFileSize); err != nil && err != http.ErrNotMultipart { // #nosec G120
-		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		h.jsonError(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
 
 	// Validate required fields
 	description := r.FormValue("description")
 	if description == "" {
-		http.Error(w, "Description is required", http.StatusBadRequest)
+		h.jsonError(w, "Description is required", http.StatusBadRequest)
 		return
 	}
 
@@ -65,20 +65,20 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	longitude := r.FormValue("longitude")
 	lat, lon, err := validateCoordinates(latitude, longitude)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		h.jsonError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	nearestIntersection := r.FormValue("intersection")
 	if nearestIntersection == "" {
-		http.Error(w, "Nearest intersection is required", http.StatusBadRequest)
+		h.jsonError(w, "Nearest intersection is required", http.StatusBadRequest)
 		return
 	}
 
 	// Validate files
 	form := r.MultipartForm
 	if form == nil || form.File == nil {
-		http.Error(w, "No files uploaded", http.StatusBadRequest)
+		h.jsonError(w, "No files uploaded", http.StatusBadRequest)
 		return
 	}
 
@@ -86,7 +86,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	for _, files := range form.File {
 		for _, file := range files {
 			if err := validateFile(file); err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				h.jsonError(w, err.Error(), http.StatusBadRequest)
 				return
 			}
 			mediaFilenames = append(mediaFilenames, file.Filename)
@@ -100,16 +100,16 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		for _, fileHeader := range files {
 			file, err := fileHeader.Open()
 			if err != nil {
-				http.Error(w, fmt.Sprintf("Failed to open file: %v", err), http.StatusInternalServerError)
+				h.jsonError(w, fmt.Sprintf("Failed to open file: %v", err), http.StatusInternalServerError)
 				return
 			}
 			url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
 			if closeErr := file.Close(); closeErr != nil {
-				log.Printf("Failed to close file: %v", closeErr)
+				slog.Error("Failed to close file", "error", closeErr)
 			}
 			if err != nil {
-				log.Printf("Failed to upload file to GCS: %v", err)
-				http.Error(w, "Failed to upload file to storage", http.StatusInternalServerError)
+				slog.Error("Failed to upload file to GCS", "error", err)
+				h.jsonError(w, "Failed to upload file to storage", http.StatusInternalServerError)
 				return
 			}
 			mediaURLs = append(mediaURLs, url)
@@ -127,33 +127,33 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		"mediaFilenames":      mediaFilenames,
 		"mediaURLs":           mediaURLs,
 	}); err != nil {
-		log.Printf("Failed to encode swarm summary: %v", err)
+		slog.Error("Failed to encode swarm summary", "error", err)
 	}
 }
 
 func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		h.jsonError(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
 	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
 	if err := r.ParseMultipartForm(maxFileSize); err != nil && err != http.ErrNotMultipart { // #nosec G120
-		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		h.jsonError(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
 
 	// Validate reference ID
 	swarmID := r.FormValue("referenceID")
 	if swarmID == "" {
-		http.Error(w, "Reference ID is required", http.StatusBadRequest)
+		h.jsonError(w, "Reference ID is required", http.StatusBadRequest)
 		return
 	}
 
 	// Validate required fields
 	description := r.FormValue("description")
 	if description == "" {
-		http.Error(w, "Description is required", http.StatusBadRequest)
+		h.jsonError(w, "Description is required", http.StatusBadRequest)
 		return
 	}
 
@@ -161,13 +161,13 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	longitude := r.FormValue("longitude")
 	lat, lon, err := validateCoordinates(latitude, longitude)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		h.jsonError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	nearestIntersection := r.FormValue("intersection")
 	if nearestIntersection == "" {
-		http.Error(w, "Nearest intersection is required", http.StatusBadRequest)
+		h.jsonError(w, "Nearest intersection is required", http.StatusBadRequest)
 		return
 	}
 
@@ -185,15 +185,15 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 			for _, fileHeader := range files {
 				file, err := fileHeader.Open()
 				if err != nil {
-					log.Printf("Error opening uploaded file %s: %v", strconv.Quote(fileHeader.Filename), err)
+					slog.Error("Error opening uploaded file", "filename", fileHeader.Filename, "error", err)
 					continue
 				}
 				url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
 				if closeErr := file.Close(); closeErr != nil {
-					log.Printf("Failed to close file: %v", closeErr)
+					slog.Error("Failed to close file", "error", closeErr)
 				}
 				if err != nil {
-					log.Printf("Error uploading file %s to GCS: %v", strconv.Quote(fileHeader.Filename), err)
+					slog.Error("Error uploading file to GCS", "filename", fileHeader.Filename, "error", err)
 					continue
 				}
 				mediaURLs = append(mediaURLs, url)
@@ -220,14 +220,14 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.CreateSwarm(r.Context(), report); err != nil {
-		log.Printf("Error creating swarm in store: %v", err)
-		http.Error(w, "Failed to save report", http.StatusInternalServerError)
+		slog.Error("Error creating swarm in store", "error", err)
+		h.jsonError(w, "Failed to save report", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(report); err != nil {
-		log.Printf("Failed to encode swarm report: %v", err)
+		slog.Error("Failed to encode swarm report", "error", err)
 	}
 }
 
@@ -253,7 +253,7 @@ func validateCoordinates(lat, lon string) (float64, float64, error) {
 
 func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
+		h.jsonError(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -264,12 +264,12 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&updateReq); err != nil {
-		http.Error(w, "Invalid JSON request body", http.StatusBadRequest)
+		h.jsonError(w, "Invalid JSON request body", http.StatusBadRequest)
 		return
 	}
 
 	if updateReq.ID == "" || updateReq.Status == "" {
-		http.Error(w, "Missing id or status in request", http.StatusBadRequest)
+		h.jsonError(w, "Missing id or status in request", http.StatusBadRequest)
 		return
 	}
 
@@ -279,8 +279,8 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: currentTime})
 
 	if err := h.Store.UpdateSwarm(r.Context(), updateReq.ID, updates); err != nil {
-		log.Printf("Failed to update report %s in Firestore: %v", strconv.Quote(updateReq.ID), err)
-		http.Error(w, "Error updating report", http.StatusInternalServerError)
+		slog.Error("Failed to update report in Firestore", "id", updateReq.ID, "error", err)
+		h.jsonError(w, "Error updating report", http.StatusInternalServerError)
 		return
 	}
 
@@ -379,7 +379,7 @@ func validateFile(file *multipart.FileHeader) error {
 	}
 
 	if allowedExtensions[ext] {
-		log.Printf("File %s accepted by extension %q (MIME type was %q)", strconv.Quote(file.Filename), ext, contentType)
+		slog.Info("File accepted by extension", "filename", file.Filename, "ext", ext, "mime", contentType)
 		return nil
 	}
 

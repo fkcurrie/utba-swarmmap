@@ -16,6 +16,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"github.com/fkcurrie/utba-swarmmap/models"
+	"github.com/fkcurrie/utba-swarmmap/service"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )
@@ -255,6 +256,18 @@ func (m *MockStore) GetSwarmsBySessionID(_ context.Context, sessionID string) ([
 	return userSwarms, nil
 }
 
+// MockSwarmService is a mock implementation of the SwarmService interface for testing.
+type MockSwarmService struct {
+	GetSwarmsFunc func(ctx context.Context, sessionID string, user *models.Session) ([]models.SwarmReport, error)
+}
+
+func (m *MockSwarmService) GetSwarms(ctx context.Context, sessionID string, user *models.Session) ([]models.SwarmReport, error) {
+	if m.GetSwarmsFunc != nil {
+		return m.GetSwarmsFunc(ctx, sessionID, user)
+	}
+	return nil, nil
+}
+
 func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 	// Prepare a mock store with some data
 	mockSwarms := []models.SwarmReport{
@@ -264,8 +277,11 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 	}
 	mockStore := &MockStore{Swarms: mockSwarms}
 
-	// Initialize handlers with the mock store
-	h := &Handlers{Store: mockStore}
+	// Initialize handlers with the mock store and swarm service
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	req, err := http.NewRequest("GET", "/get_swarms", nil)
 	if err != nil {
@@ -307,7 +323,10 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 }
 
 func TestLoginHandler(t *testing.T) {
+	mockStore := &MockStore{}
 	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
 		GoogleOAuthConfig: &oauth2.Config{
 			RedirectURL:  "http://localhost/auth/google/callback",
 			ClientID:     "test-client-id",
@@ -333,7 +352,11 @@ func TestLoginHandler(t *testing.T) {
 }
 
 func TestGoogleCallbackHandler_InvalidState(t *testing.T) {
-	h := &Handlers{} // No dependencies needed for this specific test case
+	mockStore := &MockStore{}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	} // No dependencies needed for this specific test case
 
 	req, err := http.NewRequest("GET", "/auth/google/callback?state=", nil)
 	if err != nil {
@@ -353,7 +376,10 @@ func TestGoogleCallbackHandler_InvalidState(t *testing.T) {
 func TestDashboardHandler_Unauthenticated(t *testing.T) {
 	// No session in the mock store
 	mockStore := &MockStore{}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	req, err := http.NewRequest("GET", "/dashboard", nil)
 	if err != nil {
@@ -378,7 +404,10 @@ func TestLogoutHandler(t *testing.T) {
 			"test-session-id": {UserID: "test-user"},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	req, err := http.NewRequest("GET", "/logout", nil)
 	if err != nil {
@@ -407,7 +436,10 @@ func TestAuthHandler_Authenticated(t *testing.T) {
 			"test-session-id": {UserID: "test-user", Username: "test@example.com", Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	req, err := http.NewRequest("GET", "/auth", nil)
 	if err != nil {
@@ -436,7 +468,10 @@ func TestAuthHandler_Authenticated(t *testing.T) {
 
 func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
 	mockStore := &MockStore{}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	// Create a multipart form request
 	body := new(bytes.Buffer)
@@ -492,7 +527,10 @@ func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
 
 func TestPrepareSwarmHandler_VideoRequest(t *testing.T) {
 	mockStore := &MockStore{}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	// Create a multipart form request with a video
 	body := new(bytes.Buffer)
@@ -539,7 +577,10 @@ func TestPrepareSwarmHandler_VideoRequest(t *testing.T) {
 
 func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	mockStore := &MockStore{}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	// Create a multipart form request
 	body := new(bytes.Buffer)
@@ -588,7 +629,10 @@ func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 
 func TestConfirmSwarmHandler_URLEncoded(t *testing.T) {
 	mockStore := &MockStore{}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	// Create a URL encoded request (like the frontend does)
 	form := url.Values{}
@@ -617,7 +661,10 @@ func TestConfirmSwarmHandler_URLEncoded(t *testing.T) {
 
 func TestSwarmListHandler_Unauthenticated(t *testing.T) {
 	mockStore := &MockStore{}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	req, err := http.NewRequest("GET", "/swarmlist", nil)
 	if err != nil {
@@ -636,7 +683,10 @@ func TestSwarmListHandler_Unauthenticated(t *testing.T) {
 
 func TestCollectorsMapHandler_Unauthenticated(t *testing.T) {
 	mockStore := &MockStore{}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	req, err := http.NewRequest("GET", "/collectorsmap", nil)
 	if err != nil {
@@ -659,7 +709,10 @@ func TestAdminHandler_Unauthorized(t *testing.T) {
 			"test-session-id": {UserID: "test-user", Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	req, err := http.NewRequest("GET", "/admin", nil)
 	if err != nil {
@@ -679,7 +732,10 @@ func TestAdminHandler_Unauthorized(t *testing.T) {
 
 func TestGenerateSampleDataHandler(t *testing.T) {
 	mockStore := &MockStore{}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	// Create a request with a session ID in the body
 	body := strings.NewReader(`{"sessionId": "test-session-id"}`)
@@ -713,7 +769,10 @@ func TestApproveUserHandler(t *testing.T) {
 			"test-session-id": {UserID: "admin-user", Role: "site_admin", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	body := strings.NewReader("userID=test-user-id")
 	req, err := http.NewRequest("POST", "/admin/approve_user", body)
@@ -746,7 +805,10 @@ func TestRejectUserHandler(t *testing.T) {
 			"test-session-id": {UserID: "admin-user", Role: "site_admin", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	body := strings.NewReader("userID=test-user-id")
 	req, err := http.NewRequest("POST", "/admin/reject_user", body)
@@ -779,7 +841,10 @@ func TestDeleteSwarmHandler(t *testing.T) {
 			"test-session-id": {UserID: "admin-user", Role: "site_admin", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	body := strings.NewReader("swarmID=test-swarm-id")
 	req, err := http.NewRequest("POST", "/admin/delete_swarm", body)
@@ -812,7 +877,10 @@ func TestPromoteUserHandler(t *testing.T) {
 			"test-session-id": {UserID: "admin-user", Role: "site_admin", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	body := strings.NewReader("userID=test-user-id&role=collector_admin")
 	req, err := http.NewRequest("POST", "/admin/promote_user", body)
@@ -845,7 +913,10 @@ func TestUpdateSwarmStatusHandler(t *testing.T) {
 			"test-session-id": {UserID: "test-user", Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	body := strings.NewReader(`{"id": "test-swarm-id", "status": "Verified"}`)
 	req, err := http.NewRequest("POST", "/update_swarm_status", body)
@@ -878,7 +949,10 @@ func TestAssignSwarmHandler(t *testing.T) {
 			"test-session-id": {UserID: "test-user", Username: "test@example.com", Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	body := strings.NewReader("swarmID=test-swarm-id&action=assign")
 	req, err := http.NewRequest("POST", "/assign_swarm", body)
@@ -914,7 +988,10 @@ func TestClaimSwarmHandler(t *testing.T) {
 			"test-session-id": {UserID: "test-user", Username: "test@example.com", Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	body := strings.NewReader("swarmID=test-swarm-id")
 	req, err := http.NewRequest("POST", "/claim_swarm", body)
@@ -950,7 +1027,10 @@ func TestCollectorAdminHandler_Unauthorized(t *testing.T) {
 			"test-session-id": {UserID: "test-user", Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	req, err := http.NewRequest("GET", "/collector_admin", nil)
 	if err != nil {
@@ -969,7 +1049,10 @@ func TestCollectorAdminHandler_Unauthorized(t *testing.T) {
 }
 
 func TestLoginRouting(t *testing.T) {
+	mockStore := &MockStore{}
 	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
 		GoogleOAuthConfig: &oauth2.Config{
 			RedirectURL:  "http://localhost/auth/google/callback",
 			ClientID:     "test-client-id",
@@ -1007,7 +1090,11 @@ func TestUsernameRegisterHandler(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error parsing templates: %v", err)
 	}
-	h := &Handlers{Store: mockStore, Templates: tmpl}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+		Templates:    tmpl,
+	}
 
 	body := strings.NewReader("email=test@example.com&password=password123&name=Test+User&phone=123456789&location=London")
 	req, err := http.NewRequest("POST", "/auth/register", body)

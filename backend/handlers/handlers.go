@@ -3,18 +3,17 @@ package handlers
 import (
 	"encoding/json"
 	"html/template"
-	"log"
+	"log/slog"
 	"net/http"
-	"strconv"
-	"time"
 
-	"github.com/fkcurrie/utba-swarmmap/models"
+	"github.com/fkcurrie/utba-swarmmap/service"
 	"github.com/fkcurrie/utba-swarmmap/store"
 	"golang.org/x/oauth2"
 )
 
 type Handlers struct {
 	Store             store.Storer
+	SwarmService      service.SwarmService
 	GoogleOAuthConfig *oauth2.Config
 	AppleOAuthConfig  *oauth2.Config
 	Version           string
@@ -23,9 +22,9 @@ type Handlers struct {
 }
 
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("DEBUG: IndexHandler called for %q", r.URL.Path) //nolint:gosec // G706: Path is quoted and safe for logging
+	slog.Debug("IndexHandler called", "path", r.URL.Path)
 	if r.URL.Path != "/" {
-		log.Printf("DEBUG: Path not /, returning NotFound for %q", r.URL.Path) //nolint:gosec // G706: Path is quoted and safe for logging
+		slog.Debug("Path not /, returning NotFound", "path", r.URL.Path)
 		http.NotFound(w, r)
 		return
 	}
@@ -39,65 +38,45 @@ func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
 	if err != nil {
-		log.Printf("Error executing template: %v", err)
+		slog.Error("Error executing template", "error", err)
 		http.Error(w, "Failed to render page", http.StatusInternalServerError)
+	}
+}
+
+func (h *Handlers) jsonError(w http.ResponseWriter, message string, code int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	if err := json.NewEncoder(w).Encode(map[string]string{"error": message}); err != nil {
+		slog.Error("Failed to encode JSON error", "error", err)
 	}
 }
 
 func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		http.Error(w, "Only GET method is allowed", http.StatusMethodNotAllowed)
+		h.jsonError(w, "Only GET method is allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	ctx := r.Context()
-	var currentReports []models.SwarmReport
-	var err error
-
 	sessionID := r.URL.Query().Get("sessionId")
+	session := h.getSession(r)
 
-	if sessionID != "" {
-		log.Printf("Fetching swarms for public user session: %s", strconv.Quote(sessionID)) //nolint:gosec // G706: sessionID is quoted and safe for logging
-		currentReports, err = h.Store.GetSwarmsBySessionID(ctx, sessionID)
-	} else {
-		log.Printf("Fetching all swarms")
-		currentReports, err = h.Store.GetAllSwarms(ctx)
-	}
-
+	currentReports, err := h.SwarmService.GetSwarms(ctx, sessionID, session)
 	if err != nil {
-		log.Printf("Error fetching reports: %v", err)
-		http.Error(w, "Error fetching reports", http.StatusInternalServerError)
+		slog.Error("Error fetching reports from service", "error", err)
+		h.jsonError(w, "Error fetching reports", http.StatusInternalServerError)
 		return
 	}
 
-	// Dynamic DisplayStatus logic and privacy filtering
-	session := h.getSession(r)
-	isCollector := session != nil && (session.Role == "collector" || session.Role == "collector_admin" || session.Role == "site_admin")
-
-	for i := range currentReports {
-		currentReports[i].DisplayStatus = currentReports[i].Status
-		if currentReports[i].Status != "Captured" && time.Since(currentReports[i].ReportedTimestamp).Hours() > 24 {
-			currentReports[i].DisplayStatus = "Archived"
-		}
-
-		// Privacy: Clear reporter details if not a collector/admin
-		if !isCollector {
-			currentReports[i].ReporterName = ""
-			currentReports[i].ReporterEmail = ""
-			currentReports[i].ReporterPhone = ""
-			currentReports[i].ReporterSessionID = ""
-		}
-	}
-
-	log.Printf("Returning %d swarms (isCollector: %v)", len(currentReports), isCollector) // #nosec G706
+	slog.Info("Returning swarms", "count", len(currentReports))
 	data, err := json.Marshal(currentReports)
 	if err != nil {
-		log.Printf("Error marshalling reports to JSON: %v", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		slog.Error("Error marshalling reports to JSON", "error", err)
+		h.jsonError(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	if _, err := w.Write(data); err != nil {
-		log.Printf("Failed to write swarms response: %v", err)
+		slog.Error("Failed to write swarms response", "error", err)
 	}
 }
