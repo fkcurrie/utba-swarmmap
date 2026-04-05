@@ -2,9 +2,6 @@ import js from "@eslint/js";
 import globals from "globals";
 
 export default [
-  {
-    ignores: ["frontend/static/vendor/**"],
-  },
   js.configs.recommended,
   {
     languageOptions: {

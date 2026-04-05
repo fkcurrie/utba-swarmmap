@@ -92,14 +92,16 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Return the summary and UUID (no saving yet)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	if err := json.NewEncoder(w).Encode(map[string]interface{}{
 		"referenceID":         swarmID,
 		"description":         description,
 		"latitude":            lat,
 		"longitude":           lon,
 		"nearestIntersection": nearestIntersection,
 		"mediaFilenames":      mediaFilenames,
-	})
+	}); err != nil {
+		log.Printf("Error encoding response: %v", err)
+	}
 }
 
 func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
@@ -147,6 +149,29 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	reporterPhone := r.FormValue("reporterPhone")
 	reporterSessionID := r.FormValue("reporterSessionId")
 
+	// Handle file uploads
+	mediaURLs := []string{}
+	form := r.MultipartForm
+	if form != nil && form.File != nil {
+		for _, files := range form.File {
+			for _, fileHeader := range files {
+				file, err := fileHeader.Open()
+				if err != nil {
+					log.Printf("Error opening uploaded file %s: %v", fileHeader.Filename, err)
+					continue
+				}
+				defer file.Close()
+
+				url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
+				if err != nil {
+					log.Printf("Error uploading file %s to GCS: %v", fileHeader.Filename, err)
+					continue
+				}
+				mediaURLs = append(mediaURLs, url)
+			}
+		}
+	}
+
 	now := time.Now()
 	report := models.SwarmReport{
 		ID:                   swarmID,
@@ -158,23 +183,23 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		NearestIntersection:  nearestIntersection,
 		ReportedTimestamp:    now,
 		LastUpdatedTimestamp: now,
-		ReportedMediaURLs:    []string{},
+		ReportedMediaURLs:    mediaURLs,
 		ReporterName:         reporterName,
 		ReporterEmail:        reporterEmail,
 		ReporterPhone:        reporterPhone,
 		ReporterSessionID:    reporterSessionID,
 	}
 
-	// In a real implementation, we would handle file uploads here.
-	// For now, we'll just save the report.
-
 	if err := h.Store.CreateSwarm(r.Context(), report); err != nil {
+		log.Printf("Error creating swarm in store: %v", err)
 		http.Error(w, "Failed to save report", http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(report)
+	if err := json.NewEncoder(w).Encode(report); err != nil {
+		log.Printf("Error encoding report: %v", err)
+	}
 }
 
 func validateCoordinates(lat, lon string) (float64, float64, error) {
@@ -225,7 +250,7 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: currentTime})
 
 	if err := h.Store.UpdateSwarm(r.Context(), updateReq.ID, updates); err != nil {
-		log.Printf("Failed to update report %s in Firestore: %v", updateReq.ID, err)
+		log.Printf("Failed to update report %q in Firestore: %v", updateReq.ID, err)
 		http.Error(w, "Error updating report", http.StatusInternalServerError)
 		return
 	}
@@ -287,7 +312,7 @@ func validateFile(file *multipart.FileHeader) error {
 	}
 
 	if allowedExtensions[ext] {
-		log.Printf("File %s accepted by extension %s (MIME type was %s)", file.Filename, ext, contentType)
+		log.Printf("File %q accepted by extension %q (MIME type was %q)", file.Filename, ext, contentType)
 		return nil
 	}
 

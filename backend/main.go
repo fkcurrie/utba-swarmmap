@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
@@ -18,6 +20,8 @@ import (
 
 var version = "dev"
 
+// Add a comment to trigger and verify the new CI/CD checks.
+// Add another comment to trigger and verify the new CI/CD checks.
 // getEnv reads an environment variable with a fallback value.
 func getEnv(key, fallback string) string {
 	if value, ok := os.LookupEnv(key); ok {
@@ -107,11 +111,23 @@ func main() {
 	mux.Handle("/assign_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.AssignSwarmHandler))))
 	// Add other routes here as they are refactored
 
-	port := getEnv("PORT", "8080")
-	log.Printf("Starting server on port %s", port)
-	log.Printf("Server version: %s", version)
+	portStr := getEnv("PORT", "8080")
+	port, err := strconv.Atoi(portStr)
+	if err != nil {
+		log.Fatalf("Invalid PORT: %v", err)
+	}
+	log.Printf("Starting server on port %d", port)
+	log.Printf("Server version: %q", version)
 
-	if err := http.ListenAndServe(":"+port, mux); err != nil {
+	srv := &http.Server{
+		Addr:         ":" + strconv.Itoa(port),
+		Handler:      mux,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Server failed to start: %v", err)
 	}
 }
