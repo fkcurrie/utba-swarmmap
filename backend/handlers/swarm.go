@@ -333,6 +333,7 @@ func (h *Handlers) ClaimSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
 	session, ok := r.Context().Value(SessionContextKey).(*models.Session)
 	if !ok {
 		http.Error(w, "Could not retrieve session from context", http.StatusInternalServerError)
