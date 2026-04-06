@@ -66,13 +66,13 @@ steps:
         gcloud run services describe utba-swarmmap-backend
         --platform=managed --region=northamerica-northeast2
         --format='value(status.url)' --quiet > /workspace/service-url
-  # Verify the deployment by curling the URL from the file
-  - name: 'gcr.io/cloud-builders/curl'
+  # Verify the deployment by curling the URL from the file with retries
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Verify Deployment'
     entrypoint: 'bash'
     args:
       - '-c'
-      - 'curl -I --fail --silent --show-error "$(cat /workspace/service-url)"'
+      - 'curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "$(cat /workspace/service-url)"'
 images:
   - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/backend:latest'
 

@@ -28,6 +28,23 @@ steps:
       - '--platform=managed'
       - '--allow-unauthenticated'
       - '--quiet'
+  # Get the URL of the deployed service and write it to a file
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Get Service URL'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - >
+        gcloud run services describe utba-swarmmap-frontend
+        --platform=managed --region=northamerica-northeast2
+        --format='value(status.url)' --quiet > /workspace/service-url
+  # Verify the deployment by curling the URL from the file with retries
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Verify Deployment'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - 'curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "$(cat /workspace/service-url)"'
 images:
   - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/frontend:latest'
 options:
