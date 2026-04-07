@@ -93,7 +93,8 @@ func main() {
 
 	// Initialize handlers with dependencies
 	h := &handlers.Handlers{
-		Store:             dataStore,
+		Store:           dataStore,
+		LocationService: &handlers.NominatimLocationService{Client: &http.Client{Timeout: 10 * time.Second}},
 		GoogleOAuthConfig: googleOAuthConfig,
 		Version:           version,
 		Templates:         templates,

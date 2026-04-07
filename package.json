@@ -23,7 +23,8 @@
     "bootstrap": "^5.3.3",
     "chart.js": "^4.5.0",
     "jquery": "^3.7.1",
-    "leaflet": "^1.9.4"
+    "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",

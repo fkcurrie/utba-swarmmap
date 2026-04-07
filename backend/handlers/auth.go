@@ -251,7 +251,6 @@ func (h *Handlers) showPendingApprovalPage(w http.ResponseWriter, name string) {
 	}
 }
 
-// GoogleLoginHandler initiates the Google OAuth2 login flow.
 func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 	slog.Debug("GoogleLoginHandler called", "path", h.sanitize(r.URL.Path)) // #nosec G706
 	state := uuid.New().String()
