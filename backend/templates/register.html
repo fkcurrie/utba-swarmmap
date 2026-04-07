@@ -9,31 +9,34 @@
                 </div>
                 <div class="card-body">
                     {{if .Error}}
-                    <div class="alert alert-danger">{{.Error}}</div>
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-circle mr-2"></i> {{.Error}}
+                    </div>
                     {{end}}
                     
-                    <form action="/auth/register" method="POST">
+                    <form action="/auth/register" method="POST" aria-label="Registration Form">
                         <div class="mb-3">
-                            <label for="name">Full Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <label for="name" class="fw-bold">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required autocomplete="name">
                         </div>
                         <div class="mb-3">
-                            <label for="email">Email address</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
+                            <label for="email" class="fw-bold">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
                         </div>
                         <div class="mb-3">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" required>
+                            <label for="phone" class="fw-bold">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required autocomplete="tel">
                         </div>
                         <div class="mb-3">
-                            <label for="location">General Location</label>
+                            <label for="location" class="fw-bold">General Location</label>
                             <input type="text" class="form-control" id="location" name="location" placeholder="e.g. South London, Croydon" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required minlength="8">
+                            <label for="password" class="fw-bold">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required minlength="8" autocomplete="new-password">
+                            <small class="form-text text-muted">Must be at least 8 characters long.</small>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm">Register</button>
                     </form>
                     
                     <div class="text-center mt-3">

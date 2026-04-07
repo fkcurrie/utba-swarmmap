@@ -98,4 +98,4 @@ gh issue create \
 - [ ] Create user management interface
 - [ ] Add analytics and reporting features" \
   --label "enhancement" \
-  --label "medium-priority" 
+  --label "medium-priority"

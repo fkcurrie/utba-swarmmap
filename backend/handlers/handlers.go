@@ -14,6 +14,7 @@ import (
 
 type Handlers struct {
 	Store             store.Storer
+	LocationService   LocationService
 	GoogleOAuthConfig *oauth2.Config
 	AppleOAuthConfig  *oauth2.Config
 	Version           string

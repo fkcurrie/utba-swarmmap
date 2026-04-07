@@ -1,20 +1,51 @@
-    </div> <!-- closes main-content -->
-    <footer class="container-fluid text-center fixed-bottom">
-        <p class="text-muted small mb-0">
-            Made with 🐝❤️🐝 with <a href="https://github.com/google/gemini-cli" target="_blank">gemini-cli</a>
-        </p>
-        <p class="text-muted mb-0">
-            {{if and .User (eq .User.Role "site_admin")}}
-                <a href="/admin">Site Administration</a>
-            {{else}}
-                <a href="/login?role=site_admin">Site Admin Login</a>
-            {{end}}
-        </p>
+    </main> <!-- closes main-content -->
+    <footer role="contentinfo">
+        <div class="container-fluid">
+            <p class="mb-1">
+                Made with 🐝❤️🐝 with <a href="https://github.com/google/gemini-cli" target="_blank" rel="noopener">gemini-cli</a>
+            </p>
+            <p class="small mb-0">
+                {{if and .User (eq .User.Role "site_admin")}}
+                    <a href="/admin">Site Administration</a>
+                {{else}}
+                    <a href="/login?role=site_admin">Site Admin Login</a>
+                {{end}}
+            </p>
+        </div>
     </footer>
+
+    <!-- Global Media Viewer Modal -->
+    <div class="modal fade media-modal" id="media-viewer-modal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title sr-only">Media Viewer</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="media-content">
+                        <img id="media-viewer" src="" alt="Swarm report media" style="display: none;">
+                        <video id="video-viewer" controls style="display: none;"></video>
+                        
+                        <button class="media-nav prev" aria-label="Previous media">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="media-nav next" aria-label="Next media">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="media-counter pb-3" id="media-counter"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/jquery/jquery.slim.min.js"></script>
     <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/leaflet/js/leaflet.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/leaflet.markercluster/js/leaflet.markercluster.js"></script>
     <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/js/main.js"></script>
 </body>
 </html>
