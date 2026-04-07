@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
   let selectedFiles = [];
   let swarmLayerGroup;
 
+  // Caching configuration
+  const CACHE_KEY = 'utba_swarms_cache';
+  const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
   if (mapElement) {
     // Use setTimeout to ensure the map container is fully rendered
     setTimeout(() => {
@@ -22,19 +26,28 @@ document.addEventListener('DOMContentLoaded', function () {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      swarmLayerGroup = L.layerGroup().addTo(map);
+      // Initialize Marker Cluster Group
+      swarmLayerGroup = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        zoomToBoundsOnClick: true,
+        spiderfyOnMaxZoom: true,
+      }).addTo(map);
 
       map.on('click', async function (e) {
         document.getElementById('latitude').value = e.latlng.lat;
         document.getElementById('longitude').value = e.latlng.lng;
 
         const intersectionInput = document.getElementById('intersection');
-        intersectionInput.value = 'Fetching...';
+        const originalPlaceholder = intersectionInput.placeholder;
+        intersectionInput.value = '';
+        intersectionInput.placeholder = 'Fetching nearest intersection...';
+
         const intersection = await getNearestIntersection(
           e.latlng.lat,
           e.latlng.lng,
         );
         intersectionInput.value = intersection;
+        intersectionInput.placeholder = originalPlaceholder;
 
         const reportModal = new bootstrap.Modal(
           document.getElementById('reportSwarmModal'),
@@ -42,73 +55,133 @@ document.addEventListener('DOMContentLoaded', function () {
         reportModal.show();
       });
 
-      // Fetch and display swarms
-      const fetchSwarms = async () => {
+      // Render swarms on map
+      const renderSwarms = (swarms) => {
         const debugSwarms = document.getElementById('debugSwarms');
-        try {
-          const response = await fetch('/get_swarms');
-          const swarms = await response.json();
+        swarmLayerGroup.clearLayers();
+        if (debugSwarms) debugSwarms.innerHTML = '';
 
-          swarmLayerGroup.clearLayers();
-          if (debugSwarms) debugSwarms.innerHTML = '';
+        swarms.forEach((swarm) => {
+          let color = '#ff0000'; // Default Red for Reported
+          if (swarm.displayStatus === 'Verified') color = '#ff69b4'; // Pink
+          if (swarm.displayStatus === 'Captured') color = '#00ff00'; // Green
+          if (swarm.displayStatus === 'Archived') color = '#0000ff'; // Blue
 
-          swarms.forEach((swarm) => {
-            let color = '#ff0000'; // Default Red for Reported
-            if (swarm.displayStatus === 'Verified') color = '#ff69b4'; // Pink
-            if (swarm.displayStatus === 'Captured') color = '#00ff00'; // Green
-            if (swarm.displayStatus === 'Archived') color = '#0000ff'; // Blue
+          const marker = L.circleMarker([swarm.latitude, swarm.longitude], {
+            radius: 10,
+            fillColor: color,
+            color: '#fff',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.8,
+          });
 
-            const marker = L.circleMarker([swarm.latitude, swarm.longitude], {
-              radius: 10,
-              fillColor: color,
-              color: '#fff',
-              weight: 2,
-              opacity: 1,
-              fillOpacity: 0.8,
-            }).addTo(swarmLayerGroup);
-
-            let popupContent = `
-              <strong>${swarm.displayStatus}</strong><br>
-              ${swarm.nearestIntersection}<br>
-              <small>${new Date(swarm.reportedTimestamp).toLocaleString()}</small><br>
-              <p>${swarm.description}</p>
+          let popupContent = `
+              <div class="swarm-popup">
+                <h6 class="mb-1"><strong>${swarm.displayStatus}</strong></h6>
+                <p class="mb-1 text-muted small"><i class="fas fa-map-marker-alt mr-1"></i> ${swarm.nearestIntersection}</p>
+                <p class="mb-2 small"><i class="far fa-clock mr-1"></i> ${new Date(swarm.reportedTimestamp).toLocaleString()}</p>
+                <div class="p-2 bg-light rounded small mb-2">${swarm.description}</div>
             `;
 
-            // Add contact info for collectors if available
-            if (
-              swarm.reporterName ||
-              swarm.reporterPhone ||
-              swarm.reporterEmail
-            ) {
-              popupContent +=
-                '<hr><small><strong>Reporter Contact:</strong><br>';
-              if (swarm.reporterName)
-                popupContent += `Name: ${swarm.reporterName}<br>`;
-              if (swarm.reporterPhone)
-                popupContent += `Phone: ${swarm.reporterPhone}<br>`;
-              if (swarm.reporterEmail)
-                popupContent += `Email: ${swarm.reporterEmail}<br>`;
-              popupContent += '</small>';
-            }
+          // Add media button if URLs exist
+          if (swarm.mediaURLs && swarm.mediaURLs.length > 0) {
+            popupContent += `
+                <button class="btn btn-sm btn-primary btn-block view-media-btn" data-media-urls='${JSON.stringify(swarm.mediaURLs)}'>
+                    <i class="fas fa-images mr-1"></i> View ${swarm.mediaURLs.length} Photo/Video
+                </button>
+            `;
+          }
 
-            marker.bindPopup(popupContent);
+          // Add contact info for collectors if available
+          if (
+            swarm.reporterName ||
+            swarm.reporterPhone ||
+            swarm.reporterEmail
+          ) {
+            popupContent +=
+              '<hr class="my-2"><small><strong>Reporter Contact:</strong><br>';
+            if (swarm.reporterName)
+              popupContent += `Name: ${swarm.reporterName}<br>`;
+            if (swarm.reporterPhone)
+              popupContent += `Phone: ${swarm.reporterPhone}<br>`;
+            if (swarm.reporterEmail)
+              popupContent += `Email: ${swarm.reporterEmail}<br>`;
+            popupContent += '</small>';
+          }
 
-            if (debugSwarms) {
-              const swarmDiv = document.createElement('div');
-              swarmDiv.className = 'border-bottom mb-1 pb-1';
-              swarmDiv.innerHTML = `
-                    <strong>${swarm.displayStatus}</strong>: ${swarm.nearestIntersection} 
-                    <small class="text-muted">(${new Date(swarm.reportedTimestamp).toLocaleTimeString()})</small>
-                    <br><span class="text-truncate d-inline-block" style="max-width: 100%">${swarm.description}</span>
+          popupContent += '</div>';
+
+          marker.bindPopup(popupContent);
+          swarmLayerGroup.addLayer(marker);
+
+          if (debugSwarms) {
+            const swarmDiv = document.createElement('div');
+            swarmDiv.className = 'border-bottom mb-1 pb-1 hover-bg-light';
+            swarmDiv.style.cursor = 'pointer';
+            swarmDiv.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <strong>${swarm.displayStatus}</strong>
+                        <small class="text-muted">${new Date(swarm.reportedTimestamp).toLocaleTimeString()}</small>
+                    </div>
+                    <div class="text-truncate small">${swarm.nearestIntersection}</div>
                 `;
-              debugSwarms.appendChild(swarmDiv);
+            swarmDiv.onclick = () => {
+              map.setView([swarm.latitude, swarm.longitude], 16);
+              marker.openPopup();
+            };
+            debugSwarms.appendChild(swarmDiv);
+          }
+        });
+      };
+
+      // Fetch and display swarms with caching
+      const fetchSwarms = async (forceRefresh = false) => {
+        const debugSwarms = document.getElementById('debugSwarms');
+
+        // Check cache
+        if (!forceRefresh) {
+          const cached = sessionStorage.getItem(CACHE_KEY);
+          if (cached) {
+            try {
+              const { timestamp, data } = JSON.parse(cached);
+              if (Date.now() - timestamp < CACHE_TTL) {
+                console.log('Using cached swarm data');
+                renderSwarms(data);
+                return;
+              }
+            } catch (e) {
+              console.error('Cache parse error', e);
             }
-          });
+          }
+        }
+
+        try {
+          // Show loading state
+          if (debugSwarms) {
+            debugSwarms.innerHTML =
+              '<div class="text-center p-2"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Loading...</div>';
+          }
+
+          const response = await fetch('/get_swarms');
+          if (!response.ok) throw new Error('Failed to fetch swarms');
+          const swarms = await response.json();
+
+          // Update cache
+          sessionStorage.setItem(
+            CACHE_KEY,
+            JSON.stringify({
+              timestamp: Date.now(),
+              data: swarms,
+            }),
+          );
+
+          renderSwarms(swarms);
         } catch (error) {
           console.error('Error fetching swarms:', error);
           if (debugSwarms)
             debugSwarms.innerHTML =
-              '<span class="text-danger">Error loading swarms.</span>';
+              '<div class="alert alert-danger p-2 small">Error loading swarms.</div>';
         }
       };
 
@@ -118,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const refreshMapBtn = document.getElementById('refreshMapBtn');
       if (refreshMapBtn) {
         refreshMapBtn.addEventListener('click', () => {
-          fetchSwarms();
+          fetchSwarms(true);
         });
       }
     }, 0);
@@ -126,12 +199,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const locateUser = (doPan = false) => {
     if (navigator.geolocation) {
+      if (doPan) {
+        reportSwarmBtn.disabled = true;
+        reportSwarmBtn.innerHTML =
+          '<span class="spinner-border spinner-border-sm mr-2"></span> Finding location...';
+      }
+
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const userLatLng = [
             position.coords.latitude,
             position.coords.longitude,
           ];
+
+          if (reportSwarmBtn) {
+            reportSwarmBtn.disabled = false;
+            reportSwarmBtn.innerHTML =
+              '<i class="fas fa-map-marker-alt mr-2"></i> Report a Swarm at Your Location';
+          }
+
           if (doPan && map) {
             map.setView(userLatLng, 15);
             L.marker(userLatLng)
@@ -156,6 +242,11 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         },
         (error) => {
+          if (reportSwarmBtn) {
+            reportSwarmBtn.disabled = false;
+            reportSwarmBtn.innerHTML =
+              '<i class="fas fa-map-marker-alt mr-2"></i> Report a Swarm at Your Location';
+          }
           if (doPan)
             alert('Could not get your location. Error: ' + error.message);
         },
@@ -179,10 +270,10 @@ document.addEventListener('DOMContentLoaded', function () {
           'd-flex justify-content-between align-items-center mb-2 p-2 border-bottom';
         fileItem.innerHTML = `
                     <div class="text-truncate mr-2" style="max-width: 200px;">
-                        <i class="${file.type.startsWith('image/') ? 'fas fa-image' : 'fas fa-video'} mr-2"></i>
+                        <i class="${file.type.startsWith('image/') ? 'fas fa-image text-primary' : 'fas fa-video text-info'} mr-2"></i>
                         ${file.name} <small class="text-muted">(${(file.size / (1024 * 1024)).toFixed(2)} MB)</small>
                     </div>
-                    <button type="button" class="btn btn-sm btn-outline-danger remove-file-btn" data-index="${index}">
+                    <button type="button" class="btn btn-sm btn-outline-danger remove-file-btn" data-index="${index}" aria-label="Remove file">
                         <i class="fas fa-times"></i>
                     </button>
                 `;
@@ -224,8 +315,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (clearAllFilesBtn) {
     clearAllFilesBtn.addEventListener('click', () => {
-      selectedFiles = [];
-      updateFileList();
+      if (confirm('Are you sure you want to clear all selected files?')) {
+        selectedFiles = [];
+        updateFileList();
+      }
     });
   }
 
@@ -234,15 +327,14 @@ document.addEventListener('DOMContentLoaded', function () {
       e.preventDefault();
 
       const submitBtn = reportSwarmForm.querySelector('button[type="submit"]');
-      const originalBtnText = submitBtn.textContent;
+      const originalBtnText = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.innerHTML =
-        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
 
       try {
         // 1. Prepare Swarm (Upload Files)
         const formData = new FormData(reportSwarmForm);
-        // Remove existing media fields from formData if any (though there shouldn't be since they are not in the form)
         formData.delete('media');
         selectedFiles.forEach((file) => {
           formData.append('media', file);
@@ -279,13 +371,11 @@ document.addEventListener('DOMContentLoaded', function () {
           'reporterPhone',
           document.getElementById('reporterPhone').value,
         );
-        // Add session ID for tracking (from upstream improvement)
         confirmFormData.append(
           'reporterSessionId',
           localStorage.getItem('utba_visitor_id'),
         );
 
-        // Add media URLs
         if (prepareData.mediaURLs) {
           prepareData.mediaURLs.forEach((url) => {
             confirmFormData.append('mediaURLs', url);
@@ -305,23 +395,26 @@ document.addEventListener('DOMContentLoaded', function () {
           throw new Error(errorText || 'Failed to confirm report');
         }
 
+        // Clear cache since new swarm is added
+        sessionStorage.removeItem(CACHE_KEY);
+
         alert('Swarm report submitted successfully!');
         reportSwarmForm.reset();
         selectedFiles = [];
         updateFileList();
-        const reportModal = bootstrap.Modal.getInstance(
-          document.getElementById('reportSwarmModal'),
-        );
-        reportModal.hide();
 
-        // Refresh page or update map (optional)
+        const reportModalEl = document.getElementById('reportSwarmModal');
+        const reportModal = bootstrap.Modal.getInstance(reportModalEl);
+        if (reportModal) reportModal.hide();
+
+        // Refresh page or update map
         window.location.reload();
       } catch (error) {
         console.error('Error submitting report:', error);
         alert('Error: ' + error.message);
       } finally {
         submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
+        submitBtn.innerHTML = originalBtnText;
       }
     });
   }
@@ -344,7 +437,7 @@ document.addEventListener('DOMContentLoaded', function () {
       url
         .toLowerCase()
         .match(/\.(mp4|webm|mov|avi|3gp|mpeg|ogv|ts|mkv|m4v)$/) ||
-      url.includes('video'); // Basic check
+      url.includes('video');
 
     if (isVideo) {
       videoViewer.src = url;
@@ -356,7 +449,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     counter.textContent = `${currentMediaIndex + 1} of ${mediaURLs.length}`;
 
-    // Hide nav buttons if only one item
     const navButtons = document.querySelectorAll('.media-nav');
     navButtons.forEach(
       (btn) => (btn.style.display = mediaURLs.length > 1 ? 'block' : 'none'),
@@ -379,7 +471,6 @@ document.addEventListener('DOMContentLoaded', function () {
     mediaModal.show();
   };
 
-  // Media navigation buttons
   document.querySelectorAll('.media-nav.prev').forEach((btn) => {
     btn.addEventListener('click', () => navigateMedia(-1));
   });
@@ -387,7 +478,6 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.addEventListener('click', () => navigateMedia(1));
   });
 
-  // Event delegation for dynamically (or statically) rendered view-media-btns
   document.addEventListener('click', function (e) {
     const btn = e.target.closest('.view-media-btn');
     if (btn) {
@@ -427,6 +517,7 @@ async function getNearestIntersection(lat, lng) {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
     );
+    if (!response.ok) throw new Error('Nominatim error');
     const data = await response.json();
     return data.display_name || 'Unknown location';
   } catch (error) {
