@@ -1,0 +1,114 @@
+name: Promote to Production
+
+"on":
+  release:
+    types: [published]
+
+env:
+  PROJECT_ID: 'utba-swarmmap'
+  REGION: 'northamerica-northeast2'
+  SERVICE_BACKEND: 'utba-swarmmap-backend'
+  SERVICE_FRONTEND: 'utba-swarmmap-frontend'
+  AR_REPO: 'swarmmap-repo'
+  IMAGE_BACKEND: 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/backend'
+  IMAGE_FRONTEND: 'northamerica-northeast2-docker.pkg.dev/utba-swarmmap/swarmmap-repo/frontend'
+
+jobs:
+  deploy-production:
+    name: Promote Release to Production
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.WIF_PROVIDER }}
+          service_account: ${{ vars.DEPLOY_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Tag Release Images
+        run: |
+          # Use gcloud artifacts docker images add-tag for Artifact Registry promotion
+          gcloud artifacts docker images add-tag \
+            ${{ env.IMAGE_BACKEND }}:${{ github.sha }} \
+            ${{ env.IMAGE_BACKEND }}:${{ github.event.release.tag_name }} --quiet
+          gcloud artifacts docker images add-tag \
+            ${{ env.IMAGE_FRONTEND }}:${{ github.sha }} \
+            ${{ env.IMAGE_FRONTEND }}:${{ github.event.release.tag_name }} --quiet
+
+      - name: Get Project Number
+        id: project
+        run: |
+          PROJECT_NUMBER=$(gcloud projects describe "${{ env.PROJECT_ID }}" --format='value(projectNumber)')
+          echo "number=$PROJECT_NUMBER" >> $GITHUB_OUTPUT
+
+      - name: Deploy Frontend to Production
+        id: deploy-frontend
+        run: |
+          gcloud run deploy "${{ env.SERVICE_FRONTEND }}" \
+            --image "${{ env.IMAGE_FRONTEND }}:${{ github.event.release.tag_name }}" \
+            --region "${{ env.REGION }}" \
+            --project "${{ env.PROJECT_ID }}" \
+            --allow-unauthenticated \
+            --service-account "${{ vars.FRONTEND_SERVICE_ACCOUNT_PRODUCTION }}" \
+            --format 'value(status.url)' > frontend_url.txt
+          echo "url=$(cat frontend_url.txt)" >> $GITHUB_OUTPUT
+
+      - name: Deploy Backend to Production
+        id: deploy-backend
+        run: |
+          FRONTEND_URL="${{ steps.deploy-frontend.outputs.url }}"
+
+          # Attempt to retrieve existing Backend URL, fallback to project number construction if new
+          BACKEND_URL=$(gcloud run services describe "${{ env.SERVICE_BACKEND }}" \
+            --region "${{ env.REGION }}" \
+            --project "${{ env.PROJECT_ID }}" \
+            --format 'value(status.url)' 2>/dev/null || echo "")
+
+          if [ -z "$BACKEND_URL" ]; then
+            # Construct URL using project number if it's a new service
+            PROJECT_NUMBER="${{ steps.project.outputs.number }}"
+            BACKEND_URL="https://${{ env.SERVICE_BACKEND }}-${PROJECT_NUMBER}.${{ env.REGION }}.run.app"
+          fi
+
+          gcloud run deploy "${{ env.SERVICE_BACKEND }}" \
+            --image "${{ env.IMAGE_BACKEND }}:${{ github.event.release.tag_name }}" \
+            --region "${{ env.REGION }}" \
+            --project "${{ env.PROJECT_ID }}" \
+            --allow-unauthenticated \
+            --set-env-vars "GOOGLE_REDIRECT_URL=${BACKEND_URL}/auth/google/callback" \
+            --set-env-vars "FRONTEND_ASSETS_URL=${FRONTEND_URL}" \
+            --set-secrets "GOOGLE_CLIENT_ID=google-oauth-client-id-production:latest" \
+            --set-secrets "GOOGLE_CLIENT_SECRET=google-oauth-client-secret-production:latest" \
+            --service-account "${{ vars.BACKEND_SERVICE_ACCOUNT_PRODUCTION }}" \
+            --format 'value(status.url)' > backend_url.txt
+          echo "url=$(cat backend_url.txt)" >> $GITHUB_OUTPUT
+
+      - name: Verify Live Production
+        run: |
+          BACKEND_URL="${{ steps.deploy-backend.outputs.url }}"
+          FRONTEND_URL="${{ steps.deploy-frontend.outputs.url }}"
+          echo "Production deployment complete for Release ${{ github.event.release.tag_name }}"
+          echo "Live Backend: $BACKEND_URL"
+          echo "Live Frontend: $FRONTEND_URL"
+
+          echo "Final health check (with retries)..."
+          curl --retry 5 --retry-all-errors --retry-delay 5 \
+            -s -o /dev/null -w "%{http_code}" "$BACKEND_URL/" | grep "200"
+          curl --retry 5 --retry-all-errors --retry-delay 5 \
+            -s -o /dev/null -w "%{http_code}" "$FRONTEND_URL/" | grep "200"

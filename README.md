@@ -56,16 +56,16 @@ Both the frontend and backend have their own `Dockerfile` and can be deployed in
 cd backend
 
 # Build the Docker image
-docker build -t gcr.io/[PROJECT_ID]/utba-swarmmap-backend:latest .
+docker build -t northamerica-northeast2-docker.pkg.dev/[PROJECT_ID]/swarmmap-repo/backend:latest .
 
-# Push the image to Google Container Registry
-docker push gcr.io/[PROJECT_ID]/utba-swarmmap-backend:latest
+# Push the image to Google Artifact Registry
+docker push northamerica-northeast2-docker.pkg.dev/[PROJECT_ID]/swarmmap-repo/backend:latest
 
 # Deploy to Cloud Run
 gcloud run deploy utba-swarmmap-backend \
-  --image gcr.io/[PROJECT_ID]/utba-swarmmap-backend:latest \
+  --image northamerica-northeast2-docker.pkg.dev/[PROJECT_ID]/swarmmap-repo/backend:latest \
   --platform managed \
-  --region [YOUR_REGION] \
+  --region northamerica-northeast2 \
   --allow-unauthenticated \
   --port 8080
 ```
@@ -79,16 +79,16 @@ After the initial backend deployment, get the backend service URL. You will need
 cd frontend
 
 # Build the Docker image
-docker build -t gcr.io/[PROJECT_ID]/utba-swarmmap-frontend:latest .
+docker build -t northamerica-northeast2-docker.pkg.dev/[PROJECT_ID]/swarmmap-repo/frontend:latest .
 
-# Push the image to Google Container Registry
-docker push gcr.io/[PROJECT_ID]/utba-swarmmap-frontend:latest
+# Push the image to Google Artifact Registry
+docker push northamerica-northeast2-docker.pkg.dev/[PROJECT_ID]/swarmmap-repo/frontend:latest
 
 # Deploy to Cloud Run
 gcloud run deploy utba-swarmmap-frontend \
-  --image gcr.io/[PROJECT_ID]/utba-swarmmap-frontend:latest \
+  --image northamerica-northeast2-docker.pkg.dev/[PROJECT_ID]/swarmmap-repo/frontend:latest \
   --platform managed \
-  --region [YOUR_REGION] \
+  --region northamerica-northeast2 \
   --allow-unauthenticated
 ```
 
