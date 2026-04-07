@@ -1007,7 +1007,11 @@ func TestUsernameRegisterHandler(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error parsing templates: %v", err)
 	}
-	h := &Handlers{Store: mockStore, Templates: tmpl}
+	h := &Handlers{
+		Store:           mockStore,
+		LocationService: &MockLocationService{MockIntersection: "Test Intersection"},
+		Templates:       tmpl,
+	}
 
 	body := strings.NewReader("email=test@example.com&password=password123&name=Test+User&phone=123456789&location=London")
 	req, err := http.NewRequest("POST", "/auth/register", body)
