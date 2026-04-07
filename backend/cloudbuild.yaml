@@ -20,19 +20,31 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest'
+      - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/backend:latest'
       - '.'
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Backend'
-    args: ['push', 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest']
+    args:
+      - 'push'
+      - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/backend:latest'
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy Backend'
     entrypoint: 'bash'
     args:
       - '-c'
       - >
+        BACKEND_URL=$(gcloud run services describe utba-swarmmap-backend
+        --platform=managed --region=northamerica-northeast2
+        --format='value(status.url)' 2>/dev/null || echo "");
+
+        if [ -z "$BACKEND_URL" ]; then
+          PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID
+          --format='value(projectNumber)');
+          BACKEND_URL="https://utba-swarmmap-backend-${PROJECT_NUMBER}.northamerica-northeast2.run.app";
+        fi;
+
         gcloud run deploy utba-swarmmap-backend
-        --image=gcr.io/utba-swarmmap/utba-swarmmap-backend:latest
+        --image=northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/backend:latest
         --region=northamerica-northeast2
         --platform=managed
         --allow-unauthenticated
@@ -40,7 +52,7 @@ steps:
         --memory=512Mi
         --cpu=1
         --set-env-vars=FRONTEND_ASSETS_URL=$(cat /workspace/frontend-url.txt)
-        --set-env-vars=GOOGLE_REDIRECT_URL=https://utba-swarmmap-backend-rcemytjnza-pd.a.run.app/auth/google/callback
+        --set-env-vars=GOOGLE_REDIRECT_URL=${BACKEND_URL}/auth/google/callback
         --update-secrets=GOOGLE_CLIENT_ID=google-oauth-client-id:latest
         --update-secrets=GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest
         --quiet
@@ -54,15 +66,16 @@ steps:
         gcloud run services describe utba-swarmmap-backend
         --platform=managed --region=northamerica-northeast2
         --format='value(status.url)' --quiet > /workspace/service-url
-  # Verify the deployment by curling the URL from the file
-  - name: 'gcr.io/cloud-builders/curl'
+  # Verify the deployment by curling the URL from the file with retries
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Verify Deployment'
     entrypoint: 'bash'
     args:
       - '-c'
-      - 'curl -I --fail --silent --show-error "$(cat /workspace/service-url)"'
+      - 'curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "$(cat /workspace/service-url)"'
 images:
-  - 'gcr.io/utba-swarmmap/utba-swarmmap-backend:latest'
+  - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/backend:latest'
+
 options:
   logging: CLOUD_LOGGING_ONLY
   machineType: 'E2_HIGHCPU_8'  # Use a faster machine for building

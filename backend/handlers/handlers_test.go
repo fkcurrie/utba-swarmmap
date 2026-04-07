@@ -1091,9 +1091,10 @@ func TestUsernameRegisterHandler(t *testing.T) {
 		t.Fatalf("Error parsing templates: %v", err)
 	}
 	h := &Handlers{
-		Store:        mockStore,
-		SwarmService: service.NewSwarmService(mockStore),
-		Templates:    tmpl,
+		Store:           mockStore,
+		SwarmService:    service.NewSwarmService(mockStore),
+		LocationService: &MockLocationService{MockIntersection: "Test Intersection"},
+		Templates:       tmpl,
 	}
 
 	body := strings.NewReader("email=test@example.com&password=password123&name=Test+User&phone=123456789&location=London")

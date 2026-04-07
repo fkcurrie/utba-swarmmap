@@ -43,16 +43,24 @@ type Storer interface {
 
 // Store is the concrete implementation of the Storer interface using Firestore.
 type Store struct {
-	FirestoreClient *firestore.Client
-	StorageClient   *storage.Client
+	FirestoreClient FirestoreClient
+	StorageClient   StorageClient
 	BucketName      string
 }
 
 // NewStore creates a new Store.
 func NewStore(fs *firestore.Client, sc *storage.Client, bucketName string) *Store {
+	var fc FirestoreClient
+	if fs != nil {
+		fc = &FirestoreClientWrapper{Client: fs}
+	}
+	var stc StorageClient
+	if sc != nil {
+		stc = &StorageClientWrapper{Client: sc}
+	}
 	return &Store{
-		FirestoreClient: fs,
-		StorageClient:   sc,
+		FirestoreClient: fc,
+		StorageClient:   stc,
 		BucketName:      bucketName,
 	}
 }
@@ -69,7 +77,7 @@ func (s *Store) TrackVisit(ctx context.Context, visitorID string) error {
 	today := time.Now().UTC().Format("2006-01-02")
 	docRef := s.FirestoreClient.Collection(visitsCollection).Doc(today)
 
-	return s.FirestoreClient.RunTransaction(ctx, func(_ context.Context, tx *firestore.Transaction) error {
+	return s.FirestoreClient.RunTransaction(ctx, func(_ context.Context, tx Transaction) error {
 		doc, err := tx.Get(docRef)
 		if err != nil && status.Code(err) != codes.NotFound {
 			return err
@@ -113,7 +121,7 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 		data := doc.Data()
 		timestamp, ok := data["timestamp"].(time.Time)
 		if !ok {
-			slog.Warn("Skipping visit document with invalid timestamp", "docID", doc.Ref.ID)
+			slog.Warn("Skipping visit document with invalid timestamp", "docID", doc.ID())
 			continue
 		}
 		dateStr := timestamp.Format("2006-01-02")
@@ -153,7 +161,7 @@ func (s *Store) GetUserByEmail(ctx context.Context, email string) (*models.User,
 	if err := doc.DataTo(&user); err != nil {
 		return nil, fmt.Errorf("failed to decode user: %w", err)
 	}
-	user.ID = doc.Ref.ID
+	user.ID = doc.ID()
 	return &user, nil
 }
 
@@ -172,7 +180,7 @@ func (s *Store) GetUserByVerificationToken(ctx context.Context, token string) (*
 	if err := doc.DataTo(&user); err != nil {
 		return nil, fmt.Errorf("failed to decode user: %w", err)
 	}
-	user.ID = doc.Ref.ID
+	user.ID = doc.ID()
 	return &user, nil
 }
 
@@ -191,7 +199,7 @@ func (s *Store) GetUserByResetToken(ctx context.Context, token string) (*models.
 	if err := doc.DataTo(&user); err != nil {
 		return nil, fmt.Errorf("failed to decode user: %w", err)
 	}
-	user.ID = doc.Ref.ID
+	user.ID = doc.ID()
 	return &user, nil
 }
 
@@ -317,7 +325,7 @@ func (s *Store) GetAllUsers(ctx context.Context) ([]models.User, error) {
 			slog.Error("failed to convert firestore document to User", "error", err)
 			continue
 		}
-		user.ID = doc.Ref.ID
+		user.ID = doc.ID()
 		users = append(users, user)
 	}
 	return users, nil
@@ -341,7 +349,7 @@ func (s *Store) GetAllSwarms(ctx context.Context) ([]models.SwarmReport, error) 
 			slog.Error("failed to convert firestore document to SwarmReport", "error", err)
 			continue
 		}
-		report.ID = doc.Ref.ID
+		report.ID = doc.ID()
 		reports = append(reports, report)
 	}
 	return reports, nil
@@ -365,7 +373,7 @@ func (s *Store) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]m
 			slog.Error("failed to convert firestore document to SwarmReport", "error", err)
 			continue
 		}
-		report.ID = doc.Ref.ID
+		report.ID = doc.ID()
 		reports = append(reports, report)
 	}
 	return reports, nil
@@ -383,32 +391,32 @@ func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader,
 	// Set content type
 	switch ext {
 	case ".jpg", ".jpeg":
-		writer.ContentType = "image/jpeg"
+		writer.SetContentType("image/jpeg")
 	case ".png":
-		writer.ContentType = "image/png"
+		writer.SetContentType("image/png")
 	case ".gif":
-		writer.ContentType = "image/gif"
+		writer.SetContentType("image/gif")
 	case ".mp4":
-		writer.ContentType = "video/mp4"
+		writer.SetContentType("video/mp4")
 	case ".webm":
-		writer.ContentType = "video/webm"
+		writer.SetContentType("video/webm")
 	case ".mov":
-		writer.ContentType = "video/quicktime"
+		writer.SetContentType("video/quicktime")
 	case ".avi":
-		writer.ContentType = "video/x-msvideo"
+		writer.SetContentType("video/x-msvideo")
 	case ".mpeg", ".mpg":
-		writer.ContentType = "video/mpeg"
+		writer.SetContentType("video/mpeg")
 	case ".ogv":
-		writer.ContentType = "video/ogg"
+		writer.SetContentType("video/ogg")
 	case ".ts":
-		writer.ContentType = "video/mp2t"
+		writer.SetContentType("video/mp2t")
 	case ".3gp":
-		writer.ContentType = "video/3gpp"
+		writer.SetContentType("video/3gpp")
 	default:
-		writer.ContentType = "application/octet-stream"
+		writer.SetContentType("application/octet-stream")
 	}
 
-	writer.ACL = []storage.ACLRule{{Entity: storage.AllUsers, Role: storage.RoleReader}}
+	writer.SetACL([]storage.ACLRule{{Entity: storage.AllUsers, Role: storage.RoleReader}})
 
 	if _, err := io.Copy(writer, file); err != nil {
 		return "", fmt.Errorf("failed to copy file data: %w", err)
