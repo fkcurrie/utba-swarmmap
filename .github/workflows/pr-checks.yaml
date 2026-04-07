@@ -17,10 +17,10 @@ jobs:
         working-directory: backend
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: backend/go.mod
           cache-dependency-path: backend/go.mod
@@ -40,21 +40,13 @@ jobs:
           install-mode: goinstall
           args: --verbose
       - name: Unit Tests
-        run: go test -v -coverprofile=coverage.out ./...
-
-      - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          files: ./backend/coverage.out
-          fail_ci_if_error: false # Don't fail if Codecov is down
-
-      - name: Staticcheck
-        run: |
-          go install honnef.co/go/tools/cmd/staticcheck@latest
-          staticcheck ./...
+        run: go test -v ./...
 
       - name: Race Detector
         run: go test -race -v ./...
+
+      - name: Test Coverage
+        run: go test -coverprofile=coverage.out ./...
 
       - name: Go Mod Tidy Check
         run: |
@@ -80,7 +72,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Node.js
         uses: actions/setup-node@v5
@@ -120,7 +112,7 @@ jobs:
         run: go fmt frontend/main.go
 
       - name: Go Security (gosec)
-        uses: securego/gosec@v2.25.0
+        uses: securego/gosec@master
         with:
           args: ./frontend/...
 
@@ -130,7 +122,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -141,7 +133,7 @@ jobs:
           cache: 'npm'
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: backend/go.mod
 
