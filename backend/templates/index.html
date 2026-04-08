@@ -25,19 +25,19 @@
                         <div class="d-flex flex-wrap justify-content-center" role="list">
                             <div class="legend-item" role="listitem">
                                 <span class="legend-color" style="background-color: #ff0000;" aria-hidden="true"></span>
-                                <span class="small">Red = <span class="sr-only">Status</span> Reported (new)</span>
+                                <span class="small">Red = <span class="visually-hidden">Status</span> Reported (new)</span>
                             </div>
                             <div class="legend-item" role="listitem">
                                 <span class="legend-color" style="background-color: #ff69b4;" aria-hidden="true"></span>
-                                <span class="small">Pink = <span class="sr-only">Status</span> Verified</span>
+                                <span class="small">Pink = <span class="visually-hidden">Status</span> Verified</span>
                             </div>
                             <div class="legend-item" role="listitem">
                                 <span class="legend-color" style="background-color: #00ff00;" aria-hidden="true"></span>
-                                <span class="small">Green = <span class="sr-only">Status</span> Captured</span>
+                                <span class="small">Green = <span class="visually-hidden">Status</span> Captured</span>
                             </div>
                             <div class="legend-item" role="listitem">
                                 <span class="legend-color" style="background-color: #0000ff;" aria-hidden="true"></span>
-                                <span class="small">Blue = <span class="sr-only">Status</span> Archived (24h+)</span>
+                                <span class="small">Blue = <span class="visually-hidden">Status</span> Archived (24h+)</span>
                             </div>
                         </div>
                     </div>
@@ -59,18 +59,18 @@
                 <div class="modal-body p-4">
                     <form id="reportSwarmForm">
                         <div class="mb-3">
-                            <label for="description" class="form-label font-weight-bold">Description</label>
+                            <label for="description" class="form-label fw-bold">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="3" required 
                                 placeholder="e.g., size of swarm, height from ground, on a tree branch"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="intersection" class="form-label font-weight-bold">Nearest Major Intersection</label>
+                            <label for="intersection" class="form-label fw-bold">Nearest Major Intersection</label>
                             <input type="text" class="form-control" id="intersection" name="intersection" placeholder="e.g., Yonge & Bloor" required>
                         </div>
 
                         <!-- Contact Information Section -->
                         <div class="form-section mt-4 mb-4 p-3 border rounded shadow-sm" style="background-color: #f8f9fa;">
-                            <h6 class="mb-3 font-weight-bold"><i class="fas fa-phone-alt me-2 text-success"></i> Contact Information (Optional but Recommended)</h6>
+                            <h6 class="mb-3 fw-bold"><i class="fas fa-phone-alt me-2 text-success"></i> Contact Information (Optional but Recommended)</h6>
                             <p class="small text-muted mb-3">Providing your contact details helps beekeepers reach you for additional information or to coordinate swarm collection.</p>
                             
                             <div class="row">
@@ -90,7 +90,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label font-weight-bold mb-2"><i class="fas fa-camera-retro me-2 text-info"></i> Upload Photo(s) and/or Video(s) (Optional)</label>
+                            <label class="form-label fw-bold mb-2"><i class="fas fa-camera-retro me-2 text-info"></i> Upload Photo(s) and/or Video(s) (Optional)</label>
                             <div class="file-upload-section d-flex flex-wrap align-items-center">
                                 <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
                                 <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
@@ -107,7 +107,7 @@
 
                             <!-- File management area -->
                             <div id="fileManagementArea" class="mt-3" style="display: none;">
-                                <h6 class="font-weight-bold">Selected Files:</h6>
+                                <h6 class="fw-bold">Selected Files:</h6>
                                 <div id="selectedFilesList" class="border rounded p-3 mb-2" style="max-height: 200px; overflow-y: auto; background-color: #fff;">
                                     <!-- Selected files will be displayed here -->
                                 </div>
@@ -129,7 +129,7 @@
                         
                         <div class="d-flex justify-content-end mt-4">
                             <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary px-4 font-weight-bold">Submit Report</button>
+                            <button type="submit" class="btn btn-primary px-4 fw-bold">Submit Report</button>
                         </div>
                     </form>
                 </div>

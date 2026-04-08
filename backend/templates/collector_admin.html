@@ -90,8 +90,8 @@
                                             <td class="small">{{.Phone}}</td>
                                             <td class="small">{{.Location}}</td>
                                             <td>
-                                                <span class="badge badge-{{if eq .Role "collector_admin"}}warning{{else if eq .Role "site_admin"}}danger{{else}}primary{{end}} p-1">
-                                                    {{if eq .Role "collector_admin"}}Admin{{else if eq .Role "site_admin"}}Site Admin{{else}}Collector{{end}}
+                                                <span class="badge {{if eq .Role "collector_admin"}}bg-warning text-dark{{else if eq .Role "site_admin"}}bg-danger{{else}}bg-primary{{end}} p-1">
+                                                    {{if eq .Role "collector_admin"}}Collector Admin{{else if eq .Role "site_admin"}}Site Admin{{else}}Collector{{end}}
                                                 </span>
                                             </td>
                                             <td class="small">{{.CreatedAt.Format "Jan 02, 2006"}}</td>

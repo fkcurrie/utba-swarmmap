@@ -15,15 +15,15 @@
                     {{end}}
                     
                     <form action="/auth/login" method="POST" aria-label="Login Form">
-                        <div class="form-group">
-                            <label for="email">Email address</label>
+                        <div class="mb-3">
+                            <label for="email" class="fw-bold">Email address</label>
                             <input type="email" class="form-control" id="email" name="email" required autocomplete="email">
                         </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
+                        <div class="mb-3">
+                            <label for="password" class="fw-bold">Password</label>
                             <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block font-weight-bold">Login</button>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm">Login</button>
                     </form>
                     
                     <div class="text-center mt-3">
@@ -33,12 +33,12 @@
                     <hr class="my-4">
                     
                     <div class="text-center">
-                        <p class="mb-3 font-weight-bold">Or sign in with:</p>
-                        <a href="/auth/google" class="google-signin-btn btn btn-outline-danger btn-block" aria-label="Sign in with Google">
-                            <i class="fab fa-google mr-2"></i> Sign in with Google
+                        <p class="mb-3 fw-bold">Or sign in with:</p>
+                        <a href="/auth/google" class="google-signin-btn btn btn-outline-danger w-100 shadow-sm" aria-label="Sign in with Google">
+                            <i class="fab fa-google me-2"></i> Sign in with Google
                         </a>
-                        <a href="/auth/apple" class="btn btn-outline-dark btn-block mt-2" aria-label="Sign in with Apple">
-                            <i class="fab fa-apple mr-2"></i> Sign in with Apple
+                        <a href="/auth/apple" class="btn btn-outline-dark w-100 mt-2 shadow-sm" aria-label="Sign in with Apple">
+                            <i class="fab fa-apple me-2"></i> Sign in with Apple
                         </a>
                     </div>
                     

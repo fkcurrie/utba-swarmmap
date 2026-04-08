@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/fkcurrie/utba-swarmmap#readme",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.5.1",
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.5.0",

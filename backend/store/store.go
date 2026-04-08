@@ -122,7 +122,7 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 		data := doc.Data()
 		timestamp, ok := data["timestamp"].(time.Time)
 		if !ok {
-			slog.Info("Skipping visit document with invalid timestamp", "docID", strings.ReplaceAll(strings.ReplaceAll(doc.ID(), "\n", ""), "\r", "")) // #nosec G706
+			slog.Warn("Skipping visit document with invalid timestamp", "docID", strings.ReplaceAll(strings.ReplaceAll(doc.ID(), "\n", ""), "\r", "")) // #nosec G706
 			continue
 		}
 		dateStr := timestamp.Format("2006-01-02")
