@@ -7,7 +7,6 @@ export default [
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.jquery,
         ...globals.node,
         L: "readonly",
         bootstrap: "readonly",
