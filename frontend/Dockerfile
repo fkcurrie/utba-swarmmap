@@ -1,5 +1,5 @@
 # STAGE 1: Build the minimal server
-FROM golang:1.25.8-alpine AS builder
+FROM golang:1.25.9-alpine AS builder
 
 WORKDIR /app
 COPY main.go .

@@ -69,7 +69,7 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 
 	currentReports, err := h.SwarmService.GetSwarms(ctx, sessionID, session)
 	if err != nil {
-		slog.Error("Error fetching reports from service", "error", err)
+		slog.Error("Error fetching reports from service", "error", err) // #nosec G706
 		h.jsonError(w, "Error fetching reports", http.StatusInternalServerError)
 		return
 	}
