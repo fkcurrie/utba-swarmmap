@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package handlers
 
 import (
@@ -11,7 +13,8 @@ import (
 func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 	session, ok := r.Context().Value(SessionContextKey).(*models.Session)
 	if !ok {
-		http.Error(w, "Could not retrieve session from context", http.StatusInternalServerError)
+		slog.Error("Could not retrieve session from context")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
@@ -107,7 +110,7 @@ func (h *Handlers) ApproveUserHandler(w http.ResponseWriter, r *http.Request) {
 		{Path: "status", Value: "approved"},
 	}
 	if err := h.Store.UpdateUser(r.Context(), userID, updates); err != nil {
-		slog.Error("Failed to approve user", "userID", userID, "error", err)
+		slog.Error("Failed to approve user", "error", err, "userID", h.sanitize(userID)) // #nosec G706
 		http.Error(w, "Failed to approve user", http.StatusInternalServerError)
 		return
 	}
@@ -129,7 +132,7 @@ func (h *Handlers) RejectUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.DeleteUser(r.Context(), userID); err != nil {
-		slog.Error("Failed to reject user", "userID", userID, "error", err)
+		slog.Error("Failed to reject user", "error", err, "userID", h.sanitize(userID)) // #nosec G706
 		http.Error(w, "Failed to reject user", http.StatusInternalServerError)
 		return
 	}
@@ -146,12 +149,12 @@ func (h *Handlers) DeleteSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
 	swarmID := r.FormValue("swarmID")
 	if swarmID == "" {
-		http.Error(w, "User ID required", http.StatusBadRequest)
+		http.Error(w, "Swarm ID required", http.StatusBadRequest)
 		return
 	}
 
 	if err := h.Store.DeleteSwarm(r.Context(), swarmID); err != nil {
-		slog.Error("Failed to delete swarm", "swarmID", swarmID, "error", err)
+		slog.Error("Failed to delete swarm", "error", err, "swarmID", h.sanitize(swarmID)) // #nosec G706
 		http.Error(w, "Failed to delete swarm", http.StatusInternalServerError)
 		return
 	}
@@ -188,7 +191,7 @@ func (h *Handlers) PromoteUserHandler(w http.ResponseWriter, r *http.Request) {
 		{Path: "role", Value: newRole},
 	}
 	if err := h.Store.UpdateUser(r.Context(), userID, updates); err != nil {
-		slog.Error("Failed to promote user", "userID", userID, "role", newRole, "error", err)
+		slog.Error("Failed to promote user", "error", err, "userID", h.sanitize(userID), "newRole", h.sanitize(newRole)) // #nosec G706
 		http.Error(w, "Failed to promote user", http.StatusInternalServerError)
 		return
 	}
@@ -199,7 +202,8 @@ func (h *Handlers) PromoteUserHandler(w http.ResponseWriter, r *http.Request) {
 func (h *Handlers) CollectorAdminHandler(w http.ResponseWriter, r *http.Request) {
 	session, ok := r.Context().Value(SessionContextKey).(*models.Session)
 	if !ok {
-		http.Error(w, "Could not retrieve session from context", http.StatusInternalServerError)
+		slog.Error("Could not retrieve session from context")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 

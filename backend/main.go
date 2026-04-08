@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package main
 
 import (
@@ -8,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -30,8 +33,10 @@ func getEnv(key, fallback string) string {
 }
 
 func main() {
-	// Initialize structured logging
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	// Initialize slog with JSON handler
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}))
 	slog.SetDefault(logger)
 
 	ctx := context.Background()
@@ -51,9 +56,9 @@ func main() {
 	}
 
 	// Initialize Firestore client
-	slog.Info("Initializing Firestore client", "projectID", projectID)
+	slog.Info("Initializing Firestore client", "projectID", strings.ReplaceAll(strings.ReplaceAll(projectID, "\n", ""), "\r", "")) // #nosec G706
 	if host := os.Getenv("FIRESTORE_EMULATOR_HOST"); host != "" {
-		slog.Info("Using Firestore Emulator", "host", host)
+		slog.Info("Using Firestore Emulator", "host", strings.ReplaceAll(strings.ReplaceAll(host, "\n", ""), "\r", "")) // #nosec G706
 	}
 	firestoreClient, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
@@ -65,7 +70,7 @@ func main() {
 	// Initialize Storage client
 	slog.Info("Initializing Storage client")
 	if host := os.Getenv("STORAGE_EMULATOR_HOST"); host != "" {
-		slog.Info("Using Storage Emulator", "host", host)
+		slog.Info("Using Storage Emulator", "host", strings.ReplaceAll(strings.ReplaceAll(host, "\n", ""), "\r", "")) // #nosec G706
 	}
 	storageClient, err := storage.NewClient(ctx)
 	if err != nil {
@@ -147,10 +152,10 @@ func main() {
 	port := getEnv("PORT", "8080")
 	// Validate port to prevent log injection and ensure it's a valid port number
 	if _, err := strconv.Atoi(port); err != nil {
-		slog.Error("Invalid PORT", "port", port, "error", err)
+		slog.Error("Invalid PORT", "port", strings.ReplaceAll(strings.ReplaceAll(port, "\n", ""), "\r", ""), "error", err) // #nosec G706
 		os.Exit(1)
 	}
-	slog.Info("Starting server", "port", port, "version", version)
+	slog.Info("Starting server", "port", strings.ReplaceAll(strings.ReplaceAll(port, "\n", ""), "\r", ""), "version", strings.ReplaceAll(strings.ReplaceAll(version, "\n", ""), "\r", "")) // #nosec G706
 
 	srv := &http.Server{
 		Addr:         ":" + port,

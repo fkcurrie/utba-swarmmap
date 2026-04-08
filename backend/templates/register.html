@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
 {{template "header.html" .}}
 
 <div class="container mt-5 pt-5">
@@ -9,8 +10,8 @@
                 </div>
                 <div class="card-body">
                     {{if .Error}}
-                    <div class="alert alert-danger" role="alert">
-                        <i class="fas fa-exclamation-circle mr-2"></i> {{.Error}}
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        <i class="fa-solid fa-exclamation-circle me-2"></i> {{.Error}}
                     </div>
                     {{end}}
                     

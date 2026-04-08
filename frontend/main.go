@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package main
 
 import (
@@ -5,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -17,6 +20,12 @@ func getEnv(key, fallback string) string {
 }
 
 func main() {
+	// Initialize slog with JSON handler
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}))
+	slog.SetDefault(logger)
+
 	portStr := os.Getenv("PORT")
 	if portStr == "" {
 		portStr = "8080"
@@ -28,7 +37,7 @@ func main() {
 	portInt, err := strconv.Atoi(portStr)
 	if err != nil {
 		// If port is invalid, we fatal for clarity on configuration error.
-		slog.Error("Invalid PORT environment variable", "error", err)
+		slog.Error("Invalid PORT environment variable", "error", err, "port", strings.ReplaceAll(strings.ReplaceAll(portStr, "\n", ""), "\r", "")) // #nosec G706
 		os.Exit(1)
 	}
 
@@ -36,7 +45,7 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	slog.Info("Listening on port", "port", portInt)
+	slog.Info("Listening", "port", portInt) // #nosec G706
 
 	srv := &http.Server{
 		Addr:         ":" + strconv.Itoa(portInt),

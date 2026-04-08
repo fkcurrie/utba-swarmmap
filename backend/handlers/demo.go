@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package handlers
 
 import (
@@ -34,7 +36,7 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	slog.Info("Generating sample swarms for session", "sessionID", sessionID)
+	slog.Info("Generating sample swarms for session", "sessionId", h.sanitize(sessionID)) // #nosec G706
 
 	now := time.Now()
 	sampleSwarms := []models.SwarmReport{
@@ -63,7 +65,7 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 	var createdSwarms []models.SwarmReport
 	for _, swarm := range sampleSwarms {
 		if err := h.Store.CreateSwarm(r.Context(), swarm); err != nil {
-			slog.Error("Failed to create sample swarm", "swarmID", swarm.ID, "error", err)
+			slog.Error("Failed to create sample swarm", "error", err, "swarmID", h.sanitize(swarm.ID)) // #nosec G706
 			continue
 		}
 		createdSwarms = append(createdSwarms, swarm)

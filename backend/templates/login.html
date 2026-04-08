@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
 {{template "header.html" .}}
 
 <div class="container mt-5 pt-5">
@@ -10,7 +11,7 @@
                 <div class="card-body">
                     {{if .Error}}
                     <div class="alert alert-danger" role="alert">
-                        <i class="fas fa-exclamation-circle mr-2"></i> {{.Error}}
+                        <i class="fa-solid fa-exclamation-circle me-2"></i> {{.Error}}
                     </div>
                     {{end}}
                     
@@ -35,10 +36,10 @@
                     <div class="text-center">
                         <p class="mb-3 fw-bold">Or sign in with:</p>
                         <a href="/auth/google" class="google-signin-btn btn btn-outline-danger w-100 shadow-sm" aria-label="Sign in with Google">
-                            <i class="fab fa-google me-2"></i> Sign in with Google
+                            <i class="fa-brands fa-google me-2"></i> Sign in with Google
                         </a>
                         <a href="/auth/apple" class="btn btn-outline-dark w-100 mt-2 shadow-sm" aria-label="Sign in with Apple">
-                            <i class="fab fa-apple me-2"></i> Sign in with Apple
+                            <i class="fa-brands fa-apple me-2"></i> Sign in with Apple
                         </a>
                     </div>
                     

@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 ---
 # cloudbuild-backend.yaml
 # Use this for backend deployments.
@@ -78,4 +79,4 @@ images:
 
 options:
   logging: CLOUD_LOGGING_ONLY
-  machineType: 'E2_HIGHCPU_8'  # Use a faster machine for building
+  machineType: 'E2_HIGHCPU_8' # Use a faster machine for building

@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package store
 
 import (
@@ -73,11 +75,11 @@ func TestStore_GetUserByEmail_Mock(t *testing.T) {
 	mockClient := &MockFirestoreClient{
 		MockCollection: mockColl,
 	}
-	
+
 	s := &Store{
 		FirestoreClient: mockClient,
 	}
-	
+
 	if s.FirestoreClient.Collection("users") != mockColl {
 		t.Error("expected mock collection")
 	}

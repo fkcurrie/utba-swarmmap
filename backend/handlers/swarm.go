@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package handlers
 
 import (
@@ -50,6 +52,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 
 	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
 	if err := r.ParseMultipartForm(maxFileSize); err != nil && err != http.ErrNotMultipart { // #nosec G120
+		slog.Error("Failed to parse multipart form", "error", err)
 		h.jsonError(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
@@ -85,7 +88,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	mediaFilenames := []string{}
 	for _, files := range form.File {
 		for _, file := range files {
-			if err := validateFile(file); err != nil {
+			if err := h.validateFile(file); err != nil {
 				h.jsonError(w, err.Error(), http.StatusBadRequest)
 				return
 			}
@@ -100,15 +103,16 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 		for _, fileHeader := range files {
 			file, err := fileHeader.Open()
 			if err != nil {
+				slog.Error("Failed to open uploaded file", "error", err, "filename", h.sanitize(fileHeader.Filename)) // #nosec G706
 				h.jsonError(w, fmt.Sprintf("Failed to open file: %v", err), http.StatusInternalServerError)
 				return
 			}
 			url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
 			if closeErr := file.Close(); closeErr != nil {
-				slog.Error("Failed to close file", "error", closeErr)
+				slog.Warn("Failed to close file after upload", "error", closeErr)
 			}
 			if err != nil {
-				slog.Error("Failed to upload file to GCS", "error", err)
+				slog.Error("Failed to upload file to GCS", "error", err, "filename", h.sanitize(fileHeader.Filename)) // #nosec G706
 				h.jsonError(w, "Failed to upload file to storage", http.StatusInternalServerError)
 				return
 			}
@@ -139,6 +143,7 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 
 	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
 	if err := r.ParseMultipartForm(maxFileSize); err != nil && err != http.ErrNotMultipart { // #nosec G120
+		slog.Error("Failed to parse multipart form", "error", err)
 		h.jsonError(w, "Failed to parse form", http.StatusBadRequest)
 		return
 	}
@@ -185,15 +190,15 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 			for _, fileHeader := range files {
 				file, err := fileHeader.Open()
 				if err != nil {
-					slog.Error("Error opening uploaded file", "filename", fileHeader.Filename, "error", err)
+					slog.Error("Error opening uploaded file", "error", err, "filename", h.sanitize(fileHeader.Filename)) // #nosec G706
 					continue
 				}
 				url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
 				if closeErr := file.Close(); closeErr != nil {
-					slog.Error("Failed to close file", "error", closeErr)
+					slog.Warn("Failed to close file", "error", closeErr)
 				}
 				if err != nil {
-					slog.Error("Error uploading file to GCS", "filename", fileHeader.Filename, "error", err)
+					slog.Error("Error uploading file to GCS", "error", err, "filename", h.sanitize(fileHeader.Filename)) // #nosec G706
 					continue
 				}
 				mediaURLs = append(mediaURLs, url)
@@ -279,7 +284,7 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: currentTime})
 
 	if err := h.Store.UpdateSwarm(r.Context(), updateReq.ID, updates); err != nil {
-		slog.Error("Failed to update report in Firestore", "id", updateReq.ID, "error", err)
+		slog.Error("Failed to update report in Firestore", "error", err, "id", h.sanitize(updateReq.ID)) // #nosec G706
 		h.jsonError(w, "Error updating report", http.StatusInternalServerError)
 		return
 	}
@@ -296,7 +301,8 @@ func (h *Handlers) AssignSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
 	session, ok := r.Context().Value(SessionContextKey).(*models.Session)
 	if !ok {
-		http.Error(w, "Could not retrieve session from context", http.StatusInternalServerError)
+		slog.Error("Could not retrieve session from context")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
@@ -320,6 +326,7 @@ func (h *Handlers) AssignSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: time.Now()})
 
 	if err := h.Store.UpdateSwarm(r.Context(), swarmID, updates); err != nil {
+		slog.Error("Failed to update swarm", "error", err, "id", h.sanitize(swarmID)) // #nosec G706
 		http.Error(w, "Failed to update swarm", http.StatusInternalServerError)
 		return
 	}
@@ -336,7 +343,8 @@ func (h *Handlers) ClaimSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
 	session, ok := r.Context().Value(SessionContextKey).(*models.Session)
 	if !ok {
-		http.Error(w, "Could not retrieve session from context", http.StatusInternalServerError)
+		slog.Error("Could not retrieve session from context")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
@@ -353,6 +361,7 @@ func (h *Handlers) ClaimSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: time.Now()})
 
 	if err := h.Store.UpdateSwarm(r.Context(), swarmID, updates); err != nil {
+		slog.Error("Failed to update swarm", "error", err, "id", h.sanitize(swarmID)) // #nosec G706
 		http.Error(w, "Failed to update swarm", http.StatusInternalServerError)
 		return
 	}
@@ -360,7 +369,7 @@ func (h *Handlers) ClaimSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/swarmlist", http.StatusSeeOther)
 }
 
-func validateFile(file *multipart.FileHeader) error {
+func (h *Handlers) validateFile(file *multipart.FileHeader) error {
 	if file.Size > maxFileSize {
 		return fmt.Errorf("file %s is too large (max size is 50MB)", file.Filename)
 	}
@@ -379,7 +388,7 @@ func validateFile(file *multipart.FileHeader) error {
 	}
 
 	if allowedExtensions[ext] {
-		slog.Info("File accepted by extension", "filename", file.Filename, "ext", ext, "contentType", contentType)
+		slog.Info("File accepted by extension", "filename", h.sanitize(file.Filename), "extension", h.sanitize(ext), "contentType", h.sanitize(contentType)) // #nosec G706
 		return nil
 	}
 

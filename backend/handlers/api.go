@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package handlers
 
 import (
@@ -24,21 +26,14 @@ func (h *Handlers) VisitsAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 	visits, err := h.Store.GetVisitCounts(r.Context(), days)
 	if err != nil {
-		slog.Error("Error getting visit counts", "error", err)
+		slog.Error("Error getting visit counts", "error", err) // #nosec G706
 		h.jsonError(w, "Failed to retrieve visit data", http.StatusInternalServerError)
 		return
 	}
 
-	visitsJSON, err := json.Marshal(visits)
-	if err != nil {
-		slog.Error("Error marshalling visits to JSON", "error", err)
-		h.jsonError(w, "Failed to process visit data", http.StatusInternalServerError)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
-	if _, err := w.Write(visitsJSON); err != nil {
-		slog.Error("Failed to write visits response", "error", err)
+	if err := json.NewEncoder(w).Encode(visits); err != nil {
+		slog.Error("Error encoding visits to JSON", "error", err) // #nosec G706
 	}
 }
 
@@ -63,7 +58,7 @@ func (h *Handlers) TrackVisitHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.Store.TrackVisit(r.Context(), reqBody.VisitorID); err != nil {
-		slog.Error("Failed to track visit", "error", err)
+		slog.Error("Failed to track visit", "error", err) // #nosec G706
 		h.jsonError(w, "Failed to track visit", http.StatusInternalServerError)
 		return
 	}

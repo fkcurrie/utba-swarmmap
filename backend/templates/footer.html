@@ -1,17 +1,18 @@
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
     </main> <!-- closes main-content -->
-    <footer role="contentinfo">
-        <div class="container-fluid">
-            <p class="mb-1">
-                Made with 🐝❤️🐝 with <a href="https://github.com/google/gemini-cli" target="_blank" rel="noopener">gemini-cli</a>
-            </p>
-            <p class="small mb-0">
+    <footer class="container-fluid text-center fixed-bottom bg-light py-2 border-top" role="contentinfo">
+        <p class="text-muted small mb-0">
+            Made with 🐝❤️🐝 with <a href="https://github.com/google/gemini-cli" target="_blank" rel="noopener">gemini-cli</a>
+        </p>
+        <nav aria-label="Admin navigation">
+            <p class="text-muted small mb-0">
                 {{if and .User (eq .User.Role "site_admin")}}
                     <a href="/admin">Site Administration</a>
                 {{else}}
                     <a href="/login?role=site_admin">Site Admin Login</a>
                 {{end}}
             </p>
-        </div>
+        </nav>
     </footer>
 
     <!-- Global Media Viewer Modal -->
@@ -28,10 +29,10 @@
                         <video id="video-viewer" controls style="display: none;"></video>
                         
                         <button class="media-nav prev" aria-label="Previous media">
-                            <i class="fas fa-chevron-left"></i>
+                            <i class="fa-solid fa-chevron-left"></i>
                         </button>
                         <button class="media-nav next" aria-label="Next media">
-                            <i class="fas fa-chevron-right"></i>
+                            <i class="fa-solid fa-chevron-right"></i>
                         </button>
                     </div>
                     <div class="media-counter pb-3" id="media-counter"></div>
@@ -40,8 +41,7 @@
         </div>
     </div>
 
-    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/jquery/jquery.slim.min.js"></script>
-    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/leaflet/js/leaflet.js"></script>
     <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/leaflet.markercluster/js/leaflet.markercluster.js"></script>
     <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/js/main.js"></script>

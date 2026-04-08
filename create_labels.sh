@@ -1,4 +1,5 @@
 #!/bin/bash
+# Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 
 # Create priority labels
 gh label create "high-priority" --color "FF0000" --description "High priority issues"

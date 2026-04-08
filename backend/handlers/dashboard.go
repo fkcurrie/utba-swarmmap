@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package handlers
 
 import (
@@ -10,7 +12,8 @@ import (
 func (h *Handlers) DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	session, ok := r.Context().Value(SessionContextKey).(*models.Session)
 	if !ok {
-		http.Error(w, "Could not retrieve session from context", http.StatusInternalServerError)
+		slog.Error("Could not retrieve session from context")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 

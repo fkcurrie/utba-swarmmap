@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package handlers
 
 import (
@@ -34,6 +36,7 @@ func (h *Handlers) RequireRole(role string, next http.Handler) http.Handler {
 		session, ok := r.Context().Value(SessionContextKey).(*models.Session)
 		if !ok {
 			// This should not happen if RequireAuth is used first, but as a safeguard:
+			slog.Error("Could not retrieve session from context")
 			http.Error(w, "Could not retrieve session from context", http.StatusInternalServerError)
 			return
 		}

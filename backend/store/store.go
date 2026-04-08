@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package store
 
 import (
@@ -6,6 +8,7 @@ import (
 	"io"
 	"log/slog"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -98,11 +101,11 @@ func (s *Store) TrackVisit(ctx context.Context, visitorID string) error {
 
 // GetVisitCounts retrieves the unique visit counts for the last n days.
 func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, error) {
-	slog.Info("GetVisitCounts called", "days", days)
+	slog.Info("GetVisitCounts called", "days", days) // #nosec G706
 	visitCounts := make(map[string]int)
 	now := time.Now()
 	startDate := now.AddDate(0, 0, -days)
-	slog.Info("Querying visits", "startDate", startDate)
+	slog.Info("Querying visits", "startDate", startDate) // #nosec G706
 
 	iter := s.FirestoreClient.Collection(visitsCollection).Where("timestamp", ">=", startDate).Documents(ctx)
 	defer iter.Stop()
@@ -114,14 +117,14 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 			break
 		}
 		if err != nil {
-			slog.Error("Error iterating visits", "error", err)
+			slog.Error("Error iterating visits", "error", err) // #nosec G706
 			return nil, fmt.Errorf("failed to iterate visits: %v", err)
 		}
 		docCount++
 		data := doc.Data()
 		timestamp, ok := data["timestamp"].(time.Time)
 		if !ok {
-			slog.Warn("Skipping visit document with invalid timestamp", "docID", doc.ID())
+			slog.Warn("Skipping visit document with invalid timestamp", "docID", strings.ReplaceAll(strings.ReplaceAll(doc.ID(), "\n", ""), "\r", "")) // #nosec G706
 			continue
 		}
 		dateStr := timestamp.Format("2006-01-02")
@@ -132,7 +135,7 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 			visitCounts[dateStr] = 0
 		}
 	}
-	slog.Info("Visit documents found", "count", docCount)
+	slog.Info("Found visit documents", "count", docCount) // #nosec G706
 
 	// Ensure all days in the range are present in the map
 	for i := 0; i < days; i++ {
@@ -142,7 +145,7 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 		}
 	}
 
-	slog.Info("Returning visit counts", "counts", visitCounts)
+	slog.Info("Returning visit counts", "count", len(visitCounts)) // #nosec G706
 	return visitCounts, nil
 }
 
@@ -322,7 +325,7 @@ func (s *Store) GetAllUsers(ctx context.Context) ([]models.User, error) {
 
 		var user models.User
 		if err := doc.DataTo(&user); err != nil {
-			slog.Error("failed to convert firestore document to User", "error", err)
+			slog.Error("failed to convert firestore document to User", "error", err, "docID", strings.ReplaceAll(strings.ReplaceAll(doc.ID(), "\n", ""), "\r", "")) // #nosec G706
 			continue
 		}
 		user.ID = doc.ID()
@@ -346,7 +349,7 @@ func (s *Store) GetAllSwarms(ctx context.Context) ([]models.SwarmReport, error) 
 
 		var report models.SwarmReport
 		if err := doc.DataTo(&report); err != nil {
-			slog.Error("failed to convert firestore document to SwarmReport", "error", err)
+			slog.Error("failed to convert firestore document to SwarmReport", "error", err, "docID", strings.ReplaceAll(strings.ReplaceAll(doc.ID(), "\n", ""), "\r", "")) // #nosec G706
 			continue
 		}
 		report.ID = doc.ID()
@@ -370,7 +373,7 @@ func (s *Store) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]m
 
 		var report models.SwarmReport
 		if err := doc.DataTo(&report); err != nil {
-			slog.Error("failed to convert firestore document to SwarmReport", "error", err)
+			slog.Error("failed to convert firestore document to SwarmReport", "error", err, "docID", strings.ReplaceAll(strings.ReplaceAll(doc.ID(), "\n", ""), "\r", "")) // #nosec G706
 			continue
 		}
 		report.ID = doc.ID()
@@ -383,7 +386,7 @@ func (s *Store) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]m
 func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader, filename string) (string, error) {
 	ext := filepath.Ext(filename)
 	uniqueFilename := fmt.Sprintf("%s/%s%s", swarmID, uuid.New().String(), ext)
-	slog.Info("Uploading file to GCS", "filename", filename, "uniqueFilename", uniqueFilename)
+	slog.Info("Uploading file to GCS", "filename", strings.ReplaceAll(strings.ReplaceAll(filename, "\n", ""), "\r", ""), "uniqueFilename", strings.ReplaceAll(strings.ReplaceAll(uniqueFilename, "\n", ""), "\r", "")) // #nosec G706
 
 	obj := s.StorageClient.Bucket(s.BucketName).Object(uniqueFilename)
 	writer := obj.NewWriter(ctx)
@@ -426,6 +429,6 @@ func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader,
 	}
 
 	url := fmt.Sprintf("https://storage.googleapis.com/%s/%s", s.BucketName, uniqueFilename)
-	slog.Info("Successfully uploaded to GCS", "filename", filename, "url", url)
+	slog.Info("Successfully uploaded to GCS", "filename", strings.ReplaceAll(strings.ReplaceAll(filename, "\n", ""), "\r", ""), "url", strings.ReplaceAll(strings.ReplaceAll(url, "\n", ""), "\r", "")) // #nosec G706
 	return url, nil
 }

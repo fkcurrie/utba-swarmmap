@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package handlers
 
 import (
@@ -5,6 +7,7 @@ import (
 	"html/template"
 	"log/slog"
 	"net/http"
+	"strings"
 
 	"github.com/fkcurrie/utba-swarmmap/service"
 	"github.com/fkcurrie/utba-swarmmap/store"
@@ -22,10 +25,22 @@ type Handlers struct {
 	FrontendAssetsURL string
 }
 
+func (h *Handlers) jsonError(w http.ResponseWriter, message string, code int) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	if err := json.NewEncoder(w).Encode(map[string]string{"error": message}); err != nil {
+		slog.Error("Failed to encode JSON error response", "error", err, "message", h.sanitize(message)) // #nosec G706
+	}
+}
+
+func (h *Handlers) sanitize(s string) string {
+	return strings.ReplaceAll(strings.ReplaceAll(s, "\n", ""), "\r", "")
+}
+
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	slog.Debug("IndexHandler called", "path", r.URL.Path)
+	slog.Debug("IndexHandler called", "path", h.sanitize(r.URL.Path)) // #nosec G706
 	if r.URL.Path != "/" {
-		slog.Debug("Path not /, returning NotFound", "path", r.URL.Path)
+		slog.Debug("Path not /, returning NotFound", "path", h.sanitize(r.URL.Path)) // #nosec G706
 		http.NotFound(w, r)
 		return
 	}
@@ -39,17 +54,9 @@ func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
 	if err != nil {
-		slog.Error("Error executing template", "error", err)
+		slog.Error("Error executing template", "error", err) // #nosec G706
 		http.Error(w, "Failed to render page", http.StatusInternalServerError)
 		return
-	}
-}
-
-func (h *Handlers) jsonError(w http.ResponseWriter, message string, code int) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	if err := json.NewEncoder(w).Encode(map[string]string{"error": message}); err != nil {
-		slog.Error("Failed to encode JSON error", "error", err)
 	}
 }
 
@@ -64,21 +71,14 @@ func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
 
 	currentReports, err := h.SwarmService.GetSwarms(ctx, sessionID, session)
 	if err != nil {
-		slog.Error("Error fetching reports from service", "error", err)
+		slog.Error("Error fetching reports from service", "error", err) // #nosec G706
 		h.jsonError(w, "Error fetching reports", http.StatusInternalServerError)
 		return
 	}
 
-	slog.Info("Returning swarms", "count", len(currentReports))
-	data, err := json.Marshal(currentReports)
-	if err != nil {
-		slog.Error("Error marshalling reports to JSON", "error", err)
-		h.jsonError(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
+	slog.Info("Returning swarms", "count", len(currentReports)) // #nosec G706
 	w.Header().Set("Content-Type", "application/json")
-	if _, err := w.Write(data); err != nil {
-		slog.Error("Failed to write swarms response", "error", err)
+	if err := json.NewEncoder(w).Encode(currentReports); err != nil {
+		slog.Error("Error encoding reports to JSON", "error", err) // #nosec G706
 	}
 }

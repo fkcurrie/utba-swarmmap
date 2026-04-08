@@ -1,4 +1,6 @@
-version: "2"
+# Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
+version: '2'
 output:
   formats:
     text:
@@ -26,13 +28,13 @@ linters:
     rules:
       - linters:
           - gosec
-        text: "G706:"
+        text: 'G706:'
       - linters:
           - gosec
         path: _test\.go
       - linters:
           - gosec
-        text: "G706"
+        text: 'G706'
       - linters:
           - all
         path: third_party/.*

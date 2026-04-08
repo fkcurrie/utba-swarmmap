@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 package store
 
 import (
@@ -15,10 +17,10 @@ func TestStore_DateLogic(t *testing.T) {
 	now := time.Now()
 	days := 7
 	visitCounts := make(map[string]int)
-	
+
 	// Simulated results from Firestore
 	visitCounts[now.Format("2006-01-02")] = 5
-	
+
 	// Logic from GetVisitCounts
 	for i := 0; i < days; i++ {
 		date := now.AddDate(0, 0, -i).Format("2006-01-02")
@@ -26,7 +28,7 @@ func TestStore_DateLogic(t *testing.T) {
 			visitCounts[date] = 0
 		}
 	}
-	
+
 	if len(visitCounts) < days {
 		t.Errorf("expected at least %d days, got %d", days, len(visitCounts))
 	}
