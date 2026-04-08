@@ -139,8 +139,6 @@ jobs:
           secrets: |
             GOOGLE_CLIENT_ID=google-oauth-client-id:latest
             GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest
-
       - name: Health Check
         run: |
           curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "${{ steps.deploy-backend.outputs.url }}"
-
