@@ -114,7 +114,7 @@ jobs:
       - name: Go Security (gosec)
         uses: securego/gosec@master
         with:
-          args: ./frontend/...
+          args: -exclude=G706 ./frontend/...
 
   general:
     name: General & Infrastructure

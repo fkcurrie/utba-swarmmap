@@ -98,11 +98,11 @@ func (s *Store) TrackVisit(ctx context.Context, visitorID string) error {
 
 // GetVisitCounts retrieves the unique visit counts for the last n days.
 func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, error) {
-	slog.Debug("GetVisitCounts called", "days", days)
+	slog.Info("GetVisitCounts called", "days", days)
 	visitCounts := make(map[string]int)
 	now := time.Now()
 	startDate := now.AddDate(0, 0, -days)
-	slog.Debug("Querying visits", "startDate", startDate)
+	slog.Info("Querying visits", "startDate", startDate)
 
 	iter := s.FirestoreClient.Collection(visitsCollection).Where("timestamp", ">=", startDate).Documents(ctx)
 	defer iter.Stop()
@@ -132,7 +132,7 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 			visitCounts[dateStr] = 0
 		}
 	}
-	slog.Debug("Found visit documents", "count", docCount)
+	slog.Info("Visit documents found", "count", docCount)
 
 	// Ensure all days in the range are present in the map
 	for i := 0; i < days; i++ {
@@ -142,7 +142,7 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 		}
 	}
 
-	slog.Debug("Returning visit counts", "counts", visitCounts)
+	slog.Info("Returning visit counts", "counts", visitCounts)
 	return visitCounts, nil
 }
 

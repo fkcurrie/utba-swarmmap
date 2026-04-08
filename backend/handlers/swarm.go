@@ -379,7 +379,7 @@ func validateFile(file *multipart.FileHeader) error {
 	}
 
 	if allowedExtensions[ext] {
-		slog.Info("File accepted by extension", "filename", file.Filename, "ext", ext, "mime", contentType)
+		slog.Info("File accepted by extension", "filename", file.Filename, "ext", ext, "contentType", contentType)
 		return nil
 	}
 

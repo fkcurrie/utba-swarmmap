@@ -144,7 +144,7 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 
 	// In a real app, send an email with the verification link.
 	// For this exercise, we'll just log it.
-	slog.Info("USER CREATED", "email", email, "verificationToken", verificationToken)
+	slog.Info("USER CREATED", "email", email, "verificationLink", "/auth/verify-email?token="+verificationToken)
 
 	h.renderMessagePage(w, "Registration Successful", "Your account has been created. Please check your email (see logs) to verify your account.")
 }
@@ -270,7 +270,7 @@ func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 	slog.Debug("GoogleLoginHandler called", "path", r.URL.Path)
 	state := uuid.New().String()
 	url := h.GoogleOAuthConfig.AuthCodeURL(state, oauth2.SetAuthURLParam("prompt", "select_account"))
-	slog.Debug("Redirecting to Google Auth", "url", url)
+	slog.Debug("Redirecting to Google auth", "url", url)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
@@ -333,7 +333,7 @@ func (h *Handlers) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		slog.Info("PASSWORD RESET REQUESTED", "email", email, "resetToken", resetToken)
+		slog.Info("PASSWORD RESET REQUESTED", "email", email, "resetLink", "/auth/reset-password?token="+resetToken)
 	}
 
 	h.renderMessagePage(w, "Reset Email Sent", "If an account exists with that email, a password reset link has been sent.")

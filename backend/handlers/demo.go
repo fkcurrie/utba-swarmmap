@@ -34,7 +34,7 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	slog.Info("Generating sample swarms", "sessionID", sessionID)
+	slog.Info("Generating sample swarms for session", "sessionID", sessionID)
 
 	now := time.Now()
 	sampleSwarms := []models.SwarmReport{

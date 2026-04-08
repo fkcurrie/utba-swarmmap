@@ -17,6 +17,7 @@ func (h *Handlers) SwarmListHandler(w http.ResponseWriter, r *http.Request) {
 
 	swarms, err := h.Store.GetAllSwarms(r.Context())
 	if err != nil {
+		slog.Error("Failed to retrieve swarms", "error", err)
 		http.Error(w, "Failed to retrieve swarms", http.StatusInternalServerError)
 		return
 	}

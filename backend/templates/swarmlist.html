@@ -42,7 +42,7 @@
 						</td>
 						<td>
 							{{if .AssignedCollectorEmail}}
-								<span class="badge badge-info">Claimed by {{.AssignedCollectorEmail}}</span>
+								<span class="badge bg-info">Claimed by {{.AssignedCollectorEmail}}</span>
 							{{else}}
 								<form action="/claim_swarm" method="POST" style="display:inline;">
 									<input type="hidden" name="swarmID" value="{{.ID}}">
@@ -55,6 +55,6 @@
 				</tbody>
 			</table>
 		</div>
-	{{template "footer.html" .}} 
-	</body>
-	</html>
+	</div>
+
+{{template "footer.html" .}}

@@ -188,7 +188,7 @@ func (h *Handlers) PromoteUserHandler(w http.ResponseWriter, r *http.Request) {
 		{Path: "role", Value: newRole},
 	}
 	if err := h.Store.UpdateUser(r.Context(), userID, updates); err != nil {
-		slog.Error("Failed to promote user", "userID", userID, "newRole", newRole, "error", err)
+		slog.Error("Failed to promote user", "userID", userID, "role", newRole, "error", err)
 		http.Error(w, "Failed to promote user", http.StatusInternalServerError)
 		return
 	}
