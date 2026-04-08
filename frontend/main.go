@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"strconv"
@@ -28,14 +28,15 @@ func main() {
 	portInt, err := strconv.Atoi(portStr)
 	if err != nil {
 		// If port is invalid, we fatal for clarity on configuration error.
-		log.Fatalf("Invalid PORT environment variable: %v", err)
+		slog.Error("Invalid PORT environment variable", "error", err)
+		os.Exit(1)
 	}
 
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("./static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	log.Printf("Listening on port %d", portInt)
+	slog.Info("Listening on port", "port", portInt)
 
 	srv := &http.Server{
 		Addr:         ":" + strconv.Itoa(portInt),
@@ -46,6 +47,7 @@ func main() {
 	}
 
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Fatalf("Server failed to start: %v", err)
+		slog.Error("Server failed to start", "error", err)
+		os.Exit(1)
 	}
 }

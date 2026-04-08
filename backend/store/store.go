@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"path/filepath"
-	"strconv"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -99,11 +98,11 @@ func (s *Store) TrackVisit(ctx context.Context, visitorID string) error {
 
 // GetVisitCounts retrieves the unique visit counts for the last n days.
 func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, error) {
-	log.Printf("GetVisitCounts called for the last %d days", days)
+	slog.Info("GetVisitCounts called", "days", days)
 	visitCounts := make(map[string]int)
 	now := time.Now()
 	startDate := now.AddDate(0, 0, -days)
-	log.Printf("Querying visits from %v", startDate)
+	slog.Info("Querying visits", "startDate", startDate)
 
 	iter := s.FirestoreClient.Collection(visitsCollection).Where("timestamp", ">=", startDate).Documents(ctx)
 	defer iter.Stop()
@@ -115,14 +114,14 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 			break
 		}
 		if err != nil {
-			log.Printf("Error iterating visits: %v", err)
+			slog.Error("Error iterating visits", "error", err)
 			return nil, fmt.Errorf("failed to iterate visits: %v", err)
 		}
 		docCount++
 		data := doc.Data()
 		timestamp, ok := data["timestamp"].(time.Time)
 		if !ok {
-			log.Printf("Skipping visit document with invalid timestamp: %s", strconv.Quote(doc.ID()))
+			slog.Warn("Skipping visit document with invalid timestamp", "docID", doc.ID())
 			continue
 		}
 		dateStr := timestamp.Format("2006-01-02")
@@ -133,7 +132,7 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 			visitCounts[dateStr] = 0
 		}
 	}
-	log.Printf("Found %d visit documents in the date range.", docCount)
+	slog.Info("Visit documents found", "count", docCount)
 
 	// Ensure all days in the range are present in the map
 	for i := 0; i < days; i++ {
@@ -143,7 +142,7 @@ func (s *Store) GetVisitCounts(ctx context.Context, days int) (map[string]int, e
 		}
 	}
 
-	log.Printf("Returning visit counts: %v", visitCounts)
+	slog.Info("Returning visit counts", "counts", visitCounts)
 	return visitCounts, nil
 }
 
@@ -323,7 +322,7 @@ func (s *Store) GetAllUsers(ctx context.Context) ([]models.User, error) {
 
 		var user models.User
 		if err := doc.DataTo(&user); err != nil {
-			log.Printf("failed to convert firestore document to User: %v", err)
+			slog.Error("failed to convert firestore document to User", "error", err)
 			continue
 		}
 		user.ID = doc.ID()
@@ -347,7 +346,7 @@ func (s *Store) GetAllSwarms(ctx context.Context) ([]models.SwarmReport, error) 
 
 		var report models.SwarmReport
 		if err := doc.DataTo(&report); err != nil {
-			log.Printf("failed to convert firestore document to SwarmReport: %v", err)
+			slog.Error("failed to convert firestore document to SwarmReport", "error", err)
 			continue
 		}
 		report.ID = doc.ID()
@@ -371,7 +370,7 @@ func (s *Store) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]m
 
 		var report models.SwarmReport
 		if err := doc.DataTo(&report); err != nil {
-			log.Printf("failed to convert firestore document to SwarmReport: %v", err)
+			slog.Error("failed to convert firestore document to SwarmReport", "error", err)
 			continue
 		}
 		report.ID = doc.ID()
@@ -384,7 +383,7 @@ func (s *Store) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]m
 func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader, filename string) (string, error) {
 	ext := filepath.Ext(filename)
 	uniqueFilename := fmt.Sprintf("%s/%s%s", swarmID, uuid.New().String(), ext)
-	log.Printf("Uploading file %s to GCS as %q", strconv.Quote(filename), uniqueFilename)
+	slog.Info("Uploading file to GCS", "filename", filename, "uniqueFilename", uniqueFilename)
 
 	obj := s.StorageClient.Bucket(s.BucketName).Object(uniqueFilename)
 	writer := obj.NewWriter(ctx)
@@ -427,6 +426,6 @@ func (s *Store) UploadToGCS(ctx context.Context, swarmID string, file io.Reader,
 	}
 
 	url := fmt.Sprintf("https://storage.googleapis.com/%s/%s", s.BucketName, uniqueFilename)
-	log.Printf("Successfully uploaded %s to %q", strconv.Quote(filename), url)
+	slog.Info("Successfully uploaded to GCS", "filename", filename, "url", url)
 	return url, nil
 }
