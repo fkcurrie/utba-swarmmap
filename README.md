@@ -52,7 +52,7 @@ This project includes a GitHub Actions workflow for automated validation and dep
 
 - **Workflow File**: `deployment/deploy.yml`
 - **Action Required**: Due to repository permission restrictions for automated agents, the workflow file must be manually moved to `.github/workflows/deploy.yml` to trigger the automated CI/CD pipeline.
-- **Trigger**: The workflow is configured to trigger on any tag matching `v*` (e.g., `v0.6`).
+- **Trigger**: The workflow is configured to trigger on any tag matching `v*` (e.g., `v0.6.0`).
 - **Secrets**: The following GitHub repository secrets must be configured:
   - `GCP_PROJECT_ID`: Your Google Cloud Project ID.
   - `GCP_SA_KEY`: A JSON key for a Service Account with permissions to build images and deploy to Cloud Run.
