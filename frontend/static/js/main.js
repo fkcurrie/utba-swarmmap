@@ -79,8 +79,8 @@ document.addEventListener('DOMContentLoaded', function () {
           let popupContent = `
               <div class="swarm-popup">
                 <h6 class="mb-1"><strong>${swarm.displayStatus}</strong></h6>
-                <p class="mb-1 text-muted small"><i class="fas fa-map-marker-alt me-1"></i> ${swarm.nearestIntersection}</p>
-                <p class="mb-2 small"><i class="far fa-clock me-1"></i> ${new Date(swarm.reportedTimestamp).toLocaleString()}</p>
+                <p class="mb-1 text-muted small"><i class="fa-solid fa-map-marker-alt me-1"></i> ${swarm.nearestIntersection}</p>
+                <p class="mb-2 small"><i class="fa-regular fa-clock me-1"></i> ${new Date(swarm.reportedTimestamp).toLocaleString()}</p>
                 <div class="p-2 bg-light rounded small mb-2">${swarm.description}</div>
             `;
 
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
             popupContent += `
                 <div class="d-grid">
                     <button class="btn btn-sm btn-primary view-media-btn" data-media-urls='${JSON.stringify(swarm.mediaURLs)}'>
-                        <i class="fas fa-images me-1"></i> View ${swarm.mediaURLs.length} Photo/Video
+                        <i class="fa-solid fa-images me-1"></i> View ${swarm.mediaURLs.length} Photo/Video
                     </button>
                 </div>
             `;
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (reportSwarmBtn) {
             reportSwarmBtn.disabled = false;
             reportSwarmBtn.innerHTML =
-              '<i class="fas fa-map-marker-alt me-2"></i> Report a Swarm at Your Location';
+              '<i class="fa-solid fa-map-marker-alt me-2"></i> Report a Swarm at Your Location';
           }
 
           if (doPan && map) {
@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (reportSwarmBtn) {
             reportSwarmBtn.disabled = false;
             reportSwarmBtn.innerHTML =
-              '<i class="fas fa-map-marker-alt me-2"></i> Report a Swarm at Your Location';
+              '<i class="fa-solid fa-map-marker-alt me-2"></i> Report a Swarm at Your Location';
           }
           if (doPan)
             alert('Could not get your location. Error: ' + error.message);
@@ -272,11 +272,11 @@ document.addEventListener('DOMContentLoaded', function () {
           'd-flex justify-content-between align-items-center mb-2 p-2 border-bottom';
         fileItem.innerHTML = `
                     <div class="text-truncate me-2" style="max-width: 200px;">
-                        <i class="${file.type.startsWith('image/') ? 'fas fa-image text-primary' : 'fas fa-video text-info'} me-2"></i>
+                        <i class="${file.type.startsWith('image/') ? 'fa-solid fa-image text-primary' : 'fa-solid fa-video text-info'} me-2"></i>
                         ${file.name} <small class="text-muted">(${(file.size / (1024 * 1024)).toFixed(2)} MB)</small>
                     </div>
                     <button type="button" class="btn btn-sm btn-outline-danger remove-file-btn" data-index="${index}" aria-label="Remove file">
-                        <i class="fas fa-times"></i>
+                        <i class="fa-solid fa-times"></i>
                     </button>
                 `;
         selectedFilesList.appendChild(fileItem);

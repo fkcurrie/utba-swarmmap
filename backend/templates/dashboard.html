@@ -8,23 +8,23 @@
             <div class="col-md-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="quick-actions-heading" class="h5 mb-0 fw-bold"><i class="fas fa-bolt me-2 text-warning"></i>Quick Actions</h2>
+                        <h2 id="quick-actions-heading" class="h5 mb-0 fw-bold"><i class="fa-solid fa-bolt me-2 text-warning"></i>Quick Actions</h2>
                     </div>
                     <div class="card-body d-flex flex-wrap pt-2">
                         <a href="/collectorsmap" class="btn btn-primary me-3 mb-2 shadow-sm" aria-label="Go to interactive collector map">
-                            <i class="fas fa-map-marked-alt me-1"></i> View Collector Map
+                            <i class="fa-solid fa-map-marked-alt me-1"></i> View Collector Map
                         </a>
                         <a href="/swarmlist" class="btn btn-outline-secondary me-3 mb-2" aria-label="View all swarms in a list format">
-                            <i class="fas fa-list me-1"></i> View All Swarms (List)
+                            <i class="fa-solid fa-list me-1"></i> View All Swarms (List)
                         </a>
                         {{if .ShowSiteAdmin}}
                             <a href="/admin" class="btn btn-danger me-3 mb-2 shadow-sm" aria-label="Access site administration dashboard">
-                                <i class="fas fa-user-shield me-1"></i> Site Admin
+                                <i class="fa-solid fa-user-shield me-1"></i> Site Admin
                             </a>
                         {{end}}
                         {{if .ShowCollectorAdmin}}
                             <a href="/collector_admin" class="btn btn-warning mb-2 shadow-sm" aria-label="Access collector administration dashboard">
-                                <i class="fas fa-users-cog me-1"></i> Collector Admin
+                                <i class="fa-solid fa-users-cog me-1"></i> Collector Admin
                             </a>
                         {{end}}
                     </div>
@@ -37,7 +37,7 @@
             <section class="col-md-6 mb-4" aria-labelledby="available-swarms-heading">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="available-swarms-heading" class="h5 mb-0 fw-bold text-danger"><i class="fas fa-Exclamation-circle me-2"></i>Available Swarms</h2>
+                        <h2 id="available-swarms-heading" class="h5 mb-0 fw-bold text-danger"><i class="fa-solid fa-Exclamation-circle me-2"></i>Available Swarms</h2>
                         <p class="text-muted small mb-0 mt-1">New reports that need attention</p>
                     </div>
                     <div class="card-body">
@@ -82,7 +82,7 @@
                             </div>
                         {{else}}
                             <div class="text-center py-4">
-                                <i class="fas fa-check-circle fa-3x text-success mb-3 opacity-25"></i>
+                                <i class="fa-solid fa-check-circle fa-3x text-success mb-3 opacity-25"></i>
                                 <p class="text-muted">No available swarms at the moment.</p>
                             </div>
                         {{end}}
@@ -94,7 +94,7 @@
             <section class="col-md-6 mb-4" aria-labelledby="assigned-swarms-heading">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="assigned-swarms-heading" class="h5 mb-0 fw-bold text-success"><i class="fas fa-user-check me-2"></i>My Assigned Swarms</h2>
+                        <h2 id="assigned-swarms-heading" class="h5 mb-0 fw-bold text-success"><i class="fa-solid fa-user-check me-2"></i>My Assigned Swarms</h2>
                         <p class="text-muted small mb-0 mt-1">Swarms you're currently handling</p>
                     </div>
                     <div class="card-body">
@@ -134,7 +134,7 @@
                                                         <button type="submit" class="btn btn-sm btn-success w-100">Captured</button>
                                                     </form>
                                                 {{else}}
-                                                    <span class="text-muted small">Done <i class="fas fa-check"></i></span>
+                                                    <span class="text-muted small">Done <i class="fa-solid fa-check"></i></span>
                                                 {{end}}
                                             </td>
                                         </tr>
@@ -144,7 +144,7 @@
                             </div>
                         {{else}}
                             <div class="text-center py-4">
-                                <i class="fas fa-clipboard-list fa-3x text-muted mb-3 opacity-25"></i>
+                                <i class="fa-solid fa-clipboard-list fa-3x text-muted mb-3 opacity-25"></i>
                                 <p class="text-muted">You haven't claimed any swarms yet.</p>
                             </div>
                         {{end}}

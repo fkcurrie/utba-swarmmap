@@ -4,7 +4,7 @@
         <div class="row mb-3">
             <div class="col-md-12 text-center">
                 <button id="reportSwarmBtn" class="btn btn-primary btn-lg shadow-sm" aria-label="Report a Bee Swarm at your current location">
-                    <i class="fas fa-map-marker-alt me-2"></i> Report a Swarm at Your Location
+                    <i class="fa-solid fa-map-marker-alt me-2"></i> Report a Swarm at Your Location
                 </button>
                 <p class="text-muted small mt-2">(Or click on the map to report at a specific spot)</p>
             </div>
@@ -21,7 +21,7 @@
             <div class="col-md-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body py-3">
-                        <h2 id="legendTitle" class="h6 card-title mb-3"><i class="fas fa-info-circle me-2 text-primary"></i>Pin Color Legend:</h2>
+                        <h2 id="legendTitle" class="h6 card-title mb-3"><i class="fa-solid fa-info-circle me-2 text-primary"></i>Pin Color Legend:</h2>
                         <div class="d-flex flex-wrap justify-content-center" role="list">
                             <div class="legend-item" role="listitem">
                                 <span class="legend-color" style="background-color: #ff0000;" aria-hidden="true"></span>
@@ -52,7 +52,7 @@
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-light">
                     <h5 class="modal-title" id="reportSwarmModalLabel">
-                        <i class="fas fa-bug me-2 text-primary"></i> Report Bee Swarm
+                        <i class="fa-solid fa-bug me-2 text-primary"></i> Report Bee Swarm
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -70,7 +70,7 @@
 
                         <!-- Contact Information Section -->
                         <div class="form-section mt-4 mb-4 p-3 border rounded shadow-sm" style="background-color: #f8f9fa;">
-                            <h6 class="mb-3 fw-bold"><i class="fas fa-phone-alt me-2 text-success"></i> Contact Information (Optional but Recommended)</h6>
+                            <h6 class="mb-3 fw-bold"><i class="fa-solid fa-phone-alt me-2 text-success"></i> Contact Information (Optional but Recommended)</h6>
                             <p class="small text-muted mb-3">Providing your contact details helps beekeepers reach you for additional information or to coordinate swarm collection.</p>
                             
                             <div class="row">
@@ -90,15 +90,15 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold mb-2"><i class="fas fa-camera-retro me-2 text-info"></i> Upload Photo(s) and/or Video(s) (Optional)</label>
+                            <label class="form-label fw-bold mb-2"><i class="fa-solid fa-camera-retro me-2 text-info"></i> Upload Photo(s) and/or Video(s) (Optional)</label>
                             <div class="file-upload-section d-flex flex-wrap align-items-center">
                                 <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
                                 <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
                                 <button type="button" class="btn btn-outline-primary me-2 mb-2" onclick="document.getElementById('gallery-input').click();" aria-label="Select photos or videos from gallery">
-                                    <i class="fas fa-images me-1"></i> Gallery
+                                    <i class="fa-solid fa-images me-1"></i> Gallery
                                 </button>
                                 <button type="button" class="btn btn-outline-secondary me-2 mb-2" onclick="document.getElementById('camera-input').click();" aria-label="Take a photo or video with camera">
-                                    <i class="fas fa-camera me-1"></i> Camera
+                                    <i class="fa-solid fa-camera me-1"></i> Camera
                                 </button>
                                 <div class="w-100 mt-1">
                                     <small class="form-text text-muted">Supported: JPG, PNG, HEIC, MP4, MOV, AVI, 3GP (max 50MB each)</small>
@@ -113,10 +113,10 @@
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="badge bg-success px-3 py-2">
-                                        <i class="fas fa-check-circle me-1"></i> <span id="totalFileCount">0</span> file(s) ready
+                                        <i class="fa-solid fa-check-circle me-1"></i> <span id="totalFileCount">0</span> file(s) ready
                                     </span>
                                     <button type="button" class="btn btn-sm btn-link text-danger p-0" id="clearAllFilesBtn">
-                                        <i class="fas fa-trash-alt me-1"></i> Clear All
+                                        <i class="fa-solid fa-trash-alt me-1"></i> Clear All
                                     </button>
                                 </div>
                             </div>

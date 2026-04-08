@@ -9,10 +9,10 @@
         <div class="row mt-3 mb-3">
             <div class="col-md-12 text-center">
                 <button id="reportSwarmBtn" class="btn btn-primary me-2 shadow-sm" aria-label="Report a swarm at your location">
-                    <i class="fas fa-map-marker-alt me-1"></i> Report Swarm
+                    <i class="fa-solid fa-map-marker-alt me-1"></i> Report Swarm
                 </button>
                 <button id="refreshMapBtn" class="btn btn-secondary me-2 shadow-sm" aria-label="Refresh swarm data from server">
-                    <i class="fas fa-sync-alt me-1"></i> Refresh Map
+                    <i class="fa-solid fa-sync-alt me-1"></i> Refresh Map
                 </button>
                 <small class="text-muted d-block mt-2"> (Or click on the map to report at a specific spot)</small>
             </div>
@@ -23,7 +23,7 @@
             <div class="col-md-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body py-3">
-                        <h2 class="h6 card-title mb-3"><i class="fas fa-info-circle me-2 text-primary"></i>Pin Color Legend:</h2>
+                        <h2 class="h6 card-title mb-3"><i class="fa-solid fa-info-circle me-2 text-primary"></i>Pin Color Legend:</h2>
                         <div class="d-flex flex-wrap justify-content-center" role="list">
                             <div class="legend-item" role="listitem">
                                 <span class="legend-color" style="background-color: #ff0000;" aria-hidden="true"></span>
@@ -73,7 +73,7 @@
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-light">
                     <h5 class="modal-title" id="reportSwarmModalLabel">
-                        <i class="fas fa-bug me-2 text-primary"></i> Report Bee Swarm
+                        <i class="fa-solid fa-bug me-2 text-primary"></i> Report Bee Swarm
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -89,7 +89,7 @@
                         </div>
                         
                         <div class="form-section mt-4 mb-4 p-3 border rounded shadow-sm" style="background-color: #f8f9fa;">
-                            <h6 class="mb-3 fw-bold"><i class="fas fa-phone-alt me-2 text-success"></i> Contact Information (Optional)</h6>
+                            <h6 class="mb-3 fw-bold"><i class="fa-solid fa-phone-alt me-2 text-success"></i> Contact Information (Optional)</h6>
                             <div class="row">
                                 <div class="mb-3 col-md-6">
                                     <label for="reporterName">Your Name</label>
@@ -107,15 +107,15 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="fw-bold mb-2"><i class="fas fa-camera-retro me-2 text-info"></i> Upload Media</label>
+                            <label class="fw-bold mb-2"><i class="fa-solid fa-camera-retro me-2 text-info"></i> Upload Media</label>
                             <div class="file-upload-section">
                                 <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
                                 <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
                                 <button type="button" class="btn btn-outline-primary me-2 mb-2" onclick="document.getElementById('gallery-input').click();">
-                                    <i class="fas fa-images me-1"></i> Gallery
+                                    <i class="fa-solid fa-images me-1"></i> Gallery
                                 </button>
                                 <button type="button" class="btn btn-outline-secondary me-2 mb-2" onclick="document.getElementById('camera-input').click();">
-                                    <i class="fas fa-camera me-1"></i> Camera
+                                    <i class="fa-solid fa-camera me-1"></i> Camera
                                 </button>
                             </div>
                             
