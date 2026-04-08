@@ -63,5 +63,6 @@ func (h *Handlers) CollectorsMapHandler(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		slog.Error("Error executing collectors_map.html template", "error", err)
 		http.Error(w, "Failed to render collector map", http.StatusInternalServerError)
+		return
 	}
 }

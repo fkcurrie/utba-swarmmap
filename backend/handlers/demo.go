@@ -13,7 +13,7 @@ import (
 
 func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
+		h.jsonError(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -22,7 +22,7 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 	if err != nil {
 		sessionID := r.URL.Query().Get("sessionId")
 		if sessionID == "" {
-			http.Error(w, "Session ID required", http.StatusBadRequest)
+			h.jsonError(w, "Session ID required", http.StatusBadRequest)
 			return
 		}
 		requestData = map[string]interface{}{"sessionId": sessionID}
@@ -30,7 +30,7 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 
 	sessionID, ok := requestData["sessionId"].(string)
 	if !ok || sessionID == "" {
-		http.Error(w, "Session ID required in request", http.StatusBadRequest)
+		h.jsonError(w, "Session ID required in request", http.StatusBadRequest)
 		return
 	}
 

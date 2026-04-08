@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
+	"github.com/fkcurrie/utba-swarmmap/service"
 )
 
 func TestGetSwarms_Contract(t *testing.T) {
@@ -27,7 +28,10 @@ func TestGetSwarms_Contract(t *testing.T) {
 			},
 		},
 	}
-	h := &Handlers{Store: mockStore}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	req, _ := http.NewRequest("GET", "/get_swarms", nil)
 	rr := httptest.NewRecorder()

@@ -25,14 +25,14 @@ func (h *Handlers) VisitsAPIHandler(w http.ResponseWriter, r *http.Request) {
 	visits, err := h.Store.GetVisitCounts(r.Context(), days)
 	if err != nil {
 		slog.Error("Error getting visit counts", "error", err)
-		http.Error(w, "Failed to retrieve visit data", http.StatusInternalServerError)
+		h.jsonError(w, "Failed to retrieve visit data", http.StatusInternalServerError)
 		return
 	}
 
 	visitsJSON, err := json.Marshal(visits)
 	if err != nil {
 		slog.Error("Error marshalling visits to JSON", "error", err)
-		http.Error(w, "Failed to process visit data", http.StatusInternalServerError)
+		h.jsonError(w, "Failed to process visit data", http.StatusInternalServerError)
 		return
 	}
 
@@ -44,7 +44,7 @@ func (h *Handlers) VisitsAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handlers) TrackVisitHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
+		h.jsonError(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -53,18 +53,18 @@ func (h *Handlers) TrackVisitHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		h.jsonError(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
 	if reqBody.VisitorID == "" {
-		http.Error(w, "Visitor ID is required", http.StatusBadRequest)
+		h.jsonError(w, "Visitor ID is required", http.StatusBadRequest)
 		return
 	}
 
 	if err := h.Store.TrackVisit(r.Context(), reqBody.VisitorID); err != nil {
 		slog.Error("Failed to track visit", "error", err)
-		http.Error(w, "Failed to track visit", http.StatusInternalServerError)
+		h.jsonError(w, "Failed to track visit", http.StatusInternalServerError)
 		return
 	}
 

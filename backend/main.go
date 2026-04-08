@@ -13,6 +13,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
 	"github.com/fkcurrie/utba-swarmmap/handlers"
+	"github.com/fkcurrie/utba-swarmmap/service"
 	"github.com/fkcurrie/utba-swarmmap/store"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -29,8 +30,8 @@ func getEnv(key, fallback string) string {
 }
 
 func main() {
-	// Set up slog as the default logger
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	// Initialize structured logging
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	slog.SetDefault(logger)
 
 	ctx := context.Background()
@@ -88,10 +89,14 @@ func main() {
 	// Initialize our store
 	dataStore := store.NewStore(firestoreClient, storageClient, bucketName)
 
+	// Initialize services
+	swarmService := service.NewSwarmService(dataStore)
+
 	// Initialize handlers with dependencies
 	h := &handlers.Handlers{
-		Store:           dataStore,
-		LocationService: &handlers.NominatimLocationService{Client: &http.Client{Timeout: 10 * time.Second}},
+		Store:             dataStore,
+		SwarmService:      swarmService,
+		LocationService:   &handlers.NominatimLocationService{Client: &http.Client{Timeout: 10 * time.Second}},
 		GoogleOAuthConfig: googleOAuthConfig,
 		Version:           version,
 		Templates:         templates,
@@ -142,7 +147,7 @@ func main() {
 	port := getEnv("PORT", "8080")
 	// Validate port to prevent log injection and ensure it's a valid port number
 	if _, err := strconv.Atoi(port); err != nil {
-		slog.Error("Invalid PORT", "port", port)
+		slog.Error("Invalid PORT", "port", port, "error", err)
 		os.Exit(1)
 	}
 	slog.Info("Starting server", "port", port, "version", version)
