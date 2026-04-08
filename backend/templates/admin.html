@@ -1,7 +1,7 @@
 {{template "header.html" .}}
 
     <div class="container-fluid mt-4">
-        <h1 class="h2 mb-1 font-weight-bold text-dark">Site Administrator Dashboard</h1>
+        <h1 class="h2 mb-1 fw-bold text-dark">Site Administrator Dashboard</h1>
         <p class="text-muted small">Full system administration - manage users, roles, and swarm data</p>
         
         <!-- User Role Management -->
@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="user-management-heading" class="h5 mb-0 font-weight-bold"><i class="fas fa-user-shield mr-2 text-primary"></i>User Role Management</h2>
+                        <h2 id="user-management-heading" class="h5 mb-0 fw-bold"><i class="fas fa-user-shield me-2 text-primary"></i>User Role Management</h2>
                     </div>
                     <div class="card-body pt-2">
                         <div class="table-responsive">
@@ -72,7 +72,7 @@
             <div class="col-md-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="pending-approvals-heading" class="h5 mb-0 font-weight-bold text-warning"><i class="fas fa-user-clock mr-2"></i>Pending User Approvals</h2>
+                        <h2 id="pending-approvals-heading" class="h5 mb-0 fw-bold text-warning"><i class="fas fa-user-clock me-2"></i>Pending User Approvals</h2>
                     </div>
                     <div class="card-body pt-2">
                         {{if .PendingUsers}}
@@ -90,7 +90,7 @@
                                     <tbody>
                                         {{range .PendingUsers}}
                                         <tr>
-                                            <td class="font-weight-bold">{{.Name}}</td>
+                                            <td class="fw-bold">{{.Name}}</td>
                                             <td class="small">
                                                 {{.Email}}<br>
                                                 {{.Phone}}
@@ -99,7 +99,7 @@
                                             <td class="small">{{.CreatedAt.Format "Jan 02, 2006"}}</td>
                                             <td>
                                                 <div class="btn-group btn-group-sm">
-                                                    <form method="POST" action="/admin/approve_user" class="mr-1">
+                                                    <form method="POST" action="/admin/approve_user" class="me-1">
                                                         <input type="hidden" name="userID" value="{{.ID}}">
                                                         <button type="submit" class="btn btn-success" aria-label="Approve user {{.Name}}">Approve</button>
                                                     </form>
@@ -129,7 +129,7 @@
             <div class="col-md-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="swarm-management-heading" class="h5 mb-0 font-weight-bold"><i class="fas fa-bug mr-2 text-danger"></i>Swarm Management</h2>
+                        <h2 id="swarm-management-heading" class="h5 mb-0 fw-bold"><i class="fas fa-bug me-2 text-danger"></i>Swarm Management</h2>
                     </div>
                     <div class="card-body pt-2">
                         {{if .AllSwarms}}
@@ -185,32 +185,32 @@
             <div class="col-md-3 mb-3">
                 <div class="card border-0 shadow-sm text-center py-3">
                     <div class="card-body">
-                        <div class="h3 font-weight-bold mb-0">{{len .AllSwarms}}</div>
-                        <div class="text-muted small font-weight-bold text-uppercase">Total Swarms</div>
+                        <div class="h3 fw-bold mb-0">{{len .AllSwarms}}</div>
+                        <div class="text-muted small fw-bold text-uppercase">Total Swarms</div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="card border-0 shadow-sm text-center py-3">
                     <div class="card-body">
-                        <div class="h3 font-weight-bold mb-0">{{len .PendingUsers}}</div>
-                        <div class="text-muted small font-weight-bold text-uppercase">Pending Users</div>
+                        <div class="h3 fw-bold mb-0">{{len .PendingUsers}}</div>
+                        <div class="text-muted small fw-bold text-uppercase">Pending Users</div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="card border-0 shadow-sm text-center py-3">
                     <div class="card-body">
-                        <div class="h3 font-weight-bold mb-0">{{.ReportedSwarms}}</div>
-                        <div class="text-muted small font-weight-bold text-uppercase">Active Reports</div>
+                        <div class="h3 fw-bold mb-0">{{.ReportedSwarms}}</div>
+                        <div class="text-muted small fw-bold text-uppercase">Active Reports</div>
                     </div>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div class="card border-0 shadow-sm text-center py-3">
                     <div class="card-body">
-                        <div class="h3 font-weight-bold mb-0 text-success">{{.CapturedSwarms}}</div>
-                        <div class="text-muted small font-weight-bold text-uppercase">Captured</div>
+                        <div class="h3 fw-bold mb-0 text-success">{{.CapturedSwarms}}</div>
+                        <div class="text-muted small fw-bold text-uppercase">Captured</div>
                     </div>
                 </div>
             </div>
@@ -221,7 +221,7 @@
             <div class="col-md-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center pt-3">
-                        <h2 id="site-traffic-heading" class="h5 mb-0 font-weight-bold"><i class="fas fa-chart-line mr-2 text-info"></i>Site Traffic</h2>
+                        <h2 id="site-traffic-heading" class="h5 mb-0 fw-bold"><i class="fas fa-chart-line me-2 text-info"></i>Site Traffic</h2>
                         <div class="btn-group btn-group-sm shadow-sm" role="group" id="traffic-filter" aria-label="Filter traffic by time range">
                             <button type="button" class="btn btn-outline-secondary active" data-range="7d">7D</button>
                             <button type="button" class="btn btn-outline-secondary" data-range="30d">30D</button>

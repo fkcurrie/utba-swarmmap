@@ -79,17 +79,19 @@ document.addEventListener('DOMContentLoaded', function () {
           let popupContent = `
               <div class="swarm-popup">
                 <h6 class="mb-1"><strong>${swarm.displayStatus}</strong></h6>
-                <p class="mb-1 text-muted small"><i class="fas fa-map-marker-alt mr-1"></i> ${swarm.nearestIntersection}</p>
-                <p class="mb-2 small"><i class="far fa-clock mr-1"></i> ${new Date(swarm.reportedTimestamp).toLocaleString()}</p>
+                <p class="mb-1 text-muted small"><i class="fas fa-map-marker-alt me-1"></i> ${swarm.nearestIntersection}</p>
+                <p class="mb-2 small"><i class="far fa-clock me-1"></i> ${new Date(swarm.reportedTimestamp).toLocaleString()}</p>
                 <div class="p-2 bg-light rounded small mb-2">${swarm.description}</div>
             `;
 
           // Add media button if URLs exist
           if (swarm.mediaURLs && swarm.mediaURLs.length > 0) {
             popupContent += `
-                <button class="btn btn-sm btn-primary btn-block view-media-btn" data-media-urls='${JSON.stringify(swarm.mediaURLs)}'>
-                    <i class="fas fa-images mr-1"></i> View ${swarm.mediaURLs.length} Photo/Video
-                </button>
+                <div class="d-grid">
+                    <button class="btn btn-sm btn-primary view-media-btn" data-media-urls='${JSON.stringify(swarm.mediaURLs)}'>
+                        <i class="fas fa-images me-1"></i> View ${swarm.mediaURLs.length} Photo/Video
+                    </button>
+                </div>
             `;
           }
 
@@ -202,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (doPan) {
         reportSwarmBtn.disabled = true;
         reportSwarmBtn.innerHTML =
-          '<span class="spinner-border spinner-border-sm mr-2"></span> Finding location...';
+          '<span class="spinner-border spinner-border-sm me-2"></span> Finding location...';
       }
 
       navigator.geolocation.getCurrentPosition(
@@ -215,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (reportSwarmBtn) {
             reportSwarmBtn.disabled = false;
             reportSwarmBtn.innerHTML =
-              '<i class="fas fa-map-marker-alt mr-2"></i> Report a Swarm at Your Location';
+              '<i class="fas fa-map-marker-alt me-2"></i> Report a Swarm at Your Location';
           }
 
           if (doPan && map) {
@@ -245,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (reportSwarmBtn) {
             reportSwarmBtn.disabled = false;
             reportSwarmBtn.innerHTML =
-              '<i class="fas fa-map-marker-alt mr-2"></i> Report a Swarm at Your Location';
+              '<i class="fas fa-map-marker-alt me-2"></i> Report a Swarm at Your Location';
           }
           if (doPan)
             alert('Could not get your location. Error: ' + error.message);

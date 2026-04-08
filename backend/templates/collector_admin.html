@@ -1,7 +1,7 @@
 {{template "header.html" .}}
 
     <div class="container-fluid mt-4">
-        <h1 class="h2 mb-1 font-weight-bold text-dark">Collector Administrator Dashboard</h1>
+        <h1 class="h2 mb-1 fw-bold text-dark">Collector Administrator Dashboard</h1>
         <p class="text-muted small">Manage swarm collector registrations and accounts</p>
         
         <!-- Pending User Approvals -->
@@ -9,7 +9,7 @@
             <div class="col-md-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="pending-collector-approvals-heading" class="h5 mb-0 font-weight-bold text-warning"><i class="fas fa-user-clock mr-2"></i>Pending Collector Approvals</h2>
+                        <h2 id="pending-collector-approvals-heading" class="h5 mb-0 fw-bold text-warning"><i class="fas fa-user-clock me-2"></i>Pending Collector Approvals</h2>
                     </div>
                     <div class="card-body pt-2">
                         {{if .PendingUsers}}
@@ -27,7 +27,7 @@
                                     <tbody>
                                         {{range .PendingUsers}}
                                         <tr>
-                                            <td class="font-weight-bold">{{.Name}}</td>
+                                            <td class="fw-bold">{{.Name}}</td>
                                             <td class="small">
                                                 {{.Email}}<br>
                                                 {{.Phone}}
@@ -36,7 +36,7 @@
                                             <td class="small">{{.CreatedAt.Format "Jan 02, 2006"}}</td>
                                             <td>
                                                 <div class="btn-group btn-group-sm">
-                                                    <form method="POST" action="/admin/approve_user" class="mr-1">
+                                                    <form method="POST" action="/admin/approve_user" class="me-1">
                                                         <input type="hidden" name="userID" value="{{.ID}}">
                                                         <button type="submit" class="btn btn-success" aria-label="Approve collector {{.Name}}">Approve</button>
                                                     </form>
@@ -66,7 +66,7 @@
             <div class="col-md-12">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="active-collectors-heading" class="h5 mb-0 font-weight-bold"><i class="fas fa-users mr-2 text-primary"></i>Active Collectors</h2>
+                        <h2 id="active-collectors-heading" class="h5 mb-0 fw-bold"><i class="fas fa-users me-2 text-primary"></i>Active Collectors</h2>
                     </div>
                     <div class="card-body pt-2">
                         {{if .AllCollectors}}
@@ -85,7 +85,7 @@
                                     <tbody>
                                         {{range .AllCollectors}}
                                         <tr>
-                                            <td class="font-weight-bold">{{.Name}}</td>
+                                            <td class="fw-bold">{{.Name}}</td>
                                             <td class="small">{{.Email}}</td>
                                             <td class="small">{{.Phone}}</td>
                                             <td class="small">{{.Location}}</td>
@@ -115,16 +115,16 @@
             <div class="col-md-6 mb-3">
                 <div class="card border-0 shadow-sm text-center py-3">
                     <div class="card-body">
-                        <div class="h3 font-weight-bold mb-0 text-warning">{{len .PendingUsers}}</div>
-                        <div class="text-muted small font-weight-bold text-uppercase">Pending Approvals</div>
+                        <div class="h3 fw-bold mb-0 text-warning">{{len .PendingUsers}}</div>
+                        <div class="text-muted small fw-bold text-uppercase">Pending Approvals</div>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 mb-3">
                 <div class="card border-0 shadow-sm text-center py-3">
                     <div class="card-body">
-                        <div class="h3 font-weight-bold mb-0 text-primary">{{len .AllCollectors}}</div>
-                        <div class="text-muted small font-weight-bold text-uppercase">Active Collectors</div>
+                        <div class="h3 fw-bold mb-0 text-primary">{{len .AllCollectors}}</div>
+                        <div class="text-muted small fw-bold text-uppercase">Active Collectors</div>
                     </div>
                 </div>
             </div>
