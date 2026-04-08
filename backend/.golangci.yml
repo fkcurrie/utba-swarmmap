@@ -1,4 +1,4 @@
-version: "2"
+version: '2'
 output:
   formats:
     text:
@@ -26,13 +26,13 @@ linters:
     rules:
       - linters:
           - gosec
-        text: "G706:"
+        text: 'G706:'
       - linters:
           - gosec
         path: _test\.go
       - linters:
           - gosec
-        text: "G706"
+        text: 'G706'
       - linters:
           - all
         path: third_party/.*

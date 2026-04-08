@@ -2,10 +2,10 @@
 extends: default
 
 ignore:
-  - "node_modules/"
-  - "vendor/"
-  - "backend/vendor/"
-  - ".git/"
+  - 'node_modules/'
+  - 'vendor/'
+  - 'backend/vendor/'
+  - '.git/'
 
 rules:
   line-length:
@@ -14,5 +14,5 @@ rules:
   indentation:
     spaces: 2
   truthy:
-    allowed-values: ["true", "false", "yes", "no", "on", "off"]
+    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
   document-start: disable
