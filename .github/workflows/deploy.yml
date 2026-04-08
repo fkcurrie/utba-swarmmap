@@ -12,6 +12,7 @@ env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   REGION: northamerica-northeast2
   SERVICE: utba-swarmmap-backend
+  FRONTEND_SERVICE: utba-swarmmap-frontend
   REPO: swarmmap-repo
 
 jobs:
@@ -66,6 +67,7 @@ jobs:
       - name: Docker Build Test
         run: |
           docker build -t test-backend ./backend
+          docker build -t test-frontend ./frontend
 
       - name: Google Auth
         id: auth
@@ -80,14 +82,21 @@ jobs:
         run: |
           gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
 
-      - name: Get Frontend URL
-        id: frontend-url
+      - name: Build and Push Frontend
         run: |
-          URL=$(gcloud run services describe utba-swarmmap-frontend \
-            --platform=managed \
-            --region=${{ env.REGION }} \
-            --format='value(status.url)' || echo "")
-          echo "url=$URL" >> $GITHUB_OUTPUT
+          IMAGE_NAME="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/frontend"
+          docker build -t "$IMAGE_NAME:${{ github.sha }}" ./frontend
+          docker tag "$IMAGE_NAME:${{ github.sha }}" "$IMAGE_NAME:latest"
+          docker push "$IMAGE_NAME:${{ github.sha }}"
+          docker push "$IMAGE_NAME:latest"
+
+      - name: Deploy Frontend to Cloud Run
+        id: deploy-frontend
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.FRONTEND_SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/frontend:${{ github.sha }}
 
       - name: Get Backend URL
         id: backend-url
@@ -102,7 +111,7 @@ jobs:
           fi
           echo "url=$URL" >> $GITHUB_OUTPUT
 
-      - name: Build and Push Container
+      - name: Build and Push Backend
         run: |
           IMAGE_NAME="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/backend"
           docker build -t "$IMAGE_NAME:${{ github.sha }}" ./backend
@@ -110,15 +119,15 @@ jobs:
           docker push "$IMAGE_NAME:${{ github.sha }}"
           docker push "$IMAGE_NAME:latest"
 
-      - name: Deploy to Cloud Run
-        id: deploy
+      - name: Deploy Backend to Cloud Run
+        id: deploy-backend
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/backend:${{ github.sha }}
           env_vars: |
-            FRONTEND_ASSETS_URL=${{ steps.frontend-url.outputs.url }}
+            FRONTEND_ASSETS_URL=${{ steps.deploy-frontend.outputs.url }}
             GOOGLE_REDIRECT_URL=${{ steps.backend-url.outputs.url }}/auth/google/callback
           secrets: |
             GOOGLE_CLIENT_ID=google-oauth-client-id:latest
@@ -126,4 +135,5 @@ jobs:
 
       - name: Health Check
         run: |
-          curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "${{ steps.deploy.outputs.url }}"
+          curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "${{ steps.deploy-backend.outputs.url }}"
+
