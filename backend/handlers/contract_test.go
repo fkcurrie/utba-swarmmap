@@ -74,7 +74,7 @@ func TestPrepareSwarm_Contract(t *testing.T) {
 	_ = writer.WriteField("latitude", "43.6532")
 	_ = writer.WriteField("longitude", "-79.3832")
 	_ = writer.WriteField("intersection", "Yonge & Bloor")
-	
+
 	// Add a dummy file
 	part, _ := writer.CreateFormFile("file", "test.jpg")
 	_, _ = part.Write([]byte("dummy image content"))
@@ -82,7 +82,7 @@ func TestPrepareSwarm_Contract(t *testing.T) {
 
 	req, _ := http.NewRequest("POST", "/prepare_swarm", body)
 	req.Header.Set("Content-Type", writer.FormDataContentType())
-	
+
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(h.PrepareSwarmHandler)
 	handler.ServeHTTP(rr, req)

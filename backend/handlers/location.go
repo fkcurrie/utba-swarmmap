@@ -24,7 +24,7 @@ func (s *NominatimLocationService) GetNearestIntersection(ctx context.Context, l
 		baseURL = "https://nominatim.openstreetmap.org"
 	}
 	url := fmt.Sprintf("%s/reverse?format=json&lat=%f&lon=%f", baseURL, lat, lon)
-	
+
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return "", err
