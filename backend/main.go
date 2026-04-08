@@ -14,6 +14,7 @@ import (
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
 	"github.com/fkcurrie/utba-swarmmap/handlers"
+	"github.com/fkcurrie/utba-swarmmap/service"
 	"github.com/fkcurrie/utba-swarmmap/store"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -91,10 +92,14 @@ func main() {
 	// Initialize our store
 	dataStore := store.NewStore(firestoreClient, storageClient, bucketName)
 
+	// Initialize services
+	swarmService := service.NewSwarmService(dataStore)
+
 	// Initialize handlers with dependencies
 	h := &handlers.Handlers{
-		Store:           dataStore,
-		LocationService: &handlers.NominatimLocationService{Client: &http.Client{Timeout: 10 * time.Second}},
+		Store:             dataStore,
+		SwarmService:      swarmService,
+		LocationService:   &handlers.NominatimLocationService{Client: &http.Client{Timeout: 10 * time.Second}},
 		GoogleOAuthConfig: googleOAuthConfig,
 		Version:           version,
 		Templates:         templates,
@@ -145,7 +150,7 @@ func main() {
 	port := getEnv("PORT", "8080")
 	// Validate port to prevent log injection and ensure it's a valid port number
 	if _, err := strconv.Atoi(port); err != nil {
-		slog.Error("Invalid PORT", "port", strings.ReplaceAll(strings.ReplaceAll(port, "\n", ""), "\r", "")) // #nosec G706
+		slog.Error("Invalid PORT", "port", strings.ReplaceAll(strings.ReplaceAll(port, "\n", ""), "\r", ""), "error", err) // #nosec G706
 		os.Exit(1)
 	}
 	slog.Info("Starting server", "port", strings.ReplaceAll(strings.ReplaceAll(port, "\n", ""), "\r", ""), "version", strings.ReplaceAll(strings.ReplaceAll(version, "\n", ""), "\r", "")) // #nosec G706

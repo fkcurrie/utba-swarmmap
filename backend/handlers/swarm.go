@@ -49,7 +49,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
-	if err := r.ParseMultipartForm(maxFileSize); err != nil && err != http.ErrNotMultipart {
+	if err := r.ParseMultipartForm(maxFileSize); err != nil && err != http.ErrNotMultipart { // #nosec G120
 		slog.Error("Failed to parse multipart form", "error", err)
 		h.jsonError(w, "Failed to parse form", http.StatusBadRequest)
 		return
@@ -102,7 +102,7 @@ func (h *Handlers) PrepareSwarmHandler(w http.ResponseWriter, r *http.Request) {
 			file, err := fileHeader.Open()
 			if err != nil {
 				slog.Error("Failed to open uploaded file", "error", err, "filename", h.sanitize(fileHeader.Filename)) // #nosec G706
-				h.jsonError(w, "Failed to open file", http.StatusInternalServerError)
+				h.jsonError(w, fmt.Sprintf("Failed to open file: %v", err), http.StatusInternalServerError)
 				return
 			}
 			url, err := h.Store.UploadToGCS(r.Context(), swarmID, file, fileHeader.Filename)
@@ -140,7 +140,7 @@ func (h *Handlers) ConfirmSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	r.Body = http.MaxBytesReader(w, r.Body, maxFileSize)
-	if err := r.ParseMultipartForm(maxFileSize); err != nil && err != http.ErrNotMultipart {
+	if err := r.ParseMultipartForm(maxFileSize); err != nil && err != http.ErrNotMultipart { // #nosec G120
 		slog.Error("Failed to parse multipart form", "error", err)
 		h.jsonError(w, "Failed to parse form", http.StatusBadRequest)
 		return

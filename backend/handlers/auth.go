@@ -22,6 +22,7 @@ func (h *Handlers) LoginPageHandler(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		slog.Error("Error rendering login page", "error", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -35,6 +36,7 @@ func (h *Handlers) RegisterPageHandler(w http.ResponseWriter, _ *http.Request) {
 	if err != nil {
 		slog.Error("Error rendering register page", "error", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -209,21 +211,31 @@ func (h *Handlers) createSessionAndRedirect(w http.ResponseWriter, r *http.Reque
 }
 
 func (h *Handlers) renderLoginPageWithError(w http.ResponseWriter, errorMsg string) {
-	_ = h.Templates.ExecuteTemplate(w, "login.html", map[string]interface{}{
+	err := h.Templates.ExecuteTemplate(w, "login.html", map[string]interface{}{
 		"Title":             "Login",
 		"Version":           h.Version,
 		"Error":             errorMsg,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
+	if err != nil {
+		slog.Error("Error rendering login page with error", "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 }
 
 func (h *Handlers) renderRegisterPageWithError(w http.ResponseWriter, errorMsg string) {
-	_ = h.Templates.ExecuteTemplate(w, "register.html", map[string]interface{}{
+	err := h.Templates.ExecuteTemplate(w, "register.html", map[string]interface{}{
 		"Title":             "Register",
 		"Version":           h.Version,
 		"Error":             errorMsg,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
+	if err != nil {
+		slog.Error("Error rendering register page with error", "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 }
 
 func (h *Handlers) renderMessagePage(w http.ResponseWriter, title, message string) {
@@ -236,6 +248,7 @@ func (h *Handlers) renderMessagePage(w http.ResponseWriter, title, message strin
 	if err != nil {
 		slog.Error("Error rendering message page", "error", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -248,6 +261,7 @@ func (h *Handlers) showPendingApprovalPage(w http.ResponseWriter, name string) {
 	if err != nil {
 		slog.Error("Error rendering pending approval page", "error", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 }
 
@@ -279,11 +293,15 @@ func (h *Handlers) AppleCallbackHandler(w http.ResponseWriter, _ *http.Request) 
 // ForgotPasswordHandler handles password reset requests.
 func (h *Handlers) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		_ = h.Templates.ExecuteTemplate(w, "forgot-password.html", map[string]interface{}{
+		err := h.Templates.ExecuteTemplate(w, "forgot-password.html", map[string]interface{}{
 			"Title":             "Forgot Password",
 			"Version":           h.Version,
 			"FrontendAssetsURL": h.FrontendAssetsURL,
 		})
+		if err != nil {
+			slog.Error("Error rendering forgot-password page", "error", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
 		return
 	}
 
@@ -329,12 +347,16 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if r.Method == http.MethodGet {
-		_ = h.Templates.ExecuteTemplate(w, "reset-password.html", map[string]interface{}{
+		err := h.Templates.ExecuteTemplate(w, "reset-password.html", map[string]interface{}{
 			"Title":             "Reset Password",
 			"Version":           h.Version,
 			"Token":             token,
 			"FrontendAssetsURL": h.FrontendAssetsURL,
 		})
+		if err != nil {
+			slog.Error("Error rendering reset-password page", "error", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
 		return
 	}
 
