@@ -58,6 +58,7 @@ This project includes a GitHub Actions workflow for automated validation and dep
   - `GCP_SA_KEY`: A JSON key for a Service Account with permissions to build images and deploy to Cloud Run.
 
 ### Manual Deployment
+
 Both the frontend and backend have their own `Dockerfile` and can be deployed independently.
 
 **1. Deploy the Backend:**
