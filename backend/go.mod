@@ -1,7 +1,6 @@
 module github.com/fkcurrie/utba-swarmmap
 
 go 1.25.9
-toolchain go1.25.9
 
 require (
 	cloud.google.com/go/firestore v1.21.0
