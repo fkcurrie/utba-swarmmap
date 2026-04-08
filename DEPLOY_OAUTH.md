@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
 # Google OAuth2 Deployment Guide
 
 ## Step 1: Set up Google OAuth2 Credentials

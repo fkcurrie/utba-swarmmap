@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
 # UTBA Swarm Map
 
 A web application for tracking and managing bee swarms. This application allows the public to report bee swarms and enables beekeepers to manage and respond to those reports.
