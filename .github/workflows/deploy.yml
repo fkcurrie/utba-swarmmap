@@ -4,6 +4,8 @@ name: Deploy to Cloud Run
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
   workflow_dispatch:
@@ -14,6 +16,7 @@ env:
   SERVICE: utba-swarmmap-backend
   FRONTEND_SERVICE: utba-swarmmap-frontend
   REPO: swarmmap-repo
+  GCS_BUCKET_NAME: utba-swarmmap-media
 
 jobs:
   deploy:
@@ -97,6 +100,7 @@ jobs:
           service: ${{ env.FRONTEND_SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/frontend:${{ github.sha }}
+          flags: --allow-unauthenticated
 
       - name: Get Backend URL
         id: backend-url
@@ -126,9 +130,12 @@ jobs:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/backend:${{ github.sha }}
+          flags: --allow-unauthenticated
           env_vars: |
             FRONTEND_ASSETS_URL=${{ steps.deploy-frontend.outputs.url }}
             GOOGLE_REDIRECT_URL=${{ steps.backend-url.outputs.url }}/auth/google/callback
+            GCP_PROJECT_ID=${{ env.PROJECT_ID }}
+            GCS_BUCKET_NAME=${{ env.GCS_BUCKET_NAME }}
           secrets: |
             GOOGLE_CLIENT_ID=google-oauth-client-id:latest
             GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest

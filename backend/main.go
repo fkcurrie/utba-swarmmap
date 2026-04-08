@@ -133,6 +133,8 @@ func main() {
 	mux.HandleFunc("POST /demo/generate_sample_data", h.GenerateSampleDataHandler)
 	mux.HandleFunc("POST /api/track_visit", h.TrackVisitHandler)
 	mux.HandleFunc("GET /api/visits", h.VisitsAPIHandler)
+	mux.HandleFunc("GET /bootstrap", h.BootstrapHandler)
+	mux.HandleFunc("POST /bootstrap", h.BootstrapHandler)
 
 	// Authenticated routes
 	mux.Handle("GET /dashboard", h.RequireAuth(http.HandlerFunc(h.DashboardHandler)))

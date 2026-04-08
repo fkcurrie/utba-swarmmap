@@ -1,0 +1,47 @@
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
+{{template "header.html" .}}
+
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fa-solid fa-rocket me-2"></i> Initial Admin Bootstrap</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted">Use this form to create the initial site administrator account. This route will be disabled once at least one administrator exists.</p>
+                    
+                    {{if .Error}}
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fa-solid fa-exclamation-circle me-2"></i> {{.Error}}
+                    </div>
+                    {{end}}
+
+                    {{if .Success}}
+                    <div class="alert alert-success" role="alert">
+                        <i class="fa-solid fa-check-circle me-2"></i> {{.Success}}
+                        <div class="mt-2">
+                            <a href="/login" class="btn btn-success btn-sm">Go to Login</a>
+                        </div>
+                    </div>
+                    {{else}}
+                    <form action="/bootstrap" method="POST" aria-label="Bootstrap Admin Form">
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-bold">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required placeholder="e.g. Frank Currie">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-bold">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" required placeholder="e.g. frank@example.com">
+                            <div class="form-text">Must match the email you will use for Google Login.</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm">Create Admin Account</button>
+                    </form>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{template "footer.html" .}}
