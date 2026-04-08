@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 # STAGE 1: Build the application
 FROM golang:1.25.9-alpine AS builder
 

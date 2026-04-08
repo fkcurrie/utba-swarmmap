@@ -1,3 +1,5 @@
+# Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 # Ignore files not needed for the backend build
 frontend/
 frontend.Dockerfile

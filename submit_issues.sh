@@ -1,4 +1,5 @@
 #!/bin/bash
+# Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 
 # Issue 1: Map Display Issues
 gh issue create \
