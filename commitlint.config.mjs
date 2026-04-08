@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 export default {
   extends: ['@commitlint/config-conventional'],
   rules: {

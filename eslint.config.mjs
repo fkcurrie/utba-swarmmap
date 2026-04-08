@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 import js from '@eslint/js';
 import globals from 'globals';
 

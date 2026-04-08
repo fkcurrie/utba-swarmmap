@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
+
 document.addEventListener('DOMContentLoaded', function () {
   const mapElement = document.getElementById('map');
   const reportSwarmBtn = document.getElementById('reportSwarmBtn');
