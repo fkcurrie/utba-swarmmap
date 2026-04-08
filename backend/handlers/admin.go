@@ -127,6 +127,7 @@ func (h *Handlers) BootstrapHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Handle POST
+	r.Body = http.MaxBytesReader(w, r.Body, 1024*1024) // Limit body to 1MB
 	name := r.FormValue("name")
 	email := r.FormValue("email")
 
