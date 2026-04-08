@@ -22,7 +22,7 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-var version = "0.6"
+var version = "0.6.0"
 
 // getEnv reads an environment variable with a fallback value.
 func getEnv(key, fallback string) string {
