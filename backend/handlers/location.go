@@ -57,13 +57,18 @@ func (s *NominatimLocationService) GetNearestIntersection(ctx context.Context, l
 type MapboxLocationService struct {
 	Client      *http.Client
 	AccessToken string
+	BaseURL     string
 }
 
 func (s *MapboxLocationService) GetNearestIntersection(ctx context.Context, lat, lon float64) (string, error) {
 	if s.AccessToken == "" {
 		return "", fmt.Errorf("mapbox access token is required")
 	}
-	url := fmt.Sprintf("https://api.mapbox.com/geocoding/v5/mapbox.places/%f,%f.json?access_token=%s&types=address,neighborhood,locality", lon, lat, s.AccessToken)
+	baseURL := s.BaseURL
+	if baseURL == "" {
+		baseURL = "https://api.mapbox.com"
+	}
+	url := fmt.Sprintf("%s/geocoding/v5/mapbox.places/%f,%f.json?access_token=%s&types=address,neighborhood,locality", baseURL, lon, lat, s.AccessToken)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
