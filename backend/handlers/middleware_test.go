@@ -15,7 +15,7 @@ import (
 
 func TestSecurityHeaders(t *testing.T) {
 	h := &Handlers{}
-	nextHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	nextHandler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
@@ -53,7 +53,7 @@ func TestSecurityHeaders(t *testing.T) {
 
 func TestVerifyCSRF(t *testing.T) {
 	h := &Handlers{}
-	nextHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	nextHandler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
 
