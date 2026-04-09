@@ -277,6 +277,8 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 		}
 	} else {
 		// Fallback to form values
+		// Limit request body size to 1MB to prevent memory exhaustion (G120)
+		r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
 		updateReq.ID = r.FormValue("id")
 		updateReq.Status = r.FormValue("status")
 		updateReq.BeekeeperNotes = r.FormValue("beekeeperNotes")

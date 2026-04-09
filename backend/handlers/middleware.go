@@ -105,6 +105,8 @@ func (h *Handlers) VerifyCSRF(next http.Handler) http.Handler {
 
 		token := r.Header.Get("X-CSRF-Token")
 		if token == "" {
+			// Limit request body size to 1MB to prevent memory exhaustion (G120)
+			r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
 			token = r.FormValue("csrf_token")
 		}
 
