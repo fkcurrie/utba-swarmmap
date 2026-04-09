@@ -52,4 +52,5 @@ type Session struct {
 	Username  string    `json:"username"`
 	Role      string    `json:"role"`
 	ExpiresAt time.Time `json:"expiresAt"`
+	CSRFToken string    `json:"csrfToken"`
 }

@@ -19,6 +19,9 @@ func (h *Handlers) GenerateSampleDataHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
+	// Limit request body size to 1MB
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+
 	var requestData map[string]interface{}
 	err := json.NewDecoder(r.Body).Decode(&requestData)
 	if err != nil {

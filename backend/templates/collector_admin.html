@@ -38,10 +38,12 @@
                                             <td>
                                                 <div class="btn-group btn-group-sm">
                                                     <form method="POST" action="/admin/approve_user" class="me-1">
+                                                        <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
                                                         <input type="hidden" name="userID" value="{{.ID}}">
                                                         <button type="submit" class="btn btn-success" aria-label="Approve collector {{.Name}}">Approve</button>
                                                     </form>
                                                     <form method="POST" action="/admin/reject_user">
+                                                        <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
                                                         <input type="hidden" name="userID" value="{{.ID}}">
                                                         <button type="submit" class="btn btn-danger" aria-label="Reject collector {{.Name}}">Reject</button>
                                                     </form>

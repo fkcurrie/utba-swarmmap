@@ -43,6 +43,9 @@ func (h *Handlers) TrackVisitHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Limit request body size to 1MB
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+
 	var reqBody struct {
 		VisitorID string `json:"visitorId"`
 	}

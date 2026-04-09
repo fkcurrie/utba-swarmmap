@@ -526,7 +526,7 @@ func TestPrepareSwarmHandler_ValidRequest(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := part.Write([]byte("dummy image data")); err != nil {
+	if _, err := part.Write([]byte("\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00\x48\x00\x48\x00\x00\xff\xdb\x00\x43\x00\xff\xd8")); err != nil {
 		t.Fatal(err)
 	}
 	if err := writer.Close(); err != nil {
@@ -637,7 +637,7 @@ func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := part.Write([]byte("dummy image data")); err != nil {
+	if _, err := part.Write([]byte("\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00\x48\x00\x48\x00\x00\xff\xdb\x00\x43\x00\xff\xd8")); err != nil {
 		t.Fatal(err)
 	}
 	if err := writer.Close(); err != nil {
