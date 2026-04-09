@@ -312,7 +312,7 @@ func (s *Store) UpdateSwarm(ctx context.Context, swarmID string, updates []fires
 
 // GetAllUsers retrieves all users from Firestore.
 func (s *Store) GetAllUsers(ctx context.Context) ([]models.User, error) {
-	var users []models.User
+	users := []models.User{}
 	iter := s.FirestoreClient.Collection(usersCollection).Documents(ctx)
 	for {
 		doc, err := iter.Next()
@@ -336,7 +336,7 @@ func (s *Store) GetAllUsers(ctx context.Context) ([]models.User, error) {
 
 // GetAllSwarms retrieves all swarm reports from Firestore.
 func (s *Store) GetAllSwarms(ctx context.Context) ([]models.SwarmReport, error) {
-	var reports []models.SwarmReport
+	reports := []models.SwarmReport{}
 	iter := s.FirestoreClient.Collection(reportsCollection).Documents(ctx)
 	for {
 		doc, err := iter.Next()
@@ -360,7 +360,7 @@ func (s *Store) GetAllSwarms(ctx context.Context) ([]models.SwarmReport, error) 
 
 // GetSwarmsBySessionID retrieves swarm reports for a specific session ID.
 func (s *Store) GetSwarmsBySessionID(ctx context.Context, sessionID string) ([]models.SwarmReport, error) {
-	var reports []models.SwarmReport
+	reports := []models.SwarmReport{}
 	iter := s.FirestoreClient.Collection(reportsCollection).Where("reporterSessionID", "==", sessionID).Documents(ctx)
 	for {
 		doc, err := iter.Next()
