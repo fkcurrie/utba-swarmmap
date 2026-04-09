@@ -23,6 +23,7 @@ type Handlers struct {
 	Version           string
 	Templates         *template.Template
 	FrontendAssetsURL string
+	MapboxToken       string
 }
 
 func (h *Handlers) jsonError(w http.ResponseWriter, message string, code int) {
@@ -52,6 +53,7 @@ func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
 		"Version":           h.Version,
 		"User":              session,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
+		"MapboxToken":       h.MapboxToken,
 	})
 	if err != nil {
 		slog.Error("Error executing template", "error", err) // #nosec G706

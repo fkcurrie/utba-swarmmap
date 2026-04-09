@@ -23,10 +23,29 @@ document.addEventListener('DOMContentLoaded', function () {
     // Use setTimeout to ensure the map container is fully rendered
     setTimeout(() => {
       map = L.map('map').setView([43.6532, -79.3832], 12);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
+
+      let tileLayer;
+      if (window.MAPBOX_TOKEN && window.MAPBOX_TOKEN !== '') {
+        tileLayer = L.tileLayer(
+          'https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=' +
+            window.MAPBOX_TOKEN,
+          {
+            attribution:
+              '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+            tileSize: 512,
+            zoomOffset: -1,
+          },
+        );
+      } else {
+        tileLayer = L.tileLayer(
+          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          {
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          },
+        );
+      }
+      tileLayer.addTo(map);
 
       // Initialize Marker Cluster Group
       swarmLayerGroup = L.markerClusterGroup({
@@ -543,6 +562,22 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 async function getNearestIntersection(lat, lng) {
+  if (window.MAPBOX_TOKEN && window.MAPBOX_TOKEN !== '') {
+    try {
+      const response = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${window.MAPBOX_TOKEN}&types=address,neighborhood,locality`,
+      );
+      if (!response.ok) throw new Error('Mapbox Geocoding error');
+      const data = await response.json();
+      if (data.features && data.features.length > 0) {
+        return data.features[0].place_name;
+      }
+    } catch (error) {
+      console.error('Error getting intersection from Mapbox:', error);
+      // Fallback to Nominatim below
+    }
+  }
+
   try {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,

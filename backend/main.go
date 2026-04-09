@@ -97,15 +97,32 @@ func main() {
 	// Initialize services
 	swarmService := service.NewSwarmService(dataStore)
 
+	// Initialize LocationService
+	var locationService handlers.LocationService
+	mapboxToken := os.Getenv("MAPBOX_ACCESS_TOKEN")
+	if mapboxToken != "" {
+		locationService = &handlers.MapboxLocationService{
+			Client:      &http.Client{Timeout: 10 * time.Second},
+			AccessToken: mapboxToken,
+		}
+		slog.Info("Using Mapbox Location Service")
+	} else {
+		locationService = &handlers.NominatimLocationService{
+			Client: &http.Client{Timeout: 10 * time.Second},
+		}
+		slog.Info("Using Nominatim Location Service")
+	}
+
 	// Initialize handlers with dependencies
 	h := &handlers.Handlers{
 		Store:             dataStore,
 		SwarmService:      swarmService,
-		LocationService:   &handlers.NominatimLocationService{Client: &http.Client{Timeout: 10 * time.Second}},
+		LocationService:   locationService,
 		GoogleOAuthConfig: googleOAuthConfig,
 		Version:           version,
 		Templates:         templates,
 		FrontendAssetsURL: getEnv("FRONTEND_ASSETS_URL", ""), // Default to empty string for local dev
+		MapboxToken:       mapboxToken,
 	}
 
 	mux := http.NewServeMux()

@@ -87,6 +87,7 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 		"CapturedSwarms":    capturedSwarms,
 		"VisitCounts":       visits,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
+		"MapboxToken":       h.MapboxToken,
 	})
 	if err != nil {
 		slog.Error("Error executing admin template", "error", err)
@@ -297,6 +298,7 @@ func (h *Handlers) CollectorAdminHandler(w http.ResponseWriter, r *http.Request)
 		"PendingUsers":      nil,
 		"AllCollectors":     nil,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
+		"MapboxToken":       h.MapboxToken,
 	})
 	if err != nil {
 		slog.Error("Error executing collector admin template", "error", err)
