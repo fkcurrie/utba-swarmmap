@@ -13,13 +13,13 @@
                     
                     {{if .Error}}
                     <div class="alert alert-danger" role="alert">
-                        <i class="fa-solid fa-exclamation-circle me-2"></i> {{.Error}}
+                        <i class="fa-solid fa-circle-exclamation me-2"></i> {{.Error}}
                     </div>
                     {{end}}
 
                     {{if .Success}}
                     <div class="alert alert-success" role="alert">
-                        <i class="fa-solid fa-check-circle me-2"></i> {{.Success}}
+                        <i class="fa-solid fa-circle-check me-2"></i> {{.Success}}
                         <div class="mt-2">
                             <a href="/login" class="btn btn-success btn-sm">Go to Login</a>
                         </div>

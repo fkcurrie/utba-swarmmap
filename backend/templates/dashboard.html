@@ -13,7 +13,7 @@
                     </div>
                     <div class="card-body d-flex flex-wrap pt-2">
                         <a href="/collectorsmap" class="btn btn-primary me-3 mb-2 shadow-sm" aria-label="Go to interactive collector map">
-                            <i class="fa-solid fa-map-marked-alt me-1"></i> View Collector Map
+                            <i class="fa-solid fa-map-location-dot me-1"></i> View Collector Map
                         </a>
                         <a href="/swarmlist" class="btn btn-outline-secondary me-3 mb-2" aria-label="View all swarms in a list format">
                             <i class="fa-solid fa-list me-1"></i> View All Swarms (List)
@@ -25,7 +25,7 @@
                         {{end}}
                         {{if .ShowCollectorAdmin}}
                             <a href="/collector_admin" class="btn btn-warning mb-2 shadow-sm" aria-label="Access collector administration dashboard">
-                                <i class="fa-solid fa-users-cog me-1"></i> Collector Admin
+                                <i class="fa-solid fa-users-gear me-1"></i> Collector Admin
                             </a>
                         {{end}}
                     </div>
@@ -38,7 +38,7 @@
             <section class="col-md-6 mb-4" aria-labelledby="available-swarms-heading">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="available-swarms-heading" class="h5 mb-0 fw-bold text-danger"><i class="fa-solid fa-exclamation-circle me-2"></i>Available Swarms</h2>
+                        <h2 id="available-swarms-heading" class="h5 mb-0 fw-bold text-danger"><i class="fa-solid fa-circle-exclamation me-2"></i>Available Swarms</h2>
                         <p class="text-muted small mb-0 mt-1">New reports that need attention</p>
                     </div>
                     <div class="card-body">
@@ -83,7 +83,7 @@
                             </div>
                         {{else}}
                             <div class="text-center py-4">
-                                <i class="fa-solid fa-check-circle fa-3x text-success mb-3 opacity-25"></i>
+                                <i class="fa-solid fa-circle-check fa-3x text-success mb-3 opacity-25"></i>
                                 <p class="text-muted">No available swarms at the moment.</p>
                             </div>
                         {{end}}
