@@ -95,6 +95,9 @@ jobs:
       - name: Stylelint
         run: npx stylelint "frontend/static/css/**/*.css"
 
+      - name: Dependency Audit (npm audit)
+        run: npm audit --audit-level=high
+
   frontend-go:
     name: Frontend (Go Server)
     runs-on: ubuntu-latest
@@ -115,6 +118,11 @@ jobs:
         uses: securego/gosec@master
         with:
           args: -exclude=G706 ./frontend/...
+
+      - name: Go Vulnerability Check (govulncheck)
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./frontend/...
 
   general:
     name: General & Infrastructure
