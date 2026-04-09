@@ -3,8 +3,10 @@
 package handlers
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"github.com/fkcurrie/utba-swarmmap/models"
@@ -92,6 +94,85 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (h *Handlers) BootstrapHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	allUsers, err := h.Store.GetAllUsers(ctx)
+	if err != nil {
+		slog.Error("Error checking for existing users during bootstrap", "error", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Safety check: Disable bootstrap if at least one site_admin exists
+	for _, user := range allUsers {
+		if user.Role == "site_admin" {
+			slog.Warn("Bootstrap attempted but site_admin already exists", "adminEmail", h.sanitize(user.Email))
+			http.Error(w, "Bootstrap is disabled because an administrator already exists.", http.StatusForbidden)
+			return
+		}
+	}
+
+	if r.Method == http.MethodGet {
+		err := h.Templates.ExecuteTemplate(w, "bootstrap.html", map[string]interface{}{
+			"Title":             "Bootstrap Admin",
+			"Version":           h.Version,
+			"FrontendAssetsURL": h.FrontendAssetsURL,
+		})
+		if err != nil {
+			slog.Error("Error rendering bootstrap page", "error", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Handle POST
+	r.Body = http.MaxBytesReader(w, r.Body, 1024*1024) // Limit body to 1MB
+	name := r.FormValue("name")
+	email := r.FormValue("email")
+
+	if name == "" || email == "" {
+		err := h.Templates.ExecuteTemplate(w, "bootstrap.html", map[string]interface{}{
+			"Title":             "Bootstrap Admin",
+			"Version":           h.Version,
+			"Error":             "Name and Email are required",
+			"FrontendAssetsURL": h.FrontendAssetsURL,
+		})
+		if err != nil {
+			slog.Error("Error rendering bootstrap page with error", "error", err)
+		}
+		return
+	}
+
+	newUser := models.User{
+		Email:         email,
+		Name:          name,
+		Role:          "site_admin",
+		Status:        "approved",
+		EmailVerified: true,
+		CreatedAt:     time.Now(),
+	}
+
+	_, err = h.Store.CreateUser(ctx, newUser)
+	if err != nil {
+		slog.Error("Failed to create bootstrap admin", "error", err, "email", h.sanitize(email))
+		http.Error(w, "Failed to create admin user", http.StatusInternalServerError)
+		return
+	}
+
+	slog.Info("INITIAL ADMIN BOOTSTRAPPED", "name", h.sanitize(name), "email", h.sanitize(email))
+
+	err = h.Templates.ExecuteTemplate(w, "bootstrap.html", map[string]interface{}{
+		"Title":             "Bootstrap Admin",
+		"Version":           h.Version,
+		"Success":           fmt.Sprintf("Administrator %s (%s) has been created successfully.", name, email),
+		"FrontendAssetsURL": h.FrontendAssetsURL,
+	})
+	if err != nil {
+		slog.Error("Error rendering bootstrap page with success", "error", err)
+	}
+}
+
 
 func (h *Handlers) ApproveUserHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

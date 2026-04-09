@@ -1,6 +1,6 @@
 {
   "name": "utba-swarmmap",
-  "version": "1.0.0",
+  "version": "0.6.0",
   "description": "A web application for tracking and managing bee swarms in the Greater Toronto Area. This application allows members of the public to report bee swarms and enables UTBA (Urban Toronto Beekeepers Association) members to manage and respond to swarm reports.",
   "main": "index.js",
   "scripts": {
