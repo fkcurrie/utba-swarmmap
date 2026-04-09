@@ -43,7 +43,15 @@
 						</td>
 						<td>
 							{{if .AssignedCollectorEmail}}
-								<span class="badge bg-info">Claimed by {{.AssignedCollectorEmail}}</span>
+								<div class="d-flex flex-column gap-1">
+									<span class="badge bg-info">Claimed by {{.AssignedCollectorEmail}}</span>
+									{{if eq $.User.UserID .AssignedCollectorID}}
+									<form action="/unclaim_swarm" method="POST" style="display:inline;">
+										<input type="hidden" name="swarmID" value="{{.ID}}">
+										<button type="submit" class="btn btn-sm btn-outline-danger">Unclaim</button>
+									</form>
+									{{end}}
+								</div>
 							{{else}}
 								<form action="/claim_swarm" method="POST" style="display:inline;">
 									<input type="hidden" name="swarmID" value="{{.ID}}">
