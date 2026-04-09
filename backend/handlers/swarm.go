@@ -19,7 +19,7 @@ import (
 	"github.com/google/uuid"
 )
 
-var maxFileSize = int64(50 << 20) // 50MB
+const maxFileSize = int64(50 << 20) // 50MB
 
 var (
 	allowedImageTypes = map[string]bool{
@@ -263,6 +263,9 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	// Limit request body size to 1MB to prevent memory exhaustion (G120)
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+
 	var updateReq struct {
 		ID             string `json:"id"`
 		Status         string `json:"status"`
@@ -277,8 +280,6 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 		}
 	} else {
 		// Fallback to form values
-		// Limit request body size to 1MB to prevent memory exhaustion (G120)
-		r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
 		updateReq.ID = r.FormValue("id")
 		updateReq.Status = r.FormValue("status")
 		updateReq.BeekeeperNotes = r.FormValue("beekeeperNotes")

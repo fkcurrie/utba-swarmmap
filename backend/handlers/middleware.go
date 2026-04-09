@@ -95,6 +95,9 @@ func (h *Handlers) VerifyCSRF(next http.Handler) http.Handler {
 			return
 		}
 
+		// Limit request body size to 1MB to prevent memory exhaustion (G120)
+		r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+
 		session, ok := r.Context().Value(SessionContextKey).(*models.Session)
 		if !ok || session == nil {
 			// If no session, we might still want to check CSRF for public forms
@@ -105,8 +108,10 @@ func (h *Handlers) VerifyCSRF(next http.Handler) http.Handler {
 
 		token := r.Header.Get("X-CSRF-Token")
 		if token == "" {
-			// Limit request body size to 1MB to prevent memory exhaustion (G120)
-			r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+			// Explicitly parse form to satisfy G120
+			if err := r.ParseForm(); err != nil {
+				slog.Debug("Error parsing form in VerifyCSRF", "error", err)
+			}
 			token = r.FormValue("csrf_token")
 		}
 
