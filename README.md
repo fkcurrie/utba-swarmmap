@@ -15,7 +15,8 @@ This separation allows the frontend (styling, UI logic) to be developed and depl
 
 ## Features
 
-- **Interactive Map**: Shows reported bee swarms using OpenStreetMap and Leaflet.js.
+- **Interactive Map**: Shows reported bee swarms using OpenStreetMap or Mapbox (if configured) and Leaflet.js.
+- **Enhanced Mapping**: Supports Mapbox vector tiles and Mapbox Geocoding API for superior performance and aesthetics.
 - **Public Swarm Reporting**: Anyone can report a swarm, optionally including photos and videos.
 - **Camera & Gallery Upload**: On mobile, users can either take a new photo/video or upload an existing one from their gallery.
 - **Admin Dashboard**: A comprehensive dashboard for administrators to manage users and swarms.
@@ -26,10 +27,19 @@ This separation allows the frontend (styling, UI logic) to be developed and depl
 
 - **Backend**: Go
 - **Frontend**: Go (for serving), HTML, CSS, vanilla JavaScript
-- **UI Libraries**: Bootstrap, [Chart.js](https://www.chartjs.org/), Leaflet.js
+- **UI Libraries**: Bootstrap, [Chart.js](https://www.chartjs.org/), Leaflet.js (with optional Mapbox integration)
 - **Database**: Google Cloud Firestore
 - **Storage**: Google Cloud Storage
 - **Deployment**: Docker, Google Cloud Run
+
+## Environment Variables
+
+The application can be configured using the following environment variables:
+
+- `MAPBOX_ACCESS_TOKEN`: (Optional) If provided, the application will use Mapbox for map tiles and reverse geocoding.
+- `FRONTEND_ASSETS_URL`: The URL of the frontend service serving static assets.
+- `GOOGLE_OAUTH_CLIENT_ID`: Required for Google OAuth.
+- `GOOGLE_OAUTH_CLIENT_SECRET`: Required for Google OAuth.
 
 ## Local Development & Deployment
 

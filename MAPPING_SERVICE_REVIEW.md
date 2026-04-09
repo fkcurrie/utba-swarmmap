@@ -102,11 +102,11 @@ MapLibre is an open-source fork of Mapbox GL JS v1.
 
 ## Recommendations
 
-1. **Short Term (Maintenance):** Continue using the current Leaflet/OSM solution but monitor Nominatim usage. Consider adding a fallback or a more robust geocoding provider like **LocationIQ** (5,000 requests/day free) if Nominatim limits are hit.
-2. **Medium Term (Upgrade):** Migrate to **Mapbox GL JS** or **MapLibre GL JS**. This will significantly improve the user experience with smoother interactions and more professional-looking maps. Mapbox's free tier is likely sufficient for UTBA SwarmMap's current scale.
+1. **Short Term (Completed):** Mapbox has been implemented as the primary mapping service (tiles and geocoding). It provides superior performance and aesthetics while maintaining a seamless fallback to OSM/Nominatim for environments without a Mapbox token.
+2. **Medium Term (Upgrade):** Consider a full migration to **Mapbox GL JS** or **MapLibre GL JS** for native vector tile support and even smoother interactions.
 3. **Long Term (Enterprise):** If the project requires the highest data accuracy or Street View integration, **Google Maps** would be the choice, though it comes with higher cost risks.
 
-**Recommended Action:** Implement **Mapbox** as the primary mapping service. It offers a generous free tier, superior performance, and much better aesthetics than the current solution.
+**Current Status:** Mapbox is now supported and recommended as the primary service. It offers a generous free tier, superior performance, and much better aesthetics than the baseline solution.
 
 ---
 
