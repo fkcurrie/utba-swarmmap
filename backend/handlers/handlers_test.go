@@ -324,6 +324,37 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 	}
 }
 
+func TestGetSwarmsHandler_NoSwarms(t *testing.T) {
+	// Prepare a mock store with NO data
+	mockStore := &MockStore{Swarms: []models.SwarmReport{}}
+
+	// Initialize handlers with the mock store and swarm service
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
+
+	req, err := http.NewRequest("GET", "/get_swarms", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.GetSwarmsHandler)
+	handler.ServeHTTP(rr, req)
+
+	// Check status code
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	// Check the response body is "[]\n"
+	body := strings.TrimSpace(rr.Body.String())
+	if body != "[]" {
+		t.Errorf("expected empty array '[]', got '%s'", body)
+	}
+}
+
 func TestLoginHandler(t *testing.T) {
 	mockStore := &MockStore{}
 	h := &Handlers{
