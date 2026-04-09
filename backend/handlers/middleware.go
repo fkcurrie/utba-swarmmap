@@ -16,6 +16,30 @@ type ContextKey string
 
 const SessionContextKey ContextKey = "session"
 
+// SecurityHeaders is a middleware that adds security-related headers to the response.
+func (h *Handlers) SecurityHeaders(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("X-Frame-Options", "DENY")
+		w.Header().Set("X-XSS-Protection", "1; mode=block")
+		w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
+		w.Header().Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+
+		// Content Security Policy
+		// Allow self, Google Fonts, FontAwesome, OpenStreetMap tiles, and Nominatim
+		csp := "default-src 'self'; " +
+			"script-src 'self' https://cdn.jsdelivr.net; " +
+			"style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
+			"font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
+			"img-src 'self' data: https://*.tile.openstreetmap.org https://*.googleapis.com https://*.gstatic.com; " +
+			"connect-src 'self' https://nominatim.openstreetmap.org;"
+
+		w.Header().Set("Content-Security-Policy", csp)
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 // RequireAuth is a middleware that checks for a valid session.
 func (h *Handlers) RequireAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +87,36 @@ func (h *Handlers) RequireRole(role string, next http.Handler) http.Handler {
 	})
 }
 
-// getSession retrieves the current session from a request cookie.
+// VerifyCSRF is a middleware that checks for a valid CSRF token in POST requests.
+func (h *Handlers) VerifyCSRF(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		session, ok := r.Context().Value(SessionContextKey).(*models.Session)
+		if !ok || session == nil {
+			// If no session, we might still want to check CSRF for public forms
+			// For now, only enforced for authenticated routes.
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		token := r.Header.Get("X-CSRF-Token")
+		if token == "" {
+			token = r.FormValue("csrf_token")
+		}
+
+		if token == "" || token != session.CSRFToken {
+			slog.Warn("CSRF token mismatch or missing", "userID", h.sanitize(session.UserID)) // #nosec G706
+			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
 func (h *Handlers) getSession(r *http.Request) *models.Session {
 	cookie, err := r.Cookie("session")
 	if err != nil {

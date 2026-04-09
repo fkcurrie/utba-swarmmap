@@ -155,12 +155,12 @@ func (h *Handlers) BootstrapHandler(w http.ResponseWriter, r *http.Request) {
 
 	_, err = h.Store.CreateUser(ctx, newUser)
 	if err != nil {
-		slog.Error("Failed to create bootstrap admin", "error", err, "email", h.sanitize(email))
+		slog.Error("Failed to create bootstrap admin", "error", err, "email", h.sanitize(email)) // #nosec G706
 		http.Error(w, "Failed to create admin user", http.StatusInternalServerError)
 		return
 	}
 
-	slog.Info("INITIAL ADMIN BOOTSTRAPPED", "name", h.sanitize(name), "email", h.sanitize(email))
+	slog.Info("INITIAL ADMIN BOOTSTRAPPED", "name", h.sanitize(name), "email", h.sanitize(email)) // #nosec G706
 
 	err = h.Templates.ExecuteTemplate(w, "bootstrap.html", map[string]interface{}{
 		"Title":             "Bootstrap Admin",

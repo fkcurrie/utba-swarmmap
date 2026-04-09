@@ -5,6 +5,7 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log/slog"
 	"mime/multipart"
 	"net/http"
@@ -268,9 +269,17 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 		BeekeeperNotes string `json:"beekeeperNotes"`
 	}
 
-	if err := json.NewDecoder(r.Body).Decode(&updateReq); err != nil {
-		h.jsonError(w, "Invalid JSON request body", http.StatusBadRequest)
-		return
+	// Try to decode JSON first
+	if r.Header.Get("Content-Type") == "application/json" {
+		if err := json.NewDecoder(r.Body).Decode(&updateReq); err != nil {
+			h.jsonError(w, "Invalid JSON request body", http.StatusBadRequest)
+			return
+		}
+	} else {
+		// Fallback to form values
+		updateReq.ID = r.FormValue("id")
+		updateReq.Status = r.FormValue("status")
+		updateReq.BeekeeperNotes = r.FormValue("beekeeperNotes")
 	}
 
 	if updateReq.ID == "" || updateReq.Status == "" {
@@ -286,6 +295,12 @@ func (h *Handlers) UpdateSwarmStatusHandler(w http.ResponseWriter, r *http.Reque
 	if err := h.Store.UpdateSwarm(r.Context(), updateReq.ID, updates); err != nil {
 		slog.Error("Failed to update report in Firestore", "error", err, "id", h.sanitize(updateReq.ID)) // #nosec G706
 		h.jsonError(w, "Error updating report", http.StatusInternalServerError)
+		return
+	}
+
+	// If it was a form submission, redirect back to dashboard
+	if r.Header.Get("Content-Type") != "application/json" {
+		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 		return
 	}
 
@@ -406,28 +421,43 @@ func (h *Handlers) UnclaimSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/swarmlist", http.StatusSeeOther)
 }
 
-func (h *Handlers) validateFile(file *multipart.FileHeader) error {
-	if file.Size > maxFileSize {
-		return fmt.Errorf("file %s is too large (max size is 50MB)", file.Filename)
+func (h *Handlers) validateFile(fileHeader *multipart.FileHeader) error {
+	if fileHeader.Size > maxFileSize {
+		return fmt.Errorf("file %s is too large (max size is 50MB)", fileHeader.Filename)
 	}
 
-	contentType := file.Header.Get("Content-Type")
+	file, err := fileHeader.Open()
+	if err != nil {
+		return fmt.Errorf("failed to open file %s: %v", fileHeader.Filename, err)
+	}
+	defer file.Close()
+
+	// Read the first 512 bytes to detect content type
+	buffer := make([]byte, 512)
+	n, err := file.Read(buffer)
+	if err != nil && err != io.EOF {
+		return fmt.Errorf("failed to read file %s: %v", fileHeader.Filename, err)
+	}
+
+	contentType := http.DetectContentType(buffer[:n])
 
 	if allowedImageTypes[contentType] || allowedVideoTypes[contentType] {
 		return nil
 	}
 
-	ext := strings.ToLower(filepath.Ext(file.Filename))
+	// Fallback to extension check for types not easily detected by DetectContentType
+	// (like some video formats)
+	ext := strings.ToLower(filepath.Ext(fileHeader.Filename))
 	allowedExtensions := map[string]bool{
-		".jpg": true, ".jpeg": true, ".png": true, ".gif": true, ".heic": true, ".heif": true,
+		".heic": true, ".heif": true,
 		".mp4": true, ".webm": true, ".mov": true, ".avi": true, ".3gp": true, ".mpeg": true,
 		".ogv": true, ".ts": true, ".mkv": true, ".m4v": true,
 	}
 
 	if allowedExtensions[ext] {
-		slog.Info("File accepted by extension", "filename", h.sanitize(file.Filename), "extension", h.sanitize(ext), "contentType", h.sanitize(contentType)) // #nosec G706
+		slog.Info("File accepted by extension", "filename", h.sanitize(fileHeader.Filename), "extension", h.sanitize(ext), "contentType", h.sanitize(contentType)) // #nosec G706
 		return nil
 	}
 
-	return fmt.Errorf("file %s has unsupported type %s (extension: %s)", file.Filename, contentType, ext)
+	return fmt.Errorf("file %s has unsupported type %s (extension: %s)", fileHeader.Filename, contentType, ext)
 }

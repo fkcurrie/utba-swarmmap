@@ -47,6 +47,7 @@
 									<span class="badge bg-info">Claimed by {{.AssignedCollectorEmail}}</span>
 									{{if eq $.User.UserID .AssignedCollectorID}}
 									<form action="/unclaim_swarm" method="POST" style="display:inline;">
+										<input type="hidden" name="csrf_token" value="{{.User.CSRFToken}}">
 										<input type="hidden" name="swarmID" value="{{.ID}}">
 										<button type="submit" class="btn btn-sm btn-outline-danger">Unclaim</button>
 									</form>
@@ -54,6 +55,7 @@
 								</div>
 							{{else}}
 								<form action="/claim_swarm" method="POST" style="display:inline;">
+									<input type="hidden" name="csrf_token" value="{{.User.CSRFToken}}">
 									<input type="hidden" name="swarmID" value="{{.ID}}">
 									<button type="submit" class="btn btn-sm btn-success">Offer to collect</button>
 								</form>

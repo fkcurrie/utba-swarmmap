@@ -233,12 +233,16 @@ func (s *Store) GetSession(ctx context.Context, sessionID string) (*models.Sessi
 // CreateSession creates a new session in Firestore.
 func (s *Store) CreateSession(ctx context.Context, session models.Session) (string, error) {
 	sessionID := uuid.New().String()
+	if session.CSRFToken == "" {
+		session.CSRFToken = uuid.New().String()
+	}
 	_, err := s.FirestoreClient.Collection(sessionsCollection).Doc(sessionID).Set(ctx, session)
 	if err != nil {
-		return "", fmt.Errorf("failed to create session in Firestore: %w", err)
+		return "", fmt.Errorf("failed to create session: %w", err)
 	}
 	return sessionID, nil
 }
+
 
 // DeleteSession removes a session from Firestore.
 func (s *Store) DeleteSession(ctx context.Context, sessionID string) error {

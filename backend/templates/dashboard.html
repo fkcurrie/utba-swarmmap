@@ -64,12 +64,15 @@
                                                 {{if .AssignedCollectorID}}
                                                     <span class="badge bg-warning text-dark mb-1 d-block">Assigned to you</span>
                                                     <form method="POST" action="/assign_swarm" aria-label="Unassign swarm">
+                                                        <input type="hidden" name="csrf_token" value="{{.User.CSRFToken}}">
                                                         <input type="hidden" name="swarmID" value="{{.ID}}">
+
                                                         <input type="hidden" name="action" value="unassign">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger w-100">Unassign</button>
                                                     </form>
                                                 {{else}}
                                                     <form method="POST" action="/assign_swarm" aria-label="Claim swarm">
+                                                        <input type="hidden" name="csrf_token" value="{{.User.CSRFToken}}">
                                                         <input type="hidden" name="swarmID" value="{{.ID}}">
                                                         <input type="hidden" name="action" value="assign">
                                                         <button type="submit" class="btn btn-sm btn-primary w-100">Claim</button>
@@ -124,12 +127,14 @@
                                             <td>
                                                 {{if eq .Status "Reported"}}
                                                     <form method="POST" action="/update_swarm_status" aria-label="Verify swarm">
+                                                        <input type="hidden" name="csrf_token" value="{{.User.CSRFToken}}">
                                                         <input type="hidden" name="id" value="{{.ID}}">
                                                         <input type="hidden" name="status" value="Verified">
                                                         <button type="submit" class="btn btn-sm btn-warning w-100">Verify</button>
                                                     </form>
                                                 {{else if eq .Status "Verified"}}
                                                     <form method="POST" action="/update_swarm_status" aria-label="Mark swarm as captured">
+                                                        <input type="hidden" name="csrf_token" value="{{.User.CSRFToken}}">
                                                         <input type="hidden" name="id" value="{{.ID}}">
                                                         <input type="hidden" name="status" value="Captured">
                                                         <button type="submit" class="btn btn-sm btn-success w-100">Captured</button>

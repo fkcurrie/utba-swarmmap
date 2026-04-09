@@ -79,7 +79,7 @@ func TestPrepareSwarm_Contract(t *testing.T) {
 
 	// Add a dummy file
 	part, _ := writer.CreateFormFile("file", "test.jpg")
-	_, _ = part.Write([]byte("dummy image content"))
+	_, _ = part.Write([]byte("\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00\x48\x00\x48\x00\x00\xff\xdb\x00\x43\x00\xff\xd8"))
 	_ = writer.Close()
 
 	req, _ := http.NewRequest("POST", "/prepare_swarm", body)

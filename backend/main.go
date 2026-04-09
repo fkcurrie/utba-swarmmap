@@ -130,9 +130,9 @@ func main() {
 	mux.HandleFunc("GET /auth", h.AuthHandler)
 	mux.HandleFunc("POST /prepare_swarm", h.PrepareSwarmHandler)
 	mux.HandleFunc("POST /confirm_swarm", h.ConfirmSwarmHandler)
-	mux.HandleFunc("POST /demo/generate_sample_data", h.GenerateSampleDataHandler)
+	mux.HandleFunc("POST /demo/generate_sample_data", h.RequireAuth(h.RequireRole("site_admin", h.VerifyCSRF(http.HandlerFunc(h.GenerateSampleDataHandler)))).ServeHTTP)
 	mux.HandleFunc("POST /api/track_visit", h.TrackVisitHandler)
-	mux.HandleFunc("GET /api/visits", h.VisitsAPIHandler)
+	mux.Handle("GET /api/visits", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.VisitsAPIHandler))))
 	mux.HandleFunc("GET /bootstrap", h.BootstrapHandler)
 	mux.HandleFunc("POST /bootstrap", h.BootstrapHandler)
 
@@ -141,15 +141,15 @@ func main() {
 	mux.Handle("GET /swarmlist", h.RequireAuth(http.HandlerFunc(h.SwarmListHandler)))
 	mux.Handle("GET /collectorsmap", h.RequireAuth(http.HandlerFunc(h.CollectorsMapHandler)))
 	mux.Handle("GET /admin", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.AdminHandler))))
-	mux.Handle("POST /admin/approve_user", h.RequireAuth(h.RequireRole("collector_admin", http.HandlerFunc(h.ApproveUserHandler))))
-	mux.Handle("POST /admin/reject_user", h.RequireAuth(h.RequireRole("collector_admin", http.HandlerFunc(h.RejectUserHandler))))
-	mux.Handle("POST /admin/delete_swarm", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.DeleteSwarmHandler))))
-	mux.Handle("POST /admin/promote_user", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.PromoteUserHandler))))
+	mux.Handle("POST /admin/approve_user", h.RequireAuth(h.RequireRole("collector_admin", h.VerifyCSRF(http.HandlerFunc(h.ApproveUserHandler)))))
+	mux.Handle("POST /admin/reject_user", h.RequireAuth(h.RequireRole("collector_admin", h.VerifyCSRF(http.HandlerFunc(h.RejectUserHandler)))))
+	mux.Handle("POST /admin/delete_swarm", h.RequireAuth(h.RequireRole("site_admin", h.VerifyCSRF(http.HandlerFunc(h.DeleteSwarmHandler)))))
+	mux.Handle("POST /admin/promote_user", h.RequireAuth(h.RequireRole("site_admin", h.VerifyCSRF(http.HandlerFunc(h.PromoteUserHandler)))))
 	mux.Handle("GET /collector_admin", h.RequireAuth(h.RequireRole("collector_admin", http.HandlerFunc(h.CollectorAdminHandler))))
-	mux.Handle("POST /update_swarm_status", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.UpdateSwarmStatusHandler))))
-	mux.Handle("POST /assign_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.AssignSwarmHandler))))
-	mux.Handle("POST /claim_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.ClaimSwarmHandler))))
-	mux.Handle("POST /unclaim_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.UnclaimSwarmHandler))))
+	mux.Handle("POST /update_swarm_status", h.RequireAuth(h.RequireRole("collector", h.VerifyCSRF(http.HandlerFunc(h.UpdateSwarmStatusHandler)))))
+	mux.Handle("POST /assign_swarm", h.RequireAuth(h.RequireRole("collector", h.VerifyCSRF(http.HandlerFunc(h.AssignSwarmHandler)))))
+	mux.Handle("POST /claim_swarm", h.RequireAuth(h.RequireRole("collector", h.VerifyCSRF(http.HandlerFunc(h.ClaimSwarmHandler)))))
+	mux.Handle("POST /unclaim_swarm", h.RequireAuth(h.RequireRole("collector", h.VerifyCSRF(http.HandlerFunc(h.UnclaimSwarmHandler)))))
 	// Add other routes here as they are refactored
 
 	port := getEnv("PORT", "8080")
@@ -160,9 +160,12 @@ func main() {
 	}
 	slog.Info("Starting server", "port", strings.ReplaceAll(strings.ReplaceAll(port, "\n", ""), "\r", ""), "version", strings.ReplaceAll(strings.ReplaceAll(version, "\n", ""), "\r", "")) // #nosec G706
 
+	// Apply security headers to all routes
+	handler := h.SecurityHeaders(mux)
+
 	srv := &http.Server{
 		Addr:         ":" + port,
-		Handler:      mux,
+		Handler:      handler,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 30 * time.Second,
 		IdleTimeout:  120 * time.Second,

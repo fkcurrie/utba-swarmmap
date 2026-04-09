@@ -115,6 +115,11 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	if len(password) < 8 {
+		h.renderRegisterPageWithError(w, "Password must be at least 8 characters long")
+		return
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		slog.Error("Error hashing password", "error", err)
@@ -270,6 +275,18 @@ func (h *Handlers) showPendingApprovalPage(w http.ResponseWriter, name string) {
 func (h *Handlers) GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 	slog.Debug("GoogleLoginHandler called", "path", h.sanitize(r.URL.Path)) // #nosec G706
 	state := uuid.New().String()
+
+	// Store state in a cookie to verify it in the callback
+	http.SetCookie(w, &http.Cookie{
+		Name:     "oauth_state",
+		Value:    state,
+		Path:     "/",
+		MaxAge:   300, // 5 minutes
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
 	url := h.GoogleOAuthConfig.AuthCodeURL(state, oauth2.SetAuthURLParam("prompt", "select_account"))
 	slog.Debug("Redirecting to Google Auth", "url", h.sanitize(url)) // #nosec G706
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
@@ -282,6 +299,18 @@ func (h *Handlers) AppleLoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	state := uuid.New().String()
+
+	// Store state in a cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:     "oauth_state",
+		Value:    state,
+		Path:     "/",
+		MaxAge:   300,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
 	url := h.AppleOAuthConfig.AuthCodeURL(state)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
@@ -380,6 +409,21 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	if len(password) < 8 {
+		err := h.Templates.ExecuteTemplate(w, "reset-password.html", map[string]interface{}{
+			"Title":             "Reset Password",
+			"Version":           h.Version,
+			"Token":             token,
+			"Error":             "Password must be at least 8 characters long",
+			"FrontendAssetsURL": h.FrontendAssetsURL,
+		})
+		if err != nil {
+			slog.Error("Error rendering reset-password page with error", "error", err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+		return
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		slog.Error("Error hashing password", "error", err)
@@ -450,10 +494,28 @@ func (h *Handlers) GoogleCallbackHandler(w http.ResponseWriter, r *http.Request)
 	code := r.URL.Query().Get("code")
 	state := r.URL.Query().Get("state")
 
-	if state == "" {
+	// Verify state to prevent CSRF
+	cookie, err := r.Cookie("oauth_state")
+	if err != nil || cookie == nil || cookie.Value == "" || cookie.Value != state {
+		expected := ""
+		if cookie != nil {
+			expected = cookie.Value
+		}
+		slog.Warn("Invalid OAuth state", "expected", h.sanitize(expected), "actual", h.sanitize(state)) // #nosec G706
 		http.Error(w, "Invalid state parameter", http.StatusUnauthorized)
 		return
 	}
+
+	// Clear the state cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:     "oauth_state",
+		Value:    "",
+		Path:     "/",
+		MaxAge:   -1,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	})
 
 	ctx := r.Context()
 	token, err := h.GoogleOAuthConfig.Exchange(ctx, code)
