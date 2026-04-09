@@ -32,7 +32,8 @@ func (h *Handlers) SecurityHeaders(next http.Handler) http.Handler {
 			"style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
 			"font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
 			"img-src 'self' data: https://*.tile.openstreetmap.org https://*.googleapis.com https://*.gstatic.com; " +
-			"connect-src 'self' https://nominatim.openstreetmap.org;"
+			"connect-src 'self' https://nominatim.openstreetmap.org; " +
+			"frame-ancestors 'none';"
 
 		w.Header().Set("Content-Security-Policy", csp)
 
