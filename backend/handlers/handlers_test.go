@@ -1163,6 +1163,53 @@ func TestUsernameRegisterHandler(t *testing.T) {
 	}
 }
 
+func TestUnclaimSwarmHandler(t *testing.T) {
+	mockStore := &MockStore{
+		Swarms: []models.SwarmReport{
+			{
+				ID:                     "test-swarm-id",
+				Status:                 "Collection in Progress",
+				AssignedCollectorID:    "test-user",
+				AssignedCollectorEmail: "test@example.com",
+			},
+		},
+		Sessions: map[string]models.Session{
+			"test-session-id": {UserID: "test-user", Username: "test@example.com", Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)},
+		},
+	}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
+
+	body := strings.NewReader("swarmID=test-swarm-id")
+	req, err := http.NewRequest("POST", "/unclaim_swarm", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.AddCookie(&http.Cookie{Name: "session", Value: "test-session-id"})
+
+	rr := httptest.NewRecorder()
+	handler := h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.UnclaimSwarmHandler)))
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusSeeOther {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusSeeOther)
+	}
+
+	if mockStore.Swarms[0].AssignedCollectorID != "" {
+		t.Errorf("expected AssignedCollectorID to be empty, got %v", mockStore.Swarms[0].AssignedCollectorID)
+	}
+	if mockStore.Swarms[0].AssignedCollectorEmail != "" {
+		t.Errorf("expected AssignedCollectorEmail to be empty, got %v", mockStore.Swarms[0].AssignedCollectorEmail)
+	}
+	if mockStore.Swarms[0].Status != "Reported" {
+		t.Errorf("expected swarm status to be 'Reported', got '%s'", mockStore.Swarms[0].Status)
+	}
+}
+
 func TestVerifyChecks(t *testing.T) {
 	if 1+1 != 2 {
 		t.Error("Math is broken")

@@ -369,6 +369,43 @@ func (h *Handlers) ClaimSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/swarmlist", http.StatusSeeOther)
 }
 
+func (h *Handlers) UnclaimSwarmHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // Limit body to 1MB
+	session, ok := r.Context().Value(SessionContextKey).(*models.Session)
+	if !ok {
+		slog.Error("Could not retrieve session from context")
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	swarmID := r.FormValue("swarmID")
+	if swarmID == "" {
+		http.Error(w, "Swarm ID required", http.StatusBadRequest)
+		return
+	}
+
+	var updates []firestore.Update
+	updates = append(updates, firestore.Update{Path: "assignedCollectorID", Value: ""})
+	updates = append(updates, firestore.Update{Path: "assignedCollectorEmail", Value: ""})
+	updates = append(updates, firestore.Update{Path: "status", Value: "Reported"})
+	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: time.Now()})
+
+	if err := h.Store.UpdateSwarm(r.Context(), swarmID, updates); err != nil {
+		slog.Error("Failed to update swarm", "error", err, "id", h.sanitize(swarmID)) // #nosec G706
+		http.Error(w, "Failed to update swarm", http.StatusInternalServerError)
+		return
+	}
+
+	slog.Info("Swarm unclaimed", "swarmID", h.sanitize(swarmID), "userID", h.sanitize(session.UserID)) // #nosec G706
+
+	http.Redirect(w, r, "/swarmlist", http.StatusSeeOther)
+}
+
 func (h *Handlers) validateFile(file *multipart.FileHeader) error {
 	if file.Size > maxFileSize {
 		return fmt.Errorf("file %s is too large (max size is 50MB)", file.Filename)

@@ -149,6 +149,7 @@ func main() {
 	mux.Handle("POST /update_swarm_status", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.UpdateSwarmStatusHandler))))
 	mux.Handle("POST /assign_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.AssignSwarmHandler))))
 	mux.Handle("POST /claim_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.ClaimSwarmHandler))))
+	mux.Handle("POST /unclaim_swarm", h.RequireAuth(h.RequireRole("collector", http.HandlerFunc(h.UnclaimSwarmHandler))))
 	// Add other routes here as they are refactored
 
 	port := getEnv("PORT", "8080")
