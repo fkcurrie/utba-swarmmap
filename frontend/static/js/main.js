@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let swarmLayerGroup;
 
   // Caching configuration
-  const CACHE_KEY = 'utba_swarms_cache';
+  const CACHE_KEY_BASE = 'utba_swarms_cache';
   const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   if (mapElement) {
@@ -60,8 +60,23 @@ document.addEventListener('DOMContentLoaded', function () {
       // Render swarms on map
       const renderSwarms = (swarms) => {
         const debugSwarms = document.getElementById('debugSwarms');
+
+        if (!swarmLayerGroup) return;
         swarmLayerGroup.clearLayers();
         if (debugSwarms) debugSwarms.innerHTML = '';
+
+        if (!Array.isArray(swarms)) {
+          console.warn('Swarms data is not an array:', swarms);
+          return;
+        }
+
+        if (swarms.length === 0) {
+          if (debugSwarms) {
+            debugSwarms.innerHTML =
+              '<div class="text-center p-3 text-muted">No swarms reported yet.</div>';
+          }
+          return;
+        }
 
         swarms.forEach((swarm) => {
           let color = '#ff0000'; // Default Red for Reported
@@ -86,12 +101,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="p-2 bg-light rounded small mb-2">${swarm.description}</div>
             `;
 
+          // Combine media URLs from all possible fields
+          const allMedia = [
+            ...(swarm.reportedMediaURLs || []),
+            ...(swarm.capturedMediaURLs || []),
+            ...(swarm.mediaURLs || []), // For compatibility with older data or PrepareSwarm
+          ];
+
           // Add media button if URLs exist
-          if (swarm.mediaURLs && swarm.mediaURLs.length > 0) {
+          if (allMedia.length > 0) {
             popupContent += `
                 <div class="d-grid">
-                    <button class="btn btn-sm btn-primary view-media-btn" data-media-urls='${JSON.stringify(swarm.mediaURLs)}'>
-                        <i class="fa-solid fa-images me-1"></i> View ${swarm.mediaURLs.length} Photo/Video
+                    <button class="btn btn-sm btn-primary view-media-btn" data-media-urls='${JSON.stringify(allMedia)}'>
+                        <i class="fa-solid fa-images me-1"></i> View ${allMedia.length} Photo/Video
                     </button>
                 </div>
             `;
@@ -142,10 +164,13 @@ document.addEventListener('DOMContentLoaded', function () {
       // Fetch and display swarms with caching
       const fetchSwarms = async (forceRefresh = false) => {
         const debugSwarms = document.getElementById('debugSwarms');
+        const cacheKey = debugSwarms
+          ? `${CACHE_KEY_BASE}_collector`
+          : CACHE_KEY_BASE;
 
         // Check cache
         if (!forceRefresh) {
-          const cached = sessionStorage.getItem(CACHE_KEY);
+          const cached = sessionStorage.getItem(cacheKey);
           if (cached) {
             try {
               const { timestamp, data } = JSON.parse(cached);
@@ -173,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
           // Update cache
           sessionStorage.setItem(
-            CACHE_KEY,
+            cacheKey,
             JSON.stringify({
               timestamp: Date.now(),
               data: swarms,
@@ -399,8 +424,9 @@ document.addEventListener('DOMContentLoaded', function () {
           throw new Error(errorText || 'Failed to confirm report');
         }
 
-        // Clear cache since new swarm is added
-        sessionStorage.removeItem(CACHE_KEY);
+        // Clear caches since new swarm is added
+        sessionStorage.removeItem(CACHE_KEY_BASE);
+        sessionStorage.removeItem(`${CACHE_KEY_BASE}_collector`);
 
         alert('Swarm report submitted successfully!');
         reportSwarmForm.reset();
