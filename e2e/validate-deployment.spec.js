@@ -70,7 +70,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const footerLink = footer.locator('a');
   await expect(footerLink).toHaveAttribute('href', 'https://github.com/google/gemini-cli');
   await expect(footerLink).toHaveAttribute('target', '_blank');
-  await expect(footerLink).toHaveAttribute('rel', /noopener/);
+  await expect(footerLink).toHaveAttribute('rel', 'noopener');
   await expect(footerLink).toHaveText('gemini-cli');
   await expect(footerLink).toBeVisible();
 
@@ -85,8 +85,14 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(submitBtn).toBeVisible();
   await expect(submitBtn).toHaveText(/Submit Report/i);
   
-  // Close the modal
+  // Close the modal via close button
   await modal.locator('.btn-close').click();
+  await expect(modal).not.toBeVisible();
+
+  // Re-open and close via ESC key for added robustness
+  await reportBtn.click();
+  await expect(modal).toBeVisible();
+  await page.keyboard.press('Escape');
   await expect(modal).not.toBeVisible();
 
   // 4. Verify Leaflet map is initialized (check for leaflet classes)
