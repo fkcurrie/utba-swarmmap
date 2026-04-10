@@ -33,11 +33,11 @@ func (h *Handlers) SecurityHeaders(next http.Handler) http.Handler {
 		}
 
 		csp := "default-src 'self'; " +
-			"script-src 'self' https://cdn.jsdelivr.net" + assetsURL + "; " +
+			"script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net" + assetsURL + "; " +
 			"style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com" + assetsURL + "; " +
 			"font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com" + assetsURL + "; " +
-			"img-src 'self' data: https://*.tile.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.googleapis.com https://*.gstatic.com" + assetsURL + "; " +
-			"connect-src 'self' https://nominatim.openstreetmap.org https://api.mapbox.com; " +
+			"img-src 'self' data: blob: https://*.tile.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.googleapis.com https://*.gstatic.com" + assetsURL + "; " +
+			"connect-src 'self' https://nominatim.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://events.mapbox.com; " +
 			"frame-ancestors 'none';"
 
 		w.Header().Set("Content-Security-Policy", csp)

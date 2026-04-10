@@ -34,7 +34,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(map).toBeVisible();
   // Check if CSS is applied (map should have height set in style.css)
   const mapHeight = await map.evaluate(el => window.getComputedStyle(el).height);
-  expect(parseInt(mapHeight), 'Map height should be at least 400px').toBeGreaterThan(400);
+  expect(parseInt(mapHeight), 'Map height should be at least 400px').toBeGreaterThanOrEqual(400);
 
   const legend = page.locator('#legendTitle');
   await expect(legend).toBeVisible();
