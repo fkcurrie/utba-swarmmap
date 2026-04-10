@@ -26,13 +26,13 @@ func (h *Handlers) SecurityHeaders(next http.Handler) http.Handler {
 		w.Header().Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
 
 		// Content Security Policy
-		// Allow self, Google Fonts, FontAwesome, OpenStreetMap tiles, and Nominatim
+		// Allow self, Google Fonts, FontAwesome, OpenStreetMap tiles, Mapbox, and Nominatim
 		csp := "default-src 'self'; " +
 			"script-src 'self' https://cdn.jsdelivr.net; " +
 			"style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
 			"font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
-			"img-src 'self' data: https://*.tile.openstreetmap.org https://*.googleapis.com https://*.gstatic.com; " +
-			"connect-src 'self' https://nominatim.openstreetmap.org; " +
+			"img-src 'self' data: https://*.tile.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.googleapis.com https://*.gstatic.com; " +
+			"connect-src 'self' https://nominatim.openstreetmap.org https://api.mapbox.com; " +
 			"frame-ancestors 'none';"
 
 		w.Header().Set("Content-Security-Policy", csp)

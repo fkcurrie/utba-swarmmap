@@ -49,6 +49,12 @@ func TestSecurityHeaders(t *testing.T) {
 	if !strings.Contains(csp, "frame-ancestors 'none'") {
 		t.Errorf("expected CSP to contain frame-ancestors 'none', got %s", csp)
 	}
+	if !strings.Contains(csp, "https://api.mapbox.com") {
+		t.Errorf("expected CSP to contain https://api.mapbox.com, got %s", csp)
+	}
+	if !strings.Contains(csp, "https://*.mapbox.com") {
+		t.Errorf("expected CSP to contain https://*.mapbox.com, got %s", csp)
+	}
 }
 
 func TestVerifyCSRF(t *testing.T) {
