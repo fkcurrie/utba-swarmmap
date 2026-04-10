@@ -32,6 +32,58 @@ func TestNominatimLocationService_GetNearestIntersection_Success(t *testing.T) {
 	}
 }
 
+func TestMapboxLocationService_GetNearestIntersection_Success(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, `{"features": [{"place_name": "Yonge & Bloor, Toronto, ON"}]}`)
+	}))
+	defer server.Close()
+
+	service := &MapboxLocationService{
+		Client:      server.Client(),
+		BaseURL:     server.URL,
+		AccessToken: "test-token",
+	}
+
+	res, err := service.GetNearestIntersection(context.Background(), 43.6532, -79.3832)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+
+	if res != "Yonge & Bloor, Toronto, ON" {
+		t.Errorf("expected 'Yonge & Bloor, Toronto, ON', got '%s'", res)
+	}
+}
+
+func TestMapboxLocationService_GetNearestIntersection_NoToken(t *testing.T) {
+	service := &MapboxLocationService{
+		AccessToken: "",
+	}
+
+	_, err := service.GetNearestIntersection(context.Background(), 0, 0)
+	if err == nil {
+		t.Fatal("expected error due to missing token, got nil")
+	}
+}
+
+func TestMapboxLocationService_GetNearestIntersection_Error(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer server.Close()
+
+	service := &MapboxLocationService{
+		Client:      server.Client(),
+		BaseURL:     server.URL,
+		AccessToken: "test-token",
+	}
+
+	_, err := service.GetNearestIntersection(context.Background(), 0, 0)
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+}
+
 func TestNominatimLocationService_GetNearestIntersection_Error(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)

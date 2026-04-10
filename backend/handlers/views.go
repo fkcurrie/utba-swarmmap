@@ -61,6 +61,7 @@ func (h *Handlers) CollectorsMapHandler(w http.ResponseWriter, r *http.Request) 
 		"Version":           h.Version,
 		"User":              session,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
+		"MapboxToken":       h.MapboxToken,
 	}
 
 	err := h.Templates.ExecuteTemplate(w, "collectors_map.html", data)

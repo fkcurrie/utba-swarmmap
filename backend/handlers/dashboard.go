@@ -35,6 +35,7 @@ func (h *Handlers) DashboardHandler(w http.ResponseWriter, r *http.Request) {
 		"ShowCollectorAdmin": showCollectorAdmin,
 		"ShowSiteAdmin":      showSiteAdmin,
 		"FrontendAssetsURL":  h.FrontendAssetsURL,
+		"MapboxToken":        h.MapboxToken,
 	})
 	if err != nil {
 		slog.Error("Error executing dashboard template", "error", err)

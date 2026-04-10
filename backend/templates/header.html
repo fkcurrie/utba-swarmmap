@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/leaflet.markercluster/css/MarkerCluster.css" />
     <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/leaflet.markercluster/css/MarkerCluster.Default.css" />
     <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/css/style.css">
+    <script>
+        window.MAPBOX_TOKEN = "{{.MapboxToken}}";
+    </script>
 </head>
 <body>
     <header role="banner">
