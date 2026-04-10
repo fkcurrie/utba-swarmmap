@@ -142,6 +142,7 @@ jobs:
             GOOGLE_CLIENT_ID=google-oauth-client-id:latest
             GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest
       - name: Health Check
+        id: health-check
         run: |
           curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "${{ steps.deploy-backend.outputs.url }}"
 
@@ -154,7 +155,7 @@ jobs:
           npx playwright test e2e/validate-deployment.spec.js --config e2e/playwright.config.js
 
       - name: Handle Deployment Failure
-        if: failure() && steps.validation.outcome == 'failure'
+        if: failure() && (steps.validation.outcome == 'failure' || steps.health-check.outcome == 'failure')
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
