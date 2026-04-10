@@ -130,6 +130,13 @@ document.addEventListener('DOMContentLoaded', function () {
           const coordinates = e.features[0].geometry.coordinates.slice();
           const swarm = e.features[0].properties;
 
+          // Ensure that if the map is zoomed out such that multiple
+          // copies of the feature are visible, the popup appears
+          // over the copy being pointed to.
+          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+          }
+
           // Helper to parse potential stringified JSON from Mapbox properties
           const parseProp = (prop) => {
             if (typeof prop === 'string') {
