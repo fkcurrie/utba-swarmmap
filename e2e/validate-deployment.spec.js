@@ -38,10 +38,23 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(legend).toBeVisible();
   await expect(legend).toHaveText(/Pin Color Legend/i);
 
+  // Check legend items
+  const legendItems = page.locator('.legend-item');
+  await expect(legendItems).toHaveCount(4);
+  await expect(legendItems.nth(0)).toContainText(/Reported/i);
+  await expect(legendItems.nth(1)).toContainText(/Verified/i);
+  await expect(legendItems.nth(2)).toContainText(/Captured/i);
+  await expect(legendItems.nth(3)).toContainText(/Archived/i);
+
   const footer = page.locator('footer');
   await expect(footer).toBeVisible();
   await expect(footer).toContainText(/Made with/i);
   await expect(footer).toContainText(/gemini-cli/i);
+  
+  // Verify footer link
+  const footerLink = footer.locator('a');
+  await expect(footerLink).toHaveAttribute('href', 'https://github.com/google/gemini-cli');
+  await expect(footerLink).toHaveAttribute('target', '_blank');
 
   // 3. Verify Leaflet map is initialized (check for leaflet classes)
   const leafletContainer = page.locator('.leaflet-container');
