@@ -67,7 +67,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(footer).toContainText(/gemini-cli/i);
   
   // Verify footer link specifically
-  const footerLink = footer.locator('a');
+  const footerLink = footer.getByRole('link', { name: 'gemini-cli' });
   await expect(footerLink).toHaveAttribute('href', 'https://github.com/google/gemini-cli');
   await expect(footerLink).toHaveAttribute('target', '_blank');
   await expect(footerLink).toHaveAttribute('rel', 'noopener');
