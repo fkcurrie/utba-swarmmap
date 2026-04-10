@@ -55,6 +55,9 @@ func TestSecurityHeaders(t *testing.T) {
 	if !strings.Contains(csp, "blob:") {
 		t.Errorf("expected CSP to contain blob:, got %s", csp)
 	}
+	if !strings.Contains(csp, "font-src 'self' data:") {
+		t.Errorf("expected CSP to contain font-src 'self' data:, got %s", csp)
+	}
 	if !strings.Contains(csp, "https://api.mapbox.com") {
 		t.Errorf("expected CSP to contain https://api.mapbox.com, got %s", csp)
 	}
@@ -66,6 +69,9 @@ func TestSecurityHeaders(t *testing.T) {
 	}
 	if !strings.Contains(csp, "https://events.mapbox.com") {
 		t.Errorf("expected CSP to contain https://events.mapbox.com, got %s", csp)
+	}
+	if !strings.Contains(csp, "'unsafe-eval'") {
+		t.Errorf("expected CSP to contain 'unsafe-eval', got %s", csp)
 	}
 	if !strings.Contains(csp, "worker-src 'self' blob:") {
 		t.Errorf("expected CSP to contain worker-src 'self' blob:, got %s", csp)
@@ -84,7 +90,7 @@ func TestSecurityHeaders(t *testing.T) {
 			t.Errorf("expected CSP to contain https://assets.example.com, got %s", csp2)
 		}
 		// Verify it's in multiple directives
-		directives := []string{"script-src", "style-src", "font-src", "img-src", "connect-src"}
+		directives := []string{"script-src", "style-src", "font-src", "img-src", "connect-src", "worker-src", "child-src", "media-src"}
 		for _, d := range directives {
 			if !strings.Contains(csp2, d) || !strings.Contains(strings.Split(csp2, d)[1], "https://assets.example.com") {
 				t.Errorf("expected %s to contain https://assets.example.com in %s", d, csp2)
