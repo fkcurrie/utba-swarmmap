@@ -61,8 +61,17 @@ func TestSecurityHeaders(t *testing.T) {
 	if !strings.Contains(csp, "https://*.mapbox.com") {
 		t.Errorf("expected CSP to contain https://*.mapbox.com, got %s", csp)
 	}
+	if !strings.Contains(csp, "https://unpkg.com") {
+		t.Errorf("expected CSP to contain https://unpkg.com, got %s", csp)
+	}
 	if !strings.Contains(csp, "https://events.mapbox.com") {
 		t.Errorf("expected CSP to contain https://events.mapbox.com, got %s", csp)
+	}
+	if !strings.Contains(csp, "worker-src 'self' blob:") {
+		t.Errorf("expected CSP to contain worker-src 'self' blob:, got %s", csp)
+	}
+	if !strings.Contains(csp, "media-src 'self' https://*.googleapis.com") {
+		t.Errorf("expected CSP to contain media-src 'self' https://*.googleapis.com, got %s", csp)
 	}
 
 	t.Run("CSP with FrontendAssetsURL", func(t *testing.T) {
@@ -75,7 +84,7 @@ func TestSecurityHeaders(t *testing.T) {
 			t.Errorf("expected CSP to contain https://assets.example.com, got %s", csp2)
 		}
 		// Verify it's in multiple directives
-		directives := []string{"script-src", "style-src", "font-src", "img-src"}
+		directives := []string{"script-src", "style-src", "font-src", "img-src", "connect-src"}
 		for _, d := range directives {
 			if !strings.Contains(csp2, d) || !strings.Contains(strings.Split(csp2, d)[1], "https://assets.example.com") {
 				t.Errorf("expected %s to contain https://assets.example.com in %s", d, csp2)
