@@ -38,9 +38,9 @@ func (h *Handlers) SecurityHeaders(next http.Handler) http.Handler {
 			"font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com" + assetsURL + "; " +
 			"img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.tiles.mapbox.com https://*.googleapis.com https://*.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com" + assetsURL + "; " +
 			"connect-src 'self' https://nominatim.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.tiles.mapbox.com https://events.mapbox.com https://*.tile.openstreetmap.org https://tile.openstreetmap.org" + assetsURL + "; " +
-			"worker-src 'self' blob:" + assetsURL + "; " +
-			"child-src 'self' blob:" + assetsURL + "; " +
-			"media-src 'self' https://*.googleapis.com" + assetsURL + "; " +
+			"worker-src 'self' blob: " + assetsURL + "; " +
+			"child-src 'self' blob: " + assetsURL + "; " +
+			"media-src 'self' https://*.googleapis.com " + assetsURL + "; " +
 			"frame-ancestors 'none';"
 
 		w.Header().Set("Content-Security-Policy", csp)
