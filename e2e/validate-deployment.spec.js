@@ -25,6 +25,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   // 2. Verify key UI elements are present
   const reportBtn = page.locator('#reportSwarmBtn');
   await expect(reportBtn).toBeVisible();
+  await expect(reportBtn).toHaveClass(/btn-primary/);
   await expect(reportBtn).toHaveText(/Report a Swarm at Your Location/i);
   await expect(reportBtn).toHaveAttribute('aria-label', /Report a Bee Swarm at your current location/i);
   await expect(reportBtn.locator('i.fa-location-dot')).toBeVisible();
@@ -43,10 +44,22 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   // Check legend items
   const legendItems = page.locator('.legend-item');
   await expect(legendItems).toHaveCount(4);
-  await expect(legendItems.nth(0)).toContainText(/Reported/i);
-  await expect(legendItems.nth(1)).toContainText(/Verified/i);
-  await expect(legendItems.nth(2)).toContainText(/Captured/i);
-  await expect(legendItems.nth(3)).toContainText(/Archived/i);
+  
+  // Verify specific legend text and colors for robustness
+  const expectedLegend = [
+    { text: /Reported/i, color: 'rgb(255, 0, 0)' },
+    { text: /Verified/i, color: 'rgb(255, 105, 180)' },
+    { text: /Captured/i, color: 'rgb(0, 255, 0)' },
+    { text: /Archived/i, color: 'rgb(0, 0, 255)' }
+  ];
+
+  for (let i = 0; i < expectedLegend.length; i++) {
+    const item = legendItems.nth(i);
+    await expect(item).toContainText(expectedLegend[i].text);
+    const colorSpan = item.locator('.legend-color');
+    await expect(colorSpan).toBeVisible();
+    await expect(colorSpan).toHaveCSS('background-color', expectedLegend[i].color);
+  }
 
   const footer = page.locator('footer');
   await expect(footer).toBeVisible();
@@ -54,10 +67,11 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(footer).toContainText(/gemini-cli/i);
   await expect(footer).toContainText(/🐝❤️🐝/);
   
-  // Verify footer link
+  // Verify footer link specifically
   const footerLink = footer.locator('a');
   await expect(footerLink).toHaveAttribute('href', 'https://github.com/google/gemini-cli');
   await expect(footerLink).toHaveAttribute('target', '_blank');
+  await expect(footerLink).toHaveText('gemini-cli');
   await expect(footerLink).toBeVisible();
 
   // 3. Verify Leaflet map is initialized (check for leaflet classes)
