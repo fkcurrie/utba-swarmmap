@@ -63,18 +63,33 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   const footer = page.locator('footer');
   await expect(footer).toBeVisible();
-  await expect(footer).toContainText(/Made with/i);
+  await expect(footer).toContainText(/Made with 🐝❤️🐝 with/i);
   await expect(footer).toContainText(/gemini-cli/i);
-  await expect(footer).toContainText(/🐝❤️🐝/);
   
   // Verify footer link specifically
   const footerLink = footer.locator('a');
   await expect(footerLink).toHaveAttribute('href', 'https://github.com/google/gemini-cli');
   await expect(footerLink).toHaveAttribute('target', '_blank');
+  await expect(footerLink).toHaveAttribute('rel', /noopener/);
   await expect(footerLink).toHaveText('gemini-cli');
   await expect(footerLink).toBeVisible();
 
-  // 3. Verify Leaflet map is initialized (check for leaflet classes)
+  // 3. Verify Report Modal functionality
+  await reportBtn.click();
+  const modal = page.locator('#reportSwarmModal');
+  await expect(modal).toBeVisible();
+  await expect(modal.locator('.modal-title')).toContainText(/Report Bee Swarm/i);
+  await expect(modal.locator('i.fa-bug')).toBeVisible();
+  
+  const submitBtn = modal.locator('button[type="submit"]');
+  await expect(submitBtn).toBeVisible();
+  await expect(submitBtn).toHaveText(/Submit Report/i);
+  
+  // Close the modal
+  await modal.locator('.btn-close').click();
+  await expect(modal).not.toBeVisible();
+
+  // 4. Verify Leaflet map is initialized (check for leaflet classes)
   const leafletContainer = page.locator('.leaflet-container');
   await expect(leafletContainer).toBeVisible();
 
