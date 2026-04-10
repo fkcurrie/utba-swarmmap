@@ -1,3 +1,4 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
 

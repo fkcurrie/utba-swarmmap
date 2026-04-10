@@ -1,3 +1,4 @@
+// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 import { test, expect } from '@playwright/test';
 
 test('deployment validation - basic elements and assets', async ({ page }) => {
