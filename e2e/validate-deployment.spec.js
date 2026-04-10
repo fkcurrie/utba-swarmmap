@@ -1,7 +1,7 @@
 // Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 import { test, expect } from '@playwright/test';
 
-test('deployment validation - basic elements and assets', async ({ page }) => {
+test('deployment validation - basic elements and assets', async ({ page }, testInfo) => {
   const failedRequests = [];
   const consoleErrors = [];
 
@@ -25,6 +25,7 @@ test('deployment validation - basic elements and assets', async ({ page }) => {
   // 2. Verify key UI elements are present
   const reportBtn = page.locator('#reportSwarmBtn');
   await expect(reportBtn).toBeVisible();
+  await expect(reportBtn).toHaveText(/Report a Swarm/i);
 
   const map = page.locator('#map');
   await expect(map).toBeVisible();
@@ -34,6 +35,10 @@ test('deployment validation - basic elements and assets', async ({ page }) => {
 
   const legend = page.locator('#legendTitle');
   await expect(legend).toBeVisible();
+
+  const footer = page.locator('footer');
+  await expect(footer).toBeVisible();
+  await expect(footer).toContainText(/gemini-cli/i);
 
   // 3. Verify Leaflet map is initialized (check for leaflet classes)
   const leafletContainer = page.locator('.leaflet-container');
@@ -70,6 +75,9 @@ test('deployment validation - basic elements and assets', async ({ page }) => {
     }
   }
 
-  // 7. Visual check - just a simple screenshot for the report
-  await page.screenshot({ path: 'deployment-validation.png', fullPage: true });
+  // 7. Visual check - attach a screenshot to the test report
+  await testInfo.attach('deployment-screenshot', {
+    body: await page.screenshot({ fullPage: true }),
+    contentType: 'image/png',
+  });
 });
