@@ -26,6 +26,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const reportBtn = page.locator('#reportSwarmBtn');
   await expect(reportBtn).toBeVisible();
   await expect(reportBtn).toHaveText(/Report a Swarm/i);
+  await expect(reportBtn).toHaveText(/at Your Location/i);
 
   const map = page.locator('#map');
   await expect(map).toBeVisible();
@@ -35,9 +36,11 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   const legend = page.locator('#legendTitle');
   await expect(legend).toBeVisible();
+  await expect(legend).toHaveText(/Pin Color Legend/i);
 
   const footer = page.locator('footer');
   await expect(footer).toBeVisible();
+  await expect(footer).toContainText(/Made with/i);
   await expect(footer).toContainText(/gemini-cli/i);
 
   // 3. Verify Leaflet map is initialized (check for leaflet classes)

@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
 # Mapping Service Review - UTBA SwarmMap
 
 ## Current Implementation
