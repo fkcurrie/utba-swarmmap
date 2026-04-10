@@ -27,11 +27,16 @@ func (h *Handlers) SecurityHeaders(next http.Handler) http.Handler {
 
 		// Content Security Policy
 		// Allow self, Google Fonts, FontAwesome, OpenStreetMap tiles, Mapbox, and Nominatim
+		assetsURL := ""
+		if h.FrontendAssetsURL != "" {
+			assetsURL = " " + h.FrontendAssetsURL
+		}
+
 		csp := "default-src 'self'; " +
-			"script-src 'self' https://cdn.jsdelivr.net; " +
-			"style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com; " +
-			"font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; " +
-			"img-src 'self' data: https://*.tile.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.googleapis.com https://*.gstatic.com; " +
+			"script-src 'self' https://cdn.jsdelivr.net" + assetsURL + "; " +
+			"style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com" + assetsURL + "; " +
+			"font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com" + assetsURL + "; " +
+			"img-src 'self' data: https://*.tile.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.googleapis.com https://*.gstatic.com" + assetsURL + "; " +
 			"connect-src 'self' https://nominatim.openstreetmap.org https://api.mapbox.com; " +
 			"frame-ancestors 'none';"
 
