@@ -4,3 +4,4 @@ frontend/static/vendor/**
 backend/templates/**
 node_modules/**
 package-lock.json
+test-results/**
