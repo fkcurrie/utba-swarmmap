@@ -15,8 +15,8 @@ This separation allows the frontend (styling, UI logic) to be developed and depl
 
 ## Features
 
-- **Interactive Map**: Shows reported bee swarms using OpenStreetMap or Mapbox (if configured) and Leaflet.js.
-- **Enhanced Mapping**: Supports Mapbox vector tiles and Mapbox Geocoding API for superior performance and aesthetics.
+- **Interactive Map**: Shows reported bee swarms using high-performance Mapbox GL JS v3 vector tiles.
+- **Enhanced Mapping**: Supports Mapbox native clustering and Mapbox Geocoding API (with Nominatim fallback) for superior performance and aesthetics.
 - **Public Swarm Reporting**: Anyone can report a swarm, optionally including photos and videos.
 - **Camera & Gallery Upload**: On mobile, users can either take a new photo/video or upload an existing one from their gallery.
 - **Admin Dashboard**: A comprehensive dashboard for administrators to manage users and swarms.
@@ -27,7 +27,7 @@ This separation allows the frontend (styling, UI logic) to be developed and depl
 
 - **Backend**: Go
 - **Frontend**: Go (for serving), HTML, CSS, vanilla JavaScript
-- **UI Libraries**: Bootstrap, [Chart.js](https://www.chartjs.org/), Leaflet.js (with optional Mapbox integration)
+- **UI Libraries**: Bootstrap, [Chart.js](https://www.chartjs.org/), Mapbox GL JS v3
 - **Database**: Google Cloud Firestore
 - **Storage**: Google Cloud Storage
 - **Deployment**: Docker, Google Cloud Run

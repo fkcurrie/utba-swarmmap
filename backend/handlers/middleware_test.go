@@ -61,8 +61,8 @@ func TestSecurityHeaders(t *testing.T) {
 	if !strings.Contains(csp, "https://*.mapbox.com") {
 		t.Errorf("expected CSP to contain https://*.mapbox.com, got %s", csp)
 	}
-	if !strings.Contains(csp, "https://unpkg.com") {
-		t.Errorf("expected CSP to contain https://unpkg.com, got %s", csp)
+	if !strings.Contains(csp, "https://cdnjs.cloudflare.com") {
+		t.Errorf("expected CSP to contain https://cdnjs.cloudflare.com, got %s", csp)
 	}
 	if !strings.Contains(csp, "https://events.mapbox.com") {
 		t.Errorf("expected CSP to contain https://events.mapbox.com, got %s", csp)
