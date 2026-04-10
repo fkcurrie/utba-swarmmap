@@ -61,10 +61,10 @@ Instructions for running each service locally will be added in a future update.
 This project includes a GitHub Actions workflow for automated validation and deployment to Google Cloud Run.
 
 - **Workflow File**: `.github/workflows/deploy.yml`
-- **Trigger**: The workflow is configured to trigger on any tag matching `v*` (e.g., `v0.6.0`).
-- **Secrets**: The following GitHub repository secrets must be configured:
-  - `GCP_PROJECT_ID`: Your Google Cloud Project ID.
-  - `GCP_SA_KEY`: A JSON key for a Service Account with permissions to build images and deploy to Cloud Run.
+- **Trigger**: The workflow triggers on every push to the `main` branch and on tags matching `v*`.
+- **Validation**: After deployment, the workflow performs a health check and runs end-to-end tests using Playwright to ensure the site is functional and assets are loading correctly.
+- **Automatic Rollback**: If validation fails, the workflow automatically rolls back both backend and frontend services to their previous stable revisions and creates a GitHub Issue to notify the team.
+- **Secrets**: The workflow uses Workload Identity Federation for secure authentication with Google Cloud.
 
 ### Manual Deployment
 
