@@ -55,6 +55,24 @@ func TestSecurityHeaders(t *testing.T) {
 	if !strings.Contains(csp, "https://*.mapbox.com") {
 		t.Errorf("expected CSP to contain https://*.mapbox.com, got %s", csp)
 	}
+
+	t.Run("CSP with FrontendAssetsURL", func(t *testing.T) {
+		h2 := &Handlers{FrontendAssetsURL: "https://assets.example.com"}
+		handler2 := h2.SecurityHeaders(nextHandler)
+		rr2 := httptest.NewRecorder()
+		handler2.ServeHTTP(rr2, req)
+		csp2 := rr2.Header().Get("Content-Security-Policy")
+		if !strings.Contains(csp2, "https://assets.example.com") {
+			t.Errorf("expected CSP to contain https://assets.example.com, got %s", csp2)
+		}
+		// Verify it's in multiple directives
+		directives := []string{"script-src", "style-src", "font-src", "img-src"}
+		for _, d := range directives {
+			if !strings.Contains(csp2, d) || !strings.Contains(strings.Split(csp2, d)[1], "https://assets.example.com") {
+				t.Errorf("expected %s to contain https://assets.example.com in %s", d, csp2)
+			}
+		}
+	})
 }
 
 func TestVerifyCSRF(t *testing.T) {
