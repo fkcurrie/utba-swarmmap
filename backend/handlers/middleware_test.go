@@ -84,7 +84,7 @@ func TestSecurityHeaders(t *testing.T) {
 			t.Errorf("expected CSP to contain https://assets.example.com, got %s", csp2)
 		}
 		// Verify it's in multiple directives
-		directives := []string{"script-src", "style-src", "font-src", "img-src", "connect-src"}
+		directives := []string{"script-src", "style-src", "font-src", "img-src", "connect-src", "worker-src", "child-src", "media-src"}
 		for _, d := range directives {
 			if !strings.Contains(csp2, d) || !strings.Contains(strings.Split(csp2, d)[1], "https://assets.example.com") {
 				t.Errorf("expected %s to contain https://assets.example.com in %s", d, csp2)
