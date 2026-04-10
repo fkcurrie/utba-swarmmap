@@ -164,7 +164,6 @@ jobs:
             "${{ env.FRONTEND_SERVICE }}" \
             "${{ env.REGION }}" \
             "${{ steps.deploy-backend.outputs.url }}" \
-            "${{ secrets.GITHUB_TOKEN }}" \
             "${{ github.sha }}"
 
       - name: Upload Test Results

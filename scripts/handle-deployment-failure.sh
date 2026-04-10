@@ -7,19 +7,18 @@ SERVICE=$1
 FRONTEND_SERVICE=$2
 REGION=$3
 DEPLOYED_URL=$4
-GITHUB_TOKEN=$5
-SHA=$6
+SHA=$5
 
 echo "Deployment validation failed for $SERVICE at $DEPLOYED_URL"
 echo "Initiating rollback..."
 
 # Rollback Backend
 echo "Rolling back Backend service: $SERVICE..."
-gcloud run services rollback $SERVICE --region=$REGION --quiet || echo "Backend rollback failed (maybe no previous revision)"
+gcloud run services rollback "$SERVICE" --region="$REGION" --quiet || echo "Backend rollback failed (maybe no previous revision)"
 
 # Rollback Frontend
 echo "Rolling back Frontend service: $FRONTEND_SERVICE..."
-gcloud run services rollback $FRONTEND_SERVICE --region=$REGION --quiet || echo "Frontend rollback failed (maybe no previous revision)"
+gcloud run services rollback "$FRONTEND_SERVICE" --region="$REGION" --quiet || echo "Frontend rollback failed (maybe no previous revision)"
 
 echo "Rollback complete."
 
