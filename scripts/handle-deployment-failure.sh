@@ -3,11 +3,11 @@
 
 set -e
 
-SERVICE=$1
-FRONTEND_SERVICE=$2
-REGION=$3
-DEPLOYED_URL=$4
-SHA=$5
+SERVICE="$1"
+FRONTEND_SERVICE="$2"
+REGION="$3"
+DEPLOYED_URL="$4"
+SHA="$5"
 
 echo "Deployment validation failed for $SERVICE at $DEPLOYED_URL"
 echo "Initiating rollback..."
