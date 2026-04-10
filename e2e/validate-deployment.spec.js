@@ -54,8 +54,8 @@ test('deployment validation - basic elements and assets', async ({ page }) => {
   expect(consoleErrors, `Found ${consoleErrors.length} console errors`).toHaveLength(0);
   
   // 6. Verify images are rendered (non-zero size)
-  // Wait for at least one image to be visible (usually a map tile or marker)
-  await expect(page.locator('img').first()).toBeVisible({ timeout: 10000 });
+  // Wait for at least one map tile to be visible
+  await expect(page.locator('.leaflet-tile').first()).toBeVisible({ timeout: 10000 });
   
   const images = page.locator('img');
   const imageCount = await images.count();
