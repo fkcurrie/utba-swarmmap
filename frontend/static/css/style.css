@@ -188,18 +188,3 @@ footer a:hover {
   z-index: 1000;
   border-radius: var(--border-radius);
 }
-
-/* Marker Clusters Customization */
-.marker-cluster-small div,
-.marker-cluster-medium div,
-.marker-cluster-large div {
-  background-color: rgb(142 45 226 / 60%);
-  color: white;
-  font-weight: bold;
-}
-
-.marker-cluster-small,
-.marker-cluster-medium,
-.marker-cluster-large {
-  background-color: rgb(142 45 226 / 20%);
-}

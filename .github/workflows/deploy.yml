@@ -102,7 +102,7 @@ jobs:
           service: ${{ env.FRONTEND_SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/frontend:${{ github.sha }}
-          flags: --allow-unauthenticated
+          flags: '--allow-unauthenticated --no-traffic --tag=mapbox-test'
 
       - name: Get Backend URL
         id: backend-url
@@ -132,7 +132,7 @@ jobs:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/backend:${{ github.sha }}
-          flags: --allow-unauthenticated
+          flags: '--allow-unauthenticated --no-traffic --tag=mapbox-test'
           env_vars: |
             FRONTEND_ASSETS_URL=${{ steps.deploy-frontend.outputs.url }}
             GOOGLE_REDIRECT_URL=${{ steps.backend-url.outputs.url }}/auth/google/callback
