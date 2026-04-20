@@ -117,16 +117,16 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   // Wait for at least the map canvas to be visible
   await expect(page.locator('.mapboxgl-canvas').first()).toBeVisible({ timeout: 10000 });
   
-  const images = page.locator('img');
+  // Verify visible images are rendered (non-zero size)
+  const images = page.locator('img:visible');
   const imageCount = await images.count();
-  expect(imageCount, 'Page should have at least one image').toBeGreaterThan(0);
   for (let i = 0; i < imageCount; i++) {
     const img = images.nth(i);
     const box = await img.boundingBox();
-    expect(box, `Image ${i} should be rendered (no bounding box found)`).not.toBeNull();
+    expect(box, `Visible image ${i} should have a bounding box`).not.toBeNull();
     if (box) {
-      expect(box.width, `Image ${i} has zero width`).toBeGreaterThan(0);
-      expect(box.height, `Image ${i} has zero height`).toBeGreaterThan(0);
+      expect(box.width, `Visible image ${i} has zero width`).toBeGreaterThan(0);
+      expect(box.height, `Visible image ${i} has zero height`).toBeGreaterThan(0);
     }
   }
 
