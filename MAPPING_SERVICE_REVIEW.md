@@ -57,7 +57,7 @@ The mapping solution for UTBA SwarmMap has been migrated to a modern, high-perfo
 
 ## Final Recommendation
 
-**Proceed with Migration? NO**
+### Proceed with Migration? NO
 
 **Rationale:**
 Mapbox GL JS v3 is already implemented and provides superior performance and aesthetics at a lower cost than Google Maps. The 50,000 free monthly loads provide significant headroom for growth. The integration effort to move to Google Maps is high and would result in higher operational costs once the free tier is exceeded, without offering significant functional improvements for this specific use case (unless Street View becomes mandatory).
