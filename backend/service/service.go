@@ -31,17 +31,21 @@ func (s *swarmService) GetSwarms(ctx context.Context, sessionID string, session 
 	var currentReports []models.SwarmReport
 	var err error
 
-	if sessionID != "" {
+	isCollector := session != nil && (session.Role == "collector" || session.Role == "collector_admin" || session.Role == "site_admin")
+
+	if isCollector {
+		currentReports, err = s.store.GetAllSwarms(ctx)
+	} else if sessionID != "" {
 		currentReports, err = s.store.GetSwarmsBySessionID(ctx, sessionID)
 	} else {
-		currentReports, err = s.store.GetAllSwarms(ctx)
+		// Public request: return nothing to protect privacy and prevent unauthorized interference.
+		// In the future, this could return a "general overview" (e.g. counts per region)
+		return []models.SwarmReport{}, nil
 	}
 
 	if err != nil {
 		return nil, err
 	}
-
-	isCollector := session != nil && (session.Role == "collector" || session.Role == "collector_admin" || session.Role == "site_admin")
 
 	for i := range currentReports {
 		currentReports[i].DisplayStatus = currentReports[i].Status
