@@ -24,40 +24,43 @@ The mapping solution for UTBA SwarmMap has been migrated to a modern, high-perfo
 
 ---
 
-## Alternatives Review
+## Google Maps Migration Evaluation (April 2026)
 
-### 1. MapLibre GL JS + Vector Tile Provider (e.g., Maptiler)
+### Cost Comparison
 
-MapLibre is an open-source fork of Mapbox GL JS v1.
+| Service | Mapbox (Current) | Google Maps Platform |
+| :--- | :--- | :--- |
+| **Free Tier (Loads)** | **50,000** loads/mo | **~28,500** loads/mo (via $200 credit) |
+| **Price per 1k loads** | $5.00 | $7.00 |
+| **Geocoding (Free)** | **100,000** requests/mo | **40,000** requests/mo (via $200 credit) |
+| **Geocoding (Paid)** | $0.75 / 1k | $5.00 / 1k |
 
-- **Pros:** Open-source (BSD), same performance as Mapbox GL JS.
-- **Cons:** Slightly more complex initial setup.
+**Finding:** Mapbox offers a significantly more generous free tier for both map loads (nearly 2x) and geocoding (2.5x). For the current usage profile of SwarmMap, Mapbox remains the more cost-effective solution.
 
-### 2. Google Maps Platform
+### Integration Effort
 
-- **Pros:** Best address data and Street View.
-- **Cons:** Most expensive; complex pricing.
+- **Frontend:** Requires a complete rewrite of the map initialization and interaction logic. Google Maps uses a different API for clustering (external library required) and marker/popup management.
+- **Backend:** Requires implementing a new `GoogleMapsLocationService` and updating the factory logic in `main.go`.
+- **Infrastructure:** Requires new Secret Manager entries for Google Maps API keys and updating CSP headers in the middleware.
+- **Testing:** Requires updating both unit tests for geocoding and E2E tests (Playwright) which currently rely on Mapbox-specific DOM classes.
+
+**Finding:** Migration effort is estimated as **Medium-High**.
+
+### Feature Parity
+
+- **Clustering:** Supported by both, but Mapbox's native vector-based clustering is more performant and easier to style than Google's library-based approach.
+- **Styling:** Mapbox GL JS provides superior control over vector tile styling via Mapbox Studio.
+- **Popups:** Equivalent functionality.
+- **Geocoding:** Google Maps is more accurate for obscure addresses, but Mapbox + Nominatim fallback is more than sufficient for swarm reporting.
 
 ---
 
-## Comparison Summary
+## Final Recommendation
 
-| Feature | Legacy (OSM/Leaflet) | Mapbox (Current) | MapLibre + Maptiler | Google Maps |
-| :--- | :--- | :--- | :--- | :--- |
-| **Performance** | Raster (Average) | Vector (Excellent) | Vector (Excellent) | Vector (Excellent) |
-| **Geocoding** | Nominatim (Limited) | Robust + Fallback | Robust | Best |
-| **Customization** | Low | High | High | Medium |
-| **Open Source** | Yes | No (since v2) | Yes | No |
+**Proceed with Migration? NO**
 
----
-
-## Recommendations
-
-1. **Short Term (Completed):** Mapbox GL JS v3 has been fully implemented as the primary mapping service. Leaflet and its associated plugins have been removed to reduce bundle size and maintenance overhead.
-2. **Medium Term (Monitor):** Monitor Mapbox usage to stay within the 50,000 free monthly loads. If costs become an issue, evaluate a move to MapLibre GL JS + Maptiler for a similar experience at lower cost.
-3. **Long Term (Enterprise):** Evaluate Google Maps only if Street View becomes a requirement for swarm validation.
-
-**Current Status:** Mapbox migration is complete. The application now uses high-performance vector tiles and robust geocoding with a Nominatim fallback for resilience.
+**Rationale:**
+Mapbox GL JS v3 is already implemented and provides superior performance and aesthetics at a lower cost than Google Maps. The 50,000 free monthly loads provide significant headroom for growth. The integration effort to move to Google Maps is high and would result in higher operational costs once the free tier is exceeded, without offering significant functional improvements for this specific use case (unless Street View becomes mandatory).
 
 ---
 
