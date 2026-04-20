@@ -62,6 +62,7 @@ jobs:
         uses: actions/setup-go@v6
         with:
           go-version-file: backend/go.mod
+          cache-dependency-path: backend/go.sum
 
       - name: Backend Testing
         run: |
@@ -141,6 +142,7 @@ jobs:
           secrets: |
             GOOGLE_CLIENT_ID=google-oauth-client-id:latest
             GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest
+            MAPBOX_ACCESS_TOKEN=mapbox-access-token:latest
       - name: Health Check
         id: health-check
         run: |

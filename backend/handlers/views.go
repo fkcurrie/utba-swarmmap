@@ -5,7 +5,6 @@ package handlers
 import (
 	"log/slog"
 	"net/http"
-	"time"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
 )
@@ -18,19 +17,11 @@ func (h *Handlers) SwarmListHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	swarms, err := h.Store.GetAllSwarms(r.Context())
+	swarms, err := h.SwarmService.GetSwarms(r.Context(), "", session)
 	if err != nil {
 		slog.Error("Failed to retrieve swarms", "error", err)
 		http.Error(w, "Failed to retrieve swarms", http.StatusInternalServerError)
 		return
-	}
-
-	// Dynamic DisplayStatus logic
-	for i := range swarms {
-		swarms[i].DisplayStatus = swarms[i].Status
-		if swarms[i].Status != "Captured" && time.Since(swarms[i].ReportedTimestamp).Hours() > 24 {
-			swarms[i].DisplayStatus = "Archived"
-		}
 	}
 
 	err = h.Templates.ExecuteTemplate(w, "swarmlist.html", map[string]interface{}{

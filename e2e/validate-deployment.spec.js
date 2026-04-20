@@ -95,9 +95,9 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await page.keyboard.press('Escape');
   await expect(modal).not.toBeVisible();
 
-  // 4. Verify Leaflet map is initialized (check for leaflet classes)
-  const leafletContainer = page.locator('.leaflet-container');
-  await expect(leafletContainer).toBeVisible();
+  // 4. Verify Mapbox map is initialized (check for mapbox classes)
+  const mapboxContainer = page.locator('.mapboxgl-map');
+  await expect(mapboxContainer).toBeVisible();
 
   // 4. Verify no critical assets failed to load
   // We exclude some common external tracking or optional stuff if necessary
@@ -113,20 +113,20 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   // We might allow some minor console errors, but generally want none
   expect(consoleErrors, `Found ${consoleErrors.length} console errors`).toHaveLength(0);
   
-  // 6. Verify images are rendered (non-zero size)
-  // Wait for at least one map tile to be visible
-  await expect(page.locator('.leaflet-tile').first()).toBeVisible({ timeout: 10000 });
+  // 6. Verify map is rendered
+  // Wait for at least the map canvas to be visible
+  await expect(page.locator('.mapboxgl-canvas').first()).toBeVisible({ timeout: 10000 });
   
-  const images = page.locator('img');
+  // Verify visible images are rendered (non-zero size)
+  const images = page.locator('img:visible');
   const imageCount = await images.count();
-  expect(imageCount, 'Page should have at least one image').toBeGreaterThan(0);
   for (let i = 0; i < imageCount; i++) {
     const img = images.nth(i);
     const box = await img.boundingBox();
-    expect(box, `Image ${i} should be rendered (no bounding box found)`).not.toBeNull();
+    expect(box, `Visible image ${i} should have a bounding box`).not.toBeNull();
     if (box) {
-      expect(box.width, `Image ${i} has zero width`).toBeGreaterThan(0);
-      expect(box.height, `Image ${i} has zero height`).toBeGreaterThan(0);
+      expect(box.width, `Visible image ${i} has zero width`).toBeGreaterThan(0);
+      expect(box.height, `Visible image ${i} has zero height`).toBeGreaterThan(0);
     }
   }
 

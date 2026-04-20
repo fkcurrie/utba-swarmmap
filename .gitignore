@@ -31,3 +31,6 @@ bin/
 
 # Logs
 *.log
+
+# Test results
+test-results/

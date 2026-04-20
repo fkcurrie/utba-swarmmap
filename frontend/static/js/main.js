@@ -13,104 +13,147 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let map;
   let selectedFiles = [];
-  let swarmLayerGroup;
+  let userMarker;
 
   // Caching configuration
   const CACHE_KEY_BASE = 'utba_swarms_cache';
   const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
   if (mapElement) {
-    // Use setTimeout to ensure the map container is fully rendered
-    setTimeout(() => {
-      map = L.map('map').setView([43.6532, -79.3832], 12);
+    if (window.MAPBOX_TOKEN && window.MAPBOX_TOKEN !== '') {
+      mapboxgl.accessToken = window.MAPBOX_TOKEN;
 
-      let tileLayer;
-      if (window.MAPBOX_TOKEN && window.MAPBOX_TOKEN !== '') {
-        tileLayer = L.tileLayer(
-          'https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=' +
-            window.MAPBOX_TOKEN,
-          {
-            attribution:
-              '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
-            tileSize: 512,
-            zoomOffset: -1,
-          },
-        );
-      } else {
-        tileLayer = L.tileLayer(
-          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-          {
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          },
-        );
-      }
-      tileLayer.addTo(map);
-
-      // Initialize Marker Cluster Group
-      swarmLayerGroup = L.markerClusterGroup({
-        showCoverageOnHover: false,
-        zoomToBoundsOnClick: true,
-        spiderfyOnMaxZoom: true,
-      }).addTo(map);
-
-      map.on('click', async function (e) {
-        document.getElementById('latitude').value = e.latlng.lat;
-        document.getElementById('longitude').value = e.latlng.lng;
-
-        const intersectionInput = document.getElementById('intersection');
-        const originalPlaceholder = intersectionInput.placeholder;
-        intersectionInput.value = '';
-        intersectionInput.placeholder = 'Fetching nearest intersection...';
-
-        const intersection = await getNearestIntersection(
-          e.latlng.lat,
-          e.latlng.lng,
-        );
-        intersectionInput.value = intersection;
-        intersectionInput.placeholder = originalPlaceholder;
-
-        const reportModal = new bootstrap.Modal(
-          document.getElementById('reportSwarmModal'),
-        );
-        reportModal.show();
+      map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-79.3832, 43.6532],
+        zoom: 11,
       });
 
-      // Render swarms on map
-      const renderSwarms = (swarms) => {
-        const debugSwarms = document.getElementById('debugSwarms');
+      map.addControl(new mapboxgl.NavigationControl());
 
-        if (!swarmLayerGroup) return;
-        swarmLayerGroup.clearLayers();
-        if (debugSwarms) debugSwarms.innerHTML = '';
+      map.on('load', () => {
+        // Initialize sources and layers
+        map.addSource('swarms', {
+          type: 'geojson',
+          data: { type: 'FeatureCollection', features: [] },
+          cluster: true,
+          clusterMaxZoom: 14,
+          clusterRadius: 50,
+        });
 
-        if (!Array.isArray(swarms)) {
-          console.warn('Swarms data is not an array:', swarms);
-          return;
-        }
+        // Cluster layers
+        map.addLayer({
+          id: 'clusters',
+          type: 'circle',
+          source: 'swarms',
+          filter: ['has', 'point_count'],
+          paint: {
+            'circle-color': [
+              'step',
+              ['get', 'point_count'],
+              '#51bbd6',
+              10,
+              '#f1f075',
+              30,
+              '#f28cb1',
+            ],
+            'circle-radius': [
+              'step',
+              ['get', 'point_count'],
+              20,
+              10,
+              30,
+              30,
+              40,
+            ],
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#fff',
+          },
+        });
 
-        if (swarms.length === 0) {
-          if (debugSwarms) {
-            debugSwarms.innerHTML =
-              '<div class="text-center p-3 text-muted">No swarms reported yet.</div>';
-          }
-          return;
-        }
+        map.addLayer({
+          id: 'cluster-count',
+          type: 'symbol',
+          source: 'swarms',
+          filter: ['has', 'point_count'],
+          layout: {
+            'text-field': '{point_count_abbreviated}',
+            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            'text-size': 12,
+          },
+        });
 
-        swarms.forEach((swarm) => {
-          let color = '#ff0000'; // Default Red for Reported
-          if (swarm.displayStatus === 'Verified') color = '#ff69b4'; // Pink
-          if (swarm.displayStatus === 'Captured') color = '#00ff00'; // Green
-          if (swarm.displayStatus === 'Archived') color = '#0000ff'; // Blue
+        // Unclustered points
+        map.addLayer({
+          id: 'unclustered-point',
+          type: 'circle',
+          source: 'swarms',
+          filter: ['!', ['has', 'point_count']],
+          paint: {
+            'circle-color': [
+              'match',
+              ['get', 'displayStatus'],
+              'Verified',
+              '#ff69b4',
+              'Captured',
+              '#00ff00',
+              'Archived',
+              '#0000ff',
+              '#ff0000', // Default Red for Reported
+            ],
+            'circle-radius': 10,
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#fff',
+          },
+        });
 
-          const marker = L.circleMarker([swarm.latitude, swarm.longitude], {
-            radius: 10,
-            fillColor: color,
-            color: '#fff',
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.8,
+        // Click on cluster to zoom in
+        map.on('click', 'clusters', (e) => {
+          const features = map.queryRenderedFeatures(e.point, {
+            layers: ['clusters'],
           });
+          const clusterId = features[0].properties.cluster_id;
+          map
+            .getSource('swarms')
+            .getClusterExpansionZoom(clusterId, (err, zoom) => {
+              if (err) return;
+              map.easeTo({
+                center: features[0].geometry.coordinates,
+                zoom: zoom,
+              });
+            });
+        });
+
+        // Click on unclustered point to show popup
+        map.on('click', 'unclustered-point', (e) => {
+          const coordinates = e.features[0].geometry.coordinates.slice();
+          const swarm = e.features[0].properties;
+
+          // Ensure that if the map is zoomed out such that multiple
+          // copies of the feature are visible, the popup appears
+          // over the copy being pointed to.
+          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+          }
+
+          // Helper to parse potential stringified JSON from Mapbox properties
+          const parseProp = (prop) => {
+            if (typeof prop === 'string') {
+              try {
+                return JSON.parse(prop);
+              } catch {
+                return [];
+              }
+            }
+            return prop || [];
+          };
+
+          const allMedia = [
+            ...parseProp(swarm.reportedMediaURLs),
+            ...parseProp(swarm.capturedMediaURLs),
+            ...parseProp(swarm.mediaURLs),
+          ];
 
           let popupContent = `
               <div class="swarm-popup">
@@ -120,14 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="p-2 bg-light rounded small mb-2">${swarm.description}</div>
             `;
 
-          // Combine media URLs from all possible fields
-          const allMedia = [
-            ...(swarm.reportedMediaURLs || []),
-            ...(swarm.capturedMediaURLs || []),
-            ...(swarm.mediaURLs || []), // For compatibility with older data or PrepareSwarm
-          ];
-
-          // Add media button if URLs exist
           if (allMedia.length > 0) {
             popupContent += `
                 <div class="d-grid">
@@ -138,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
           }
 
-          // Add contact info for collectors if available
           if (
             swarm.reporterName ||
             swarm.reporterPhone ||
@@ -154,95 +188,188 @@ document.addEventListener('DOMContentLoaded', function () {
               popupContent += `Email: ${swarm.reporterEmail}<br>`;
             popupContent += '</small>';
           }
-
           popupContent += '</div>';
 
-          marker.bindPopup(popupContent);
-          swarmLayerGroup.addLayer(marker);
-
-          if (debugSwarms) {
-            const swarmDiv = document.createElement('div');
-            swarmDiv.className = 'border-bottom mb-1 pb-1 hover-bg-light';
-            swarmDiv.style.cursor = 'pointer';
-            swarmDiv.innerHTML = `
-                    <div class="d-flex justify-content-between">
-                        <strong>${swarm.displayStatus}</strong>
-                        <small class="text-muted">${new Date(swarm.reportedTimestamp).toLocaleTimeString()}</small>
-                    </div>
-                    <div class="text-truncate small">${swarm.nearestIntersection}</div>
-                `;
-            swarmDiv.onclick = () => {
-              map.setView([swarm.latitude, swarm.longitude], 16);
-              marker.openPopup();
-            };
-            debugSwarms.appendChild(swarmDiv);
-          }
+          new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(popupContent)
+            .addTo(map);
         });
-      };
 
-      // Fetch and display swarms with caching
-      const fetchSwarms = async (forceRefresh = false) => {
-        const debugSwarms = document.getElementById('debugSwarms');
-        const cacheKey = debugSwarms
-          ? `${CACHE_KEY_BASE}_collector`
-          : CACHE_KEY_BASE;
-
-        // Check cache
-        if (!forceRefresh) {
-          const cached = sessionStorage.getItem(cacheKey);
-          if (cached) {
-            try {
-              const { timestamp, data } = JSON.parse(cached);
-              if (Date.now() - timestamp < CACHE_TTL) {
-                console.log('Using cached swarm data');
-                renderSwarms(data);
-                return;
-              }
-            } catch (e) {
-              console.error('Cache parse error', e);
-            }
-          }
-        }
-
-        try {
-          // Show loading state
-          if (debugSwarms) {
-            debugSwarms.innerHTML =
-              '<div class="text-center p-2"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Loading...</div>';
-          }
-
-          const response = await fetch('/get_swarms');
-          if (!response.ok) throw new Error('Failed to fetch swarms');
-          const swarms = await response.json();
-
-          // Update cache
-          sessionStorage.setItem(
-            cacheKey,
-            JSON.stringify({
-              timestamp: Date.now(),
-              data: swarms,
-            }),
-          );
-
-          renderSwarms(swarms);
-        } catch (error) {
-          console.error('Error fetching swarms:', error);
-          if (debugSwarms)
-            debugSwarms.innerHTML =
-              '<div class="alert alert-danger p-2 small">Error loading swarms.</div>';
-        }
-      };
-
-      fetchSwarms();
-
-      // Hook up refresh button if it exists
-      const refreshMapBtn = document.getElementById('refreshMapBtn');
-      if (refreshMapBtn) {
-        refreshMapBtn.addEventListener('click', () => {
-          fetchSwarms(true);
+        map.on('mouseenter', 'clusters', () => {
+          map.getCanvas().style.cursor = 'pointer';
         });
+        map.on('mouseleave', 'clusters', () => {
+          map.getCanvas().style.cursor = '';
+        });
+        map.on('mouseenter', 'unclustered-point', () => {
+          map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'unclustered-point', () => {
+          map.getCanvas().style.cursor = '';
+        });
+
+        fetchSwarms();
+      });
+
+      // Map click for reporting
+      map.on('click', async (e) => {
+        // Don't trigger if clicking on a cluster or point
+        const features = map.queryRenderedFeatures(e.point, {
+          layers: ['clusters', 'unclustered-point'],
+        });
+        if (features.length > 0) return;
+
+        const { lng, lat } = e.lngLat;
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
+
+        const intersectionInput = document.getElementById('intersection');
+        const originalPlaceholder = intersectionInput.placeholder;
+        intersectionInput.value = '';
+        intersectionInput.placeholder = 'Fetching nearest intersection...';
+
+        const intersection = await getNearestIntersection(lat, lng);
+        intersectionInput.value = intersection;
+        intersectionInput.placeholder = originalPlaceholder;
+
+        const reportModal = new bootstrap.Modal(
+          document.getElementById('reportSwarmModal'),
+        );
+        reportModal.show();
+      });
+    } else {
+      mapElement.innerHTML =
+        '<div class="alert alert-warning m-3">Mapbox token is missing. Please configure MAPBOX_ACCESS_TOKEN.</div>';
+    }
+  }
+
+  // Render swarms on map and list
+  const renderSwarms = (swarms) => {
+    const debugSwarms = document.getElementById('debugSwarms');
+
+    if (debugSwarms) debugSwarms.innerHTML = '';
+
+    if (!Array.isArray(swarms)) {
+      console.warn('Swarms data is not an array:', swarms);
+      return;
+    }
+
+    if (swarms.length === 0) {
+      if (debugSwarms) {
+        debugSwarms.innerHTML =
+          '<div class="text-center p-3 text-muted">No swarms reported yet.</div>';
       }
-    }, 0);
+      return;
+    }
+
+    // Update Mapbox source
+    if (map && map.getSource('swarms')) {
+      const geojson = {
+        type: 'FeatureCollection',
+        features: swarms.map((swarm) => ({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [swarm.longitude, swarm.latitude],
+          },
+          properties: {
+            ...swarm,
+            // Convert arrays to strings for Mapbox properties to avoid issues
+            reportedMediaURLs: JSON.stringify(swarm.reportedMediaURLs || []),
+            capturedMediaURLs: JSON.stringify(swarm.capturedMediaURLs || []),
+            mediaURLs: JSON.stringify(swarm.mediaURLs || []),
+          },
+        })),
+      };
+      map.getSource('swarms').setData(geojson);
+    }
+
+    if (debugSwarms) {
+      swarms.forEach((swarm) => {
+        const swarmDiv = document.createElement('div');
+        swarmDiv.className = 'border-bottom mb-1 pb-1 hover-bg-light';
+        swarmDiv.style.cursor = 'pointer';
+        swarmDiv.innerHTML = `
+                <div class="d-flex justify-content-between">
+                    <strong>${swarm.displayStatus}</strong>
+                    <small class="text-muted">${new Date(swarm.reportedTimestamp).toLocaleTimeString()}</small>
+                </div>
+                <div class="text-truncate small">${swarm.nearestIntersection}</div>
+            `;
+        swarmDiv.onclick = () => {
+          if (map) {
+            map.flyTo({
+              center: [swarm.longitude, swarm.latitude],
+              zoom: 16,
+            });
+          }
+        };
+        debugSwarms.appendChild(swarmDiv);
+      });
+    }
+  };
+
+  // Fetch and display swarms with caching
+  const fetchSwarms = async (forceRefresh = false) => {
+    const debugSwarms = document.getElementById('debugSwarms');
+    const cacheKey = debugSwarms
+      ? `${CACHE_KEY_BASE}_collector`
+      : CACHE_KEY_BASE;
+
+    if (!forceRefresh) {
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        try {
+          const { timestamp, data } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_TTL) {
+            console.log('Using cached swarm data');
+            renderSwarms(data);
+            return;
+          }
+        } catch (e) {
+          console.error('Cache parse error', e);
+        }
+      }
+    }
+
+    try {
+      if (debugSwarms) {
+        debugSwarms.innerHTML =
+          '<div class="text-center p-2"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Loading...</div>';
+      }
+
+      const visitorId = localStorage.getItem('utba_visitor_id');
+      const url = visitorId
+        ? `/get_swarms?sessionId=${visitorId}`
+        : '/get_swarms';
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch swarms');
+      const swarms = await response.json();
+
+      sessionStorage.setItem(
+        cacheKey,
+        JSON.stringify({
+          timestamp: Date.now(),
+          data: swarms,
+        }),
+      );
+
+      renderSwarms(swarms);
+    } catch (error) {
+      console.error('Error fetching swarms:', error);
+      if (debugSwarms)
+        debugSwarms.innerHTML =
+          '<div class="alert alert-danger p-2 small">Error loading swarms.</div>';
+    }
+  };
+
+  // Hook up refresh button if it exists
+  const refreshMapBtn = document.getElementById('refreshMapBtn');
+  if (refreshMapBtn) {
+    refreshMapBtn.addEventListener('click', () => {
+      fetchSwarms(true);
+    });
   }
 
   const locateUser = (doPan = false) => {
@@ -255,10 +382,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       navigator.geolocation.getCurrentPosition(
         async (position) => {
-          const userLatLng = [
-            position.coords.latitude,
-            position.coords.longitude,
-          ];
+          const { latitude, longitude } = position.coords;
 
           if (reportSwarmBtn) {
             reportSwarmBtn.disabled = false;
@@ -267,19 +391,23 @@ document.addEventListener('DOMContentLoaded', function () {
           }
 
           if (doPan && map) {
-            map.setView(userLatLng, 15);
-            L.marker(userLatLng)
+            map.flyTo({ center: [longitude, latitude], zoom: 15 });
+
+            if (userMarker) userMarker.remove();
+            userMarker = new mapboxgl.Marker({ color: '#ff0000' })
+              .setLngLat([longitude, latitude])
+              .setPopup(new mapboxgl.Popup().setHTML('<h6>Your Location</h6>'))
               .addTo(map)
-              .bindPopup('Your Location')
-              .openPopup();
-            document.getElementById('latitude').value = userLatLng[0];
-            document.getElementById('longitude').value = userLatLng[1];
+              .togglePopup();
+
+            document.getElementById('latitude').value = latitude;
+            document.getElementById('longitude').value = longitude;
 
             const intersectionInput = document.getElementById('intersection');
             intersectionInput.value = 'Fetching...';
             const intersection = await getNearestIntersection(
-              userLatLng[0],
-              userLatLng[1],
+              latitude,
+              longitude,
             );
             intersectionInput.value = intersection;
 
@@ -347,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function () {
         selectedFiles.push(e.target.files[i]);
       }
       updateFileList();
-      galleryInput.value = ''; // Reset for next selection
+      galleryInput.value = '';
     });
   }
 
@@ -357,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
         selectedFiles.push(e.target.files[0]);
         updateFileList();
       }
-      cameraInput.value = ''; // Reset
+      cameraInput.value = '';
     });
   }
 
@@ -381,7 +509,6 @@ document.addEventListener('DOMContentLoaded', function () {
         '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Submitting...';
 
       try {
-        // 1. Prepare Swarm (Upload Files)
         const formData = new FormData(reportSwarmForm);
         formData.delete('media');
         selectedFiles.forEach((file) => {
@@ -392,15 +519,12 @@ document.addEventListener('DOMContentLoaded', function () {
           method: 'POST',
           body: formData,
         });
-
         if (!prepareResponse.ok) {
           const errorText = await prepareResponse.text();
           throw new Error(errorText || 'Failed to prepare report');
         }
-
         const prepareData = await prepareResponse.json();
 
-        // 2. Confirm Swarm
         const confirmFormData = new URLSearchParams();
         confirmFormData.append('referenceID', prepareData.referenceID);
         confirmFormData.append('description', prepareData.description);
@@ -432,9 +556,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const confirmResponse = await fetch('/confirm_swarm', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: confirmFormData,
         });
 
@@ -443,7 +565,6 @@ document.addEventListener('DOMContentLoaded', function () {
           throw new Error(errorText || 'Failed to confirm report');
         }
 
-        // Clear caches since new swarm is added
         sessionStorage.removeItem(CACHE_KEY_BASE);
         sessionStorage.removeItem(`${CACHE_KEY_BASE}_collector`);
 
@@ -456,7 +577,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const reportModal = bootstrap.Modal.getInstance(reportModalEl);
         if (reportModal) reportModal.hide();
 
-        // Refresh page or update map
         window.location.reload();
       } catch (error) {
         console.error('Error submitting report:', error);
@@ -468,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Media Viewer Functionality
+  // Media Viewer
   let currentMediaIndex = 0;
   let mediaURLs = [];
 
@@ -497,11 +617,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     counter.textContent = `${currentMediaIndex + 1} of ${mediaURLs.length}`;
-
-    const navButtons = document.querySelectorAll('.media-nav');
-    navButtons.forEach(
-      (btn) => (btn.style.display = mediaURLs.length > 1 ? 'block' : 'none'),
-    );
+    document
+      .querySelectorAll('.media-nav')
+      .forEach(
+        (btn) => (btn.style.display = mediaURLs.length > 1 ? 'block' : 'none'),
+      );
   };
 
   const navigateMedia = (step) => {
@@ -520,12 +640,12 @@ document.addEventListener('DOMContentLoaded', function () {
     mediaModal.show();
   };
 
-  document.querySelectorAll('.media-nav.prev').forEach((btn) => {
-    btn.addEventListener('click', () => navigateMedia(-1));
-  });
-  document.querySelectorAll('.media-nav.next').forEach((btn) => {
-    btn.addEventListener('click', () => navigateMedia(1));
-  });
+  document
+    .querySelectorAll('.media-nav.prev')
+    .forEach((btn) => btn.addEventListener('click', () => navigateMedia(-1)));
+  document
+    .querySelectorAll('.media-nav.next')
+    .forEach((btn) => btn.addEventListener('click', () => navigateMedia(1)));
 
   document.addEventListener('click', function (e) {
     const btn = e.target.closest('.view-media-btn');
@@ -541,7 +661,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   locateUser(false);
 
-  // Visit tracking
   (function trackVisit() {
     let visitorId = localStorage.getItem('utba_visitor_id');
     if (!visitorId) {
@@ -550,12 +669,9 @@ document.addEventListener('DOMContentLoaded', function () {
         Math.random().toString(36).substring(2, 15);
       localStorage.setItem('utba_visitor_id', visitorId);
     }
-
     fetch('/api/track_visit', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ visitorId: visitorId }),
     }).catch((err) => console.error('Failed to track visit:', err));
   })();
@@ -569,12 +685,10 @@ async function getNearestIntersection(lat, lng) {
       );
       if (!response.ok) throw new Error('Mapbox Geocoding error');
       const data = await response.json();
-      if (data.features && data.features.length > 0) {
+      if (data.features && data.features.length > 0)
         return data.features[0].place_name;
-      }
     } catch (error) {
       console.error('Error getting intersection from Mapbox:', error);
-      // Fallback to Nominatim below
     }
   }
 

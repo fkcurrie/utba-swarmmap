@@ -13,7 +13,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        L: 'readonly',
+        mapboxgl: 'readonly',
         bootstrap: 'readonly',
       },
     },

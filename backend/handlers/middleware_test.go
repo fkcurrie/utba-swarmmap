@@ -52,11 +52,8 @@ func TestSecurityHeaders(t *testing.T) {
 	if !strings.Contains(csp, "'unsafe-inline'") {
 		t.Errorf("expected CSP to contain 'unsafe-inline' in script-src, got %s", csp)
 	}
-	if !strings.Contains(csp, "blob:") {
-		t.Errorf("expected CSP to contain blob:, got %s", csp)
-	}
-	if !strings.Contains(csp, "font-src 'self' data:") {
-		t.Errorf("expected CSP to contain font-src 'self' data:, got %s", csp)
+	if !strings.Contains(csp, "script-src 'self' 'unsafe-inline' blob:") {
+		t.Errorf("expected CSP to contain blob: in script-src, got %s", csp)
 	}
 	if !strings.Contains(csp, "https://api.mapbox.com") {
 		t.Errorf("expected CSP to contain https://api.mapbox.com, got %s", csp)
@@ -64,14 +61,11 @@ func TestSecurityHeaders(t *testing.T) {
 	if !strings.Contains(csp, "https://*.mapbox.com") {
 		t.Errorf("expected CSP to contain https://*.mapbox.com, got %s", csp)
 	}
-	if !strings.Contains(csp, "https://unpkg.com") {
-		t.Errorf("expected CSP to contain https://unpkg.com, got %s", csp)
+	if !strings.Contains(csp, "https://cdnjs.cloudflare.com") {
+		t.Errorf("expected CSP to contain https://cdnjs.cloudflare.com, got %s", csp)
 	}
 	if !strings.Contains(csp, "https://events.mapbox.com") {
 		t.Errorf("expected CSP to contain https://events.mapbox.com, got %s", csp)
-	}
-	if !strings.Contains(csp, "'unsafe-eval'") {
-		t.Errorf("expected CSP to contain 'unsafe-eval', got %s", csp)
 	}
 	if !strings.Contains(csp, "worker-src 'self' blob:") {
 		t.Errorf("expected CSP to contain worker-src 'self' blob:, got %s", csp)

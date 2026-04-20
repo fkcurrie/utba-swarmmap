@@ -26,21 +26,21 @@ func (h *Handlers) SecurityHeaders(next http.Handler) http.Handler {
 		w.Header().Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
 
 		// Content Security Policy
-		// Allow self, Google Fonts, FontAwesome, OpenStreetMap tiles, Mapbox, and Nominatim
+		// Allow self, Google Fonts, FontAwesome, Mapbox, and Nominatim fallback
 		assetsURL := ""
 		if h.FrontendAssetsURL != "" {
 			assetsURL = " " + h.FrontendAssetsURL
 		}
 
 		csp := "default-src 'self'; " +
-			"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://api.mapbox.com https://*.mapbox.com" + assetsURL + "; " +
-			"style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com https://cdnjs.cloudflare.com https://api.mapbox.com https://*.mapbox.com" + assetsURL + "; " +
-			"font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com" + assetsURL + "; " +
-			"img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.tiles.mapbox.com https://*.googleapis.com https://*.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com" + assetsURL + "; " +
-			"connect-src 'self' https://nominatim.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.tiles.mapbox.com https://events.mapbox.com https://*.tile.openstreetmap.org https://tile.openstreetmap.org" + assetsURL + "; " +
-			"worker-src 'self' blob: " + assetsURL + "; " +
-			"child-src 'self' blob: " + assetsURL + "; " +
-			"media-src 'self' https://*.googleapis.com " + assetsURL + "; " +
+			"script-src 'self' 'unsafe-inline' blob: https://api.mapbox.com https://*.mapbox.com" + assetsURL + "; " +
+			"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://api.mapbox.com https://*.mapbox.com" + assetsURL + "; " +
+			"font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com" + assetsURL + "; " +
+			"img-src 'self' data: blob: https://api.mapbox.com https://*.mapbox.com https://*.tiles.mapbox.com https://*.googleapis.com https://*.gstatic.com" + assetsURL + "; " +
+			"connect-src 'self' https://nominatim.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.tiles.mapbox.com https://events.mapbox.com" + assetsURL + "; " +
+			"worker-src 'self' blob:" + assetsURL + "; " +
+			"child-src 'self' blob:" + assetsURL + "; " +
+			"media-src 'self' https://*.googleapis.com" + assetsURL + "; " +
 			"frame-ancestors 'none';"
 
 		w.Header().Set("Content-Security-Policy", csp)

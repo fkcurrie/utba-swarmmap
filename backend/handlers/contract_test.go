@@ -29,6 +29,13 @@ func TestGetSwarms_Contract(t *testing.T) {
 				ReportedTimestamp:   time.Now(),
 			},
 		},
+		Sessions: map[string]models.Session{
+			"collector-session": {
+				UserID:    "collector-123",
+				Role:      "collector",
+				ExpiresAt: time.Now().Add(1 * time.Hour),
+			},
+		},
 	}
 	h := &Handlers{
 		Store:        mockStore,
@@ -36,6 +43,7 @@ func TestGetSwarms_Contract(t *testing.T) {
 	}
 
 	req, _ := http.NewRequest("GET", "/get_swarms", nil)
+	req.AddCookie(&http.Cookie{Name: "session", Value: "collector-session"})
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(h.GetSwarmsHandler)
 	handler.ServeHTTP(rr, req)

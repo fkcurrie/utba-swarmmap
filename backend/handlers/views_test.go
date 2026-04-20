@@ -11,12 +11,17 @@ import (
 	"time"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
+	"github.com/fkcurrie/utba-swarmmap/service"
 )
 
 func TestSwarmListHandler(t *testing.T) {
 	mockStore := &MockStore{}
 	tmpl, _ := template.New("swarmlist.html").Parse("<html>Swarm List</html>")
-	h := &Handlers{Store: mockStore, Templates: tmpl}
+	h := &Handlers{
+		Store:        mockStore,
+		Templates:    tmpl,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
 
 	req, _ := http.NewRequest("GET", "/swarmlist", nil)
 	session := &models.Session{Role: "collector", ExpiresAt: time.Now().Add(1 * time.Hour)}

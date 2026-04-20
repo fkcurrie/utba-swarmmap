@@ -2,3 +2,4 @@
 
 frontend/static/vendor/**
 node_modules/**
+test-results/**
