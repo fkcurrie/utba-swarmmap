@@ -4,16 +4,16 @@
   --header-height: 70px;
   --footer-height: 60px;
   --primary-color: #f1c40f; /* Sunflower Yellow */
-  --primary-dark: #f39c12;  /* Orange/Yellow */
+  --primary-dark: #f39c12; /* Orange/Yellow */
   --secondary-color: #2d3436; /* Dark Charcoal */
-  --accent-color: #0984e3;    /* Bright Blue */
+  --accent-color: #0984e3; /* Bright Blue */
   --bg-light: #f8f9fa;
-  --bg-white: #ffffff;
+  --bg-white: #fff;
   --text-color: #2d3436;
   --text-muted: #636e72;
   --border-radius: 12px;
   --transition: all 0.2s ease-in-out;
-  --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --card-shadow: 0 4px 15px rgb(0 0 0 / 5%);
 }
 
 html,
@@ -23,7 +23,13 @@ body {
 
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -37,7 +43,7 @@ body {
 .navbar {
   min-height: var(--header-height);
   background: var(--bg-white) !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 5%);
   padding: 0.5rem 1rem;
 }
 
@@ -87,7 +93,7 @@ body {
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 25px rgb(0 0 0 / 8%);
 }
 
 .btn-primary {
@@ -99,7 +105,8 @@ body {
   padding: 0.6rem 1.5rem;
 }
 
-.btn-primary:hover, .btn-primary:focus {
+.btn-primary:hover,
+.btn-primary:focus {
   background-color: var(--primary-dark);
   border-color: var(--primary-dark);
   color: var(--secondary-color);
@@ -126,12 +133,12 @@ body {
   border: 4px solid var(--bg-white);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   #map {
     height: 60vh;
     min-height: 350px;
   }
-  
+
   :root {
     --header-height: 60px;
   }
@@ -141,7 +148,7 @@ body {
 footer {
   flex-shrink: 0;
   background: var(--bg-white);
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgb(0 0 0 / 5%);
   padding: 1.5rem 0;
   margin-top: 2rem;
 }
@@ -152,17 +159,17 @@ footer a {
   transition: var(--transition);
 }
 
-footer a:hover {
-  text-decoration: underline;
-}
-
 /* Accessibility: Focus States */
 a:focus,
 button:focus,
 .form-control:focus {
-  outline: 3px solid rgba(241, 196, 15, 0.3);
+  outline: 3px solid rgb(241 196 15 / 30%);
   outline-offset: 2px;
   box-shadow: none !important;
+}
+
+footer a:hover {
+  text-decoration: underline;
 }
 
 /* Media Viewer Styles */
@@ -195,24 +202,32 @@ button:focus,
 
 .table tr {
   background: var(--bg-white);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 2%);
   border-radius: 8px;
 }
 
-.table td, .table th {
+.table td,
+.table th {
   border: none;
   padding: 1rem;
 }
 
-.table tr td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
-.table tr td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+.table tr td:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.table tr td:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
 
 /* Legend Styles */
 .legend-item {
   background: var(--bg-white);
   padding: 0.5rem 1rem;
   border-radius: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 5%);
   margin: 0.25rem;
 }
 
@@ -223,4 +238,3 @@ button:focus,
   border-radius: 50%;
   margin-right: 0.5rem;
 }
-
