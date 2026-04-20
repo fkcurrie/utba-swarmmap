@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (reportSwarmBtn) {
             reportSwarmBtn.disabled = false;
             reportSwarmBtn.innerHTML =
-              '<i class="fa-solid fa-map-marker-alt me-2"></i> Report a Swarm at Your Location';
+              '<i class="fa-solid fa-location-dot me-2"></i> Report a Swarm at Your Location';
           }
 
           if (doPan && map) {
@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (reportSwarmBtn) {
             reportSwarmBtn.disabled = false;
             reportSwarmBtn.innerHTML =
-              '<i class="fa-solid fa-map-marker-alt me-2"></i> Report a Swarm at Your Location';
+              '<i class="fa-solid fa-location-dot me-2"></i> Report a Swarm at Your Location';
           }
           if (doPan)
             alert('Could not get your location. Error: ' + error.message);
