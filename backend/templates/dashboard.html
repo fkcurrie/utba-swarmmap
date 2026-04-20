@@ -1,81 +1,93 @@
 <!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
 {{template "header.html" .}}
 
-    <div class="container-fluid">
-        <h1 class="h2 mb-4 fw-bold">Swarm Collector Dashboard</h1>
+    <div class="container-xl">
+        <header class="row mb-5">
+            <div class="col-md-12">
+                <h1 class="display-6 fw-bold">Dashboard</h1>
+                <p class="text-muted">Manage swarm reports and your assignments.</p>
+            </div>
+        </header>
         
         <!-- Quick Actions -->
-        <section class="row mb-4" aria-labelledby="quick-actions-heading">
+        <section class="row mb-5" aria-labelledby="quick-actions-heading">
             <div class="col-md-12">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="quick-actions-heading" class="h5 mb-0 fw-bold"><i class="fa-solid fa-bolt me-2 text-warning"></i>Quick Actions</h2>
+                <div class="card border-0 shadow-sm overflow-hidden">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                        <h2 id="quick-actions-heading" class="h5 mb-0 fw-bold text-secondary">
+                            <i class="fa-solid fa-bolt me-2 text-warning"></i> Quick Actions
+                        </h2>
                     </div>
-                    <div class="card-body d-flex flex-wrap pt-2">
-                        <a href="/collectorsmap" class="btn btn-primary me-3 mb-2 shadow-sm" aria-label="Go to interactive collector map">
-                            <i class="fa-solid fa-map-location-dot me-1"></i> View Collector Map
-                        </a>
-                        <a href="/swarmlist" class="btn btn-outline-secondary me-3 mb-2" aria-label="View all swarms in a list format">
-                            <i class="fa-solid fa-list me-1"></i> View All Swarms (List)
-                        </a>
-                        {{if .ShowSiteAdmin}}
-                            <a href="/admin" class="btn btn-danger me-3 mb-2 shadow-sm" aria-label="Access site administration dashboard">
-                                <i class="fa-solid fa-user-shield me-1"></i> Site Admin
+                    <div class="card-body p-4 pt-2">
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="/collectorsmap" class="btn btn-primary shadow-sm" aria-label="Go to interactive collector map">
+                                <i class="fa-solid fa-map-location-dot me-2"></i> Collector Map
                             </a>
-                        {{end}}
-                        {{if .ShowCollectorAdmin}}
-                            <a href="/collector_admin" class="btn btn-warning mb-2 shadow-sm" aria-label="Access collector administration dashboard">
-                                <i class="fa-solid fa-users-gear me-1"></i> Collector Admin
+                            <a href="/swarmlist" class="btn btn-light border" aria-label="View all swarms in a list format">
+                                <i class="fa-solid fa-list me-2"></i> All Swarms List
                             </a>
-                        {{end}}
+                            {{if .ShowSiteAdmin}}
+                                <a href="/admin" class="btn btn-outline-danger" aria-label="Access site administration dashboard">
+                                    <i class="fa-solid fa-user-shield me-2"></i> Site Admin
+                                </a>
+                            {{end}}
+                            {{if .ShowCollectorAdmin}}
+                                <a href="/collector_admin" class="btn btn-outline-warning text-dark" aria-label="Access collector administration dashboard">
+                                    <i class="fa-solid fa-users-gear me-2"></i> Collector Admin
+                                </a>
+                            {{end}}
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
         
-        <div class="row">
+        <div class="row g-4">
             <!-- Available Swarms -->
-            <section class="col-md-6 mb-4" aria-labelledby="available-swarms-heading">
+            <section class="col-lg-6 mb-4" aria-labelledby="available-swarms-heading">
                 <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="available-swarms-heading" class="h5 mb-0 fw-bold text-danger"><i class="fa-solid fa-circle-exclamation me-2"></i>Available Swarms</h2>
-                        <p class="text-muted small mb-0 mt-1">New reports that need attention</p>
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 id="available-swarms-heading" class="h5 mb-0 fw-bold text-danger">
+                                <i class="fa-solid fa-circle-exclamation me-2"></i> Available Swarms
+                            </h2>
+                            <p class="text-muted small mb-0 mt-1">New reports needing attention</p>
+                        </div>
+                        <span class="badge bg-danger rounded-pill">{{len .AvailableSwarms}}</span>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body px-4">
                         {{if .AvailableSwarms}}
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle">
-                                    <thead class="table-light">
+                                    <thead class="small text-uppercase text-muted">
                                         <tr>
                                             <th>Location</th>
                                             <th>Reported</th>
-                                            <th>Action</th>
+                                            <th class="text-end">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {{range .AvailableSwarms}}
                                         <tr>
                                             <td>
-                                                <span class="fw-bold d-block">{{.NearestIntersection}}</span>
-                                                <small class="text-muted d-block text-truncate" style="max-width: 150px;">{{.Description}}</small>
+                                                <span class="fw-bold d-block text-dark">{{.NearestIntersection}}</span>
+                                                <small class="text-muted d-block text-truncate" style="max-width: 200px;">{{.Description}}</small>
                                             </td>
-                                            <td class="small">{{.ReportedTimestamp.Format "Jan 02 15:04"}}</td>
-                                            <td>
+                                            <td class="small text-nowrap">{{.ReportedTimestamp.Format "Jan 02, 15:04"}}</td>
+                                            <td class="text-end">
                                                 {{if .AssignedCollectorID}}
-                                                    <span class="badge bg-warning text-dark mb-1 d-block">Assigned to you</span>
-                                                    <form method="POST" action="/assign_swarm" aria-label="Unassign swarm">
+                                                    <form method="POST" action="/assign_swarm" class="d-inline">
                                                         <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
                                                         <input type="hidden" name="swarmID" value="{{.ID}}">
-
                                                         <input type="hidden" name="action" value="unassign">
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">Unassign</button>
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">Unclaim</button>
                                                     </form>
                                                 {{else}}
-                                                    <form method="POST" action="/assign_swarm" aria-label="Claim swarm">
+                                                    <form method="POST" action="/assign_swarm" class="d-inline">
                                                         <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
                                                         <input type="hidden" name="swarmID" value="{{.ID}}">
                                                         <input type="hidden" name="action" value="assign">
-                                                        <button type="submit" class="btn btn-sm btn-primary w-100">Claim</button>
+                                                        <button type="submit" class="btn btn-sm btn-primary px-3">Claim</button>
                                                     </form>
                                                 {{end}}
                                             </td>
@@ -85,9 +97,11 @@
                                 </table>
                             </div>
                         {{else}}
-                            <div class="text-center py-4">
-                                <i class="fa-solid fa-circle-check fa-3x text-success mb-3 opacity-25"></i>
-                                <p class="text-muted">No available swarms at the moment.</p>
+                            <div class="text-center py-5">
+                                <div class="mb-3 text-success opacity-50">
+                                    <i class="fa-solid fa-circle-check fa-3x"></i>
+                                </div>
+                                <p class="text-muted">No new swarms reported. Good job!</p>
                             </div>
                         {{end}}
                     </div>
@@ -95,52 +109,57 @@
             </section>
 
             <!-- Assigned Swarms -->
-            <section class="col-md-6 mb-4" aria-labelledby="assigned-swarms-heading">
+            <section class="col-lg-6 mb-4" aria-labelledby="assigned-swarms-heading">
                 <div class="card border-0 shadow-sm h-100">
-                    <div class="card-header bg-white border-bottom-0 pt-3">
-                        <h2 id="assigned-swarms-heading" class="h5 mb-0 fw-bold text-success"><i class="fa-solid fa-user-check me-2"></i>My Assigned Swarms</h2>
-                        <p class="text-muted small mb-0 mt-1">Swarms you're currently handling</p>
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 id="assigned-swarms-heading" class="h5 mb-0 fw-bold text-success">
+                                <i class="fa-solid fa-user-check me-2"></i> My Assignments
+                            </h2>
+                            <p class="text-muted small mb-0 mt-1">Swarms you're currently handling</p>
+                        </div>
+                        <span class="badge bg-success rounded-pill">{{len .AssignedSwarms}}</span>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body px-4">
                         {{if .AssignedSwarms}}
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle">
-                                    <thead class="table-light">
+                                    <thead class="small text-uppercase text-muted">
                                         <tr>
                                             <th>Location</th>
                                             <th>Status</th>
-                                            <th>Actions</th>
+                                            <th class="text-end">Update</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {{range .AssignedSwarms}}
                                         <tr>
                                             <td>
-                                                <span class="fw-bold d-block">{{.NearestIntersection}}</span>
-                                                <small class="text-muted d-block">{{.ReportedTimestamp.Format "Jan 02 15:04"}}</small>
+                                                <span class="fw-bold d-block text-dark">{{.NearestIntersection}}</span>
+                                                <small class="text-muted d-block">{{.ReportedTimestamp.Format "Jan 02, 15:04"}}</small>
                                             </td>
                                             <td>
-                                                <span class="badge bg-{{if eq .Status "Reported"}}danger{{else if eq .Status "Verified"}}warning text-dark{{else if eq .Status "Captured"}}success{{else}}secondary{{end}} p-2">
+                                                <span class="badge {{if eq .Status "Reported"}}bg-danger-subtle text-danger{{else if eq .Status "Verified"}}bg-warning-subtle text-warning-emphasis{{else if eq .Status "Captured"}}bg-success-subtle text-success{{else}}bg-secondary-subtle text-secondary{{end}} px-2 py-1">
                                                     {{.Status}}
                                                 </span>
                                             </td>
-                                            <td>
+                                            <td class="text-end">
                                                 {{if eq .Status "Reported"}}
-                                                    <form method="POST" action="/update_swarm_status" aria-label="Verify swarm">
+                                                    <form method="POST" action="/update_swarm_status" class="d-inline">
                                                         <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
                                                         <input type="hidden" name="id" value="{{.ID}}">
                                                         <input type="hidden" name="status" value="Verified">
-                                                        <button type="submit" class="btn btn-sm btn-warning w-100">Verify</button>
+                                                        <button type="submit" class="btn btn-sm btn-warning">Verify</button>
                                                     </form>
                                                 {{else if eq .Status "Verified"}}
-                                                    <form method="POST" action="/update_swarm_status" aria-label="Mark swarm as captured">
+                                                    <form method="POST" action="/update_swarm_status" class="d-inline">
                                                         <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
                                                         <input type="hidden" name="id" value="{{.ID}}">
                                                         <input type="hidden" name="status" value="Captured">
-                                                        <button type="submit" class="btn btn-sm btn-success w-100">Captured</button>
+                                                        <button type="submit" class="btn btn-sm btn-success">Captured</button>
                                                     </form>
                                                 {{else}}
-                                                    <span class="text-muted small">Done <i class="fa-solid fa-check"></i></span>
+                                                    <i class="fa-solid fa-check-double text-success"></i>
                                                 {{end}}
                                             </td>
                                         </tr>
@@ -149,9 +168,12 @@
                                 </table>
                             </div>
                         {{else}}
-                            <div class="text-center py-4">
-                                <i class="fa-solid fa-clipboard-list fa-3x text-muted mb-3 opacity-25"></i>
+                            <div class="text-center py-5">
+                                <div class="mb-3 text-muted opacity-25">
+                                    <i class="fa-solid fa-clipboard-list fa-3x"></i>
+                                </div>
                                 <p class="text-muted">You haven't claimed any swarms yet.</p>
+                                <p class="small text-muted">Claim a swarm from the list on the left.</p>
                             </div>
                         {{end}}
                     </div>

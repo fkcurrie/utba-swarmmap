@@ -1,41 +1,41 @@
 <!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
 {{template "header.html" .}}
 
-<div class="container-fluid mt-5">
+<div class="container mt-5 pt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="fa-solid fa-rocket me-2"></i> Initial Admin Bootstrap</h4>
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4 text-center">
+                    <h4 class="fw-bold mb-0"><i class="fa-solid fa-rocket me-2 text-primary"></i> System Bootstrap</h4>
                 </div>
-                <div class="card-body p-4">
-                    <p class="text-muted">Use this form to create the initial site administrator account. This route will be disabled once at least one administrator exists.</p>
+                <div class="card-body p-5 pt-4">
+                    <p class="text-muted small text-center mb-4">Create the initial site administrator account to get started.</p>
                     
                     {{if .Error}}
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger border-0 small" role="alert">
                         <i class="fa-solid fa-circle-exclamation me-2"></i> {{.Error}}
                     </div>
                     {{end}}
 
                     {{if .Success}}
-                    <div class="alert alert-success" role="alert">
+                    <div class="alert alert-success border-0 small text-center" role="alert">
                         <i class="fa-solid fa-circle-check me-2"></i> {{.Success}}
-                        <div class="mt-2">
-                            <a href="/login" class="btn btn-success btn-sm">Go to Login</a>
+                        <div class="mt-3">
+                            <a href="/login" class="btn btn-success btn-sm px-4">Go to Login</a>
                         </div>
                     </div>
                     {{else}}
                     <form action="/bootstrap" method="POST" aria-label="Bootstrap Admin Form">
                         <div class="mb-3">
-                            <label for="name" class="form-label fw-bold">Full Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required placeholder="e.g. Frank Currie">
+                            <label for="name" class="form-label small fw-bold text-muted text-uppercase">Full Name</label>
+                            <input type="text" class="form-control bg-light border-0 py-2" id="name" name="name" required placeholder="Frank Currie">
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label fw-bold">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" required placeholder="e.g. frank@example.com">
-                            <div class="form-text">Must match the email you will use for Google Login.</div>
+                        <div class="mb-4">
+                            <label for="email" class="form-label small fw-bold text-muted text-uppercase">Email Address</label>
+                            <input type="email" class="form-control bg-light border-0 py-2" id="email" name="email" required placeholder="frank@example.com">
+                            <div class="form-text small opacity-75 mt-2">Must match your Google Login email.</div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm">Create Admin Account</button>
+                        <button type="submit" class="btn btn-primary w-100 py-2 shadow-sm">Create Admin Account</button>
                     </form>
                     {{end}}
                 </div>
