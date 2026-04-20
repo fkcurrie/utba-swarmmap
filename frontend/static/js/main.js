@@ -339,7 +339,9 @@ document.addEventListener('DOMContentLoaded', function () {
           '<div class="text-center p-2"><div class="spinner-border spinner-border-sm text-primary" role="status"></div> Loading...</div>';
       }
 
-      const response = await fetch('/get_swarms');
+      const visitorId = localStorage.getItem('utba_visitor_id');
+      const url = visitorId ? `/get_swarms?sessionId=${visitorId}` : '/get_swarms';
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch swarms');
       const swarms = await response.json();
 

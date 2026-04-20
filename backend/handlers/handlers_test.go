@@ -277,7 +277,16 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 		{ID: "2", Description: "Swarm 2", Status: "Captured", ReportedTimestamp: time.Now().Add(-25 * time.Hour)},
 		{ID: "3", Description: "Swarm 3", Status: "Reported", ReportedTimestamp: time.Now().Add(-25 * time.Hour)},
 	}
-	mockStore := &MockStore{Swarms: mockSwarms}
+	mockStore := &MockStore{
+		Swarms: mockSwarms,
+		Sessions: map[string]models.Session{
+			"collector-session": {
+				UserID:    "collector-123",
+				Role:      "collector",
+				ExpiresAt: time.Now().Add(1 * time.Hour),
+			},
+		},
+	}
 
 	// Initialize handlers with the mock store and swarm service
 	h := &Handlers{
@@ -289,6 +298,7 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	req.AddCookie(&http.Cookie{Name: "session", Value: "collector-session"})
 
 	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(h.GetSwarmsHandler)
@@ -321,6 +331,89 @@ func TestGetSwarmsHandler_WithSwarms(t *testing.T) {
 	}
 	if returnedSwarms[2].DisplayStatus != "Archived" {
 		t.Errorf("expected DisplayStatus to be 'Archived', got '%s'", returnedSwarms[2].DisplayStatus)
+	}
+}
+
+func TestGetSwarmsHandler_PublicRestriction(t *testing.T) {
+	// Prepare a mock store with some data
+	mockSwarms := []models.SwarmReport{
+		{ID: "1", Description: "Swarm 1", Status: "Reported", ReportedTimestamp: time.Now()},
+	}
+	mockStore := &MockStore{Swarms: mockSwarms}
+
+	// Initialize handlers with the mock store and swarm service
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
+
+	// Request WITHOUT session or sessionId
+	req, err := http.NewRequest("GET", "/get_swarms", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.GetSwarmsHandler)
+	handler.ServeHTTP(rr, req)
+
+	// Check status code
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	// Check the response body
+	var returnedSwarms []models.SwarmReport
+	if err := json.NewDecoder(rr.Body).Decode(&returnedSwarms); err != nil {
+		t.Fatalf("could not decode response body: %v", err)
+	}
+
+	if len(returnedSwarms) != 0 {
+		t.Errorf("public request should return 0 swarms, got %d", len(returnedSwarms))
+	}
+}
+
+func TestGetSwarmsHandler_ReporterSession(t *testing.T) {
+	// Prepare a mock store with some data
+	mockSwarms := []models.SwarmReport{
+		{ID: "1", Description: "Reporter Swarm", ReporterSessionID: "reporter-123", ReportedTimestamp: time.Now()},
+		{ID: "2", Description: "Other Swarm", ReporterSessionID: "other-456", ReportedTimestamp: time.Now()},
+	}
+	mockStore := &MockStore{Swarms: mockSwarms}
+
+	// Initialize handlers with the mock store and swarm service
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
+
+	// Request WITH sessionId
+	req, err := http.NewRequest("GET", "/get_swarms?sessionId=reporter-123", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.GetSwarmsHandler)
+	handler.ServeHTTP(rr, req)
+
+	// Check status code
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	// Check the response body
+	var returnedSwarms []models.SwarmReport
+	if err := json.NewDecoder(rr.Body).Decode(&returnedSwarms); err != nil {
+		t.Fatalf("could not decode response body: %v", err)
+	}
+
+	if len(returnedSwarms) != 1 {
+		t.Errorf("reporter request should return 1 swarm, got %d", len(returnedSwarms))
+	}
+
+	if returnedSwarms[0].ID != "1" {
+		t.Errorf("reporter request returned wrong swarm: got %s want 1", returnedSwarms[0].ID)
 	}
 }
 
