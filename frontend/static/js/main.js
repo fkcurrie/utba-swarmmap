@@ -340,7 +340,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const visitorId = localStorage.getItem('utba_visitor_id');
-      const url = visitorId ? `/get_swarms?sessionId=${visitorId}` : '/get_swarms';
+      const url = visitorId
+        ? `/get_swarms?sessionId=${visitorId}`
+        : '/get_swarms';
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch swarms');
       const swarms = await response.json();
