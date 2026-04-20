@@ -19,27 +19,29 @@
 </head>
 <body>
     <header role="banner">
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top" aria-label="Main Navigation">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-md navbar-light fixed-top" aria-label="Main Navigation">
+            <div class="container-xl">
                 <a class="navbar-brand" href="/">UTBA Swarm Map</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <span class="fa-solid fa-bars"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto align-items-center">
                         {{if .User}}
                             <li class="nav-item">
-                                <span class="navbar-text me-3">Welcome, {{.User.Username}}</span>
+                                <span class="nav-link disabled px-3">
+                                    <i class="fa-solid fa-user-circle me-1"></i> {{.User.Username}}
+                                </span>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/dashboard">Dashboard</a>
+                                <a class="nav-link px-3" href="/dashboard">Dashboard</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/logout">Logout</a>
+                            <li class="nav-item ms-md-2">
+                                <a class="btn btn-sm btn-outline-secondary" href="/logout">Logout</a>
                             </li>
                         {{else}}
                             <li class="nav-item">
-                                <a class="nav-link" href="/login">Swarm Collectors Login</a>
+                                <a class="nav-link px-3" href="/login">Swarm Collectors Login</a>
                             </li>
                         {{end}}
                     </ul>

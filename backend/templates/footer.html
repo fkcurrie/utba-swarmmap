@@ -1,32 +1,34 @@
 <!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
     </main> <!-- closes main-content -->
-    <footer class="container-fluid text-center fixed-bottom bg-light py-2 border-top" role="contentinfo">
-        <p class="text-muted small mb-0">
-            Made with 🐝❤️🐝 with <a href="https://github.com/google/gemini-cli" target="_blank" rel="noopener">gemini-cli</a>
-        </p>
-        <nav aria-label="Admin navigation">
-            <p class="text-muted small mb-0">
-                {{if and .User (eq .User.Role "site_admin")}}
-                    <a href="/admin">Site Administration</a>
-                {{else}}
-                    <a href="/login?role=site_admin">Site Admin Login</a>
-                {{end}}
+    <footer class="footer py-4" role="contentinfo">
+        <div class="container-xl text-center">
+            <p class="text-muted small mb-2">
+                Made with 🐝❤️🐝 with <a href="https://github.com/google/gemini-cli" target="_blank" rel="noopener">gemini-cli</a>
             </p>
-        </nav>
+            <nav aria-label="Admin navigation">
+                <p class="text-muted small mb-0">
+                    {{if and .User (eq .User.Role "site_admin")}}
+                        <a href="/admin" class="text-decoration-none">Site Administration</a>
+                    {{else}}
+                        <a href="/login?role=site_admin" class="text-decoration-none">Site Admin Login</a>
+                    {{end}}
+                </p>
+            </nav>
+        </div>
     </footer>
 
     <!-- Global Media Viewer Modal -->
     <div class="modal fade media-modal" id="media-viewer-modal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header border-0">
+            <div class="modal-content overflow-hidden">
+                <div class="modal-header border-0 bg-dark py-2">
                     <h5 class="modal-title visually-hidden">Media Viewer</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-0">
+                <div class="modal-body p-0 bg-dark">
                     <div class="media-content">
-                        <img id="media-viewer" src="" alt="Swarm report media" style="display: none;">
-                        <video id="video-viewer" controls style="display: none;"></video>
+                        <img id="media-viewer" src="" alt="Swarm report media" class="img-fluid" style="display: none;">
+                        <video id="video-viewer" controls class="w-100" style="display: none;"></video>
                         
                         <button class="media-nav prev" aria-label="Previous media">
                             <i class="fa-solid fa-chevron-left"></i>
@@ -35,7 +37,7 @@
                             <i class="fa-solid fa-chevron-right"></i>
                         </button>
                     </div>
-                    <div class="media-counter pb-3" id="media-counter"></div>
+                    <div class="media-counter py-3 text-light small opacity-75" id="media-counter"></div>
                 </div>
             </div>
         </div>
