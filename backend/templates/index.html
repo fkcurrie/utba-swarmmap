@@ -16,7 +16,14 @@
         
         <div class="col-lg-12 mb-4">
             <div class="card border-0 shadow-lg overflow-hidden" style="height: 600px; border-radius: var(--border-radius-lg);">
-                <div id="map" class="h-100 w-100" aria-label="Interactive map showing bee swarm reports" role="application"></div>
+                <div id="map" class="h-100 w-100" aria-label="Interactive map showing bee swarm reports" role="application" style="min-height: 400px;">
+                    <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">
+                        <div class="text-center">
+                            <div class="spinner-border text-warning mb-2" role="status"></div>
+                            <p class="mb-0 fw-bold">Initializing Map...</p>
+                        </div>
+                    </div>
+                </div>
                 <div class="position-absolute top-0 end-0 m-3 d-none d-md-block" style="z-index: 1;">
                     <button id="btnRecenter" class="btn btn-white btn-sm shadow-sm fw-bold">
                         <i class="fa-solid fa-location-crosshairs me-1"></i> Recenter

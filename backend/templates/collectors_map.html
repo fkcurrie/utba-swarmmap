@@ -26,7 +26,14 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm overflow-hidden" style="height: 600px; border-radius: var(--border-radius-lg);">
-                <div id="map" class="h-100 w-100"></div>
+                <div id="map" class="h-100 w-100" aria-label="Interactive map showing bee swarm reports" role="application" style="min-height: 400px;">
+                    <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">
+                        <div class="text-center">
+                            <div class="spinner-border text-warning mb-2" role="status"></div>
+                            <p class="mb-0 fw-bold">Initializing Map...</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
