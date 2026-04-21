@@ -78,12 +78,13 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   // Check legend items
   const legendItems = page.locator('.legend-item');
-  await expect(legendItems).toHaveCount(4);
+  await expect(legendItems).toHaveCount(5);
   
   // Verify specific legend text and colors for robustness
   const expectedLegend = [
     { text: /Reported/i, color: 'rgb(232, 65, 24)' }, // #e84118
     { text: /Verified/i, color: 'rgb(251, 197, 49)' }, // #fbc531
+    { text: /Claimed/i, color: 'rgb(255, 140, 0)' },   // #ff8c00
     { text: /Captured/i, color: 'rgb(76, 209, 55)' }, // #4cd137
     { text: /Archived/i, color: 'rgb(72, 126, 176)' } // #487eb0
   ];
@@ -125,6 +126,15 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   const videoBtn = modal.locator('button:has-text("Video")');
   await expect(videoBtn).toBeVisible();
+  
+  const galleryBtn = modal.locator('button:has-text("Gallery")');
+  await expect(galleryBtn).toBeVisible();
+
+  // Verify form fields
+  await expect(modal.locator('#reporterEmail')).toBeVisible();
+  await expect(modal.locator('#reporterPhone')).toBeVisible();
+  await expect(modal.locator('#intersection')).toBeVisible();
+  await expect(modal.locator('#selectedFilesList')).toBeAttached();
   
   // Close the modal via close button
   const closeBtn = page.locator('#reportSwarmModalCloseBtn');
