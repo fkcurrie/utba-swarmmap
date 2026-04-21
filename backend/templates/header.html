@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/css/style.css">
     <script>
         window.MAPBOX_TOKEN = "{{.MapboxToken}}";
+        {{if .User}}
+        window.USER_ROLE = "{{.User.Role}}";
+        window.CSRF_TOKEN = "{{.User.CSRFToken}}";
+        {{end}}
     </script>
 </head>
 <body>

@@ -112,6 +112,8 @@ document.addEventListener('DOMContentLoaded', function () {
               ['get', 'displayStatus'],
               'Verified',
               '#fbc531',
+              'Claimed',
+              '#ff8c00',
               'Captured',
               '#4cd137',
               'Archived',
@@ -203,6 +205,26 @@ document.addEventListener('DOMContentLoaded', function () {
             if (swarm.reporterEmail)
               popupContent += `Email: ${swarm.reporterEmail}<br>`;
             popupContent += '</small>';
+          }
+          if (
+            window.USER_ROLE &&
+            ['collector', 'collector_admin', 'site_admin'].includes(
+              window.USER_ROLE,
+            ) &&
+            ['Reported', 'Verified'].includes(swarm.status) &&
+            !swarm.assignedCollectorID
+          ) {
+            popupContent += `
+                <div class="d-grid mt-2 pt-2 border-top">
+                    <form action="/claim_swarm" method="POST">
+                        <input type="hidden" name="swarmID" value="${swarm.id}">
+                        <input type="hidden" name="csrf_token" value="${window.CSRF_TOKEN}">
+                        <button type="submit" class="btn btn-sm btn-success w-100">
+                            <i class="fa-solid fa-hand-holding-heart me-1"></i> Claim Swarm
+                        </button>
+                    </form>
+                </div>
+            `;
           }
           popupContent += '</div>';
 

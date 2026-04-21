@@ -1,41 +1,30 @@
-<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
-{{template "header.html" .}}
+{% extends "bootstrap.html" %}
 
-    <div class="container-xl">
-        <div class="row mb-5 justify-content-center">
-            <div class="col-lg-10 text-center">
-                <div class="py-4 py-md-5">
-                    <h1 class="display-5 fw-extrabold mb-3 tracking-tight">Save Toronto's Bees</h1>
-                    <p class="lead text-muted mb-4 mx-auto" style="max-width: 700px;">Spotted a bee swarm? Report it instantly to help local beekeepers safely relocate them and protect our urban pollinators.</p>
-                    <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-                        <button id="reportSwarmBtn" class="btn btn-primary btn-lg shadow-lg" aria-label="Report a Bee Swarm at your current location">
-                            <i class="fa-solid fa-location-dot me-2"></i> Report a Swarm at Your Location
-                        </button>
-                        <a href="#map" class="btn btn-outline-secondary btn-lg border-2">
-                            <i class="fa-solid fa-map me-2"></i> View Swarm Map
-                        </a>
-                    </div>
-                    <div class="mt-4">
-                        <span class="badge bg-white text-dark border-0 shadow-sm p-2 px-3">
-                            <i class="fa-solid fa-mouse-pointer me-1 text-warning"></i> Or click on the map to pin a location
-                        </span>
-                    </div>
-                </div>
-            </div>
+{% block content %}
+<div class="container-fluid py-4 px-lg-5">
+    <div class="row mb-5">
+        <div class="col-lg-12 text-center mb-4">
+            <h1 class="display-5 fw-800 mb-2">Live Swarm Tracking</h1>
+            <p class="lead text-muted mx-auto" style="max-width: 700px;">Helping beekeepers save swarms and protect our pollinators across the region.</p>
         </div>
         
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card p-1 bg-white shadow-lg border-0 overflow-hidden">
-                    <div id="map" aria-label="Interactive map showing bee swarm reports" role="application"></div>
+        <div class="col-lg-12 mb-4">
+            <div class="card border-0 shadow-lg overflow-hidden" style="height: 600px; border-radius: var(--border-radius-lg);">
+                <div id="map" class="h-100 w-100"></div>
+                <div class="position-absolute top-0 end-0 m-3 d-none d-md-block" style="z-index: 1;">
+                    <button id="btnRecenter" class="btn btn-white btn-sm shadow-sm fw-bold">
+                        <i class="fa-solid fa-location-crosshairs me-1"></i> Recenter
+                    </button>
+                    <button id="btnRefresh" class="btn btn-white btn-sm shadow-sm fw-bold ms-2">
+                        <i class="fa-solid fa-rotate me-1"></i> Refresh
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Map Legend -->
-        <aside class="row mt-5 mb-5" aria-labelledby="legendTitle">
-            <div class="col-md-12 text-center mb-4">
-                <h2 id="legendTitle" class="h5 fw-bold">
+        <aside class="col-lg-12 mb-5">
+            <div class="text-center mb-3">
+                <h2 id="legendTitle" class="h6 fw-bold text-uppercase tracking-wider text-muted">
                     <i class="fa-solid fa-circle-info me-2 text-warning"></i>Map Legend
                 </h2>
             </div>
@@ -48,6 +37,10 @@
                     <div class="legend-item d-flex align-items-center" role="listitem">
                         <span class="legend-color" style="background-color: rgb(251, 197, 49);" aria-hidden="true"></span>
                         <span class="small fw-bold text-uppercase tracking-wider">Verified</span>
+                    </div>
+                    <div class="legend-item d-flex align-items-center" role="listitem">
+                        <span class="legend-color" style="background-color: rgb(255, 140, 0);" aria-hidden="true"></span>
+                        <span class="small fw-bold text-uppercase tracking-wider">Claimed</span>
                     </div>
                     <div class="legend-item d-flex align-items-center" role="listitem">
                         <span class="legend-color" style="background-color: rgb(76, 209, 55);" aria-hidden="true"></span>
@@ -74,81 +67,125 @@
                 </div>
                 <div class="modal-body p-4">
                     <form id="reportSwarmForm">
-                        <div class="mb-4">
-                            <label for="description" class="form-label fw-bold small text-uppercase tracking-wider text-muted">Description</label>
-                            <textarea class="form-control bg-light border-0 p-3" id="description" name="description" rows="3" required 
-                                placeholder="Describe the swarm (size, height, location details...)"></textarea>
-                        </div>
-                        <div class="mb-4">
-                            <label for="intersection" class="form-label fw-bold small text-uppercase tracking-wider text-muted">Nearest Major Intersection</label>
-                            <input type="text" class="form-control bg-light border-0 p-3" id="intersection" name="intersection" placeholder="e.g., Yonge & Bloor" required>
-                        </div>
-
-                        <!-- Contact Information Section -->
-                        <div class="card border-0 bg-light mb-4 shadow-none">
-                            <div class="card-body p-4">
-                                <h6 class="mb-3 fw-bold text-secondary"><i class="fa-solid fa-phone me-2 text-warning"></i> Contact Information (Optional)</h6>
-                                <p class="small text-muted mb-4">Helps beekeepers coordinate with you for safe relocation.</p>
-                                
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="reporterName" class="form-label small fw-bold">Your Name</label>
-                                        <input type="text" class="form-control border-0 p-2" id="reporterName" name="reporterName" placeholder="John Smith">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="reporterPhone" class="form-label small fw-bold">Phone Number</label>
-                                        <input type="tel" class="form-control border-0 p-2" id="reporterPhone" name="reporterPhone" placeholder="(416) 555-0123">
-                                    </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="reporterName" class="form-label fw-bold small text-uppercase">Your Name</label>
+                                <input type="text" class="form-control" id="reporterName" required placeholder="Full Name">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="reporterContact" class="form-label fw-bold small text-uppercase">Phone Number</label>
+                                <input type="tel" class="form-control" id="reporterContact" required placeholder="Best number to reach you">
+                            </div>
+                            <div class="col-12">
+                                <label for="locationAddress" class="form-label fw-bold small text-uppercase">Exact Location</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-location-dot text-danger"></i></span>
+                                    <input type="text" class="form-control border-start-0" id="locationAddress" required placeholder="Address or description">
                                 </div>
-                                <div class="mb-0">
-                                    <label for="reporterEmail" class="form-label small fw-bold">Email Address</label>
-                                    <input type="email" class="form-control border-0 p-2" id="reporterEmail" name="reporterEmail" placeholder="john@example.com">
+                                <div id="locationStatus" class="form-text mt-2">
+                                    <i class="fa-solid fa-crosshairs me-1"></i> Detecting your coordinates...
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label fw-bold small text-uppercase tracking-wider text-muted mb-3">Upload Media</label>
-                            <div class="d-flex flex-wrap gap-2">
-                                <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
-                                <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
-                                <input type="file" id="video-input" accept="video/*" capture="environment" style="display: none;">
-                                <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('gallery-input').click();">
-                                    <i class="fa-solid fa-images me-1 text-warning"></i> Gallery
-                                </button>
-                                <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('camera-input').click();">
-                                    <i class="fa-solid fa-camera me-1 text-warning"></i> Camera
-                                </button>
-                                <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('video-input').click();">
-                                    <i class="fa-solid fa-video me-1 text-warning"></i> Video
-                                </button>
-                            </div>
-                            <div class="mt-2">
-                                <small class="text-muted">JPG, PNG, MP4, etc. (max 50MB)</small>
-                            </div>
-
-
-                            <!-- File management area -->
-                            <div id="fileManagementArea" class="mt-3" style="display: none;">
-                                <div id="selectedFilesList" class="bg-white rounded border p-2 mb-2" style="max-height: 150px; overflow-y: auto;"></div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-success" id="totalFileCount">0 files ready</span>
-                                    <button type="button" class="btn btn-sm text-danger" id="clearAllFilesBtn">Clear All</button>
-                                </div>
+                            <div class="col-12">
+                                <label for="description" class="form-label fw-bold small text-uppercase">Details & Size</label>
+                                <textarea class="form-control" id="description" rows="3" placeholder="e.g. Football size, 10ft up in an apple tree..."></textarea>
                             </div>
                         </div>
-                        
-                        <input type="hidden" id="latitude" name="latitude">
-                        <input type="hidden" id="longitude" name="longitude">
-                        
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
-                            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary px-5 shadow-sm">Submit Report</button>
-                        </div>
+                        <input type="hidden" id="latitude">
+                        <input type="hidden" id="longitude">
                     </form>
+                </div>
+                <div class="modal-footer border-0 p-4">
+                    <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="reportSwarmForm" class="btn btn-primary px-4 fw-bold shadow-sm">Submit Report</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Scripts -->
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+<script>
+    // Configuration for the map
+    window.MAP_CONFIG = {
+        mapboxToken: '{{.MapboxToken}}',
+        userRole: '{{.UserRole}}',
+        csrfToken: '{{.CSRFToken}}'
+    };
+</script>
+<script src="/static/js/main.js"></script>
+
+<style>
+    .legend-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        margin-right: 8px;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
     
-    {{template "footer.html" .}}
+    .legend-item {
+        padding: 6px 12px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+
+    /* Custom popup styling */
+    .mapboxgl-popup-content {
+        padding: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        border: none;
+        max-width: 320px;
+    }
+    
+    .mapboxgl-popup-close-button {
+        padding: 8px;
+        color: white;
+        font-size: 16px;
+        z-index: 10;
+    }
+    
+    .swarm-popup-header {
+        background: linear-gradient(135deg, #2f3640 0%, #1e272e 100%);
+        color: white;
+        padding: 15px 20px;
+    }
+    
+    .swarm-popup-body {
+        padding: 20px;
+    }
+    
+    .status-badge {
+        font-size: 10px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-claim {
+        background-color: #ff8c00;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        width: 100%;
+        transition: all 0.2s;
+        margin-top: 10px;
+    }
+    
+    .btn-claim:hover {
+        background-color: #e67e00;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(255, 140, 0, 0.3);
+    }
+</style>
+{% endblock %}

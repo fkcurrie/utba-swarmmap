@@ -139,7 +139,7 @@
                                                 <small class="text-muted d-block">{{.ReportedTimestamp.Format "Jan 02, 15:04"}}</small>
                                             </td>
                                             <td data-label="Status">
-                                                <span class="badge {{if eq .Status "Reported"}}bg-danger-subtle text-danger{{else if eq .Status "Verified"}}bg-warning-subtle text-warning-emphasis{{else if eq .Status "Captured"}}bg-success-subtle text-success{{else}}bg-secondary-subtle text-secondary{{end}} px-2 py-1">
+                                                <span class="badge {{if eq .Status "Reported"}}bg-danger-subtle text-danger{{else if eq .Status "Verified"}}bg-warning-subtle text-warning-emphasis{{else if eq .Status "Claimed"}}bg-info-subtle text-info-emphasis{{else if eq .Status "Captured"}}bg-success-subtle text-success{{else}}bg-secondary-subtle text-secondary{{end}} px-2 py-1">
                                                     {{.Status}}
                                                 </span>
                                             </td>
