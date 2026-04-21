@@ -1,7 +1,7 @@
 # Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 
 # STAGE 1: Build the application
-FROM golang:1.25.9-alpine3.21 AS builder
+FROM golang:1.25.9-alpine AS builder
 
 WORKDIR /src
 COPY go.mod go.sum ./

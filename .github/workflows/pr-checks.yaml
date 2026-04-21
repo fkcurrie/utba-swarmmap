@@ -240,7 +240,7 @@ jobs:
             if curl -s http://localhost:8082/static/css/style.css > /dev/null; then
               FRONTEND_UP=true
             fi
-            
+
             if [ "$BACKEND_UP" = true ] && [ "$FRONTEND_UP" = true ]; then
               echo "All services are up!"
               exit 0
