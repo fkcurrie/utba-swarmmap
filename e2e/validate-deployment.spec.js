@@ -107,10 +107,10 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(submitBtn).toBeVisible();
   await expect(submitBtn).toHaveText(/Submit Report/i);
 
-  const cameraBtn = modal.locator('button:has-text("Camera")');
+  const cameraBtn = modal.locator('button:has(.fa-camera)');
   await expect(cameraBtn).toBeVisible();
 
-  const videoBtn = modal.locator('button:has-text("Video")');
+  const videoBtn = modal.locator('button:has(.fa-video)');
   await expect(videoBtn).toBeVisible();
   
   // Close the modal via close button
