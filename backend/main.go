@@ -113,6 +113,9 @@ func main() {
 		slog.Info("Using Nominatim Location Service")
 	}
 
+	frontendAssetsURL := strings.TrimSpace(getEnv("FRONTEND_ASSETS_URL", ""))
+	frontendAssetsURL = strings.TrimSuffix(frontendAssetsURL, "/")
+
 	// Initialize handlers with dependencies
 	h := &handlers.Handlers{
 		Store:             dataStore,
@@ -121,11 +124,18 @@ func main() {
 		GoogleOAuthConfig: googleOAuthConfig,
 		Version:           version,
 		Templates:         templates,
-		FrontendAssetsURL: strings.TrimSpace(getEnv("FRONTEND_ASSETS_URL", "")), // Default to empty string for local dev
+		FrontendAssetsURL: frontendAssetsURL,
 		MapboxToken:       mapboxToken,
 	}
 
 	mux := http.NewServeMux()
+
+	// Serve static files if they exist locally (fallback for when FRONTEND_ASSETS_URL is empty)
+	if _, err := os.Stat("static"); err == nil {
+		slog.Info("Serving static files from local directory")
+		fs := http.FileServer(http.Dir("static"))
+		mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
+	}
 
 	// Public routes
 	mux.HandleFunc("GET /{$}", h.IndexHandler)
