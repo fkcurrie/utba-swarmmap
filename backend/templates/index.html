@@ -95,6 +95,35 @@
                                 <label for="description" class="form-label fw-bold small text-uppercase">Details & Size</label>
                                 <textarea class="form-control" id="description" rows="3" placeholder="e.g. Football size, 10ft up in an apple tree..."></textarea>
                             </div>
+                            <div class="col-12 mt-2">
+                                <label class="form-label fw-bold small text-uppercase mb-2">Upload Media (Optional)</label>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
+                                    <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
+                                    <input type="file" id="video-input" accept="video/*" capture="environment" style="display: none;">
+                                    <button type="button" class="btn btn-light border shadow-sm" onclick="document.getElementById('gallery-input').click();">
+                                        <i class="fa-solid fa-images me-1 text-warning"></i> Gallery
+                                    </button>
+                                    <button type="button" class="btn btn-light border shadow-sm" onclick="document.getElementById('camera-input').click();">
+                                        <i class="fa-solid fa-camera me-1 text-warning"></i> Camera
+                                    </button>
+                                    <button type="button" class="btn btn-light border shadow-sm" onclick="document.getElementById('video-input').click();">
+                                        <i class="fa-solid fa-video me-1 text-warning"></i> Video
+                                    </button>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-muted small">JPG, PNG, MP4, etc. (max 50MB)</small>
+                                </div>
+
+                                <!-- File management area -->
+                                <div id="fileManagementArea" class="mt-3" style="display: none;">
+                                    <div id="selectedFilesList" class="bg-light rounded border p-2 mb-2" style="max-height: 150px; overflow-y: auto;"></div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-success" id="totalFileCount">0 files ready</span>
+                                        <button type="button" class="btn btn-sm text-danger" id="clearAllFilesBtn">Clear All</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <input type="hidden" id="latitude">
                         <input type="hidden" id="longitude">
