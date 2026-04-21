@@ -44,6 +44,11 @@ type User struct {
 	ResetToken          string    `json:"-" firestore:"reset_token"`
 	ResetTokenExpiresAt time.Time `json:"-" firestore:"reset_token_expires_at"`
 	CreatedAt           time.Time `json:"created_at" firestore:"created_at"`
+
+	// Experience fields for collector application
+	ExperienceYears int    `json:"experience_years" firestore:"experience_years"`
+	Equipment       string `json:"equipment" firestore:"equipment"`
+	CompetencyNotes string `json:"competency_notes" firestore:"competency_notes"`
 }
 
 // Session defines user session structure

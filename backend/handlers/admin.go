@@ -288,14 +288,29 @@ func (h *Handlers) CollectorAdminHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// In a real implementation, we would fetch users here.
-	// For now, we'll just render the template.
-	err := h.Templates.ExecuteTemplate(w, "collector_admin.html", map[string]interface{}{
+	allUsers, err := h.Store.GetAllUsers(r.Context())
+	if err != nil {
+		slog.Error("Error getting all users for collector admin", "error", err)
+		http.Error(w, "Failed to retrieve users", http.StatusInternalServerError)
+		return
+	}
+
+	var pendingUsers []models.User
+	var allCollectors []models.User
+	for _, user := range allUsers {
+		if user.Status == "pending" {
+			pendingUsers = append(pendingUsers, user)
+		} else if user.Status == "approved" {
+			allCollectors = append(allCollectors, user)
+		}
+	}
+
+	err = h.Templates.ExecuteTemplate(w, "collector_admin.html", map[string]interface{}{
 		"Title":             "Collector Admin",
 		"Version":           h.Version,
 		"User":              session,
-		"PendingUsers":      nil,
-		"AllCollectors":     nil,
+		"PendingUsers":      pendingUsers,
+		"AllCollectors":     allCollectors,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 		"MapboxToken":       h.MapboxToken,
 	})
