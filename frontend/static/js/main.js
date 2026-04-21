@@ -767,6 +767,11 @@ async function getNearestIntersection(lat, lng) {
   try {
     const response = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+      {
+        headers: {
+          'User-Agent': 'utba-swarmmap (fkcurrie/utba-swarmmap)',
+        },
+      },
     );
     if (!response.ok) throw new Error('Nominatim error');
     const data = await response.json();

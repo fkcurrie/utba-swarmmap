@@ -17,6 +17,9 @@ RUN apk add --no-cache tzdata
 WORKDIR /app
 COPY --from=builder /app/server /app/server
 COPY --from=builder /src/templates /app/templates/
+# Copy static assets if they were provided in the build context
+# We use a wildcard to avoid failure if the directory is missing
+COPY static* /app/static/
 
 ENV PORT=8080
 EXPOSE 8080

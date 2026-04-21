@@ -120,6 +120,7 @@ jobs:
 
       - name: Build and Push Backend
         run: |
+          cp -r frontend/static backend/static
           IMAGE_NAME="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/backend"
           docker build -t "$IMAGE_NAME:${{ github.sha }}" ./backend
           docker tag "$IMAGE_NAME:${{ github.sha }}" "$IMAGE_NAME:latest"
