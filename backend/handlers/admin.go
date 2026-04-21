@@ -43,10 +43,10 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 
 	var reportedSwarms, capturedSwarms int
 	for _, swarm := range allSwarms {
-		if swarm.Status == "Reported" {
+		switch swarm.Status {
+		case "Reported":
 			reportedSwarms++
-		}
-		if swarm.Status == "Captured" {
+		case "Captured":
 			capturedSwarms++
 		}
 	}
@@ -298,9 +298,10 @@ func (h *Handlers) CollectorAdminHandler(w http.ResponseWriter, r *http.Request)
 	var pendingUsers []models.User
 	var allCollectors []models.User
 	for _, user := range allUsers {
-		if user.Status == "pending" {
+		switch user.Status {
+		case "pending":
 			pendingUsers = append(pendingUsers, user)
-		} else if user.Status == "approved" {
+		case "approved":
 			allCollectors = append(allCollectors, user)
 		}
 	}
