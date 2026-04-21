@@ -1,70 +1,69 @@
 <!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
 {{template "header.html" .}}
 
-    <div class="container-xl">
-        <header class="row mb-4 align-items-center">
-            <div class="col-md-6">
-                <h1 class="h3 fw-800 mb-1 tracking-tight">Collector Map</h1>
-                <p class="text-muted small">View and manage all active swarm reports in the city.</p>
-            </div>
-            <div class="col-md-6 text-md-end">
-                <button id="reportSwarmBtn" class="btn btn-primary shadow-sm me-2" aria-label="Report a swarm at your location">
-                    <i class="fa-solid fa-location-dot me-1"></i> Report Swarm
+<div class="container-fluid py-4 px-lg-5">
+    <!-- Header Section -->
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h1 class="h3 fw-bold mb-0">
+                <i class="fa-solid fa-map-location-dot me-2 text-primary"></i>Collectors Map
+            </h1>
+            <p class="text-muted small mb-0 mt-1">Real-time bee swarm tracking and management</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <div class="btn-group shadow-sm">
+                <button type="button" class="btn btn-white btn-sm fw-bold border-end" id="btnRecenter">
+                    <i class="fa-solid fa-location-crosshairs me-1"></i> Recenter
                 </button>
-                <button id="refreshMapBtn" class="btn btn-light border-0 shadow-sm" aria-label="Refresh swarm data from server">
+                <button type="button" class="btn btn-white btn-sm fw-bold" id="btnRefresh">
                     <i class="fa-solid fa-rotate me-1"></i> Refresh
                 </button>
             </div>
-        </header>
+        </div>
+    </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card p-1 bg-white shadow-lg border-0 overflow-hidden mb-4">
-                    <div id="map" aria-label="Interactive map for collectors showing all bee swarm reports"></div>
+    <!-- Map and Side Info -->
+    <div class="row g-4 mb-4">
+        <!-- Legend Section -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h2 id="legendTitle" class="h6 fw-bold mb-4 tracking-wider text-uppercase text-muted"><i class="fa-solid fa-circle-info me-2 text-warning"></i>Map Legend</h2>
+                    <div class="d-flex flex-column gap-3" role="list">
+                        <div class="legend-item d-flex align-items-center" role="listitem">
+                            <span class="legend-color" style="background-color: rgb(232, 65, 24);" aria-hidden="true"></span>
+                            <span class="small fw-bold text-uppercase tracking-wider">Reported (New)</span>
+                        </div>
+                        <div class="legend-item d-flex align-items-center" role="listitem">
+                            <span class="legend-color" style="background-color: rgb(251, 197, 49);" aria-hidden="true"></span>
+                            <span class="small fw-bold text-uppercase tracking-wider">Verified</span>
+                        </div>
+                        <div class="legend-item d-flex align-items-center" role="listitem">
+                            <span class="legend-color" style="background-color: rgb(255, 140, 0);" aria-hidden="true"></span>
+                            <span class="small fw-bold text-uppercase tracking-wider">Claimed</span>
+                        </div>
+                        <div class="legend-item d-flex align-items-center" role="listitem">
+                            <span class="legend-color" style="background-color: rgb(76, 209, 55);" aria-hidden="true"></span>
+                            <span class="small fw-bold text-uppercase tracking-wider">Captured</span>
+                        </div>
+                        <div class="legend-item d-flex align-items-center" role="listitem">
+                            <span class="legend-color" style="background-color: rgb(72, 126, 176);" aria-hidden="true"></span>
+                            <span class="small fw-bold text-uppercase tracking-wider">Archived (24h+)</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="row g-4 mb-5">
-            <!-- Pin Color Legend -->
-            <div class="col-lg-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <h2 id="legendTitle" class="h6 fw-bold mb-4 tracking-wider text-uppercase text-muted"><i class="fa-solid fa-circle-info me-2 text-warning"></i>Map Legend</h2>
-                        <div class="d-flex flex-column gap-3" role="list">
-                            <div class="legend-item d-flex align-items-center" role="listitem">
-                                <span class="legend-color" style="background-color: rgb(232, 65, 24);" aria-hidden="true"></span>
-                                <span class="small fw-bold text-uppercase tracking-wider">Reported (New)</span>
-                            </div>
-                            <div class="legend-item d-flex align-items-center" role="listitem">
-                                <span class="legend-color" style="background-color: rgb(251, 197, 49);" aria-hidden="true"></span>
-                                <span class="small fw-bold text-uppercase tracking-wider">Verified</span>
-                            </div>
-                            <div class="legend-item d-flex align-items-center" role="listitem">
-                                <span class="legend-color" style="background-color: rgb(76, 209, 55);" aria-hidden="true"></span>
-                                <span class="small fw-bold text-uppercase tracking-wider">Captured</span>
-                            </div>
-                            <div class="legend-item d-flex align-items-center" role="listitem">
-                                <span class="legend-color" style="background-color: rgb(72, 126, 176);" aria-hidden="true"></span>
-                                <span class="small fw-bold text-uppercase tracking-wider">Archived (24h+)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- List Section -->
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4">
-                        <h2 class="h6 fw-bold mb-3"><i class="fa-solid fa-list me-2 text-muted"></i>Active Swarms List</h2>
-                        <div id="debugSwarms" class="small" style="max-height: 250px; overflow-y: auto;">
-                            <div class="text-center p-5">
-                                <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                                <span class="ms-2 text-muted">Syncing data...</span>
-                            </div>
+        <!-- List Section -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h2 class="h6 fw-bold mb-3"><i class="fa-solid fa-list me-2 text-muted"></i>Active Swarms List</h2>
+                    <div id="debugSwarms" class="small" style="max-height: 250px; overflow-y: auto;">
+                        <div class="text-center p-5">
+                            <div class="spinner-border spinner-border-sm text-primary mb-3" role="status"></div>
+                            <p class="text-muted mb-0">Loading swarms data...</p>
                         </div>
                     </div>
                 </div>
@@ -72,86 +71,90 @@
         </div>
     </div>
 
-    <!-- Report Swarm Modal -->
-    <div class="modal fade" id="reportSwarmModal" tabindex="-1" role="dialog" aria-labelledby="reportSwarmModalLabel" aria-hidden="true" aria-modal="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content border-0 shadow-lg" style="border-radius: var(--border-radius-lg);">
-                <div class="modal-header border-0 pt-4 px-4 pb-0">
-                    <h5 class="modal-title fw-800" id="reportSwarmModalLabel">
-                        <i class="fa-solid fa-bug me-2 text-warning"></i> Report Bee Swarm
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <form id="reportSwarmForm">
-                        <div class="mb-4">
-                            <label for="description" class="form-label fw-bold small text-uppercase tracking-wider text-muted">Description</label>
-                            <textarea class="form-control bg-light border-0" id="description" name="description" rows="3" required placeholder="Describe the swarm details..."></textarea>
-                        </div>
-                        <div class="mb-4">
-                            <label for="intersection" class="form-label fw-bold small text-uppercase tracking-wider text-muted">Nearest Major Intersection</label>
-                            <input type="text" class="form-control bg-light border-0" id="intersection" name="intersection" placeholder="e.g., Yonge & Bloor" required>
-                        </div>
-                        
-                        <div class="card border-0 bg-light mb-4 shadow-none">
-                            <div class="card-body p-4">
-                                <h6 class="mb-3 fw-bold text-secondary"><i class="fa-solid fa-phone me-2 text-warning"></i> Contact Information (Optional)</h6>
-                                <div class="row">
-                                    <div class="mb-3 col-md-6">
-                                        <label for="reporterName" class="form-label small fw-bold">Your Name</label>
-                                        <input type="text" class="form-control border-0" id="reporterName" name="reporterName" placeholder="John Smith">
-                                    </div>
-                                    <div class="mb-3 col-md-6">
-                                        <label for="reporterPhone" class="form-label small fw-bold">Phone Number</label>
-                                        <input type="tel" class="form-control border-0" id="reporterPhone" name="reporterPhone" placeholder="(416) 555-0123">
-                                    </div>
-                                </div>
-                                <div class="mb-0">
-                                    <label for="reporterEmail" class="form-label small fw-bold">Email Address</label>
-                                    <input type="email" class="form-control border-0" id="reporterEmail" name="reporterEmail" placeholder="john@example.com">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label fw-bold small text-uppercase tracking-wider text-muted mb-3">Upload Media</label>
-                            <div class="d-flex flex-wrap gap-2">
-                                <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
-                                <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
-                                <input type="file" id="video-input" accept="video/*" capture="environment" style="display: none;">
-                                <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('gallery-input').click();">
-                                    <i class="fa-solid fa-images me-1 text-warning"></i> Gallery
-                                </button>
-                                <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('camera-input').click();">
-                                    <i class="fa-solid fa-camera me-1 text-warning"></i> Camera
-                                </button>
-                                <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('video-input').click();">
-                                    <i class="fa-solid fa-video me-1 text-warning"></i> Video
-                                </button>
-                            </div>
-                            
-                            <div id="fileManagementArea" class="mt-3" style="display: none;">
-                                <div id="selectedFilesList" class="bg-white rounded border p-2 mb-2" style="max-height: 150px; overflow-y: auto;"></div>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-success" id="totalFileCount">0 files ready</span>
-                                    <button type="button" class="btn btn-sm text-danger" id="clearAllFilesBtn">Clear All</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <input type="hidden" id="latitude" name="latitude">
-                        <input type="hidden" id="longitude" name="longitude">
-                        
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
-                            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary px-5 shadow-sm">Submit Report</button>
-                        </div>
-                    </form>
-                </div>
+    <!-- Map Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm overflow-hidden" style="height: 600px; border-radius: var(--border-radius-lg);">
+                <div id="map" class="h-100 w-100"></div>
             </div>
         </div>
     </div>
+</div>
 
-    {{template "footer.html" .}}
-</body>
-</html>
+<style>
+    .legend-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        margin-right: 12px;
+        display: inline-block;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .legend-item {
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+    }
+    
+    .legend-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Custom popup styling */
+    .mapboxgl-popup-content {
+        padding: 0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        border: none;
+        max-width: 320px;
+    }
+    
+    .mapboxgl-popup-close-button {
+        padding: 8px;
+        color: white;
+        font-size: 16px;
+        z-index: 10;
+    }
+    
+    .swarm-popup-header {
+        background: linear-gradient(135deg, #2f3640 0%, #1e272e 100%);
+        color: white;
+        padding: 15px 20px;
+    }
+    
+    .swarm-popup-body {
+        padding: 20px;
+    }
+    
+    .status-badge {
+        font-size: 10px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-claim {
+        background-color: #ff8c00;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        width: 100%;
+        transition: all 0.2s;
+        margin-top: 10px;
+    }
+    
+    .btn-claim:hover {
+        background-color: #e67e00;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(255, 140, 0, 0.3);
+    }
+</style>
+
+{{template "footer.html" .}}

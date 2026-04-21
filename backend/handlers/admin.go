@@ -44,7 +44,7 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 	var reportedSwarms, capturedSwarms int
 	for _, swarm := range allSwarms {
 		switch swarm.Status {
-		case "Reported":
+		case "Reported", "Claimed", "Verified":
 			reportedSwarms++
 		case "Captured":
 			capturedSwarms++
