@@ -66,5 +66,9 @@ func (h *Handlers) TrackVisitHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(map[string]string{"status": "success"}); err != nil {
+		slog.Error("Failed to encode track visit response", "error", err) // #nosec G706
+	}
 }

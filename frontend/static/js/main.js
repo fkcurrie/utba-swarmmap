@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function () {
         intersectionInput.value = intersection;
         intersectionInput.placeholder = originalPlaceholder;
 
-        const reportModal = new bootstrap.Modal(
+        const reportModal = bootstrap.Modal.getOrCreateInstance(
           document.getElementById('reportSwarmModal'),
         );
         reportModal.show();
@@ -728,7 +728,7 @@ document.addEventListener('DOMContentLoaded', function () {
     mediaURLs = urls;
     currentMediaIndex = startIndex;
     updateMediaViewer();
-    const mediaModal = new bootstrap.Modal(
+    const mediaModal = bootstrap.Modal.getOrCreateInstance(
       document.getElementById('media-viewer-modal'),
     );
     mediaModal.show();

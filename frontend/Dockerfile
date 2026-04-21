@@ -10,7 +10,7 @@ COPY main.go .
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server main.go
 
 # STAGE 2: Create the final image
-FROM alpine:latest
+FROM alpine:3.21.3
 
 WORKDIR /app
 
