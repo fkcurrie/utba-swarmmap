@@ -7,7 +7,22 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   // Track failed requests
   page.on('requestfailed', request => {
-    failedRequests.push(`${request.url()}: ${request.failure().errorText}`);
+    const url = request.url();
+    const errorText = request.failure().errorText;
+    
+    // Ignore background tracking requests that might be aborted when the test finishes
+    if (url.includes('/api/track_visit')) {
+      console.log(`Ignoring failed tracking request: ${url} (${errorText})`);
+      return;
+    }
+    
+    // Ignore optional Mapbox/external assets that might fail in CI
+    if (url.includes('mapbox.com') || url.includes('events.mapbox.com')) {
+      console.log(`Ignoring failed Mapbox request: ${url} (${errorText})`);
+      return;
+    }
+
+    failedRequests.push(`${url}: ${errorText}`);
   });
 
   // Track console errors

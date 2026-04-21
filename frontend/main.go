@@ -43,7 +43,20 @@ func main() {
 
 	mux := http.NewServeMux()
 	fs := http.FileServer(http.Dir("./static"))
-	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	
+	// Add CORS headers for static assets (especially fonts)
+	staticHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		http.StripPrefix("/static/", fs).ServeHTTP(w, r)
+	})
+	
+	mux.Handle("/static/", staticHandler)
 
 	slog.Info("Listening", "port", portInt) // #nosec G706
 
