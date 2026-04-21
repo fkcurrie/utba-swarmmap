@@ -378,6 +378,11 @@ document.addEventListener('DOMContentLoaded', function () {
         reportSwarmBtn.disabled = true;
         reportSwarmBtn.innerHTML =
           '<span class="spinner-border spinner-border-sm me-2"></span> Finding location...';
+
+        // Show modal immediately so user (and E2E tests) sees it's working
+        const reportModalEl = document.getElementById('reportSwarmModal');
+        const reportModal = new bootstrap.Modal(reportModalEl);
+        reportModal.show();
       }
 
       navigator.geolocation.getCurrentPosition(
@@ -404,17 +409,15 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('longitude').value = longitude;
 
             const intersectionInput = document.getElementById('intersection');
-            intersectionInput.value = 'Fetching...';
+            const originalPlaceholder = intersectionInput.placeholder;
+            intersectionInput.value = '';
+            intersectionInput.placeholder = 'Fetching...';
             const intersection = await getNearestIntersection(
               latitude,
               longitude,
             );
             intersectionInput.value = intersection;
-
-            const reportModal = new bootstrap.Modal(
-              document.getElementById('reportSwarmModal'),
-            );
-            reportModal.show();
+            intersectionInput.placeholder = originalPlaceholder;
           }
         },
         (error) => {
@@ -423,10 +426,11 @@ document.addEventListener('DOMContentLoaded', function () {
             reportSwarmBtn.innerHTML =
               '<i class="fa-solid fa-location-dot me-2"></i> Report a Swarm at Your Location';
           }
-          if (doPan)
-            alert('Could not get your location. Error: ' + error.message);
+          // Only show alert if we really couldn't get location and it was requested
+          // But we don't block the modal anymore.
+          console.warn('Could not get your location:', error.message);
         },
-        { timeout: 20000, enableHighAccuracy: true },
+        { timeout: 10000, enableHighAccuracy: true },
       );
     }
   };
