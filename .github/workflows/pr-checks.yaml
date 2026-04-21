@@ -47,7 +47,14 @@ jobs:
         run: go test -race -v ./...
 
       - name: Test Coverage
-        run: go test -coverprofile=coverage.out ./...
+        run: |
+          go test -coverprofile=coverage.out ./...
+          TOTAL_COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
+          echo "Total coverage: $TOTAL_COVERAGE%"
+          if awk "BEGIN {exit !($TOTAL_COVERAGE < 25)}"; then
+            echo "Coverage is below threshold (25%)"
+            exit 1
+          fi
 
       - name: Go Mod Tidy Check
         run: |
@@ -179,6 +186,11 @@ jobs:
         with:
           ignore_paths: node_modules
 
+      - name: Dockerfile Lint (hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          recursive: true
+
       - name: Misspell
         uses: reviewdog/action-misspell@v1
         with:
@@ -189,3 +201,61 @@ jobs:
         uses: wagoid/commitlint-github-action@v6.2.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  e2e:
+    name: End-to-End (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Start Services
+        run: docker compose up -d --build
+
+      - name: Wait for Backend
+        run: |
+          echo "Waiting for backend to be healthy..."
+          for i in {1..30}; do
+            if curl -s http://localhost:8085 > /dev/null; then
+              echo "Backend is up!"
+              exit 0
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 2
+          done
+          echo "Backend failed to start"
+          docker compose logs
+          exit 1
+
+      - name: Run Playwright tests
+        run: npx playwright test -c e2e/playwright.config.js
+        env:
+          DEPLOYED_URL: http://localhost:8085
+
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down

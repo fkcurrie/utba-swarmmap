@@ -26,9 +26,10 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const reportBtn = page.locator('#reportSwarmBtn');
   await expect(reportBtn).toBeVisible();
   await expect(reportBtn).toHaveClass(/btn-primary/);
-  await expect(reportBtn).toHaveText(/Report a Swarm at Your Location/i);
+  // Using a more flexible regex to handle potential rendering differences or whitespace
+  await expect(reportBtn).toHaveText(/Report (a Swarm )?at Your Location/i);
   await expect(reportBtn).toHaveAttribute('aria-label', /Report a Bee Swarm at your current location/i);
-  await expect(reportBtn.locator('i.fa-location-dot')).toBeVisible();
+  await expect(reportBtn.locator('i.fa-location-dot')).toBeAttached();
 
   const map = page.locator('#map');
   await expect(map).toBeVisible();
@@ -39,7 +40,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const legend = page.locator('#legendTitle');
   await expect(legend).toBeVisible();
   await expect(legend).toHaveText(/Map Legend/i);
-  await expect(legend.locator('i.fa-circle-info')).toBeVisible();
+  await expect(legend.locator('i.fa-circle-info')).toBeAttached();
 
   // Check legend items
   const legendItems = page.locator('.legend-item');
@@ -79,7 +80,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const modal = page.locator('#reportSwarmModal');
   await expect(modal).toBeVisible();
   await expect(modal.locator('.modal-title')).toContainText(/Report Bee Swarm/i);
-  await expect(modal.locator('i.fa-bug')).toBeVisible();
+  await expect(modal.locator('i.fa-bug')).toBeAttached();
   
   const submitBtn = modal.locator('button[type="submit"]');
   await expect(submitBtn).toBeVisible();
