@@ -259,22 +259,27 @@ document.addEventListener('DOMContentLoaded', function () {
         if (features.length > 0) return;
 
         const { lng, lat } = e.lngLat;
-        document.getElementById('latitude').value = lat;
-        document.getElementById('longitude').value = lng;
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
+        if (latInput) latInput.value = lat;
+        if (lngInput) lngInput.value = lng;
 
         const intersectionInput = document.getElementById('intersection');
-        const originalPlaceholder = intersectionInput.placeholder;
-        intersectionInput.value = '';
-        intersectionInput.placeholder = 'Fetching nearest intersection...';
+        if (intersectionInput) {
+          const originalPlaceholder = intersectionInput.placeholder;
+          intersectionInput.value = '';
+          intersectionInput.placeholder = 'Fetching nearest intersection...';
 
-        const intersection = await getNearestIntersection(lat, lng);
-        intersectionInput.value = intersection;
-        intersectionInput.placeholder = originalPlaceholder;
+          const intersection = await getNearestIntersection(lat, lng);
+          intersectionInput.value = intersection;
+          intersectionInput.placeholder = originalPlaceholder;
+        }
 
-        const reportModal = bootstrap.Modal.getOrCreateInstance(
-          document.getElementById('reportSwarmModal'),
-        );
-        reportModal.show();
+        const reportModalEl = document.getElementById('reportSwarmModal');
+        if (reportModalEl) {
+          const reportModal = bootstrap.Modal.getOrCreateInstance(reportModalEl);
+          reportModal.show();
+        }
       });
     } else {
       console.error('Mapbox token is missing. Map will not be initialized.');

@@ -61,7 +61,7 @@
     </div>
 
     <!-- Report Swarm Modal -->
-    <div class="modal fade" id="reportSwarmModal" tabindex="-1" role="dialog" aria-labelledby="reportSwarmModalLabel" aria-hidden="true" aria-modal="true">
+    <div class="modal fade" id="reportSwarmModal" tabindex="-1" role="dialog" aria-labelledby="reportSwarmModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content border-0 shadow-lg" style="border-radius: var(--border-radius-lg);">
                 <div class="modal-header border-0 pt-4 px-4 pb-0">
@@ -75,17 +75,21 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="reporterName" class="form-label fw-bold small text-uppercase">Your Name</label>
-                                <input type="text" class="form-control" id="reporterName" required placeholder="Full Name">
+                                <input type="text" class="form-control" id="reporterName" name="reporterName" required placeholder="Full Name">
                             </div>
                             <div class="col-md-6">
-                                <label for="reporterContact" class="form-label fw-bold small text-uppercase">Phone Number</label>
-                                <input type="tel" class="form-control" id="reporterContact" required placeholder="Best number to reach you">
+                                <label for="reporterPhone" class="form-label fw-bold small text-uppercase">Phone Number</label>
+                                <input type="tel" class="form-control" id="reporterPhone" name="reporterPhone" required placeholder="Best number to reach you">
                             </div>
                             <div class="col-12">
-                                <label for="locationAddress" class="form-label fw-bold small text-uppercase">Exact Location</label>
+                                <label for="reporterEmail" class="form-label fw-bold small text-uppercase">Email Address</label>
+                                <input type="email" class="form-control" id="reporterEmail" name="reporterEmail" required placeholder="Email for updates (optional)">
+                            </div>
+                            <div class="col-12">
+                                <label for="intersection" class="form-label fw-bold small text-uppercase">Exact Location</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-location-dot text-danger"></i></span>
-                                    <input type="text" class="form-control border-start-0" id="locationAddress" required placeholder="Address or description">
+                                    <input type="text" class="form-control border-start-0" id="intersection" name="intersection" required placeholder="Address or description">
                                 </div>
                                 <div id="locationStatus" class="form-text mt-2">
                                     <i class="fa-solid fa-crosshairs me-1"></i> Detecting your coordinates...
@@ -93,14 +97,14 @@
                             </div>
                             <div class="col-12">
                                 <label for="description" class="form-label fw-bold small text-uppercase">Details & Size</label>
-                                <textarea class="form-control" id="description" rows="3" placeholder="e.g. Football size, 10ft up in an apple tree..."></textarea>
+                                <textarea class="form-control" id="description" name="description" rows="3" placeholder="e.g. Football size, 10ft up in an apple tree..."></textarea>
                             </div>
                             <div class="col-12 mt-2">
                                 <label class="form-label fw-bold small text-uppercase mb-2">Upload Media (Optional)</label>
                                 <div class="d-flex flex-wrap gap-2">
-                                    <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
-                                    <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
-                                    <input type="file" id="video-input" accept="video/*" capture="environment" style="display: none;">
+                                    <input type="file" id="gallery-input" name="media" accept="image/*,video/*" multiple style="display: none;">
+                                    <input type="file" id="camera-input" name="media" accept="image/*" capture="environment" style="display: none;">
+                                    <input type="file" id="video-input" name="media" accept="video/*" capture="environment" style="display: none;">
                                     <button type="button" class="btn btn-light border shadow-sm" onclick="document.getElementById('gallery-input').click();">
                                         <i class="fa-solid fa-images me-1 text-warning"></i> Gallery
                                     </button>
@@ -125,8 +129,8 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" id="latitude">
-                        <input type="hidden" id="longitude">
+                        <input type="hidden" id="latitude" name="latitude">
+                        <input type="hidden" id="longitude" name="longitude">
                     </form>
                 </div>
                 <div class="modal-footer border-0 p-4">
