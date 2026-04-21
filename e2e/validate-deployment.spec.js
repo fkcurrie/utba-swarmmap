@@ -38,7 +38,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   const legend = page.locator('#legendTitle');
   await expect(legend).toBeVisible();
-  await expect(legend).toHaveText(/Pin Color Legend:/i);
+  await expect(legend).toHaveText(/Map Legend/i);
   await expect(legend.locator('i.fa-circle-info')).toBeVisible();
 
   // Check legend items
