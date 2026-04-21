@@ -99,7 +99,7 @@ func main() {
 
 	// Initialize LocationService
 	var locationService handlers.LocationService
-	mapboxToken := os.Getenv("MAPBOX_ACCESS_TOKEN")
+	mapboxToken := strings.TrimSpace(os.Getenv("MAPBOX_ACCESS_TOKEN"))
 	if mapboxToken != "" {
 		locationService = &handlers.MapboxLocationService{
 			Client:      &http.Client{Timeout: 10 * time.Second},
@@ -121,7 +121,7 @@ func main() {
 		GoogleOAuthConfig: googleOAuthConfig,
 		Version:           version,
 		Templates:         templates,
-		FrontendAssetsURL: getEnv("FRONTEND_ASSETS_URL", ""), // Default to empty string for local dev
+		FrontendAssetsURL: strings.TrimSpace(getEnv("FRONTEND_ASSETS_URL", "")), // Default to empty string for local dev
 		MapboxToken:       mapboxToken,
 	}
 
