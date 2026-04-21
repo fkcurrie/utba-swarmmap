@@ -70,6 +70,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const expectedLegend = [
     { text: /Reported/i, color: 'rgb(232, 65, 24)' }, // #e84118
     { text: /Verified/i, color: 'rgb(251, 197, 49)' }, // #fbc531
+    { text: /Claimed/i, color: 'rgb(255, 140, 0)' },  // #ff8c00
     { text: /Captured/i, color: 'rgb(76, 209, 55)' }, // #4cd137
     { text: /Archived/i, color: 'rgb(72, 126, 176)' } // #487eb0
   ];
