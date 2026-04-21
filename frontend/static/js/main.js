@@ -390,25 +390,29 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   const locateUser = (doPan = false) => {
-    if (navigator.geolocation) {
-      if (doPan) {
-        reportSwarmBtn.disabled = true;
-        reportSwarmBtn.innerHTML =
+    if (doPan) {
+      const reportBtn = document.getElementById('reportSwarmBtn');
+      if (reportBtn) {
+        reportBtn.disabled = true;
+        reportBtn.innerHTML =
           '<span class="spinner-border spinner-border-sm me-2"></span> Finding location...';
-
-        // Show modal immediately so user (and E2E tests) sees it's working
-        const reportModalEl = document.getElementById('reportSwarmModal');
-        const reportModal = new bootstrap.Modal(reportModalEl);
-        reportModal.show();
       }
 
+      // Show modal immediately so user (and E2E tests) sees it's working
+      const reportModalEl = document.getElementById('reportSwarmModal');
+      const reportModal = bootstrap.Modal.getOrCreateInstance(reportModalEl);
+      reportModal.show();
+    }
+
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
 
-          if (reportSwarmBtn) {
-            reportSwarmBtn.disabled = false;
-            reportSwarmBtn.innerHTML =
+          const reportBtn = document.getElementById('reportSwarmBtn');
+          if (reportBtn) {
+            reportBtn.disabled = false;
+            reportBtn.innerHTML =
               '<i class="fa-solid fa-location-dot me-2"></i> Report a Swarm at Your Location';
           }
 
@@ -422,33 +426,38 @@ document.addEventListener('DOMContentLoaded', function () {
               .addTo(map)
               .togglePopup();
 
-            document.getElementById('latitude').value = latitude;
-            document.getElementById('longitude').value = longitude;
+            const latInput = document.getElementById('latitude');
+            const lngInput = document.getElementById('longitude');
+            if (latInput) latInput.value = latitude;
+            if (lngInput) lngInput.value = longitude;
 
             const intersectionInput = document.getElementById('intersection');
-            const originalPlaceholder = intersectionInput.placeholder;
-            intersectionInput.value = '';
-            intersectionInput.placeholder = 'Fetching...';
-            const intersection = await getNearestIntersection(
-              latitude,
-              longitude,
-            );
-            intersectionInput.value = intersection;
-            intersectionInput.placeholder = originalPlaceholder;
+            if (intersectionInput) {
+              const originalPlaceholder = intersectionInput.placeholder;
+              intersectionInput.value = '';
+              intersectionInput.placeholder = 'Fetching...';
+              const intersection = await getNearestIntersection(
+                latitude,
+                longitude,
+              );
+              intersectionInput.value = intersection;
+              intersectionInput.placeholder = originalPlaceholder;
+            }
           }
         },
         (error) => {
-          if (reportSwarmBtn) {
-            reportSwarmBtn.disabled = false;
-            reportSwarmBtn.innerHTML =
+          const reportBtn = document.getElementById('reportSwarmBtn');
+          if (reportBtn) {
+            reportBtn.disabled = false;
+            reportBtn.innerHTML =
               '<i class="fa-solid fa-location-dot me-2"></i> Report a Swarm at Your Location';
           }
-          // Only show alert if we really couldn't get location and it was requested
-          // But we don't block the modal anymore.
           console.warn('Could not get your location:', error.message);
         },
         { timeout: 10000, enableHighAccuracy: true },
       );
+    } else {
+      console.warn('Geolocation is not supported by this browser.');
     }
   };
 
