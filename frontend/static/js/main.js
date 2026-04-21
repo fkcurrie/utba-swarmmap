@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (mapElement) {
     if (window.MAPBOX_TOKEN && window.MAPBOX_TOKEN !== '') {
       if (typeof mapboxgl === 'undefined') {
-        console.error(
+        console.warn(
           'Mapbox GL JS is not loaded. Check script include in footer.html.',
         );
         mapElement.innerHTML =
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
           zoom: 11,
         });
       } catch (e) {
-        console.error('Failed to initialize Mapbox map:', e);
+        console.warn('Failed to initialize Mapbox map:', e);
         mapElement.innerHTML = `<div class="alert alert-danger m-3">Map initialization error: ${e.message}</div>`;
         return;
       }
@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       renderSwarms(swarms);
     } catch (error) {
-      console.error('Error fetching swarms:', error);
+      console.warn('Error fetching swarms:', error);
       if (debugSwarms)
         debugSwarms.innerHTML =
           '<div class="alert alert-danger p-2 small">Error loading swarms.</div>';
@@ -774,7 +774,7 @@ document.addEventListener('DOMContentLoaded', function () {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ visitorId: visitorId }),
-    }).catch((err) => console.error('Failed to track visit:', err));
+    }).catch((err) => console.warn('Failed to track visit:', err));
   })();
 });
 
@@ -789,7 +789,7 @@ async function getNearestIntersection(lat, lng) {
       if (data.features && data.features.length > 0)
         return data.features[0].place_name;
     } catch (error) {
-      console.error('Error getting intersection from Mapbox:', error);
+      console.warn('Error getting intersection from Mapbox:', error);
     }
   }
 
@@ -806,7 +806,7 @@ async function getNearestIntersection(lat, lng) {
     const data = await response.json();
     return data.display_name || 'Unknown location';
   } catch (error) {
-    console.error('Error getting intersection:', error);
+    console.warn('Error getting intersection:', error);
     return 'Could not fetch location';
   }
 }
