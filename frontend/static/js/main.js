@@ -259,28 +259,22 @@ document.addEventListener('DOMContentLoaded', function () {
         if (features.length > 0) return;
 
         const { lng, lat } = e.lngLat;
-        const latInput = document.getElementById('latitude');
-        const lngInput = document.getElementById('longitude');
-        if (latInput) latInput.value = lat;
-        if (lngInput) lngInput.value = lng;
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
 
         const intersectionInput = document.getElementById('intersection');
-        if (intersectionInput) {
-          const originalPlaceholder = intersectionInput.placeholder;
-          intersectionInput.value = '';
-          intersectionInput.placeholder = 'Fetching nearest intersection...';
+        const originalPlaceholder = intersectionInput.placeholder;
+        intersectionInput.value = '';
+        intersectionInput.placeholder = 'Fetching nearest intersection...';
 
-          const intersection = await getNearestIntersection(lat, lng);
-          intersectionInput.value = intersection;
-          intersectionInput.placeholder = originalPlaceholder;
-        }
+        const intersection = await getNearestIntersection(lat, lng);
+        intersectionInput.value = intersection;
+        intersectionInput.placeholder = originalPlaceholder;
 
-        const reportModalEl = document.getElementById('reportSwarmModal');
-        if (reportModalEl) {
-          const reportModal =
-            bootstrap.Modal.getOrCreateInstance(reportModalEl);
-          reportModal.show();
-        }
+        const reportModal = bootstrap.Modal.getOrCreateInstance(
+          document.getElementById('reportSwarmModal'),
+        );
+        reportModal.show();
       });
     } else {
       console.error('Mapbox token is missing. Map will not be initialized.');
@@ -297,6 +291,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!Array.isArray(swarms)) {
       console.warn('Swarms data is not an array:', swarms);
+      return;
+    }
+
+    if (swarms.length === 0) {
+      if (debugSwarms) {
+        debugSwarms.innerHTML =
+          '<div class="text-center p-3 text-muted">No swarms reported yet.</div>';
+      }
       return;
     }
 
@@ -320,14 +322,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })),
       };
       map.getSource('swarms').setData(geojson);
-    }
-
-    if (swarms.length === 0) {
-      if (debugSwarms) {
-        debugSwarms.innerHTML =
-          '<div class="text-center p-3 text-muted">No swarms reported yet.</div>';
-      }
-      return;
     }
 
     if (debugSwarms) {
@@ -385,10 +379,9 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const visitorId = localStorage.getItem('utba_visitor_id');
-      const url =
-        visitorId && !debugSwarms
-          ? `/get_swarms?sessionId=${visitorId}`
-          : '/get_swarms';
+      const url = visitorId
+        ? `/get_swarms?sessionId=${visitorId}`
+        : '/get_swarms';
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch swarms');
       const swarms = await response.json();
@@ -415,6 +408,13 @@ document.addEventListener('DOMContentLoaded', function () {
   if (refreshMapBtn) {
     refreshMapBtn.addEventListener('click', () => {
       fetchSwarms(true);
+    });
+  }
+
+  const btnRecenter = document.getElementById('btnRecenter');
+  if (btnRecenter) {
+    btnRecenter.addEventListener('click', () => {
+      locateUser(false);
     });
   }
 

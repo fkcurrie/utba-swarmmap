@@ -18,7 +18,7 @@
     </footer>
 
     <!-- Global Media Viewer Modal -->
-    <div class="modal fade media-modal" id="media-viewer-modal" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true">
+    <div class="modal media-modal" id="media-viewer-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content overflow-hidden">
                 <div class="modal-header border-0 bg-dark py-2">
@@ -43,8 +43,8 @@
         </div>
     </div>
 
-    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
-    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/js/main.js"></script>
+    <script src="/static/js/main.js"></script>
 </body>
 </html>

@@ -15,7 +15,7 @@
                 <button type="button" class="btn btn-white btn-sm fw-bold border-end" id="btnRecenter">
                     <i class="fa-solid fa-location-crosshairs me-1"></i> Recenter
                 </button>
-                <button type="button" class="btn btn-white btn-sm fw-bold" id="btnRefresh">
+                <button type="button" class="btn btn-white btn-sm fw-bold" id="refreshMapBtn">
                     <i class="fa-solid fa-rotate me-1"></i> Refresh
                 </button>
             </div>
@@ -74,8 +74,8 @@
     <!-- Map Section -->
     <div class="row">
         <div class="col-12">
-            <div class="card border-0 shadow-sm overflow-hidden" style="height: 600px; border-radius: var(--border-radius-lg);">
-                <div id="map" class="h-100 w-100"></div>
+            <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: var(--border-radius-lg);">
+                <div id="map" class="w-100" style="height: 600px; min-height: 500px;"></div>
             </div>
         </div>
     </div>
