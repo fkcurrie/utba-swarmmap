@@ -294,14 +294,6 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    if (swarms.length === 0) {
-      if (debugSwarms) {
-        debugSwarms.innerHTML =
-          '<div class="text-center p-3 text-muted">No swarms reported yet.</div>';
-      }
-      return;
-    }
-
     // Update Mapbox source
     if (map && map.getSource('swarms')) {
       const geojson = {
@@ -322,6 +314,14 @@ document.addEventListener('DOMContentLoaded', function () {
         })),
       };
       map.getSource('swarms').setData(geojson);
+    }
+
+    if (swarms.length === 0) {
+      if (debugSwarms) {
+        debugSwarms.innerHTML =
+          '<div class="text-center p-3 text-muted">No swarms reported yet.</div>';
+      }
+      return;
     }
 
     if (debugSwarms) {
@@ -379,9 +379,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const visitorId = localStorage.getItem('utba_visitor_id');
-      const url = visitorId
-        ? `/get_swarms?sessionId=${visitorId}`
-        : '/get_swarms';
+      const url =
+        visitorId && !debugSwarms
+          ? `/get_swarms?sessionId=${visitorId}`
+          : '/get_swarms';
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch swarms');
       const swarms = await response.json();
