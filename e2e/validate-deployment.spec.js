@@ -84,6 +84,12 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const submitBtn = modal.locator('button[type="submit"]');
   await expect(submitBtn).toBeVisible();
   await expect(submitBtn).toHaveText(/Submit Report/i);
+
+  const takePhotoBtn = modal.locator('button:has-text("Take Photo")');
+  await expect(takePhotoBtn).toBeVisible();
+
+  const recordVideoBtn = modal.locator('button:has-text("Record Video")');
+  await expect(recordVideoBtn).toBeVisible();
   
   // Close the modal via close button
   await modal.locator('.btn-close').click();
