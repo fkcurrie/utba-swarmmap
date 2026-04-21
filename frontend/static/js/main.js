@@ -21,14 +21,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (mapElement) {
     if (window.MAPBOX_TOKEN && window.MAPBOX_TOKEN !== '') {
+      if (typeof mapboxgl === 'undefined') {
+        console.error('Mapbox GL JS is not loaded. Check script include in footer.html.');
+        mapElement.innerHTML = '<div class="alert alert-danger m-3">Mapbox library failed to load.</div>';
+        return;
+      }
+      
       mapboxgl.accessToken = window.MAPBOX_TOKEN;
 
-      map = new mapboxgl.Map({
-        container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v12',
-        center: [-79.3832, 43.6532],
-        zoom: 11,
-      });
+      try {
+        map = new mapboxgl.Map({
+          container: 'map',
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: [-79.3832, 43.6532],
+          zoom: 11,
+        });
+      } catch (e) {
+        console.error('Failed to initialize Mapbox map:', e);
+        mapElement.innerHTML = `<div class="alert alert-danger m-3">Map initialization error: ${e.message}</div>`;
+        return;
+      }
 
       map.addControl(new mapboxgl.NavigationControl());
 
@@ -239,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
         reportModal.show();
       });
     } else {
+      console.error('Mapbox token is missing. Map will not be initialized.');
       mapElement.innerHTML =
         '<div class="alert alert-warning m-3">Mapbox token is missing. Please configure MAPBOX_ACCESS_TOKEN.</div>';
     }
