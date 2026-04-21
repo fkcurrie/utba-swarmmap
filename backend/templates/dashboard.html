@@ -144,7 +144,7 @@
                                                 </span>
                                             </td>
                                             <td class="text-end" data-label="Update">
-                                                {{if eq .Status "Reported"}}
+                                                {{if or (eq .Status "Reported") (eq .Status "Claimed")}}
                                                     <form method="POST" action="/update_swarm_status" class="d-inline">
                                                         <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
                                                         <input type="hidden" name="id" value="{{.ID}}">

@@ -1,6 +1,6 @@
-{% extends "bootstrap.html" %}
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
+{{template "header.html" .}}
 
-{% block content %}
 <div class="container-fluid py-4 px-lg-5">
     <!-- Header Section -->
     <div class="row mb-4 align-items-center">
@@ -81,19 +81,6 @@
     </div>
 </div>
 
-<!-- Scripts -->
-<link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
-<script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
-<script>
-    // Configuration for the map
-    window.MAP_CONFIG = {
-        mapboxToken: '{{.MapboxToken}}',
-        userRole: '{{.UserRole}}',
-        csrfToken: '{{.CSRFToken}}'
-    };
-</script>
-<script src="/static/js/main.js"></script>
-
 <style>
     .legend-color {
         width: 14px;
@@ -169,4 +156,5 @@
         box-shadow: 0 4px 8px rgba(255, 140, 0, 0.3);
     }
 </style>
-{% endblock %}
+
+{{template "footer.html" .}}

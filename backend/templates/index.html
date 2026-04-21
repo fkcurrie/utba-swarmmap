@@ -1,6 +1,6 @@
-{% extends "bootstrap.html" %}
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
+{{template "header.html" .}}
 
-{% block content %}
 <div class="container-fluid py-4 px-lg-5">
     <div class="row mb-5">
         <div class="col-lg-12 text-center mb-4">
@@ -10,7 +10,7 @@
         
         <div class="col-lg-12 mb-4">
             <div class="card border-0 shadow-lg overflow-hidden" style="height: 600px; border-radius: var(--border-radius-lg);">
-                <div id="map" class="h-100 w-100"></div>
+                <div id="map" class="h-100 w-100" aria-label="Interactive map showing bee swarm reports" role="application"></div>
                 <div class="position-absolute top-0 end-0 m-3 d-none d-md-block" style="z-index: 1;">
                     <button id="btnRecenter" class="btn btn-white btn-sm shadow-sm fw-bold">
                         <i class="fa-solid fa-location-crosshairs me-1"></i> Recenter
@@ -104,19 +104,6 @@
     </div>
 </div>
 
-<!-- Scripts -->
-<link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
-<script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
-<script>
-    // Configuration for the map
-    window.MAP_CONFIG = {
-        mapboxToken: '{{.MapboxToken}}',
-        userRole: '{{.UserRole}}',
-        csrfToken: '{{.CSRFToken}}'
-    };
-</script>
-<script src="/static/js/main.js"></script>
-
 <style>
     .legend-color {
         width: 14px;
@@ -188,4 +175,5 @@
         box-shadow: 0 4px 8px rgba(255, 140, 0, 0.3);
     }
 </style>
-{% endblock %}
+
+{{template "footer.html" .}}
