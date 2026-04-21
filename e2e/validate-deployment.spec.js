@@ -2,10 +2,8 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('Deployment Validation', () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the application URL
-    // The BASE_URL is provided by the CI environment or defaults to localhost:8080
-    const baseUrl = process.env.BASE_URL || 'http://localhost:8080';
-    await page.goto(baseUrl);
+    // Navigate to the application URL using the baseURL from playwright.config.js
+    await page.goto('/');
   });
 
   test('page title is correct', async ({ page }) => {
@@ -42,10 +40,10 @@ test.describe('Deployment Validation', () => {
     ];
 
     for (const item of expectedLegend) {
-      const legendItem = legend.locator('span', { hasText: item.text });
+      const legendItem = legend.locator('.legend-item', { hasText: item.text });
       await expect(legendItem).toBeVisible();
-      const icon = legendItem.locator('i');
-      await expect(icon).toHaveCSS('color', item.color);
+      const colorBox = legendItem.locator('.legend-color');
+      await expect(colorBox).toHaveCSS('background-color', item.color);
     }
   });
 

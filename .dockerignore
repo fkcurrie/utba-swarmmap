@@ -10,8 +10,10 @@ node_modules
 # Ignore frontend files for the backend build, but ALLOW static assets
 # This is required because backend/Dockerfile now copies frontend/static
 # and the build context is set to the repository root.
-frontend/*
-!frontend/static/
+frontend/cloudbuild.yaml
+frontend/Dockerfile
+frontend/go.mod
+frontend/main.go
 frontend.Dockerfile
 cloudbuild-frontend.yaml
 
