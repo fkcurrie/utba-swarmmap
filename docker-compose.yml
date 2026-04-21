@@ -40,6 +40,7 @@ services:
       - GOOGLE_CLIENT_SECRET=fake-secret
       - GOOGLE_REDIRECT_URL=http://localhost:8085/auth/google/callback
       - MAPBOX_ACCESS_TOKEN=${MAPBOX_ACCESS_TOKEN:-}
+      - FRONTEND_ASSETS_URL=http://localhost:8082
     ports:
       - '8085:8085'
     depends_on:

@@ -11,8 +11,9 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server .
 
 # STAGE 2: Create the final, minimal image
-FROM alpine:latest
+FROM alpine:3.21.3
 
+# hadolint ignore=DL3018
 RUN apk add --no-cache tzdata
 WORKDIR /app
 COPY --from=builder /app/server /app/server

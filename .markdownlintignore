@@ -3,3 +3,4 @@
 node_modules
 frontend/static/vendor
 test-results
+playwright-report

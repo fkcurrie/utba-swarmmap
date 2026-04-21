@@ -17,16 +17,29 @@ func (h *Handlers) DashboardHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// In a real implementation, we would fetch available and assigned swarms here.
-	// For now, we'll just render the template with the user's session.
+	allSwarms, err := h.Store.GetAllSwarms(r.Context())
+	if err != nil {
+		slog.Error("Error getting all swarms for dashboard", "error", err)
+		http.Error(w, "Failed to retrieve swarms", http.StatusInternalServerError)
+		return
+	}
+
 	availableSwarms := []models.SwarmReport{}
 	assignedSwarms := []models.SwarmReport{}
+
+	for _, swarm := range allSwarms {
+		if swarm.AssignedCollectorID == session.UserID {
+			assignedSwarms = append(assignedSwarms, swarm)
+		} else if swarm.AssignedCollectorID == "" && (swarm.Status == "Reported" || swarm.Status == "Verified") {
+			availableSwarms = append(availableSwarms, swarm)
+		}
+	}
 
 	// Determine navigation options based on role
 	showCollectorAdmin := session.Role == "collector_admin" || session.Role == "site_admin"
 	showSiteAdmin := session.Role == "site_admin"
 
-	err := h.Templates.ExecuteTemplate(w, "dashboard.html", map[string]interface{}{
+	err = h.Templates.ExecuteTemplate(w, "dashboard.html", map[string]interface{}{
 		"Title":              "Dashboard",
 		"Version":            h.Version,
 		"User":               session,

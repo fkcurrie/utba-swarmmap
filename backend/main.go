@@ -130,21 +130,22 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	// Static file handler (fallback for local development and production resilience)
-	// We check if ./static exists and serve from there.
+	// Static file handler
+	// This consolidated handler serves static assets from ./static (for production/Docker)
+	// or ../frontend/static (for local development), ensuring backend self-sufficiency.
 	staticDir := "./static"
 	if _, err := os.Stat(staticDir); os.IsNotExist(err) {
 		staticDir = "../frontend/static"
 	}
+
 	if _, err := os.Stat(staticDir); err == nil {
-		slog.Info("Serving static files from", "dir", staticDir)
+		slog.Info("Serving static files", "dir", staticDir)
 		fs := http.FileServer(http.Dir(staticDir))
 		mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
 	}
 
 	// Public routes
 	mux.HandleFunc("GET /{$}", h.IndexHandler)
-
 	mux.HandleFunc("GET /get_swarms", h.GetSwarmsHandler)
 	mux.HandleFunc("GET /login", h.LoginPageHandler)
 	mux.HandleFunc("GET /register", h.RegisterPageHandler)

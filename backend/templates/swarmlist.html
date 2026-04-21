@@ -28,7 +28,7 @@
                             <tr>
                                 <td class="ps-4 text-muted small" data-label="ID">{{.ID}}</td>
                                 <td data-label="Status">
-                                    <span class="badge {{if eq .DisplayStatus "Reported"}}bg-danger-subtle text-danger{{else if eq .DisplayStatus "Verified"}}bg-warning-subtle text-warning-emphasis{{else if eq .DisplayStatus "Captured"}}bg-success-subtle text-success{{else}}bg-secondary-subtle text-secondary{{end}} px-2 py-1">
+                                    <span class="badge {{if eq .DisplayStatus "Reported"}}bg-danger-subtle text-danger{{else if eq .DisplayStatus "Verified"}}bg-warning-subtle text-warning-emphasis{{else if eq .DisplayStatus "Claimed"}}bg-info-subtle text-info-emphasis{{else if eq .DisplayStatus "Captured"}}bg-success-subtle text-success{{else}}bg-secondary-subtle text-secondary{{end}} px-2 py-1">
                                         {{.DisplayStatus}}
                                     </span>
                                 </td>

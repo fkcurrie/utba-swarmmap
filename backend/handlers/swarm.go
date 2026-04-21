@@ -337,9 +337,11 @@ func (h *Handlers) AssignSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	case "assign":
 		updates = append(updates, firestore.Update{Path: "assignedCollectorID", Value: session.UserID})
 		updates = append(updates, firestore.Update{Path: "assignedCollectorEmail", Value: session.Username})
+		updates = append(updates, firestore.Update{Path: "status", Value: "Claimed"})
 	case "unassign":
 		updates = append(updates, firestore.Update{Path: "assignedCollectorID", Value: ""})
 		updates = append(updates, firestore.Update{Path: "assignedCollectorEmail", Value: ""})
+		updates = append(updates, firestore.Update{Path: "status", Value: "Reported"})
 	}
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: time.Now()})
 
@@ -375,7 +377,7 @@ func (h *Handlers) ClaimSwarmHandler(w http.ResponseWriter, r *http.Request) {
 	var updates []firestore.Update
 	updates = append(updates, firestore.Update{Path: "assignedCollectorID", Value: session.UserID})
 	updates = append(updates, firestore.Update{Path: "assignedCollectorEmail", Value: session.Username})
-	updates = append(updates, firestore.Update{Path: "status", Value: "Collection in Progress"})
+	updates = append(updates, firestore.Update{Path: "status", Value: "Claimed"})
 	updates = append(updates, firestore.Update{Path: "lastUpdatedTimestamp", Value: time.Now()})
 
 	if err := h.Store.UpdateSwarm(r.Context(), swarmID, updates); err != nil {

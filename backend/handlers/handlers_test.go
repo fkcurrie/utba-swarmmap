@@ -1192,8 +1192,8 @@ func TestClaimSwarmHandler(t *testing.T) {
 	if mockStore.Swarms[0].AssignedCollectorEmail != "test@example.com" {
 		t.Error("expected swarm to be assigned to the user email")
 	}
-	if mockStore.Swarms[0].Status != "Collection in Progress" {
-		t.Errorf("expected swarm status to be 'Collection in Progress', got '%s'", mockStore.Swarms[0].Status)
+	if mockStore.Swarms[0].Status != "Claimed" {
+		t.Errorf("expected swarm status to be 'Claimed', got '%s'", mockStore.Swarms[0].Status)
 	}
 }
 
@@ -1319,7 +1319,7 @@ func TestUnclaimSwarmHandler(t *testing.T) {
 		Swarms: []models.SwarmReport{
 			{
 				ID:                     "test-swarm-id",
-				Status:                 "Collection in Progress",
+				Status:                 "Claimed",
 				AssignedCollectorID:    "test-user",
 				AssignedCollectorEmail: "test@example.com",
 			},
