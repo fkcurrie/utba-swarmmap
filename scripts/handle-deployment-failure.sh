@@ -44,6 +44,7 @@ gh issue create \
   --title "$ISSUE_TITLE" \
   --body "$ISSUE_BODY" \
   --label "overseer" \
-  --label "bug"
+  --label "bug" \
+  --label "repo-agent"
 
 echo "GitHub Issue created."
