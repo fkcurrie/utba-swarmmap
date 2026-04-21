@@ -110,12 +110,12 @@ document.addEventListener('DOMContentLoaded', function () {
               'match',
               ['get', 'displayStatus'],
               'Verified',
-              '#ff69b4',
+              '#fbc531',
               'Captured',
-              '#00ff00',
+              '#4cd137',
               'Archived',
-              '#0000ff',
-              '#ff0000', // Default Red for Reported
+              '#487eb0',
+              '#e84118', // Default Red-Orange for Reported
             ],
             'circle-radius': 10,
             'circle-stroke-width': 2,

@@ -9,7 +9,7 @@
                     <p class="lead text-muted mb-4 mx-auto" style="max-width: 700px;">Spotted a bee swarm? Report it instantly to help local beekeepers safely relocate them and protect our urban pollinators.</p>
                     <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
                         <button id="reportSwarmBtn" class="btn btn-primary btn-lg shadow-lg" aria-label="Report a Bee Swarm at your current location">
-                            <i class="fa-solid fa-location-dot me-2"></i> Report at Your Location
+                            <i class="fa-solid fa-location-dot me-2"></i> Report a Swarm at Your Location
                         </button>
                         <a href="#map" class="btn btn-outline-secondary btn-lg border-2">
                             <i class="fa-solid fa-map me-2"></i> View Swarm Map
@@ -34,6 +34,11 @@
 
         <!-- Pin Color Legend -->
         <aside class="row mt-5 mb-5" aria-labelledby="legendTitle">
+            <div class="col-md-12 text-center mb-3">
+                <h2 id="legendTitle" class="h6 fw-bold text-uppercase tracking-wider text-muted">
+                    <i class="fa-solid fa-circle-info me-2 text-warning"></i>Map Legend
+                </h2>
+            </div>
             <div class="col-md-12">
                 <div class="d-flex flex-wrap justify-content-center gap-3" role="list">
                     <div class="legend-item d-flex align-items-center" role="listitem">
