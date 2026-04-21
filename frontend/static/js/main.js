@@ -22,11 +22,14 @@ document.addEventListener('DOMContentLoaded', function () {
   if (mapElement) {
     if (window.MAPBOX_TOKEN && window.MAPBOX_TOKEN !== '') {
       if (typeof mapboxgl === 'undefined') {
-        console.error('Mapbox GL JS is not loaded. Check script include in footer.html.');
-        mapElement.innerHTML = '<div class="alert alert-danger m-3">Mapbox library failed to load.</div>';
+        console.error(
+          'Mapbox GL JS is not loaded. Check script include in footer.html.',
+        );
+        mapElement.innerHTML =
+          '<div class="alert alert-danger m-3">Mapbox library failed to load.</div>';
         return;
       }
-      
+
       mapboxgl.accessToken = window.MAPBOX_TOKEN;
 
       try {
