@@ -32,5 +32,8 @@ bin/
 # Logs
 *.log
 
+# Docker build artifacts
+backend/static/
+
 # Test results
 test-results/

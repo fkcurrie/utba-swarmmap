@@ -225,6 +225,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Prepare Backend Assets
+        run: cp -r frontend/static backend/static
+
       - name: Build and Start Services
         run: docker compose up -d --build
 
