@@ -152,8 +152,14 @@ jobs:
       - name: Post-Deployment Validation
         id: validation
         env:
-          DEPLOYED_URL: ${{ steps.deploy-backend.outputs.url }}
+          DEPLOYED_URL: ${{ steps.deploy-backend.outputs.url || steps.backend-url.outputs.url }}
+          BASE_URL: ${{ steps.deploy-backend.outputs.url || steps.backend-url.outputs.url }}
         run: |
+          if [ -z "$DEPLOYED_URL" ]; then
+            echo "Error: Deployed URL is not set. Check previous steps."
+            exit 1
+          fi
+          echo "Validating deployment at $DEPLOYED_URL"
           npx playwright install --with-deps chromium
           npx playwright test e2e/validate-deployment.spec.js --config e2e/playwright.config.js
 
@@ -167,7 +173,7 @@ jobs:
             "${{ env.SERVICE }}" \
             "${{ env.FRONTEND_SERVICE }}" \
             "${{ env.REGION }}" \
-            "${{ steps.deploy-backend.outputs.url }}" \
+            "${{ steps.deploy-backend.outputs.url || steps.backend-url.outputs.url }}" \
             "${{ github.sha }}"
 
       - name: Upload Test Results
