@@ -4,10 +4,10 @@
 FROM golang:1.25.9-alpine AS builder
 
 WORKDIR /src
-COPY go.mod go.sum ./
+COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 
-COPY . .
+COPY backend/ .
 RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server .
 
 # STAGE 2: Create the final, minimal image
@@ -18,9 +18,8 @@ RUN apk add --no-cache tzdata
 WORKDIR /app
 COPY --from=builder /app/server /app/server
 COPY --from=builder /src/templates /app/templates/
-# Copy static assets if they were provided in the build context
-# We use a wildcard to avoid failure if the directory is missing
-COPY static* /app/static/
+# Copy static assets from the frontend directory (accessible via root context)
+COPY frontend/static /app/static/
 
 ENV PORT=8080
 EXPOSE 8080

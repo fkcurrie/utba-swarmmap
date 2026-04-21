@@ -22,6 +22,8 @@ steps:
       - 'build'
       - '-t'
       - 'northamerica-northeast2-docker.pkg.dev/$PROJECT_ID/swarmmap-repo/backend:latest'
+      - '-f'
+      - 'backend/Dockerfile'
       - '.'
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Backend'

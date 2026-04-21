@@ -131,17 +131,23 @@ func main() {
 	mux := http.NewServeMux()
 
 	// Static file handler
-	// This consolidated handler serves static assets from ./static (for production/Docker)
-	// or ../frontend/static (for local development), ensuring backend self-sufficiency.
-	staticDir := "./static"
-	if _, err := os.Stat(staticDir); os.IsNotExist(err) {
-		staticDir = "../frontend/static"
+	// We check multiple possible locations for the static directory to ensure compatibility
+	// across local development and various Docker/Cloud Run configurations.
+	staticDirs := []string{"./static", "/app/static", "../frontend/static"}
+	var staticDir string
+	for _, dir := range staticDirs {
+		if _, err := os.Stat(dir); err == nil {
+			staticDir = dir
+			break
+		}
 	}
 
-	if _, err := os.Stat(staticDir); err == nil {
+	if staticDir != "" {
 		slog.Info("Serving static files", "dir", staticDir)
 		fs := http.FileServer(http.Dir(staticDir))
 		mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
+	} else {
+		slog.Warn("Static files directory not found in any of the expected locations", "searched", staticDirs)
 	}
 
 	// Public routes

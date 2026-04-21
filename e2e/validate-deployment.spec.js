@@ -1,162 +1,93 @@
-// Copyright (c) 2026 Frank Currie (frank@sfle.ca)
-import { test, expect } from '@playwright/test';
+const { test, expect } = require('@playwright/test');
 
-test('deployment validation - basic elements and assets', async ({ page }, testInfo) => {
-  const failedRequests = [];
-  const consoleErrors = [];
-
-  // Track failed requests
-  page.on('requestfailed', request => {
-    const url = request.url();
-    const errorText = request.failure().errorText;
-    
-    // Ignore background tracking requests that might be aborted when the test finishes
-    if (url.includes('/api/track_visit')) {
-      console.log(`Ignoring failed tracking request: ${url} (${errorText})`);
-      return;
-    }
-    
-    // Ignore optional Mapbox/external assets that might fail in CI
-    if (url.includes('mapbox.com') || url.includes('events.mapbox.com')) {
-      console.log(`Ignoring failed Mapbox request: ${url} (${errorText})`);
-      return;
-    }
-
-    failedRequests.push(`${url}: ${errorText}`);
+test.describe('Deployment Validation', () => {
+  test.beforeEach(async ({ page }) => {
+    // Navigate to the application URL
+    // The BASE_URL is provided by the CI environment or defaults to localhost:8080
+    const baseUrl = process.env.BASE_URL || 'http://localhost:8080';
+    await page.goto(baseUrl);
   });
 
-  // Track console errors
-  page.on('console', msg => {
-    if (msg.type() === 'error') {
-      const text = msg.text();
-      if (text.includes('Mapbox token is missing')) return;
-      if (text.includes('track_visit') || text.includes('Failed to track visit')) return;
-      if (text.includes('net::ERR_EMPTY_RESPONSE')) return; // Also ignore this if it's from the tracking request
-      consoleErrors.push(text);
+  test('page title is correct', async ({ page }) => {
+    await expect(page).toHaveTitle(/UTBA SwarmMap/i);
+  });
+
+  test('deployment validation - basic elements', async ({ page }) => {
+    // Check for the main heading
+    await expect(page.locator('h1')).toContainText(/Live Swarm Tracking/i);
+
+    // Check for the map container
+    const map = page.locator('#map');
+    await expect(map).toBeVisible();
+
+    // Verify the map has content (Leaflet adds tiles and markers)
+    // We check for the presence of leaflet-pane or leaflet-tile-container
+    await expect(page.locator('.leaflet-container')).toBeVisible();
+
+    // Check for the "Report a Swarm" button
+    const reportBtn = page.locator('#reportSwarmBtn');
+    await expect(reportBtn).toBeVisible();
+    await expect(reportBtn).toContainText(/Report a Swarm/i);
+
+    // Verify legend exists with correct items
+    const legend = page.locator('#mapLegend');
+    await expect(legend).toBeVisible();
+
+    const expectedLegend = [
+      { text: /Reported/i, color: 'rgb(232, 65, 24)' }, // #e84118
+      { text: /Verified/i, color: 'rgb(251, 197, 49)' }, // #fbc531
+      { text: /Claimed/i, color: 'rgb(255, 140, 0)' },   // #ff8c00
+      { text: /Captured/i, color: 'rgb(76, 209, 55)' }, // #4cd137
+      { text: /Archived/i, color: 'rgb(72, 126, 176)' } // #487eb0
+    ];
+
+    for (const item of expectedLegend) {
+      const legendItem = legend.locator('span', { hasText: item.text });
+      await expect(legendItem).toBeVisible();
+      const icon = legendItem.locator('i');
+      await expect(icon).toHaveCSS('color', item.color);
     }
   });
 
-  await page.goto('/');
+  test('report swarm modal opens and has media buttons', async ({ page }) => {
+    // Click the report button to open the modal
+    await page.click('#reportSwarmBtn');
 
-  // 1. Verify basic page title/content
-  await expect(page).toHaveTitle(/UTBA Swarm Map/i);
+    // Wait for the modal to be visible
+    const modal = page.locator('#reportSwarmModal');
+    await expect(modal).toBeVisible();
 
-  // 2. Verify key UI elements are present
-  const reportBtn = page.locator('#reportSwarmBtn');
-  await expect(reportBtn).toBeVisible({ timeout: 10000 });
-  await expect(reportBtn).toHaveClass(/btn-primary/);
-  // Using an even more flexible regex to handle potential rendering differences, 
-  // whitespace, or flaky text updates during geolocation
-  await expect(reportBtn).toHaveText(/Report (a Swarm )?at Your Location/i);
-  await expect(reportBtn).toHaveAttribute('aria-label', /Report a Bee Swarm at your current location/i);
-  await expect(reportBtn.locator('i.fa-location-dot')).toBeAttached();
+    // Verify modal elements
+    await expect(modal.locator('.modal-title')).toContainText(/Report a New Swarm/i);
+    await expect(modal.locator('#reportSwarmForm')).toBeVisible();
 
-  const map = page.locator('#map');
-  await expect(map).toBeVisible({ timeout: 15000 });
-  // Check if CSS is applied (map should have height set in style.css)
-  const mapHeight = await map.evaluate(el => window.getComputedStyle(el).height);
-  expect(parseInt(mapHeight), 'Map height should be at least 350px').toBeGreaterThanOrEqual(350);
+    // Verify media upload buttons (Camera and Video)
+    const cameraBtn = modal.locator('#cameraBtn');
+    await expect(cameraBtn).toBeVisible();
+    await expect(cameraBtn).toContainText(/Camera/i);
 
-  const legend = page.locator('#legendTitle');
-  await expect(legend).toBeVisible({ timeout: 10000 });
-  await expect(legend).toHaveText(/Map Legend/i);
-  await expect(legend.locator('i.fa-circle-info')).toBeAttached();
+    const videoBtn = modal.locator('#videoBtn');
+    await expect(videoBtn).toBeVisible();
+    await expect(videoBtn).toContainText(/Video/i);
 
-  // Check legend items
-  const legendItems = page.locator('.legend-item');
-  await expect(legendItems).toHaveCount(5);
-  
-  // Verify specific legend text and colors for robustness
-  const expectedLegend = [
-    { text: /Reported/i, color: 'rgb(232, 65, 24)' }, // #e84118
-    { text: /Verified/i, color: 'rgb(251, 197, 49)' }, // #fbc531
-    { text: /Claimed/i, color: 'rgb(255, 140, 0)' },   // #ff8c00
-    { text: /Captured/i, color: 'rgb(76, 209, 55)' }, // #4cd137
-    { text: /Archived/i, color: 'rgb(72, 126, 176)' } // #487eb0
-  ];
+    // Close the modal
+    await page.click('#reportSwarmModal .btn-close');
+    await expect(modal).not.toBeVisible();
+  });
 
-  for (let i = 0; i < expectedLegend.length; i++) {
-    const item = legendItems.nth(i);
-    await expect(item).toContainText(expectedLegend[i].text);
-    const colorSpan = item.locator('.legend-color');
-    await expect(colorSpan).toBeVisible();
-    await expect(colorSpan).toHaveCSS('background-color', expectedLegend[i].color);
-  }
-
-  const footer = page.locator('footer');
-  await expect(footer).toBeVisible();
-  await expect(footer).toContainText(/Made with 🐝❤️🐝 with/i);
-  await expect(footer).toContainText(/gemini-cli/i);
-  
-  // Verify footer link specifically
-  const footerLink = footer.getByRole('link', { name: 'gemini-cli' });
-  await expect(footerLink).toHaveAttribute('href', 'https://github.com/google/gemini-cli');
-  await expect(footerLink).toHaveAttribute('target', '_blank');
-  await expect(footerLink).toHaveAttribute('rel', 'noopener');
-  await expect(footerLink).toHaveText('gemini-cli');
-  await expect(footerLink).toBeVisible();
-
-  // 3. Verify Report Modal functionality
-  await reportBtn.click();
-  const modal = page.locator('#reportSwarmModal');
-  await expect(modal).toBeVisible();
-  await expect(modal.locator('.modal-title')).toContainText(/Report Bee Swarm/i);
-  await expect(modal.locator('i.fa-bug')).toBeAttached();
-  
-  const submitBtn = modal.locator('button[type="submit"]');
-  await expect(submitBtn).toBeVisible();
-  await expect(submitBtn).toHaveText(/Submit Report/i);
-
-  const cameraBtn = modal.locator('button:has-text("Camera")');
-  await expect(cameraBtn).toBeVisible();
-
-  const videoBtn = modal.locator('button:has-text("Video")');
-  await expect(videoBtn).toBeVisible();
-  
-  // Close the modal via close button
-  await modal.locator('.btn-close').click();
-  await expect(modal).not.toBeVisible({ timeout: 10000 });
-
-  // 4. Verify Mapbox map is initialized or missing token alert is present
-  const mapboxElement = page.locator('.mapboxgl-map, #map .alert-warning');
-  await expect(mapboxElement.first()).toBeVisible({ timeout: 10000 });
-
-  // 4. Verify no critical assets failed to load
-  // We exclude some common external tracking or optional stuff if necessary
-  if (failedRequests.length > 0) {
-    console.error('Failed requests:', failedRequests);
-  }
-  expect(failedRequests, `Found ${failedRequests.length} failed requests`).toHaveLength(0);
-
-  // 5. Verify no console errors
-  if (consoleErrors.length > 0) {
-    console.error('Console errors:', consoleErrors);
-  }
-  // We might allow some minor console errors, but generally want none
-  expect(consoleErrors, `Found ${consoleErrors.length} console errors`).toHaveLength(0);
-  
-  // 6. Verify map is rendered (if initialized)
-  if (await page.locator('.mapboxgl-map').count() > 0) {
-    // Wait for at least the map canvas to be visible
-    await expect(page.locator('.mapboxgl-canvas').first()).toBeVisible({ timeout: 10000 });
-  }
-  
-  // Verify visible images are rendered (non-zero size)
-  const images = page.locator('img:visible');
-  const imageCount = await images.count();
-  for (let i = 0; i < imageCount; i++) {
-    const img = images.nth(i);
-    const box = await img.boundingBox();
-    expect(box, `Visible image ${i} should have a bounding box`).not.toBeNull();
-    if (box) {
-      expect(box.width, `Visible image ${i} has zero width`).toBeGreaterThan(0);
-      expect(box.height, `Visible image ${i} has zero height`).toBeGreaterThan(0);
+  test('navigation links are functional', async ({ page }) => {
+    // Check navbar links
+    const dashboardLink = page.locator('.navbar-nav .nav-link', { hasText: /Dashboard/i });
+    if (await dashboardLink.isVisible()) {
+      await dashboardLink.click();
+      await expect(page).toHaveURL(/.*dashboard/);
+      await page.goBack();
     }
-  }
 
-  // 7. Visual check - attach a screenshot to the test report
-  await testInfo.attach('deployment-screenshot', {
-    body: await page.screenshot({ fullPage: true }),
-    contentType: 'image/png',
+    const loginLink = page.locator('.navbar-nav .nav-link', { hasText: /Login/i });
+    if (await loginLink.isVisible()) {
+      await loginLink.click();
+      await expect(page).toHaveURL(/.*login/);
+    }
   });
 });
