@@ -1,16 +1,24 @@
 # Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 
-# Ignore files not needed for the backend build
-frontend/
+# Core ignores
+.git
+node_modules
+.env
+.DS_Store
+*.log
+
+# Ignore frontend files for the backend build, but ALLOW static assets
+# This is required because backend/Dockerfile now copies frontend/static
+# and the build context is set to the repository root.
+frontend/*
+!frontend/static/
 frontend.Dockerfile
 cloudbuild-frontend.yaml
 
-# Ignore files not needed for the frontend build
-handlers/
-models/
-store/
-main.go
-go.mod
-go.sum
-Dockerfile
+# Infrastructure and other service files
+# We don't ignore backend/ files here because they are needed for the backend build
+# when using the root context.
 cloudbuild-backend.yaml
+scripts/
+e2e/
+docs/
