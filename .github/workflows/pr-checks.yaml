@@ -228,18 +228,27 @@ jobs:
       - name: Build and Start Services
         run: docker compose up -d --build
 
-      - name: Wait for Backend
+      - name: Wait for Services
         run: |
-          echo "Waiting for backend to be healthy..."
+          echo "Waiting for services to be healthy..."
           for i in {1..30}; do
+            BACKEND_UP=false
+            FRONTEND_UP=false
             if curl -s http://localhost:8085 > /dev/null; then
-              echo "Backend is up!"
+              BACKEND_UP=true
+            fi
+            if curl -s http://localhost:8082/static/css/style.css > /dev/null; then
+              FRONTEND_UP=true
+            fi
+            
+            if [ "$BACKEND_UP" = true ] && [ "$FRONTEND_UP" = true ]; then
+              echo "All services are up!"
               exit 0
             fi
-            echo "Waiting... ($i/30)"
+            echo "Waiting... Backend: $BACKEND_UP, Frontend: $FRONTEND_UP ($i/30)"
             sleep 2
           done
-          echo "Backend failed to start"
+          echo "Services failed to start"
           docker compose logs
           exit 1
 

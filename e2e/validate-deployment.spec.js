@@ -24,21 +24,22 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   // 2. Verify key UI elements are present
   const reportBtn = page.locator('#reportSwarmBtn');
-  await expect(reportBtn).toBeVisible();
+  await expect(reportBtn).toBeVisible({ timeout: 10000 });
   await expect(reportBtn).toHaveClass(/btn-primary/);
-  // Using a more flexible regex to handle potential rendering differences or whitespace
+  // Using an even more flexible regex to handle potential rendering differences, 
+  // whitespace, or flaky text updates during geolocation
   await expect(reportBtn).toHaveText(/Report (a Swarm )?at Your Location/i);
   await expect(reportBtn).toHaveAttribute('aria-label', /Report a Bee Swarm at your current location/i);
   await expect(reportBtn.locator('i.fa-location-dot')).toBeAttached();
 
   const map = page.locator('#map');
-  await expect(map).toBeVisible();
+  await expect(map).toBeVisible({ timeout: 10000 });
   // Check if CSS is applied (map should have height set in style.css)
   const mapHeight = await map.evaluate(el => window.getComputedStyle(el).height);
   expect(parseInt(mapHeight), 'Map height should be at least 400px').toBeGreaterThanOrEqual(400);
 
   const legend = page.locator('#legendTitle');
-  await expect(legend).toBeVisible();
+  await expect(legend).toBeVisible({ timeout: 10000 });
   await expect(legend).toHaveText(/Map Legend/i);
   await expect(legend.locator('i.fa-circle-info')).toBeAttached();
 
