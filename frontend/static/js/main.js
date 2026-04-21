@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       });
     } else {
-      console.error('Mapbox token is missing. Map will not be initialized.');
+      console.warn('Mapbox token is missing. Map will not be initialized.');
       mapElement.innerHTML =
         '<div class="alert alert-warning m-3">Mapbox token is missing. Please configure MAPBOX_ACCESS_TOKEN.</div>';
     }
@@ -373,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
           }
         } catch (e) {
-          console.error('Cache parse error', e);
+          console.warn('Cache parse error', e);
         }
       }
     }
@@ -680,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         window.location.reload();
       } catch (error) {
-        console.error('Error submitting report:', error);
+        console.warn('Error submitting report:', error);
         alert('Error: ' + error.message);
       } finally {
         submitBtn.disabled = false;
@@ -755,7 +755,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const urls = JSON.parse(btn.getAttribute('data-media-urls'));
         openMediaViewer(urls);
       } catch (err) {
-        console.error('Error parsing media URLs:', err);
+        console.warn('Error parsing media URLs:', err);
       }
     }
   });
