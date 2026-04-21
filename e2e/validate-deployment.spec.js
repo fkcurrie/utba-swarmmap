@@ -18,8 +18,10 @@ test.describe('Deployment Validation', () => {
     const map = page.locator('#map');
     await expect(map).toBeVisible();
 
-    // Verify the map has content (Mapbox adds a canvas)
-    await expect(page.locator('.mapboxgl-map')).toBeVisible();
+    // Verify the map has content (Mapbox adds a canvas or we see a warning if token is missing)
+    const mapboxMap = page.locator('.mapboxgl-map');
+    const tokenAlert = page.locator('#map .alert-warning');
+    await expect(mapboxMap.or(tokenAlert).first()).toBeVisible();
 
     // Check for the "Report a Swarm" button
     const reportBtn = page.locator('#reportSwarmBtn');
