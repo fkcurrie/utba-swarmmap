@@ -129,7 +129,7 @@ func TestVerifyCSRF(t *testing.T) {
 		req := httptest.NewRequest("POST", "/", nil)
 		req = req.WithContext(ctx)
 		req.Header.Set("X-CSRF-Token", "token123")
-		
+
 		rr := httptest.NewRecorder()
 		handler.ServeHTTP(rr, req)
 		if rr.Code != http.StatusOK {
@@ -147,7 +147,7 @@ func TestVerifyCSRF(t *testing.T) {
 		req := httptest.NewRequest("POST", "/", strings.NewReader("csrf_token=token123"))
 		req = req.WithContext(ctx)
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-		
+
 		rr := httptest.NewRecorder()
 		handler.ServeHTTP(rr, req)
 		if rr.Code != http.StatusOK {
@@ -164,7 +164,7 @@ func TestVerifyCSRF(t *testing.T) {
 		ctx := context.WithValue(context.Background(), SessionContextKey, session)
 		req := httptest.NewRequest("POST", "/", nil)
 		req = req.WithContext(ctx)
-		
+
 		rr := httptest.NewRecorder()
 		handler.ServeHTTP(rr, req)
 		if rr.Code != http.StatusForbidden {
@@ -182,7 +182,7 @@ func TestVerifyCSRF(t *testing.T) {
 		req := httptest.NewRequest("POST", "/", nil)
 		req = req.WithContext(ctx)
 		req.Header.Set("X-CSRF-Token", "wrong-token")
-		
+
 		rr := httptest.NewRecorder()
 		handler.ServeHTTP(rr, req)
 		if rr.Code != http.StatusForbidden {

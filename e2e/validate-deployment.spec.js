@@ -49,10 +49,10 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   
   // Verify specific legend text and colors for robustness
   const expectedLegend = [
-    { text: /Reported/i, color: 'rgb(255, 0, 0)' },
-    { text: /Verified/i, color: 'rgb(255, 105, 180)' },
-    { text: /Captured/i, color: 'rgb(0, 255, 0)' },
-    { text: /Archived/i, color: 'rgb(0, 0, 255)' }
+    { text: /Reported/i, color: 'rgb(232, 65, 24)' },
+    { text: /Verified/i, color: 'rgb(251, 197, 49)' },
+    { text: /Captured/i, color: 'rgb(76, 209, 55)' },
+    { text: /Archived/i, color: 'rgb(72, 126, 176)' }
   ];
 
   for (let i = 0; i < expectedLegend.length; i++) {
@@ -86,6 +86,12 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const submitBtn = modal.locator('button[type="submit"]');
   await expect(submitBtn).toBeVisible();
   await expect(submitBtn).toHaveText(/Submit Report/i);
+
+  const cameraBtn = modal.locator('button:has-text("Camera")');
+  await expect(cameraBtn).toBeVisible();
+
+  const videoBtn = modal.locator('button:has-text("Video")');
+  await expect(videoBtn).toBeVisible();
   
   // Close the modal via close button
   await modal.locator('.btn-close').click();

@@ -701,6 +701,56 @@ func TestPrepareSwarmHandler_VideoRequest(t *testing.T) {
 	}
 }
 
+func TestPrepareSwarmHandler_QuicktimeVideoRequest(t *testing.T) {
+	mockStore := &MockStore{}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
+
+	// Create a multipart form request with a quicktime video
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	if err := writer.WriteField("description", "A test swarm with MOV"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("latitude", "43.6532"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("longitude", "-79.3832"); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.WriteField("intersection", "Yonge & Bloor"); err != nil {
+		t.Fatal(err)
+	}
+	// Create a dummy MOV file part
+	part, err := writer.CreateFormFile("media", "test.mov")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := part.Write([]byte("dummy mov data")); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	req, err := http.NewRequest("POST", "/prepare_swarm", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.PrepareSwarmHandler)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v, body: %s",
+			status, http.StatusOK, rr.Body.String())
+	}
+}
+
 func TestConfirmSwarmHandler_ValidRequest(t *testing.T) {
 	mockStore := &MockStore{}
 	h := &Handlers{
@@ -1223,7 +1273,7 @@ func TestUsernameRegisterHandler(t *testing.T) {
 		Templates:       tmpl,
 	}
 
-	body := strings.NewReader("email=test@example.com&password=password123&name=Test+User&phone=123456789&location=London")
+	body := strings.NewReader("email=test@example.com&password=password123&name=Test+User&phone=123456789&location=London&experience_years=5&equipment=Ladders&competency_notes=Professional")
 	req, err := http.NewRequest("POST", "/auth/register", body)
 	if err != nil {
 		t.Fatal(err)
@@ -1245,6 +1295,14 @@ func TestUsernameRegisterHandler(t *testing.T) {
 
 	if mockStore.Users[0].Email != "test@example.com" {
 		t.Errorf("expected email to be test@example.com, got %s", mockStore.Users[0].Email)
+	}
+
+	if mockStore.Users[0].ExperienceYears != 5 {
+		t.Errorf("expected experience_years to be 5, got %d", mockStore.Users[0].ExperienceYears)
+	}
+
+	if mockStore.Users[0].Equipment != "Ladders" {
+		t.Errorf("expected equipment to be Ladders, got %s", mockStore.Users[0].Equipment)
 	}
 
 	if mockStore.Users[0].EmailVerified {

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/fkcurrie/utba-swarmmap/models"
@@ -101,6 +102,11 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 	name := r.FormValue("name")
 	phone := r.FormValue("phone")
 	location := r.FormValue("location")
+	experienceYearsStr := r.FormValue("experience_years")
+	equipment := r.FormValue("equipment")
+	competencyNotes := r.FormValue("competency_notes")
+
+	experienceYears, _ := strconv.Atoi(experienceYearsStr)
 
 	ctx := r.Context()
 	existingUser, err := h.Store.GetUserByEmail(ctx, email)
@@ -140,6 +146,9 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 		EmailVerified:     false,
 		VerificationToken: verificationToken,
 		CreatedAt:         time.Now(),
+		ExperienceYears:   experienceYears,
+		Equipment:         equipment,
+		CompetencyNotes:   competencyNotes,
 	}
 
 	_, err = h.Store.CreateUser(ctx, user)
@@ -153,7 +162,31 @@ func (h *Handlers) UsernameRegisterHandler(w http.ResponseWriter, r *http.Reques
 	// For this exercise, we'll just log it.
 	slog.Info("USER CREATED", "email", h.sanitize(email), "verificationToken", h.sanitize(verificationToken)) // #nosec G706
 
-	h.renderMessagePage(w, "Registration Successful", "Your account has been created. Please check your email (see logs) to verify your account.")
+	// Send notification to admins
+	h.sendAdminNotification(user)
+
+	h.renderMessagePage(w, "Application Submitted", "Your application has been submitted successfully. Please check your email (see logs) to verify your account. An administrator will review your application soon.")
+}
+
+func (h *Handlers) sendAdminNotification(user models.User) {
+	// For this implementation, we will log the "email" content.
+	// In a production environment, this would use net/smtp to send a real email.
+	subject := "New Collector Access Request"
+	body := "A new collector access request has been submitted.\n\n" +
+		"Name: " + user.Name + "\n" +
+		"Email: " + user.Email + "\n" +
+		"Location: " + user.Location + "\n" +
+		"Experience: " + strconv.Itoa(user.ExperienceYears) + " years\n" +
+		"Equipment: " + user.Equipment + "\n" +
+		"Competency: " + user.CompetencyNotes + "\n\n" +
+		"Review application here: /admin"
+
+	slog.Info("ADMIN NOTIFICATION EMAIL",
+		"subject", subject,
+		"to", "admin@example.com", // In real app, fetch from config/db
+		"userID", user.ID,
+		"body", body,
+	)
 }
 
 // VerifyEmailHandler handles email verification with a token.

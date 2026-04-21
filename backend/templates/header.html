@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/fontawesome/css/all.min.css">
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/css/style.css">
     <script>
@@ -19,29 +19,36 @@
 </head>
 <body>
     <header role="banner">
-        <nav class="navbar navbar-expand-md navbar-light fixed-top" aria-label="Main Navigation">
+        <nav class="navbar navbar-expand-md fixed-top" aria-label="Main Navigation">
             <div class="container-xl">
                 <a class="navbar-brand" href="/">UTBA Swarm Map</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="fa-solid fa-bars"></span>
+                <button class="navbar-toggler p-2 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars-staggered"></i>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto align-items-center">
+                    <ul class="navbar-nav ms-auto align-items-center gap-2">
                         {{if .User}}
                             <li class="nav-item">
                                 <span class="nav-link disabled px-3">
-                                    <i class="fa-solid fa-user-circle me-1"></i> {{.User.Username}}
+                                    <i class="fa-solid fa-user-circle me-1 text-warning"></i> {{.User.Username}}
                                 </span>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link px-3" href="/dashboard">Dashboard</a>
                             </li>
                             <li class="nav-item ms-md-2">
-                                <a class="btn btn-sm btn-outline-secondary" href="/logout">Logout</a>
+                                <a class="btn btn-sm btn-outline-secondary px-3" href="/logout">Logout</a>
                             </li>
                         {{else}}
+                            <li class="nav-item me-md-2">
+                                <a class="btn btn-sm btn-warning px-3" href="/register">
+                                    <i class="fa-solid fa-bee me-1"></i> Request Collector Access
+                                </a>
+                            </li>
                             <li class="nav-item">
-                                <a class="nav-link px-3" href="/login">Swarm Collectors Login</a>
+                                <a class="nav-link px-3" href="/login">
+                                    <i class="fa-solid fa-right-to-bracket me-1 opacity-50"></i> Collector Login
+                                </a>
                             </li>
                         {{end}}
                     </ul>

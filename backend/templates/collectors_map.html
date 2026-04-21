@@ -4,14 +4,14 @@
     <div class="container-xl">
         <header class="row mb-4 align-items-center">
             <div class="col-md-6">
-                <h1 class="h3 fw-bold mb-1">Collector Map</h1>
+                <h1 class="h3 fw-800 mb-1 tracking-tight">Collector Map</h1>
                 <p class="text-muted small">View and manage all active swarm reports in the city.</p>
             </div>
             <div class="col-md-6 text-md-end">
                 <button id="reportSwarmBtn" class="btn btn-primary shadow-sm me-2" aria-label="Report a swarm at your location">
                     <i class="fa-solid fa-location-dot me-1"></i> Report Swarm
                 </button>
-                <button id="refreshMapBtn" class="btn btn-light border shadow-sm" aria-label="Refresh swarm data from server">
+                <button id="refreshMapBtn" class="btn btn-light border-0 shadow-sm" aria-label="Refresh swarm data from server">
                     <i class="fa-solid fa-rotate me-1"></i> Refresh
                 </button>
             </div>
@@ -19,7 +19,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div class="card p-1 bg-white shadow-sm overflow-hidden mb-4">
+                <div class="card p-1 bg-white shadow-lg border-0 overflow-hidden mb-4">
                     <div id="map" aria-label="Interactive map for collectors showing all bee swarm reports"></div>
                 </div>
             </div>
@@ -30,23 +30,23 @@
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body p-4">
-                        <h2 class="h6 fw-bold mb-3"><i class="fa-solid fa-circle-info me-2 text-primary"></i>Status Legend</h2>
-                        <div class="d-flex flex-column gap-2" role="list">
+                        <h2 id="legendTitle" class="h6 fw-bold mb-4 tracking-wider text-uppercase text-muted"><i class="fa-solid fa-circle-info me-2 text-warning"></i>Map Legend</h2>
+                        <div class="d-flex flex-column gap-3" role="list">
                             <div class="legend-item d-flex align-items-center" role="listitem">
-                                <span class="legend-color" style="background-color: #ff0000;" aria-hidden="true"></span>
-                                <span class="small fw-medium">Reported (New)</span>
+                                <span class="legend-color" style="background-color: rgb(232, 65, 24);" aria-hidden="true"></span>
+                                <span class="small fw-bold text-uppercase tracking-wider">Reported (New)</span>
                             </div>
                             <div class="legend-item d-flex align-items-center" role="listitem">
-                                <span class="legend-color" style="background-color: #ff69b4;" aria-hidden="true"></span>
-                                <span class="small fw-medium">Verified</span>
+                                <span class="legend-color" style="background-color: rgb(251, 197, 49);" aria-hidden="true"></span>
+                                <span class="small fw-bold text-uppercase tracking-wider">Verified</span>
                             </div>
                             <div class="legend-item d-flex align-items-center" role="listitem">
-                                <span class="legend-color" style="background-color: #00ff00;" aria-hidden="true"></span>
-                                <span class="small fw-medium">Captured</span>
+                                <span class="legend-color" style="background-color: rgb(76, 209, 55);" aria-hidden="true"></span>
+                                <span class="small fw-bold text-uppercase tracking-wider">Captured</span>
                             </div>
                             <div class="legend-item d-flex align-items-center" role="listitem">
-                                <span class="legend-color" style="background-color: #0000ff;" aria-hidden="true"></span>
-                                <span class="small fw-medium">Archived (24h+)</span>
+                                <span class="legend-color" style="background-color: rgb(72, 126, 176);" aria-hidden="true"></span>
+                                <span class="small fw-bold text-uppercase tracking-wider">Archived (24h+)</span>
                             </div>
                         </div>
                     </div>
@@ -75,10 +75,10 @@
     <!-- Report Swarm Modal -->
     <div class="modal fade" id="reportSwarmModal" tabindex="-1" role="dialog" aria-labelledby="reportSwarmModalLabel" aria-hidden="true" aria-modal="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-white border-bottom-0 pt-4 px-4">
-                    <h5 class="modal-title fw-bold" id="reportSwarmModalLabel">
-                        <i class="fa-solid fa-bug me-2 text-primary"></i> Report Bee Swarm
+            <div class="modal-content border-0 shadow-lg" style="border-radius: var(--border-radius-lg);">
+                <div class="modal-header border-0 pt-4 px-4 pb-0">
+                    <h5 class="modal-title fw-800" id="reportSwarmModalLabel">
+                        <i class="fa-solid fa-bug me-2 text-warning"></i> Report Bee Swarm
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -93,9 +93,9 @@
                             <input type="text" class="form-control bg-light border-0" id="intersection" name="intersection" placeholder="e.g., Yonge & Bloor" required>
                         </div>
                         
-                        <div class="card border-0 bg-light mb-4">
+                        <div class="card border-0 bg-light mb-4 shadow-none">
                             <div class="card-body p-4">
-                                <h6 class="mb-3 fw-bold text-secondary"><i class="fa-solid fa-phone me-2"></i> Contact Information (Optional)</h6>
+                                <h6 class="mb-3 fw-bold text-secondary"><i class="fa-solid fa-phone me-2 text-warning"></i> Contact Information (Optional)</h6>
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label for="reporterName" class="form-label small fw-bold">Your Name</label>
@@ -118,11 +118,15 @@
                             <div class="d-flex flex-wrap gap-2">
                                 <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
                                 <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
-                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('gallery-input').click();">
-                                    <i class="fa-solid fa-images me-1"></i> Gallery
+                                <input type="file" id="video-input" accept="video/*" capture="environment" style="display: none;">
+                                <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('gallery-input').click();">
+                                    <i class="fa-solid fa-images me-1 text-warning"></i> Gallery
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('camera-input').click();">
-                                    <i class="fa-solid fa-camera me-1"></i> Camera
+                                <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('camera-input').click();">
+                                    <i class="fa-solid fa-camera me-1 text-warning"></i> Camera
+                                </button>
+                                <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('video-input').click();">
+                                    <i class="fa-solid fa-video me-1 text-warning"></i> Video
                                 </button>
                             </div>
                             
