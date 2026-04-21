@@ -494,9 +494,10 @@ document.addEventListener('DOMContentLoaded', function () {
       document.querySelectorAll('.preview-file-btn').forEach((btn) => {
         btn.addEventListener('click', (e) => {
           const index = parseInt(e.currentTarget.getAttribute('data-index'));
-          const previewURLs = selectedFiles.map((file) =>
-            URL.createObjectURL(file) +
-            (file.type.startsWith('video/') ? '#video' : '#image'),
+          const previewURLs = selectedFiles.map(
+            (file) =>
+              URL.createObjectURL(file) +
+              (file.type.startsWith('video/') ? '#video' : '#image'),
           );
           openMediaViewer(previewURLs, index);
         });
