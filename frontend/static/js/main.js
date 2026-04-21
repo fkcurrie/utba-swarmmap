@@ -277,7 +277,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const reportModalEl = document.getElementById('reportSwarmModal');
         if (reportModalEl) {
-          const reportModal = bootstrap.Modal.getOrCreateInstance(reportModalEl);
+          const reportModal =
+            bootstrap.Modal.getOrCreateInstance(reportModalEl);
           reportModal.show();
         }
       });

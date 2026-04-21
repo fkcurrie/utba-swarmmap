@@ -43,8 +43,8 @@
         </div>
     </div>
 
-    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
-    <script src="/static/js/main.js"></script>
+    <script src="{{if .FrontendAssetsURL}}{{.FrontendAssetsURL}}{{end}}/static/js/main.js"></script>
 </body>
 </html>

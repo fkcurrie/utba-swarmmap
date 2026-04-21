@@ -43,6 +43,8 @@ services:
       - FRONTEND_ASSETS_URL=http://localhost:8082
     ports:
       - '8085:8085'
+    volumes:
+      - ./frontend/static:/app/static
     depends_on:
       firestore-emulator:
         condition: service_healthy
