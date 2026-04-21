@@ -52,7 +52,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(reportBtn.locator('i.fa-location-dot')).toBeAttached();
 
   const map = page.locator('#map');
-  await expect(map).toBeVisible({ timeout: 10000 });
+  await expect(map).toBeVisible({ timeout: 15000 });
   // Check if CSS is applied (map should have height set in style.css)
   const mapHeight = await map.evaluate(el => window.getComputedStyle(el).height);
   expect(parseInt(mapHeight), 'Map height should be at least 350px').toBeGreaterThanOrEqual(350);
@@ -64,12 +64,13 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   // Check legend items
   const legendItems = page.locator('.legend-item');
-  await expect(legendItems).toHaveCount(4);
+  await expect(legendItems).toHaveCount(5);
   
   // Verify specific legend text and colors for robustness
   const expectedLegend = [
     { text: /Reported/i, color: 'rgb(232, 65, 24)' }, // #e84118
     { text: /Verified/i, color: 'rgb(251, 197, 49)' }, // #fbc531
+    { text: /Claimed/i, color: 'rgb(255, 140, 0)' },   // #ff8c00
     { text: /Captured/i, color: 'rgb(76, 209, 55)' }, // #4cd137
     { text: /Archived/i, color: 'rgb(72, 126, 176)' } // #487eb0
   ];

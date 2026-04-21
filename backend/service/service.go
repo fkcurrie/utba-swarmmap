@@ -33,7 +33,7 @@ func (s *swarmService) GetSwarms(ctx context.Context, sessionID string, session 
 
 	isCollector := session != nil && (session.Role == "collector" || session.Role == "collector_admin" || session.Role == "site_admin")
 
-	if isCollector {
+	if isCollector && sessionID == "" {
 		currentReports, err = s.store.GetAllSwarms(ctx)
 	} else if sessionID != "" {
 		currentReports, err = s.store.GetSwarmsBySessionID(ctx, sessionID)
