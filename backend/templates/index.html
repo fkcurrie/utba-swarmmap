@@ -112,11 +112,15 @@
                             <div class="d-flex flex-wrap gap-2">
                                 <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
                                 <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
+                                <input type="file" id="video-input" accept="video/*" capture="environment" style="display: none;">
                                 <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('gallery-input').click();">
                                     <i class="fa-solid fa-images me-1 text-warning"></i> Gallery
                                 </button>
                                 <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('camera-input').click();">
                                     <i class="fa-solid fa-camera me-1 text-warning"></i> Camera
+                                </button>
+                                <button type="button" class="btn btn-light border-0 shadow-sm" onclick="document.getElementById('video-input').click();">
+                                    <i class="fa-solid fa-video me-1 text-warning"></i> Video
                                 </button>
                             </div>
                             <div class="mt-2">
