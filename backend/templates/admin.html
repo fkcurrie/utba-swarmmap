@@ -103,7 +103,14 @@
                                                 <span class="fw-bold d-block">{{.Name}}</span>
                                                 <small class="text-muted">{{.Email}}</small>
                                             </td>
-                                            <td class="small">{{.Location}}</td>
+                                            <td class="small">
+                                                {{.Location}}
+                                                <div class="mt-1">
+                                                    <button class="btn btn-link btn-sm p-0 text-decoration-none x-small" type="button" data-bs-toggle="collapse" data-bs-target="#details-{{.ID}}" aria-expanded="false">
+                                                        Details <i class="fa-solid fa-chevron-down ms-1"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
                                             <td class="pe-4 text-end">
                                                 <div class="d-flex justify-content-end gap-2">
                                                     <form method="POST" action="/admin/approve_user">
@@ -116,6 +123,24 @@
                                                         <input type="hidden" name="userID" value="{{.ID}}">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger px-3">Reject</button>
                                                     </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="collapse bg-light" id="details-{{.ID}}">
+                                            <td colspan="3" class="px-4 py-3">
+                                                <div class="row g-3">
+                                                    <div class="col-md-4">
+                                                        <h4 class="h6 fw-bold text-muted text-uppercase small" style="font-size: 0.7rem;">Experience</h4>
+                                                        <p class="mb-0 small">{{.ExperienceYears}} years</p>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h4 class="h6 fw-bold text-muted text-uppercase small" style="font-size: 0.7rem;">Equipment</h4>
+                                                        <p class="mb-0 small">{{.Equipment}}</p>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h4 class="h6 fw-bold text-muted text-uppercase small" style="font-size: 0.7rem;">Competency</h4>
+                                                        <p class="mb-0 x-small">{{.CompetencyNotes}}</p>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>

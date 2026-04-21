@@ -3,12 +3,12 @@
 
 <div class="container mt-5 pt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
+        <div class="col-md-8 col-lg-6">
             <div class="card border-0 shadow-lg" style="border-radius: var(--border-radius-lg);">
                 <div class="card-body p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <h1 class="h3 fw-800 tracking-tight">Join the Swarm</h1>
-                        <p class="text-muted">Register as a swarm collector</p>
+                        <h1 class="h3 fw-800 tracking-tight">Collector Application</h1>
+                        <p class="text-muted">Apply to become a verified swarm collector</p>
                     </div>
 
                     {{if .Error}}
@@ -17,30 +17,55 @@
                     </div>
                     {{end}}
                     
-                    <form action="/auth/register" method="POST" aria-label="Registration Form">
-                        <div class="mb-3">
-                            <label for="name" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Full Name</label>
-                            <input type="text" class="form-control bg-light border-0 p-3" id="name" name="name" required autocomplete="name" placeholder="Frank Currie">
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Email address</label>
-                            <input type="email" class="form-control bg-light border-0 p-3" id="email" name="email" required autocomplete="email" placeholder="frank@example.com">
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6 mb-3 mb-md-0">
-                                <label for="phone" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Phone</label>
-                                <input type="tel" class="form-control bg-light border-0 p-3" id="phone" name="phone" required autocomplete="tel" placeholder="(416) 555-0123">
+                    <form action="/auth/register" method="POST" id="applicationForm" aria-label="Collector Application Form">
+                        <!-- Step 1: Contact Information -->
+                        <div id="step1">
+                            <h2 class="h6 fw-bold text-uppercase tracking-wider mb-3">Step 1: Contact Information</h2>
+                            <div class="mb-3">
+                                <label for="name" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Full Name</label>
+                                <input type="text" class="form-control bg-light border-0 p-3" id="name" name="name" required autocomplete="name" placeholder="Frank Currie">
                             </div>
-                            <div class="col-md-6">
-                                <label for="location" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Location</label>
-                                <input type="text" class="form-control bg-light border-0 p-3" id="location" name="location" placeholder="Toronto, ON" required>
+                            <div class="mb-3">
+                                <label for="email" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Email address</label>
+                                <input type="email" class="form-control bg-light border-0 p-3" id="email" name="email" required autocomplete="email" placeholder="frank@example.com">
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label for="phone" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Phone</label>
+                                    <input type="tel" class="form-control bg-light border-0 p-3" id="phone" name="phone" required autocomplete="tel" placeholder="(416) 555-0123">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="location" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Location</label>
+                                    <input type="text" class="form-control bg-light border-0 p-3" id="location" name="location" placeholder="Toronto, ON" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Password</label>
+                                <input type="password" class="form-control bg-light border-0 p-3" id="password" name="password" required minlength="8" autocomplete="new-password" placeholder="Min 8 characters">
+                            </div>
+                            <button type="button" class="btn btn-primary w-100 py-3 shadow-sm" onclick="nextStep(2)">Next: Experience Details</button>
+                        </div>
+
+                        <!-- Step 2: Experience & Equipment -->
+                        <div id="step2" style="display: none;">
+                            <h2 class="h6 fw-bold text-uppercase tracking-wider mb-3">Step 2: Experience & Equipment</h2>
+                            <div class="mb-3">
+                                <label for="experience_years" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Years of Experience Collecting Swarms</label>
+                                <input type="number" class="form-control bg-light border-0 p-3" id="experience_years" name="experience_years" required min="0" placeholder="e.g. 5">
+                            </div>
+                            <div class="mb-3">
+                                <label for="equipment" class="form-label small fw-bold text-muted text-uppercase tracking-wider">What equipment do you have?</label>
+                                <textarea class="form-control bg-light border-0 p-3" id="equipment" name="equipment" rows="3" required placeholder="Ladders, bee vacuum, nuc boxes, etc."></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label for="competency_notes" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Briefly describe your competency & approach</label>
+                                <textarea class="form-control bg-light border-0 p-3" id="competency_notes" name="competency_notes" rows="3" required placeholder="Describe your experience handling complex swarm removals."></textarea>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary w-50 py-3" onclick="nextStep(1)">Back</button>
+                                <button type="submit" class="btn btn-primary w-50 py-3 shadow-sm">Submit Application</button>
                             </div>
                         </div>
-                        <div class="mb-4">
-                            <label for="password" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Password</label>
-                            <input type="password" class="form-control bg-light border-0 p-3" id="password" name="password" required minlength="8" autocomplete="new-password" placeholder="Min 8 characters">
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 py-3 shadow-sm">Create Account</button>
                     </form>
                     
                     <div class="text-center mt-5">
@@ -51,5 +76,29 @@
         </div>
     </div>
 </div>
+
+<script>
+    function nextStep(step) {
+        if (step === 2) {
+            // Basic validation for step 1
+            const requiredFields = ['name', 'email', 'phone', 'location', 'password'];
+            for (const field of requiredFields) {
+                if (!document.getElementById(field).value) {
+                    alert('Please fill in all contact information fields.');
+                    return;
+                }
+            }
+            if (document.getElementById('password').value.length < 8) {
+                alert('Password must be at least 8 characters long.');
+                return;
+            }
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+        } else {
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+        }
+    }
+</script>
 
 {{template "footer.html" .}}
