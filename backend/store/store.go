@@ -243,7 +243,6 @@ func (s *Store) CreateSession(ctx context.Context, session models.Session) (stri
 	return sessionID, nil
 }
 
-
 // DeleteSession removes a session from Firestore.
 func (s *Store) DeleteSession(ctx context.Context, sessionID string) error {
 	_, err := s.FirestoreClient.Collection(sessionsCollection).Doc(sessionID).Delete(ctx)

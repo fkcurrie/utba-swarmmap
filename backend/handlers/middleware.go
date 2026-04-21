@@ -35,11 +35,11 @@ func (h *Handlers) SecurityHeaders(next http.Handler) http.Handler {
 		csp := "default-src 'self'; " +
 			"script-src 'self' 'unsafe-inline' blob: https://api.mapbox.com https://*.mapbox.com" + assetsURL + "; " +
 			"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://api.mapbox.com https://*.mapbox.com" + assetsURL + "; " +
-			"font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com" + assetsURL + "; " +
+			"font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://api.mapbox.com https://*.mapbox.com" + assetsURL + "; " +
 			"img-src 'self' data: blob: https://api.mapbox.com https://*.mapbox.com https://*.tiles.mapbox.com https://*.googleapis.com https://*.gstatic.com" + assetsURL + "; " +
 			"connect-src 'self' https://nominatim.openstreetmap.org https://api.mapbox.com https://*.mapbox.com https://*.tiles.mapbox.com https://events.mapbox.com" + assetsURL + "; " +
-			"worker-src 'self' blob:" + assetsURL + "; " +
-			"child-src 'self' blob:" + assetsURL + "; " +
+			"worker-src 'self' blob: https://api.mapbox.com https://*.mapbox.com" + assetsURL + "; " +
+			"child-src 'self' blob: https://api.mapbox.com https://*.mapbox.com" + assetsURL + "; " +
 			"media-src 'self' https://*.googleapis.com" + assetsURL + "; " +
 			"frame-ancestors 'none';"
 

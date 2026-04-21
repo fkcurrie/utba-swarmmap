@@ -22,8 +22,8 @@
                     <div class="card-body p-0">
                         {{if .PendingUsers}}
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead class="bg-light small text-uppercase text-muted">
+                                <table class="table table-hover align-middle mb-0 responsive-card-table">
+                                    <thead>
                                         <tr>
                                             <th class="ps-4">Collector</th>
                                             <th>Location</th>
@@ -33,12 +33,19 @@
                                     <tbody>
                                         {{range .PendingUsers}}
                                         <tr>
-                                            <td class="ps-4">
+                                            <td class="ps-4" data-label="Collector">
                                                 <span class="fw-bold d-block">{{.Name}}</span>
                                                 <small class="text-muted">{{.Email}}<br>{{.Phone}}</small>
                                             </td>
-                                            <td class="small">{{.Location}}</td>
-                                            <td class="pe-4 text-end">
+                                            <td class="small" data-label="Location">
+                                                {{.Location}}
+                                                <div class="mt-2">
+                                                    <button class="btn btn-link btn-sm p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#details-{{.ID}}" aria-expanded="false">
+                                                        View Application Details <i class="fa-solid fa-chevron-down ms-1"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td class="pe-4 text-end" data-label="Actions">
                                                 <div class="d-flex justify-content-end gap-2">
                                                     <form method="POST" action="/admin/approve_user">
                                                         <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
@@ -50,6 +57,24 @@
                                                         <input type="hidden" name="userID" value="{{.ID}}">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger px-3">Reject</button>
                                                     </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class="collapse bg-light" id="details-{{.ID}}">
+                                            <td colspan="3" class="px-4 py-3">
+                                                <div class="row g-3">
+                                                    <div class="col-md-4">
+                                                        <h4 class="h6 fw-bold text-muted text-uppercase small">Experience</h4>
+                                                        <p class="mb-0">{{.ExperienceYears}} years</p>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h4 class="h6 fw-bold text-muted text-uppercase small">Equipment</h4>
+                                                        <p class="mb-0">{{.Equipment}}</p>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <h4 class="h6 fw-bold text-muted text-uppercase small">Approach/Competency</h4>
+                                                        <p class="mb-0 small">{{.CompetencyNotes}}</p>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -70,18 +95,18 @@
             <div class="col-lg-4">
                 <div class="row g-3 h-100">
                     <div class="col-12">
-                        <div class="card border-0 shadow-sm text-center py-4">
+                        <div class="card border-0 shadow-sm text-center py-4 bg-white">
                             <div class="card-body">
-                                <div class="h2 fw-bold mb-0 text-warning">{{len .PendingUsers}}</div>
-                                <div class="text-muted small fw-bold text-uppercase">Pending Approvals</div>
+                                <div class="display-6 fw-800 mb-1 text-warning">{{len .PendingUsers}}</div>
+                                <div class="text-muted small fw-bold text-uppercase tracking-wider">Pending Approvals</div>
                             </div>
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="card border-0 shadow-sm text-center py-4">
+                        <div class="card border-0 shadow-sm text-center py-4 bg-white">
                             <div class="card-body">
-                                <div class="h2 fw-bold mb-0 text-primary">{{len .AllCollectors}}</div>
-                                <div class="text-muted small fw-bold text-uppercase">Active Collectors</div>
+                                <div class="display-6 fw-800 mb-1 text-primary">{{len .AllCollectors}}</div>
+                                <div class="text-muted small fw-bold text-uppercase tracking-wider">Active Collectors</div>
                             </div>
                         </div>
                     </div>
@@ -101,8 +126,8 @@
                     <div class="card-body p-0">
                         {{if .AllCollectors}}
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead class="bg-light small text-uppercase text-muted">
+                                <table class="table table-hover align-middle mb-0 responsive-card-table">
+                                    <thead>
                                         <tr>
                                             <th class="ps-4">Collector</th>
                                             <th>Contact</th>
@@ -114,19 +139,19 @@
                                     <tbody>
                                         {{range .AllCollectors}}
                                         <tr>
-                                            <td class="ps-4">
+                                            <td class="ps-4" data-label="Collector">
                                                 <span class="fw-bold d-block">{{.Name}}</span>
                                             </td>
-                                            <td class="small">
+                                            <td class="small" data-label="Contact">
                                                 {{.Email}}<br>{{.Phone}}
                                             </td>
-                                            <td class="small">{{.Location}}</td>
-                                            <td>
+                                            <td class="small" data-label="Location">{{.Location}}</td>
+                                            <td data-label="Role">
                                                 <span class="badge {{if eq .Role "collector_admin"}}bg-warning-subtle text-warning-emphasis{{else if eq .Role "site_admin"}}bg-danger-subtle text-danger{{else}}bg-primary-subtle text-primary{{end}} px-2 py-1">
                                                     {{if eq .Role "collector_admin"}}Collector Admin{{else if eq .Role "site_admin"}}Site Admin{{else}}Collector{{end}}
                                                 </span>
                                             </td>
-                                            <td class="small text-muted pe-4 text-end">{{.CreatedAt.Format "Jan 02, 2006"}}</td>
+                                            <td class="small text-muted pe-4 text-end" data-label="Joined">{{.CreatedAt.Format "Jan 02, 2006"}}</td>
                                         </tr>
                                         {{end}}
                                     </tbody>

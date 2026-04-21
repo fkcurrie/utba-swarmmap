@@ -43,10 +43,10 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 
 	var reportedSwarms, capturedSwarms int
 	for _, swarm := range allSwarms {
-		if swarm.Status == "Reported" {
+		switch swarm.Status {
+		case "Reported":
 			reportedSwarms++
-		}
-		if swarm.Status == "Captured" {
+		case "Captured":
 			capturedSwarms++
 		}
 	}
@@ -174,7 +174,6 @@ func (h *Handlers) BootstrapHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 func (h *Handlers) ApproveUserHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -289,14 +288,30 @@ func (h *Handlers) CollectorAdminHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// In a real implementation, we would fetch users here.
-	// For now, we'll just render the template.
-	err := h.Templates.ExecuteTemplate(w, "collector_admin.html", map[string]interface{}{
+	allUsers, err := h.Store.GetAllUsers(r.Context())
+	if err != nil {
+		slog.Error("Error getting all users for collector admin", "error", err)
+		http.Error(w, "Failed to retrieve users", http.StatusInternalServerError)
+		return
+	}
+
+	var pendingUsers []models.User
+	var allCollectors []models.User
+	for _, user := range allUsers {
+		switch user.Status {
+		case "pending":
+			pendingUsers = append(pendingUsers, user)
+		case "approved":
+			allCollectors = append(allCollectors, user)
+		}
+	}
+
+	err = h.Templates.ExecuteTemplate(w, "collector_admin.html", map[string]interface{}{
 		"Title":             "Collector Admin",
 		"Version":           h.Version,
 		"User":              session,
-		"PendingUsers":      nil,
-		"AllCollectors":     nil,
+		"PendingUsers":      pendingUsers,
+		"AllCollectors":     allCollectors,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 		"MapboxToken":       h.MapboxToken,
 	})

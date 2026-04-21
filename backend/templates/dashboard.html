@@ -58,8 +58,8 @@
                     <div class="card-body px-4">
                         {{if .AvailableSwarms}}
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="small text-uppercase text-muted">
+                                <table class="table table-hover align-middle responsive-card-table">
+                                    <thead>
                                         <tr>
                                             <th>Location</th>
                                             <th>Reported</th>
@@ -69,12 +69,12 @@
                                     <tbody>
                                         {{range .AvailableSwarms}}
                                         <tr>
-                                            <td>
+                                            <td data-label="Location">
                                                 <span class="fw-bold d-block text-dark">{{.NearestIntersection}}</span>
                                                 <small class="text-muted d-block text-truncate" style="max-width: 200px;">{{.Description}}</small>
                                             </td>
-                                            <td class="small text-nowrap">{{.ReportedTimestamp.Format "Jan 02, 15:04"}}</td>
-                                            <td class="text-end">
+                                            <td class="small text-nowrap" data-label="Reported">{{.ReportedTimestamp.Format "Jan 02, 15:04"}}</td>
+                                            <td class="text-end" data-label="Action">
                                                 {{if .AssignedCollectorID}}
                                                     <form method="POST" action="/assign_swarm" class="d-inline">
                                                         <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
@@ -123,8 +123,8 @@
                     <div class="card-body px-4">
                         {{if .AssignedSwarms}}
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="small text-uppercase text-muted">
+                                <table class="table table-hover align-middle responsive-card-table">
+                                    <thead>
                                         <tr>
                                             <th>Location</th>
                                             <th>Status</th>
@@ -134,16 +134,16 @@
                                     <tbody>
                                         {{range .AssignedSwarms}}
                                         <tr>
-                                            <td>
+                                            <td data-label="Location">
                                                 <span class="fw-bold d-block text-dark">{{.NearestIntersection}}</span>
                                                 <small class="text-muted d-block">{{.ReportedTimestamp.Format "Jan 02, 15:04"}}</small>
                                             </td>
-                                            <td>
+                                            <td data-label="Status">
                                                 <span class="badge {{if eq .Status "Reported"}}bg-danger-subtle text-danger{{else if eq .Status "Verified"}}bg-warning-subtle text-warning-emphasis{{else if eq .Status "Captured"}}bg-success-subtle text-success{{else}}bg-secondary-subtle text-secondary{{end}} px-2 py-1">
                                                     {{.Status}}
                                                 </span>
                                             </td>
-                                            <td class="text-end">
+                                            <td class="text-end" data-label="Update">
                                                 {{if eq .Status "Reported"}}
                                                     <form method="POST" action="/update_swarm_status" class="d-inline">
                                                         <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">

@@ -38,7 +38,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   const legend = page.locator('#legendTitle');
   await expect(legend).toBeVisible();
-  await expect(legend).toHaveText(/Pin Color Legend:/i);
+  await expect(legend).toHaveText(/Map Legend/i);
   await expect(legend.locator('i.fa-circle-info')).toBeVisible();
 
   // Check legend items
@@ -85,11 +85,11 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(submitBtn).toBeVisible();
   await expect(submitBtn).toHaveText(/Submit Report/i);
 
-  const takePhotoBtn = modal.locator('button:has-text("Take Photo")');
-  await expect(takePhotoBtn).toBeVisible();
+  const cameraBtn = modal.locator('button:has-text("Camera")');
+  await expect(cameraBtn).toBeVisible();
 
-  const recordVideoBtn = modal.locator('button:has-text("Record Video")');
-  await expect(recordVideoBtn).toBeVisible();
+  const videoBtn = modal.locator('button:has-text("Video")');
+  await expect(videoBtn).toBeVisible();
   
   // Close the modal via close button
   await modal.locator('.btn-close').click();

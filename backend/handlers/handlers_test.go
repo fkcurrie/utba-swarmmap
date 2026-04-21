@@ -1273,7 +1273,7 @@ func TestUsernameRegisterHandler(t *testing.T) {
 		Templates:       tmpl,
 	}
 
-	body := strings.NewReader("email=test@example.com&password=password123&name=Test+User&phone=123456789&location=London")
+	body := strings.NewReader("email=test@example.com&password=password123&name=Test+User&phone=123456789&location=London&experience_years=5&equipment=Ladders&competency_notes=Professional")
 	req, err := http.NewRequest("POST", "/auth/register", body)
 	if err != nil {
 		t.Fatal(err)
@@ -1295,6 +1295,14 @@ func TestUsernameRegisterHandler(t *testing.T) {
 
 	if mockStore.Users[0].Email != "test@example.com" {
 		t.Errorf("expected email to be test@example.com, got %s", mockStore.Users[0].Email)
+	}
+
+	if mockStore.Users[0].ExperienceYears != 5 {
+		t.Errorf("expected experience_years to be 5, got %d", mockStore.Users[0].ExperienceYears)
+	}
+
+	if mockStore.Users[0].Equipment != "Ladders" {
+		t.Errorf("expected equipment to be Ladders, got %s", mockStore.Users[0].Equipment)
 	}
 
 	if mockStore.Users[0].EmailVerified {
