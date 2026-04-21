@@ -7,7 +7,7 @@ test.describe('Deployment Validation', () => {
   });
 
   test('page title is correct', async ({ page }) => {
-    await expect(page).toHaveTitle(/UTBA SwarmMap/i);
+    await expect(page).toHaveTitle(/UTBA Swarm Map/i);
   });
 
   test('deployment validation - basic elements', async ({ page }) => {
@@ -18,9 +18,8 @@ test.describe('Deployment Validation', () => {
     const map = page.locator('#map');
     await expect(map).toBeVisible();
 
-    // Verify the map has content (Leaflet adds tiles and markers)
-    // We check for the presence of leaflet-pane or leaflet-tile-container
-    await expect(page.locator('.leaflet-container')).toBeVisible();
+    // Verify the map has content (Mapbox adds a canvas)
+    await expect(page.locator('.mapboxgl-map')).toBeVisible();
 
     // Check for the "Report a Swarm" button
     const reportBtn = page.locator('#reportSwarmBtn');
