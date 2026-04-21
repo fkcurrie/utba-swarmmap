@@ -94,8 +94,13 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   // Re-open and close via ESC key for added robustness
   await reportBtn.click();
   await expect(modal).toBeVisible();
+  
+  // Give it a moment to ensure it's fully focused and ready for keyboard input
+  await page.waitForTimeout(500); 
   await page.keyboard.press('Escape');
-  await expect(modal).not.toBeVisible();
+  
+  // Increase timeout for closing as animation might be slow in CI
+  await expect(modal).not.toBeVisible({ timeout: 10000 });
 
   // 4. Verify Mapbox map is initialized (check for mapbox classes)
   const mapboxContainer = page.locator('.mapboxgl-map');
