@@ -147,12 +147,12 @@ jobs:
       - name: Health Check
         id: health-check
         run: |
-          curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "${{ steps.deploy-backend.outputs.url }}"
+          curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "${{ steps.backend-url.outputs.url }}"
 
       - name: Post-Deployment Validation
         id: validation
         env:
-          DEPLOYED_URL: ${{ steps.deploy-backend.outputs.url }}
+          DEPLOYED_URL: ${{ steps.backend-url.outputs.url }}
         run: |
           npx playwright install --with-deps chromium
           npx playwright test e2e/validate-deployment.spec.js --config e2e/playwright.config.js
@@ -167,7 +167,7 @@ jobs:
             "${{ env.SERVICE }}" \
             "${{ env.FRONTEND_SERVICE }}" \
             "${{ env.REGION }}" \
-            "${{ steps.deploy-backend.outputs.url }}" \
+            "${{ steps.backend-url.outputs.url }}" \
             "${{ github.sha }}"
 
       - name: Upload Test Results
