@@ -4,10 +4,10 @@
 <div class="container mt-5 pt-5">
     <div class="row justify-content-center">
         <div class="col-md-5">
-            <div class="card border-0 shadow-lg">
-                <div class="card-body p-5">
+            <div class="card border-0 shadow-lg" style="border-radius: var(--border-radius-lg);">
+                <div class="card-body p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <h1 class="h3 fw-bold">Welcome Back</h1>
+                        <h1 class="h3 fw-800 tracking-tight">Welcome Back</h1>
                         <p class="text-muted">Login to your collector account</p>
                     </div>
 
@@ -19,14 +19,14 @@
                     
                     <form action="/auth/login" method="POST" aria-label="Login Form">
                         <div class="mb-3">
-                            <label for="email" class="form-label small fw-bold text-muted text-uppercase">Email address</label>
-                            <input type="email" class="form-control bg-light border-0 py-2" id="email" name="email" required autocomplete="email" placeholder="email@example.com">
+                            <label for="email" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Email address</label>
+                            <input type="email" class="form-control bg-light border-0 p-3" id="email" name="email" required autocomplete="email" placeholder="email@example.com">
                         </div>
                         <div class="mb-4">
-                            <label for="password" class="form-label small fw-bold text-muted text-uppercase">Password</label>
-                            <input type="password" class="form-control bg-light border-0 py-2" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+                            <label for="password" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Password</label>
+                            <input type="password" class="form-control bg-light border-0 p-3" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 py-2 shadow-sm mb-3">Sign In</button>
+                        <button type="submit" class="btn btn-primary w-100 py-3 shadow-sm mb-3">Sign In</button>
                     </form>
                     
                     <div class="text-center">

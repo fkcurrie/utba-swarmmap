@@ -4,10 +4,10 @@
 <div class="container mt-5 pt-5">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
-            <div class="card border-0 shadow-lg">
-                <div class="card-body p-5">
+            <div class="card border-0 shadow-lg" style="border-radius: var(--border-radius-lg);">
+                <div class="card-body p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <h1 class="h3 fw-bold">Join the Swarm</h1>
+                        <h1 class="h3 fw-800 tracking-tight">Join the Swarm</h1>
                         <p class="text-muted">Register as a swarm collector</p>
                     </div>
 
@@ -19,28 +19,28 @@
                     
                     <form action="/auth/register" method="POST" aria-label="Registration Form">
                         <div class="mb-3">
-                            <label for="name" class="form-label small fw-bold text-muted text-uppercase">Full Name</label>
-                            <input type="text" class="form-control bg-light border-0 py-2" id="name" name="name" required autocomplete="name" placeholder="Frank Currie">
+                            <label for="name" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Full Name</label>
+                            <input type="text" class="form-control bg-light border-0 p-3" id="name" name="name" required autocomplete="name" placeholder="Frank Currie">
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label small fw-bold text-muted text-uppercase">Email address</label>
-                            <input type="email" class="form-control bg-light border-0 py-2" id="email" name="email" required autocomplete="email" placeholder="frank@example.com">
+                            <label for="email" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Email address</label>
+                            <input type="email" class="form-control bg-light border-0 p-3" id="email" name="email" required autocomplete="email" placeholder="frank@example.com">
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6 mb-3 mb-md-0">
-                                <label for="phone" class="form-label small fw-bold text-muted text-uppercase">Phone</label>
-                                <input type="tel" class="form-control bg-light border-0 py-2" id="phone" name="phone" required autocomplete="tel" placeholder="(416) 555-0123">
+                                <label for="phone" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Phone</label>
+                                <input type="tel" class="form-control bg-light border-0 p-3" id="phone" name="phone" required autocomplete="tel" placeholder="(416) 555-0123">
                             </div>
                             <div class="col-md-6">
-                                <label for="location" class="form-label small fw-bold text-muted text-uppercase">Location</label>
-                                <input type="text" class="form-control bg-light border-0 py-2" id="location" name="location" placeholder="Toronto, ON" required>
+                                <label for="location" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Location</label>
+                                <input type="text" class="form-control bg-light border-0 p-3" id="location" name="location" placeholder="Toronto, ON" required>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <label for="password" class="form-label small fw-bold text-muted text-uppercase">Password</label>
-                            <input type="password" class="form-control bg-light border-0 py-2" id="password" name="password" required minlength="8" autocomplete="new-password" placeholder="Min 8 characters">
+                            <label for="password" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Password</label>
+                            <input type="password" class="form-control bg-light border-0 p-3" id="password" name="password" required minlength="8" autocomplete="new-password" placeholder="Min 8 characters">
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 py-2 shadow-sm">Create Account</button>
+                        <button type="submit" class="btn btn-primary w-100 py-3 shadow-sm">Create Account</button>
                     </form>
                     
                     <div class="text-center mt-5">

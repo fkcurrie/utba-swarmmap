@@ -21,8 +21,8 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="bg-light small text-uppercase text-muted">
+                            <table class="table table-hover align-middle mb-0 responsive-card-table">
+                                <thead>
                                     <tr>
                                         <th class="ps-4">User</th>
                                         <th>Role</th>
@@ -34,24 +34,24 @@
                                 <tbody>
                                     {{range .AllUsers}}
                                     <tr>
-                                        <td class="ps-4">
+                                        <td class="ps-4" data-label="User">
                                             <span class="fw-bold d-block">{{.Name}}</span>
                                             <small class="text-muted">{{.Email}}</small>
                                         </td>
-                                        <td>
+                                        <td data-label="Role">
                                             <span class="badge {{if eq .Role "site_admin"}}bg-danger-subtle text-danger{{else if eq .Role "collector_admin"}}bg-warning-subtle text-warning-emphasis{{else}}bg-primary-subtle text-primary{{end}} px-2 py-1">
                                                 {{if eq .Role "site_admin"}}Site Admin{{else if eq .Role "collector_admin"}}Collector Admin{{else}}Collector{{end}}
                                             </span>
                                         </td>
-                                        <td>
+                                        <td data-label="Status">
                                             <span class="badge {{if eq .Status "approved"}}bg-success-subtle text-success{{else}}bg-warning-subtle text-warning-emphasis{{end}} px-2 py-1">
                                                 {{.Status}}
                                             </span>
                                         </td>
-                                        <td class="small text-muted">{{.CreatedAt.Format "Jan 02, 2006"}}</td>
-                                        <td class="pe-4">
+                                        <td class="small text-muted" data-label="Joined">{{.CreatedAt.Format "Jan 02, 2006"}}</td>
+                                        <td class="pe-4" data-label="Actions">
                                             {{if ne .Role "site_admin"}}
-                                                <form method="POST" action="/admin/promote_user" class="d-flex align-items-center" aria-label="Update user role">
+                                                <form method="POST" action="/admin/promote_user" class="d-flex align-items-center justify-content-end justify-content-md-start" aria-label="Update user role">
                                                     <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
                                                     <input type="hidden" name="userID" value="{{.ID}}">
                                                     <select name="role" class="form-select form-select-sm me-2 border-0 bg-light" style="width: auto;" aria-label="Select new role">
@@ -136,34 +136,34 @@
             <div class="col-lg-5">
                 <div class="row g-3 h-100">
                     <div class="col-6">
-                        <div class="card border-0 shadow-sm text-center h-100 d-flex justify-content-center">
-                            <div class="card-body">
-                                <div class="h2 fw-bold mb-0 text-primary">{{len .AllSwarms}}</div>
-                                <div class="text-muted small fw-bold text-uppercase">Total Swarms</div>
+                        <div class="card border-0 shadow-sm text-center h-100 d-flex justify-content-center bg-white">
+                            <div class="card-body py-4">
+                                <div class="display-6 fw-800 mb-1 text-primary">{{len .AllSwarms}}</div>
+                                <div class="text-muted small fw-bold text-uppercase tracking-wider">Total Swarms</div>
                             </div>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card border-0 shadow-sm text-center h-100 d-flex justify-content-center">
-                            <div class="card-body">
-                                <div class="h2 fw-bold mb-0 text-warning">{{len .PendingUsers}}</div>
-                                <div class="text-muted small fw-bold text-uppercase">Pending Users</div>
+                        <div class="card border-0 shadow-sm text-center h-100 d-flex justify-content-center bg-white">
+                            <div class="card-body py-4">
+                                <div class="display-6 fw-800 mb-1 text-warning">{{len .PendingUsers}}</div>
+                                <div class="text-muted small fw-bold text-uppercase tracking-wider">Pending Users</div>
                             </div>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card border-0 shadow-sm text-center h-100 d-flex justify-content-center">
-                            <div class="card-body">
-                                <div class="h2 fw-bold mb-0 text-danger">{{.ReportedSwarms}}</div>
-                                <div class="text-muted small fw-bold text-uppercase">Active Reports</div>
+                        <div class="card border-0 shadow-sm text-center h-100 d-flex justify-content-center bg-white">
+                            <div class="card-body py-4">
+                                <div class="display-6 fw-800 mb-1 text-danger">{{.ReportedSwarms}}</div>
+                                <div class="text-muted small fw-bold text-uppercase tracking-wider">Active Reports</div>
                             </div>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="card border-0 shadow-sm text-center h-100 d-flex justify-content-center">
-                            <div class="card-body">
-                                <div class="h2 fw-bold mb-0 text-success">{{.CapturedSwarms}}</div>
-                                <div class="text-muted small fw-bold text-uppercase">Captured</div>
+                        <div class="card border-0 shadow-sm text-center h-100 d-flex justify-content-center bg-white">
+                            <div class="card-body py-4">
+                                <div class="display-6 fw-800 mb-1 text-success">{{.CapturedSwarms}}</div>
+                                <div class="text-muted small fw-bold text-uppercase tracking-wider">Captured</div>
                             </div>
                         </div>
                     </div>
@@ -183,8 +183,8 @@
                     <div class="card-body p-0">
                         {{if .AllSwarms}}
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0">
-                                    <thead class="bg-light small text-uppercase text-muted">
+                                <table class="table table-hover align-middle mb-0 responsive-card-table">
+                                    <thead>
                                         <tr>
                                             <th class="ps-4">Intersection</th>
                                             <th>Status</th>
@@ -195,18 +195,18 @@
                                     <tbody>
                                         {{range .AllSwarms}}
                                         <tr>
-                                            <td class="ps-4">
+                                            <td class="ps-4" data-label="Intersection">
                                                 <span class="fw-bold d-block">{{.NearestIntersection}}</span>
                                                 <small class="text-muted small">{{slice .ID 0 8}}...</small>
                                             </td>
-                                            <td>
+                                            <td data-label="Status">
                                                 <span class="badge {{if eq .Status "Reported"}}bg-danger-subtle text-danger{{else if eq .Status "Verified"}}bg-warning-subtle text-warning-emphasis{{else if eq .Status "Captured"}}bg-success-subtle text-success{{else}}bg-secondary-subtle text-secondary{{end}} px-2 py-1">
                                                     {{.Status}}
                                                 </span>
                                             </td>
-                                            <td class="small text-muted">{{.ReportedTimestamp.Format "Jan 02, 15:04"}}</td>
-                                            <td class="pe-4 text-end">
-                                                <form method="POST" action="/admin/delete_swarm" onsubmit="return confirm('Delete this swarm report permanently?');">
+                                            <td class="small text-muted" data-label="Reported">{{.ReportedTimestamp.Format "Jan 02, 15:04"}}</td>
+                                            <td class="pe-4 text-end" data-label="Action">
+                                                <form method="POST" action="/admin/delete_swarm" onsubmit="return confirm('Delete this swarm report permanently?');" class="d-flex justify-content-end">
                                                     <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
                                                     <input type="hidden" name="swarmID" value="{{.ID}}">
                                                     <button type="submit" class="btn btn-sm text-danger text-decoration-none">Delete</button>
