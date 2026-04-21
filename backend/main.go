@@ -129,6 +129,24 @@ func main() {
 
 	// Public routes
 	mux.HandleFunc("GET /{$}", h.IndexHandler)
+
+	// Static file handler (fallback for local development)
+	// We check if ./static exists and serve from there if FRONTEND_ASSETS_URL is empty
+	if h.FrontendAssetsURL == "" {
+		// In production, assets are served by the frontend service or a CDN.
+		// For local dev, we might have a symbolic link or the static dir copied here.
+		// We try to serve from ../frontend/static if it exists, or ./static
+		staticDir := "./static"
+		if _, err := os.Stat(staticDir); os.IsNotExist(err) {
+			staticDir = "../frontend/static"
+		}
+		if _, err := os.Stat(staticDir); err == nil {
+			slog.Info("Serving static files from", "dir", staticDir)
+			fs := http.FileServer(http.Dir(staticDir))
+			mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
+		}
+	}
+
 	mux.HandleFunc("GET /get_swarms", h.GetSwarmsHandler)
 	mux.HandleFunc("GET /login", h.LoginPageHandler)
 	mux.HandleFunc("GET /register", h.RegisterPageHandler)
