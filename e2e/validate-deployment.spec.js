@@ -64,7 +64,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   // Check legend items
   const legendItems = page.locator('.legend-item');
-  await expect(legendItems).toHaveCount(4);
+  await expect(legendItems).toHaveCount(5);
   
   // Verify specific legend text and colors for robustness
   const expectedLegend = [

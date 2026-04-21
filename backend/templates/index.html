@@ -6,6 +6,11 @@
         <div class="col-lg-12 text-center mb-4">
             <h1 class="display-5 fw-800 mb-2">Live Swarm Tracking</h1>
             <p class="lead text-muted mx-auto" style="max-width: 700px;">Helping beekeepers save swarms and protect our pollinators across the region.</p>
+            <div class="mt-4">
+                <button id="reportSwarmBtn" class="btn btn-primary btn-lg shadow-lg px-4" aria-label="Report a Bee Swarm at your current location">
+                    <i class="fa-solid fa-location-dot me-2"></i> Report a Swarm at Your Location
+                </button>
+            </div>
         </div>
         
         <div class="col-lg-12 mb-4">
@@ -90,9 +95,34 @@
                                 <label for="description" class="form-label fw-bold small text-uppercase">Details & Size</label>
                                 <textarea class="form-control" id="description" rows="3" placeholder="e.g. Football size, 10ft up in an apple tree..."></textarea>
                             </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold small text-uppercase">Photos & Videos</label>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button type="button" class="btn btn-outline-primary fw-bold btn-sm" onclick="document.getElementById('gallery-input').click();">
+                                        <i class="fa-solid fa-images me-1"></i> Gallery
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary fw-bold btn-sm" onclick="document.getElementById('camera-input').click();">
+                                        <i class="fa-solid fa-camera me-1"></i> Camera
+                                    </button>
+                                    <button type="button" class="btn btn-outline-info fw-bold btn-sm" onclick="document.getElementById('video-input').click();">
+                                        <i class="fa-solid fa-video me-1"></i> Video
+                                    </button>
+                                </div>
+                                <input type="file" id="gallery-input" accept="image/*,video/*" multiple style="display: none;">
+                                <input type="file" id="camera-input" accept="image/*" capture="environment" style="display: none;">
+                                <input type="file" id="video-input" accept="video/*" capture="environment" style="display: none;">
+                                <div id="fileManagementArea" class="mt-3" style="display: none;">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span id="totalFileCount" class="badge bg-primary">0 files</span>
+                                        <button type="button" id="clearAllFilesBtn" class="btn btn-link btn-sm text-danger p-0 text-decoration-none fw-bold">Clear All</button>
+                                    </div>
+                                    <div id="selectedFilesList" class="small text-muted border rounded p-2 bg-light" style="max-height: 150px; overflow-y: auto;"></div>
+                                </div>
+                            </div>
                         </div>
                         <input type="hidden" id="latitude">
                         <input type="hidden" id="longitude">
+                        <input type="hidden" id="intersection">
                     </form>
                 </div>
                 <div class="modal-footer border-0 p-4">
