@@ -25,6 +25,9 @@ bin/
 .vscode/
 .idea/
 
+# Static assets in backend (copied from frontend)
+backend/static/
+
 # Environment variables
 .env
 .env.*

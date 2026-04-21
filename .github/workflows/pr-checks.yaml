@@ -225,6 +225,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Copy Static Assets to Backend
+        run: cp -r frontend/static backend/static
+
       - name: Build and Start Services
         run: docker compose up -d --build
 
@@ -234,10 +237,10 @@ jobs:
           for i in {1..30}; do
             BACKEND_UP=false
             FRONTEND_UP=false
-            if curl -s http://localhost:8085 > /dev/null; then
+            if curl -s --fail http://localhost:8085 > /dev/null; then
               BACKEND_UP=true
             fi
-            if curl -s http://localhost:8082/static/css/style.css > /dev/null; then
+            if curl -s --fail http://localhost:8082/static/css/style.css > /dev/null; then
               FRONTEND_UP=true
             fi
 
