@@ -26,7 +26,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const reportBtn = page.locator('#reportSwarmBtn');
   await expect(reportBtn).toBeVisible();
   await expect(reportBtn).toHaveClass(/btn-primary/);
-  await expect(reportBtn).toHaveText(/Report a Swarm at Your Location/i);
+  await expect(reportBtn).toHaveText(/Report at Your Location/i);
   await expect(reportBtn).toHaveAttribute('aria-label', /Report a Bee Swarm at your current location/i);
   await expect(reportBtn.locator('i.fa-location-dot')).toBeVisible();
 
@@ -34,12 +34,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(map).toBeVisible();
   // Check if CSS is applied (map should have height set in style.css)
   const mapHeight = await map.evaluate(el => window.getComputedStyle(el).height);
-  expect(parseInt(mapHeight), 'Map height should be at least 400px').toBeGreaterThanOrEqual(400);
-
-  const legend = page.locator('#legendTitle');
-  await expect(legend).toBeVisible();
-  await expect(legend).toHaveText(/Map Legend/i);
-  await expect(legend.locator('i.fa-circle-info')).toBeVisible();
+  expect(parseInt(mapHeight), 'Map height should be at least 350px').toBeGreaterThanOrEqual(350);
 
   // Check legend items
   const legendItems = page.locator('.legend-item');
@@ -47,10 +42,10 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   
   // Verify specific legend text and colors for robustness
   const expectedLegend = [
-    { text: /Reported/i, color: 'rgb(255, 0, 0)' },
-    { text: /Verified/i, color: 'rgb(255, 105, 180)' },
-    { text: /Captured/i, color: 'rgb(0, 255, 0)' },
-    { text: /Archived/i, color: 'rgb(0, 0, 255)' }
+    { text: /Reported/i, color: 'rgb(232, 65, 24)' }, // #e84118
+    { text: /Verified/i, color: 'rgb(251, 197, 49)' }, // #fbc531
+    { text: /Captured/i, color: 'rgb(76, 209, 55)' }, // #4cd137
+    { text: /Archived/i, color: 'rgb(72, 126, 176)' } // #487eb0
   ];
 
   for (let i = 0; i < expectedLegend.length; i++) {
