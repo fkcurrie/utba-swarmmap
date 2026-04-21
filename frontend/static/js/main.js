@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const reportSwarmForm = document.getElementById('reportSwarmForm');
   const galleryInput = document.getElementById('gallery-input');
   const cameraInput = document.getElementById('camera-input');
+  const videoInput = document.getElementById('video-input');
   const selectedFilesList = document.getElementById('selectedFilesList');
   const fileManagementArea = document.getElementById('fileManagementArea');
   const totalFileCount = document.getElementById('totalFileCount');
@@ -110,12 +111,12 @@ document.addEventListener('DOMContentLoaded', function () {
               'match',
               ['get', 'displayStatus'],
               'Verified',
-              '#ff69b4',
+              '#fbc531',
               'Captured',
-              '#00ff00',
+              '#4cd137',
               'Archived',
-              '#0000ff',
-              '#ff0000', // Default Red for Reported
+              '#487eb0',
+              '#e84118', // Default Red-Orange for Reported
             ],
             'circle-radius': 10,
             'circle-stroke-width': 2,
@@ -389,25 +390,29 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   const locateUser = (doPan = false) => {
-    if (navigator.geolocation) {
-      if (doPan) {
-        reportSwarmBtn.disabled = true;
-        reportSwarmBtn.innerHTML =
+    if (doPan) {
+      const reportBtn = document.getElementById('reportSwarmBtn');
+      if (reportBtn) {
+        reportBtn.disabled = true;
+        reportBtn.innerHTML =
           '<span class="spinner-border spinner-border-sm me-2"></span> Finding location...';
-
-        // Show modal immediately so user (and E2E tests) sees it's working
-        const reportModalEl = document.getElementById('reportSwarmModal');
-        const reportModal = new bootstrap.Modal(reportModalEl);
-        reportModal.show();
       }
 
+      // Show modal immediately so user (and E2E tests) sees it's working
+      const reportModalEl = document.getElementById('reportSwarmModal');
+      const reportModal = bootstrap.Modal.getOrCreateInstance(reportModalEl);
+      reportModal.show();
+    }
+
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
 
-          if (reportSwarmBtn) {
-            reportSwarmBtn.disabled = false;
-            reportSwarmBtn.innerHTML =
+          const reportBtn = document.getElementById('reportSwarmBtn');
+          if (reportBtn) {
+            reportBtn.disabled = false;
+            reportBtn.innerHTML =
               '<i class="fa-solid fa-location-dot me-2"></i> Report a Swarm at Your Location';
           }
 
@@ -421,33 +426,38 @@ document.addEventListener('DOMContentLoaded', function () {
               .addTo(map)
               .togglePopup();
 
-            document.getElementById('latitude').value = latitude;
-            document.getElementById('longitude').value = longitude;
+            const latInput = document.getElementById('latitude');
+            const lngInput = document.getElementById('longitude');
+            if (latInput) latInput.value = latitude;
+            if (lngInput) lngInput.value = longitude;
 
             const intersectionInput = document.getElementById('intersection');
-            const originalPlaceholder = intersectionInput.placeholder;
-            intersectionInput.value = '';
-            intersectionInput.placeholder = 'Fetching...';
-            const intersection = await getNearestIntersection(
-              latitude,
-              longitude,
-            );
-            intersectionInput.value = intersection;
-            intersectionInput.placeholder = originalPlaceholder;
+            if (intersectionInput) {
+              const originalPlaceholder = intersectionInput.placeholder;
+              intersectionInput.value = '';
+              intersectionInput.placeholder = 'Fetching...';
+              const intersection = await getNearestIntersection(
+                latitude,
+                longitude,
+              );
+              intersectionInput.value = intersection;
+              intersectionInput.placeholder = originalPlaceholder;
+            }
           }
         },
         (error) => {
-          if (reportSwarmBtn) {
-            reportSwarmBtn.disabled = false;
-            reportSwarmBtn.innerHTML =
+          const reportBtn = document.getElementById('reportSwarmBtn');
+          if (reportBtn) {
+            reportBtn.disabled = false;
+            reportBtn.innerHTML =
               '<i class="fa-solid fa-location-dot me-2"></i> Report a Swarm at Your Location';
           }
-          // Only show alert if we really couldn't get location and it was requested
-          // But we don't block the modal anymore.
           console.warn('Could not get your location:', error.message);
         },
         { timeout: 10000, enableHighAccuracy: true },
       );
+    } else {
+      console.warn('Geolocation is not supported by this browser.');
     }
   };
 
@@ -465,23 +475,40 @@ document.addEventListener('DOMContentLoaded', function () {
         fileItem.className =
           'd-flex justify-content-between align-items-center mb-2 p-2 border-bottom';
         fileItem.innerHTML = `
-                    <div class="text-truncate me-2" style="max-width: 200px;">
+                    <div class="text-truncate me-2" style="max-width: 150px;">
                         <i class="${file.type.startsWith('image/') ? 'fa-solid fa-image text-primary' : 'fa-solid fa-video text-info'} me-2"></i>
                         ${file.name} <small class="text-muted">(${(file.size / (1024 * 1024)).toFixed(2)} MB)</small>
                     </div>
-                    <button type="button" class="btn btn-sm btn-outline-danger remove-file-btn" data-index="${index}" aria-label="Remove file">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
+                    <div>
+                        <button type="button" class="btn btn-sm btn-outline-primary preview-file-btn me-1" data-index="${index}" title="Preview file">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-file-btn" data-index="${index}" aria-label="Remove file">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
                 `;
         selectedFilesList.appendChild(fileItem);
       });
-      totalFileCount.textContent = selectedFiles.length;
+      totalFileCount.textContent = selectedFiles.length + ' file(s) ready';
 
       document.querySelectorAll('.remove-file-btn').forEach((btn) => {
         btn.addEventListener('click', (e) => {
           const index = parseInt(e.currentTarget.getAttribute('data-index'));
           selectedFiles.splice(index, 1);
           updateFileList();
+        });
+      });
+
+      document.querySelectorAll('.preview-file-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const index = parseInt(e.currentTarget.getAttribute('data-index'));
+          const previewURLs = selectedFiles.map(
+            (file) =>
+              URL.createObjectURL(file) +
+              (file.type.startsWith('video/') ? '#video' : '#image'),
+          );
+          openMediaViewer(previewURLs, index);
         });
       });
     } else {
@@ -492,7 +519,12 @@ document.addEventListener('DOMContentLoaded', function () {
   if (galleryInput) {
     galleryInput.addEventListener('change', (e) => {
       for (let i = 0; i < e.target.files.length; i++) {
-        selectedFiles.push(e.target.files[i]);
+        const file = e.target.files[i];
+        if (file.size > 50 * 1024 * 1024) {
+          alert(`File ${file.name} is too large (max 50MB)`);
+          continue;
+        }
+        selectedFiles.push(file);
       }
       updateFileList();
       galleryInput.value = '';
@@ -502,10 +534,30 @@ document.addEventListener('DOMContentLoaded', function () {
   if (cameraInput) {
     cameraInput.addEventListener('change', (e) => {
       if (e.target.files.length > 0) {
-        selectedFiles.push(e.target.files[0]);
-        updateFileList();
+        const file = e.target.files[0];
+        if (file.size > 50 * 1024 * 1024) {
+          alert('File is too large (max 50MB)');
+        } else {
+          selectedFiles.push(file);
+          updateFileList();
+        }
       }
       cameraInput.value = '';
+    });
+  }
+
+  if (videoInput) {
+    videoInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        if (file.size > 50 * 1024 * 1024) {
+          alert('Video file is too large (max 50MB)');
+        } else {
+          selectedFiles.push(file);
+          updateFileList();
+        }
+      }
+      videoInput.value = '';
     });
   }
 
@@ -650,9 +702,9 @@ document.addEventListener('DOMContentLoaded', function () {
     updateMediaViewer();
   };
 
-  const openMediaViewer = (urls) => {
+  const openMediaViewer = (urls, startIndex = 0) => {
     mediaURLs = urls;
-    currentMediaIndex = 0;
+    currentMediaIndex = startIndex;
     updateMediaViewer();
     const mediaModal = new bootstrap.Modal(
       document.getElementById('media-viewer-modal'),

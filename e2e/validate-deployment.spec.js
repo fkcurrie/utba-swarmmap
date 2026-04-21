@@ -26,7 +26,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const reportBtn = page.locator('#reportSwarmBtn');
   await expect(reportBtn).toBeVisible();
   await expect(reportBtn).toHaveClass(/btn-primary/);
-  await expect(reportBtn).toHaveText(/Report at Your Location/i);
+  await expect(reportBtn).toHaveText(/Report a Swarm at Your Location/i);
   await expect(reportBtn).toHaveAttribute('aria-label', /Report a Bee Swarm at your current location/i);
   await expect(reportBtn.locator('i.fa-location-dot')).toBeVisible();
 
@@ -35,6 +35,11 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   // Check if CSS is applied (map should have height set in style.css)
   const mapHeight = await map.evaluate(el => window.getComputedStyle(el).height);
   expect(parseInt(mapHeight), 'Map height should be at least 350px').toBeGreaterThanOrEqual(350);
+
+  const legend = page.locator('#legendTitle');
+  await expect(legend).toBeVisible();
+  await expect(legend).toHaveText(/Map Legend/i);
+  await expect(legend.locator('i.fa-circle-info')).toBeVisible();
 
   // Check legend items
   const legendItems = page.locator('.legend-item');
@@ -79,6 +84,12 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const submitBtn = modal.locator('button[type="submit"]');
   await expect(submitBtn).toBeVisible();
   await expect(submitBtn).toHaveText(/Submit Report/i);
+
+  const cameraBtn = modal.locator('button:has-text("Camera")');
+  await expect(cameraBtn).toBeVisible();
+
+  const videoBtn = modal.locator('button:has-text("Video")');
+  await expect(videoBtn).toBeVisible();
   
   // Close the modal via close button
   await modal.locator('.btn-close').click();
