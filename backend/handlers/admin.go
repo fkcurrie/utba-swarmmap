@@ -174,7 +174,6 @@ func (h *Handlers) BootstrapHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 func (h *Handlers) ApproveUserHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
