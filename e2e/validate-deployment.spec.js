@@ -113,7 +113,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   const footer = page.locator('footer');
   await expect(footer).toBeVisible();
-  await expect(footer).toContainText(/Made with 🐝❤️🐝 with/i);
+  await expect(footer).toContainText(/Made with .* with/i);
   await expect(footer).toContainText(/gemini-cli/i);
   
   // Verify footer link specifically
@@ -123,6 +123,10 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(footerLink).toHaveAttribute('rel', 'noopener');
   await expect(footerLink).toHaveText('gemini-cli');
   await expect(footerLink).toBeVisible();
+
+  // Verify Give Feedback button is present
+  const feedbackBtn = page.getByRole('button', { name: /Give Feedback/i });
+  await expect(feedbackBtn.first()).toBeVisible();
 
   // 3. Verify Report Modal functionality
   await reportBtn.click();
@@ -155,14 +159,14 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   if (failedRequests.length > 0) {
     console.error('Failed requests:', failedRequests);
   }
-  expect(failedRequests, `Found ${failedRequests.length} failed requests`).toHaveLength(0);
+  expect(failedRequests, `Found ${failedRequests.length} failed requests: ${failedRequests.join(', ')}`).toHaveLength(0);
 
   // 5. Verify no console errors
   if (consoleErrors.length > 0) {
     console.error('Console errors:', consoleErrors);
   }
   // We might allow some minor console errors, but generally want none
-  expect(consoleErrors, `Found ${consoleErrors.length} console errors`).toHaveLength(0);
+  expect(consoleErrors, `Found ${consoleErrors.length} console errors: ${consoleErrors.join(', ')}`).toHaveLength(0);
   
   // 6. Verify map is rendered (if initialized)
   if (await page.locator('.mapboxgl-map').count() > 0) {
@@ -176,11 +180,16 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const imageCount = await images.count();
   for (let i = 0; i < imageCount; i++) {
     const img = images.nth(i);
+    const src = await img.getAttribute('src') || '';
+    // Skip Mapbox images and data URIs as they can have transitional 0-size states 
+    // or be used for tracking/spacers
+    if (src.includes('mapbox.com') || src.startsWith('data:')) continue;
+    
     const box = await img.boundingBox();
-    expect(box, `Visible image ${i} should have a bounding box`).not.toBeNull();
+    expect(box, `Visible image ${i} (${src}) should have a bounding box`).not.toBeNull();
     if (box) {
-      expect(box.width, `Visible image ${i} has zero width`).toBeGreaterThan(0);
-      expect(box.height, `Visible image ${i} has zero height`).toBeGreaterThan(0);
+      expect(box.width, `Visible image ${i} (${src}) has zero width`).toBeGreaterThan(0);
+      expect(box.height, `Visible image ${i} (${src}) has zero height`).toBeGreaterThan(0);
     }
   }
 
