@@ -18,12 +18,15 @@ type Handlers struct {
 	Store             store.Storer
 	SwarmService      service.SwarmService
 	LocationService   LocationService
+	GitHubService     GitHubService
 	GoogleOAuthConfig *oauth2.Config
 	AppleOAuthConfig  *oauth2.Config
 	Version           string
 	Templates         *template.Template
 	FrontendAssetsURL string
 	MapboxToken       string
+	GithubToken       string
+	GithubRepo        string
 }
 
 func (h *Handlers) jsonError(w http.ResponseWriter, message string, code int) {

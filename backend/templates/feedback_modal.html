@@ -1,0 +1,105 @@
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
+<div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: var(--border-radius-lg);">
+            <div class="modal-header border-0 pt-4 px-4 pb-0">
+                <h5 class="modal-title fw-800" id="feedbackModalLabel">
+                    <i class="fa-solid fa-comment-dots me-2 text-warning"></i> Give Feedback
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="feedbackForm">
+                    <div class="mb-3">
+                        <label for="feedbackType" class="form-label fw-bold small text-uppercase">Feedback Type</label>
+                        <select class="form-select" id="feedbackType" name="type" required>
+                            <option value="bug">Bug Report</option>
+                            <option value="enhancement">Feature Request</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedbackTitle" class="form-label fw-bold small text-uppercase">Title</label>
+                        <input type="text" class="form-control" id="feedbackTitle" name="title" required placeholder="Brief summary of your feedback">
+                    </div>
+                    <div class="mb-3">
+                        <label for="feedbackDescription" class="form-label fw-bold small text-uppercase">Description</label>
+                        <textarea class="form-control" id="feedbackDescription" name="description" rows="4" required placeholder="Please provide as much detail as possible..."></textarea>
+                    </div>
+                    <input type="hidden" id="feedbackUrl" name="url">
+                    <input type="hidden" id="feedbackBrowser" name="browser">
+                    <input type="hidden" id="feedbackLoggedIn" name="loggedIn">
+                </form>
+            </div>
+            <div class="modal-footer border-0 p-4">
+                <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="feedbackForm" id="submitFeedbackBtn" class="btn btn-primary px-4 fw-bold shadow-sm">Submit Feedback</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const feedbackModal = document.getElementById('feedbackModal');
+    if (feedbackModal) {
+        feedbackModal.addEventListener('show.bs.modal', function() {
+            document.getElementById('feedbackUrl').value = window.location.href;
+            document.getElementById('feedbackBrowser').value = navigator.userAgent;
+            document.getElementById('feedbackLoggedIn').value = window.USER_ROLE ? 'true' : 'false';
+        });
+    }
+
+    const feedbackForm = document.getElementById('feedbackForm');
+    if (feedbackForm) {
+        feedbackForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitFeedbackBtn');
+            const originalBtnText = submitBtn.innerHTML;
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Sending...';
+
+            const formData = new FormData(feedbackForm);
+            const data = {
+                type: formData.get('type'),
+                title: formData.get('title'),
+                description: formData.get('description'),
+                context: {
+                    url: formData.get('url'),
+                    browser: formData.get('browser'),
+                    loggedIn: formData.get('loggedIn') === 'true'
+                }
+            };
+
+            fetch('/api/feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': window.CSRF_TOKEN || ''
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const modal = bootstrap.Modal.getInstance(feedbackModal);
+                modal.hide();
+                feedbackForm.reset();
+                alert('Thank you for your feedback! A GitHub issue has been created.');
+            })
+            .catch(error => {
+                console.error('Error submitting feedback:', error);
+                alert('Failed to submit feedback. Please try again later.');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        });
+    }
+});
+</script>

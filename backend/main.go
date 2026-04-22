@@ -116,16 +116,25 @@ func main() {
 	frontendAssetsURL := strings.TrimSpace(getEnv("FRONTEND_ASSETS_URL", ""))
 	frontendAssetsURL = strings.TrimSuffix(frontendAssetsURL, "/")
 
+	githubToken := strings.TrimSpace(os.Getenv("GITHUB_TOKEN"))
+	githubRepo := strings.TrimSpace(os.Getenv("GITHUB_REPO"))
+	if githubRepo == "" {
+		githubRepo = "fkcurrie/utba-swarmmap"
+	}
+
 	// Initialize handlers with dependencies
 	h := &handlers.Handlers{
 		Store:             dataStore,
 		SwarmService:      swarmService,
 		LocationService:   locationService,
+		GitHubService:     &handlers.RealGitHubService{Client: &http.Client{Timeout: 10 * time.Second}},
 		GoogleOAuthConfig: googleOAuthConfig,
 		Version:           version,
 		Templates:         templates,
 		FrontendAssetsURL: frontendAssetsURL,
 		MapboxToken:       mapboxToken,
+		GithubToken:       githubToken,
+		GithubRepo:        githubRepo,
 	}
 
 	mux := http.NewServeMux()
@@ -166,6 +175,7 @@ func main() {
 	mux.HandleFunc("POST /confirm_swarm", h.ConfirmSwarmHandler)
 	mux.HandleFunc("POST /demo/generate_sample_data", h.RequireAuth(h.RequireRole("site_admin", h.VerifyCSRF(http.HandlerFunc(h.GenerateSampleDataHandler)))).ServeHTTP)
 	mux.HandleFunc("POST /api/track_visit", h.TrackVisitHandler)
+	mux.Handle("POST /api/feedback", h.WithSession(h.VerifyCSRF(http.HandlerFunc(h.FeedbackHandler))))
 	mux.Handle("GET /api/visits", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.VisitsAPIHandler))))
 	mux.HandleFunc("GET /bootstrap", h.BootstrapHandler)
 	mux.HandleFunc("POST /bootstrap", h.BootstrapHandler)

@@ -69,6 +69,19 @@ func (h *Handlers) RequireAuth(next http.Handler) http.Handler {
 	})
 }
 
+// WithSession is a middleware that populates the session in the context if it exists, but does not require it.
+func (h *Handlers) WithSession(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		session := h.getSession(r)
+		if session != nil {
+			ctx := context.WithValue(r.Context(), SessionContextKey, session)
+			next.ServeHTTP(w, r.WithContext(ctx))
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 func (h *Handlers) RequireRole(role string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, ok := r.Context().Value(SessionContextKey).(*models.Session)
