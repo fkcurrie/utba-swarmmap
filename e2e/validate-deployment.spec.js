@@ -52,10 +52,33 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(reportBtn.locator('i.fa-location-dot')).toBeAttached();
 
   const map = page.locator('#map');
-  await expect(map).toBeVisible({ timeout: 15000 });
-  // Check if CSS is applied (map should have height set in style.css)
+  
+  // If visibility check fails, we want to know why (e.g. is height 0?)
+  try {
+    await expect(map).toBeVisible({ timeout: 15000 });
+  } catch (error) {
+    const box = await map.boundingBox();
+    const styles = await map.evaluate(el => {
+      const s = window.getComputedStyle(el);
+      return {
+        display: s.display,
+        visibility: s.visibility,
+        height: s.height,
+        width: s.width,
+        opacity: s.opacity
+      };
+    });
+    console.error('Map visibility failure details:', {
+      boundingBox: box,
+      computedStyles: styles,
+      html: await map.innerHTML().catch(() => 'could not get innerHTML')
+    });
+    throw error;
+  }
+
+  // Check if CSS is applied (map should have height set in style.css or inline)
   const mapHeight = await map.evaluate(el => window.getComputedStyle(el).height);
-  expect(parseInt(mapHeight), 'Map height should be at least 350px').toBeGreaterThanOrEqual(350);
+  expect(parseInt(mapHeight), `Map height should be at least 350px, but got ${mapHeight}`).toBeGreaterThanOrEqual(350);
 
   const legend = page.locator('#legendTitle');
   await expect(legend).toBeVisible({ timeout: 10000 });
