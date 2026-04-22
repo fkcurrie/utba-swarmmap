@@ -40,6 +40,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
     }
   });
 
+  console.log(`Validating deployment at: ${testInfo.project.use.baseURL || 'default'}`);
   await page.goto('/');
 
   // 1. Verify basic page title/content
