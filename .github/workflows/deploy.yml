@@ -136,7 +136,6 @@ jobs:
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/backend:${{ github.sha }}
           flags: --allow-unauthenticated
           env_vars: |
-            FRONTEND_ASSETS_URL=${{ steps.deploy-frontend.outputs.url }}
             GOOGLE_REDIRECT_URL=${{ steps.backend-url.outputs.url }}/auth/google/callback
             GCP_PROJECT_ID=${{ env.PROJECT_ID }}
             GCS_BUCKET_NAME=${{ env.GCS_BUCKET_NAME }}
