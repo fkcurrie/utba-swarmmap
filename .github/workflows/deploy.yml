@@ -153,7 +153,17 @@ jobs:
         id: validation
         env:
           DEPLOYED_URL: ${{ steps.deploy-backend.outputs.url }}
+          FALLBACK_URL: ${{ steps.backend-url.outputs.url }}
         run: |
+          # Ensure DEPLOYED_URL is set, fallback to backend-url output if necessary
+          FINAL_URL="${DEPLOYED_URL:-$FALLBACK_URL}"
+          echo "Validating deployment at URL: $FINAL_URL"
+          if [ -z "$FINAL_URL" ] || [ "$FINAL_URL" == "http://localhost:8085" ]; then
+            echo "Error: Could not determine deployment URL. DEPLOYED_URL='$DEPLOYED_URL', FALLBACK_URL='$FALLBACK_URL'"
+            exit 1
+          fi
+          # Export for Playwright to pick up
+          export DEPLOYED_URL="$FINAL_URL"
           npx playwright install --with-deps chromium
           npx playwright test e2e/validate-deployment.spec.js --config e2e/playwright.config.js
 
