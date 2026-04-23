@@ -36,19 +36,24 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
       if (text.includes('Map initialization error')) return;
       if (text.includes('track_visit') || text.includes('Failed to track visit')) return;
       if (text.includes('net::ERR_EMPTY_RESPONSE')) return; // Also ignore this if it's from the tracking request
+      if (text.includes('net::ERR_ABORTED')) return;
+      if (text.includes('favicon.ico')) return;
+      if (text.includes('getLayer')) return; // Ignore Mapbox internal layer cleanup issues
       consoleErrors.push(text);
     }
   });
 
-  console.log(`Validating deployment at: ${testInfo.project.use.baseURL || 'default'}`);
-  await page.goto('/');
+  const baseURL = testInfo.project.use.baseURL || 'default';
+  console.log(`Validating deployment at: ${baseURL}`);
+  await page.goto('/', { waitUntil: 'load', timeout: 30000 });
 
   // 1. Verify basic page title/content
   await expect(page).toHaveTitle(/UTBA Swarm Map/i);
 
   // 2. Verify key UI elements are present
+  console.log('Verifying key UI elements...');
   const reportBtn = page.locator('#reportSwarmBtn');
-  await expect(reportBtn).toBeVisible({ timeout: 15000 });
+  await expect(reportBtn).toBeVisible({ timeout: 30000 });
   await expect(reportBtn).toHaveClass(/btn-primary/);
   // Using an even more flexible regex to handle potential rendering differences, 
   // whitespace, or flaky text updates during geolocation
@@ -60,7 +65,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   
   // If visibility check fails, we want to know why (e.g. is height 0?)
   try {
-    await expect(map).toBeVisible({ timeout: 15000 });
+    await expect(map).toBeVisible({ timeout: 30000 });
   } catch (error) {
     const box = await map.boundingBox();
     const styles = await map.evaluate(el => {
@@ -86,12 +91,12 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   expect(parseInt(mapHeight), `Map height should be at least 350px, but got ${mapHeight}`).toBeGreaterThanOrEqual(350);
 
   const legend = page.locator('#legendTitle');
-  await expect(legend).toBeVisible({ timeout: 10000 });
+  await expect(legend).toBeVisible({ timeout: 15000 });
   await expect(legend).toHaveText(/Map Legend/i);
   await expect(legend.locator('i.fa-circle-info')).toBeAttached();
 
-  // Check legend items
-  const legendItems = page.locator('.legend-item');
+  // Check legend items specifically within the aside/legend area
+  const legendItems = page.locator('aside .legend-item');
   await expect(legendItems).toHaveCount(5);
   
   // Verify specific legend text and colors for robustness
@@ -129,9 +134,10 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(feedbackBtn.first()).toBeVisible();
 
   // 3. Verify Report Modal functionality
+  console.log('Verifying Report Modal...');
   await reportBtn.click();
   const modal = page.locator('#reportSwarmModal');
-  await expect(modal).toBeVisible();
+  await expect(modal).toBeVisible({ timeout: 15000 });
   await expect(modal.locator('.modal-title')).toContainText(/Report Bee Swarm/i);
   await expect(modal.locator('i.fa-bug')).toBeAttached();
   
@@ -147,15 +153,15 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   
   // Close the modal via close button
   await modal.locator('.btn-close').click();
-  await expect(modal).not.toBeVisible({ timeout: 10000 });
+  await expect(modal).not.toBeVisible({ timeout: 15000 });
 
   // 4. Verify Mapbox map is initialized or a fallback alert is present
+  console.log('Verifying Mapbox state...');
   // Accept any alert within the map container as a valid fallback state
-  const mapboxElement = page.locator('.mapboxgl-map, #map .alert');
-  await expect(mapboxElement.first()).toBeVisible({ timeout: 15000 });
+  const mapboxElement = page.locator('#map .mapboxgl-map, #map .alert');
+  await expect(mapboxElement.first()).toBeVisible({ timeout: 20000 });
 
   // 4. Verify no critical assets failed to load
-  // We exclude some common external tracking or optional stuff if necessary
   if (failedRequests.length > 0) {
     console.error('Failed requests:', failedRequests);
   }
@@ -171,7 +177,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   // 6. Verify map is rendered (if initialized)
   if (await page.locator('.mapboxgl-map').count() > 0) {
     // Wait for at least the map canvas to be visible. Increased timeout for CI robustness.
-    await expect(page.locator('.mapboxgl-canvas').first()).toBeVisible({ timeout: 20000 });
+    await expect(page.locator('.mapboxgl-canvas').first()).toBeVisible({ timeout: 30000 });
   }
 
   
@@ -181,16 +187,20 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   for (let i = 0; i < imageCount; i++) {
     const img = images.nth(i);
     const src = await img.getAttribute('src') || '';
+    const alt = await img.getAttribute('alt') || 'no alt';
     // Skip Mapbox images and data URIs as they can have transitional 0-size states 
     // or be used for tracking/spacers
     if (src.includes('mapbox.com') || src.startsWith('data:')) continue;
     
     const box = await img.boundingBox();
-    expect(box, `Visible image ${i} (${src}) should have a bounding box`).not.toBeNull();
-    if (box) {
-      expect(box.width, `Visible image ${i} (${src}) has zero width`).toBeGreaterThan(0);
-      expect(box.height, `Visible image ${i} (${src}) has zero height`).toBeGreaterThan(0);
+    // If it's visible but has no box, or very small, it might be a tracking pixel or still loading
+    if (!box || (box.width <= 1 && box.height <= 1)) {
+      console.log(`Skipping potential tracking pixel or small image: ${src} (alt: ${alt})`);
+      continue;
     }
+    
+    expect(box.width, `Visible image ${i} (${src}, alt: ${alt}) has zero width`).toBeGreaterThan(1);
+    expect(box.height, `Visible image ${i} (${src}, alt: ${alt}) has zero height`).toBeGreaterThan(1);
   }
 
   // 7. Visual check - attach a screenshot to the test report

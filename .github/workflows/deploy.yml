@@ -163,6 +163,8 @@ jobs:
           fi
           # Export for Playwright to pick up
           export DEPLOYED_URL="$FINAL_URL"
+          echo "Waiting 5 seconds for service readiness..."
+          sleep 5
           npx playwright install --with-deps chromium
           npx playwright test e2e/validate-deployment.spec.js --config e2e/playwright.config.js
 

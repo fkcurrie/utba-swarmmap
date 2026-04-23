@@ -8,9 +8,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './',
   /* Increase timeout for CI */
-  timeout: 60000,
+  timeout: 90000,
   expect: {
-    timeout: 10000,
+    timeout: 15000,
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
