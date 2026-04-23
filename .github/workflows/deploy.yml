@@ -108,12 +108,12 @@ jobs:
       - name: Get Backend URL
         id: backend-url
         run: |
-          URL=$(gcloud run services describe ${{ env.SERVICE }} \
+          URL=$(gcloud run services describe "${{ env.SERVICE }}" \
             --platform=managed \
-            --region=${{ env.REGION }} \
+            --region="${{ env.REGION }}" \
             --format='value(status.url)' 2>/dev/null || echo "")
           if [ -z "$URL" ]; then
-            PROJECT_NUMBER=$(gcloud projects describe ${{ env.PROJECT_ID }} --format='value(projectNumber)')
+            PROJECT_NUMBER=$(gcloud projects describe "${{ env.PROJECT_ID }}" --format='value(projectNumber)')
             URL="https://${{ env.SERVICE }}-${PROJECT_NUMBER}.${{ env.REGION }}.run.app"
           fi
           echo "url=$URL" >> $GITHUB_OUTPUT
@@ -155,13 +155,13 @@ jobs:
           DEPLOYED_URL="${{ steps.deploy-backend.outputs.url }}"
           BACKEND_URL="${{ steps.backend-url.outputs.url }}"
           FINAL_URL="${DEPLOYED_URL:-$BACKEND_URL}"
-          
+
           echo "Validating deployment at URL: $FINAL_URL"
           if [ -z "$FINAL_URL" ] || [ "$FINAL_URL" == "http://localhost:8085" ]; then
             echo "Error: Could not determine deployment URL. DEPLOYED_URL='$DEPLOYED_URL', BACKEND_URL='$BACKEND_URL'"
             exit 1
           fi
-          
+
           npx playwright install --with-deps chromium
           # Pass DEPLOYED_URL explicitly to the test command
           DEPLOYED_URL="$FINAL_URL" npx playwright test e2e/validate-deployment.spec.js --config e2e/playwright.config.js
