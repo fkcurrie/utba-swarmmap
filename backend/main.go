@@ -122,6 +122,12 @@ func main() {
 		githubRepo = "fkcurrie/utba-swarmmap"
 	}
 
+	if githubToken == "" {
+		slog.Warn("GITHUB_TOKEN is not set; feedback submission will be disabled")
+	} else {
+		slog.Info("GitHub integration configured", "repo", githubRepo)
+	}
+
 	// Initialize handlers with dependencies
 	h := &handlers.Handlers{
 		Store:             dataStore,
