@@ -276,10 +276,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const reportModalEl = document.getElementById('reportSwarmModal');
-        if (reportModalEl) {
-          const reportModal =
-            bootstrap.Modal.getOrCreateInstance(reportModalEl);
-          reportModal.show();
+        if (reportModalEl && typeof bootstrap !== 'undefined') {
+          try {
+            const reportModal =
+              bootstrap.Modal.getOrCreateInstance(reportModalEl);
+            reportModal.show();
+          } catch (e) {
+            console.warn('Failed to show report modal on map click:', e);
+          }
         }
       });
     } else {
@@ -429,8 +433,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Show modal immediately so user (and E2E tests) sees it's working
       const reportModalEl = document.getElementById('reportSwarmModal');
-      const reportModal = bootstrap.Modal.getOrCreateInstance(reportModalEl);
-      reportModal.show();
+      if (reportModalEl && typeof bootstrap !== 'undefined') {
+        try {
+          const reportModal =
+            bootstrap.Modal.getOrCreateInstance(reportModalEl);
+          reportModal.show();
+        } catch (e) {
+          console.warn('Failed to show report modal:', e);
+        }
+      }
     }
 
     if (navigator.geolocation) {
@@ -675,8 +686,10 @@ document.addEventListener('DOMContentLoaded', function () {
         updateFileList();
 
         const reportModalEl = document.getElementById('reportSwarmModal');
-        const reportModal = bootstrap.Modal.getInstance(reportModalEl);
-        if (reportModal) reportModal.hide();
+        if (reportModalEl && typeof bootstrap !== 'undefined') {
+          const reportModal = bootstrap.Modal.getInstance(reportModalEl);
+          if (reportModal) reportModal.hide();
+        }
 
         window.location.reload();
       } catch (error) {
@@ -735,10 +748,15 @@ document.addEventListener('DOMContentLoaded', function () {
     mediaURLs = urls;
     currentMediaIndex = startIndex;
     updateMediaViewer();
-    const mediaModal = bootstrap.Modal.getOrCreateInstance(
-      document.getElementById('media-viewer-modal'),
-    );
-    mediaModal.show();
+    const mediaModalEl = document.getElementById('media-viewer-modal');
+    if (mediaModalEl && typeof bootstrap !== 'undefined') {
+      try {
+        const mediaModal = bootstrap.Modal.getOrCreateInstance(mediaModalEl);
+        mediaModal.show();
+      } catch (e) {
+        console.warn('Failed to show media modal:', e);
+      }
+    }
   };
 
   document
