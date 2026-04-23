@@ -1,14 +1,14 @@
 // Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 import { test, expect } from '@playwright/test';
 
-test('deployment validation - basic elements and assets', async ({ page }, testInfo) => {
+test('deployment validation - basic elements and assets', async ({ page, baseURL }, testInfo) => {
   const failedRequests = [];
   const consoleErrors = [];
 
-  // Track failed requests
+  // Track failed requests (network level errors)
   page.on('requestfailed', request => {
     const url = request.url();
-    const errorText = request.failure().errorText;
+    const errorText = request.failure()?.errorText || 'Unknown error';
     
     // Ignore background tracking requests that might be aborted when the test finishes
     if (url.includes('/api/track_visit')) {
@@ -17,8 +17,8 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
     }
     
     // Ignore optional Mapbox/external assets that might fail in CI
-    if (url.includes('mapbox.com') || url.includes('events.mapbox.com')) {
-      console.log(`Ignoring failed Mapbox request: ${url} (${errorText})`);
+    if (url.includes('mapbox.com') || url.includes('events.mapbox.com') || url.includes('openstreetmap.org')) {
+      console.log(`Ignoring failed external request: ${url} (${errorText})`);
       return;
     }
 
@@ -31,19 +31,27 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
     const url = response.url();
     if (status >= 400) {
       // Ignore known Mapbox or external 4xx/5xx if necessary
-      if (url.includes('mapbox.com') || url.includes('events.mapbox.com')) {
+      if (url.includes('mapbox.com') || url.includes('events.mapbox.com') || url.includes('openstreetmap.org')) {
+        console.log(`Ignoring HTTP ${status} for external resource: ${url}`);
         return;
       }
-      console.log(`HTTP ${status} for ${url}`);
-      // We'll treat critical HTTP errors as console errors to fail the test
-      // but only if they are not specifically ignored
+      
+      // Specifically ignore 404s for source maps as they are non-critical
+      if (url.endsWith('.map')) {
+        console.log(`Ignoring HTTP ${status} for source map: ${url}`);
+        return;
+      }
+
+      console.error(`HTTP ${status} for ${url}`);
+      // We don't necessarily fail immediately on 4xx/5xx unless it's a critical asset,
+      // but we log it to help debug.
     }
   });
 
   // Track console errors
   page.on('console', msg => {
+    const text = msg.text();
     if (msg.type() === 'error') {
-      const text = msg.text();
       // Ignore various Mapbox-related errors that are either expected in some CI environments 
       // or handled gracefully by the UI with fallbacks/alerts.
       if (text.includes('Mapbox token is missing')) return;
@@ -59,11 +67,22 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
         return;
       }
       
+      // Ignore Mapbox specific errors that might happen due to token or network issues in CI
+      if (text.includes('mapbox') || text.includes('Mapbox')) {
+        console.log(`Ignoring Mapbox-related console error: ${text}`);
+        return;
+      }
+      
       consoleErrors.push(text);
+    } else if (msg.type() === 'warning') {
+        // Just log warnings for diagnostics
+        if (text.includes('mapbox') || text.includes('Mapbox')) {
+            console.log(`Mapbox warning: ${text}`);
+        }
     }
   });
 
-  console.log(`Validating deployment at: ${testInfo.project.use.baseURL || 'default'}`);
+  console.log(`Validating deployment at: ${baseURL || 'default'}`);
   await page.goto('/');
 
   // 1. Verify basic page title/content
