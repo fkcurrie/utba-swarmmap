@@ -143,6 +143,7 @@ jobs:
             GOOGLE_CLIENT_ID=google-oauth-client-id:latest
             GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest
             MAPBOX_ACCESS_TOKEN=mapbox-access-token:latest
+            GITHUB_TOKEN=github-pat:latest
       - name: Health Check
         id: health-check
         run: |

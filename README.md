@@ -38,8 +38,10 @@ The application can be configured using the following environment variables:
 
 - `MAPBOX_ACCESS_TOKEN`: (Optional) If provided, the application will use Mapbox for map tiles and reverse geocoding.
 - `FRONTEND_ASSETS_URL`: The URL of the frontend service serving static assets.
-- `GOOGLE_OAUTH_CLIENT_ID`: Required for Google OAuth.
-- `GOOGLE_OAUTH_CLIENT_SECRET`: Required for Google OAuth.
+- `GOOGLE_CLIENT_ID`: Required for Google OAuth.
+- `GOOGLE_CLIENT_SECRET`: Required for Google OAuth.
+- `GITHUB_TOKEN`: Required for feedback submission. A Personal Access Token with repo scope.
+- `GITHUB_REPO`: (Optional) The GitHub repository where feedback issues will be created (default: `fkcurrie/utba-swarmmap`).
 
 ## Local Development & Deployment
 
