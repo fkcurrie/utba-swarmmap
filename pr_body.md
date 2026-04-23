@@ -1,18 +1,20 @@
-## Description
+# Description
+
 The post-deployment validation failed due to various factors including tight timeouts, non-critical console errors, and potentially brittle element selectors. This PR improves the E2E test robustness and adds safety checks to the frontend to ensure reliable deployment validation.
 
-### Key Changes:
+## Key Changes
+
 - **E2E Test Improvements:**
-    - Increased overall timeout to 90s and specific visibility timeouts to 30s.
-    - Refined console error tracking to ignore non-critical errors (e.g., `net::ERR_ABORTED`, `favicon.ico`, Mapbox internal cleanup).
-    - Relaxed image size validation to ignore tracking pixels (<= 1px) and added better logging.
-    - Used more specific selectors for legend items to avoid collisions.
-    - Added explicit logging of the URL being tested and key test stages.
+  - Increased overall timeout to 90s and specific visibility timeouts to 30s.
+  - Refined console error tracking to ignore non-critical errors (e.g., `net::ERR_ABORTED`, `favicon.ico`, Mapbox internal cleanup).
+  - Relaxed image size validation to ignore tracking pixels (<= 1px) and added better logging.
+  - Used more specific selectors for legend items to avoid collisions.
+  - Added explicit logging of the URL being tested and key test stages.
 - **Frontend Robustness:**
-    - Added safety checks for the `bootstrap` object in `main.js` to prevent `ReferenceError` during script loading or failures.
-    - Wrapped modal operations in try-catch blocks for more resilient UI interactions.
+  - Added safety checks for the `bootstrap` object in `main.js` to prevent `ReferenceError` during script loading or failures.
+  - Wrapped modal operations in try-catch blocks for more resilient UI interactions.
 - **Deployment Workflow:**
-    - Added a 5-second sleep before starting Playwright tests to ensure the service is fully ready after traffic migration.
+  - Added a 5-second sleep before starting Playwright tests to ensure the service is fully ready after traffic migration.
 
 Fixes #146
 
