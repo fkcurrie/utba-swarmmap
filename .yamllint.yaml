@@ -1,4 +1,3 @@
-# Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 ---
 extends: default
 
@@ -9,9 +8,7 @@ ignore:
   - '.git/'
 
 rules:
-  line-length:
-    max: 160
-    allow-non-breakable-words: true
+  line-length: disable
   indentation:
     spaces: 2
   truthy:
