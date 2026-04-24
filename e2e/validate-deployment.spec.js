@@ -34,9 +34,12 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
       if (url.includes('mapbox.com') || url.includes('events.mapbox.com')) {
         return;
       }
+      // Also ignore favicon and tracking pixels
+      if (url.includes('favicon.ico') || url.includes('api/track_visit')) {
+        return;
+      }
       console.log(`HTTP ${status} for ${url}`);
-      // We'll treat critical HTTP errors as console errors to fail the test
-      // but only if they are not specifically ignored
+      failedRequests.push(`HTTP ${status} for ${url}`);
     }
   });
 
@@ -180,8 +183,8 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   // 4. Verify Mapbox map is initialized or a fallback alert is present
   console.log('Verifying Mapbox state...');
-  // Accept any alert within the map container as a valid fallback state
-  const mapboxElement = page.locator('#map .mapboxgl-map, #map .alert');
+  // Accept any alert within the map container or the map itself as a valid state
+  const mapboxElement = page.locator('#map.mapboxgl-map, #map .alert');
   await expect(mapboxElement.first()).toBeVisible({ timeout: 20000 });
 
   // 4. Verify no critical assets failed to load
