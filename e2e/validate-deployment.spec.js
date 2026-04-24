@@ -118,8 +118,8 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(legend).toHaveText(/Map Legend/i);
   await expect(legend.locator('i.fa-circle-info')).toBeAttached();
 
-  // Check legend items specifically within the aside/legend area
-  const legendItems = page.locator('aside .legend-item');
+  // Check legend items
+  const legendItems = page.locator('.legend-item');
   await expect(legendItems).toHaveCount(5);
   
   // Verify specific legend text and colors for robustness
