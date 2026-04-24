@@ -139,6 +139,7 @@ jobs:
             GOOGLE_REDIRECT_URL=${{ steps.backend-url.outputs.url }}/auth/google/callback
             GCP_PROJECT_ID=${{ env.PROJECT_ID }}
             GCS_BUCKET_NAME=${{ env.GCS_BUCKET_NAME }}
+            FRONTEND_ASSETS_URL=${{ steps.deploy-frontend.outputs.url }}
           secrets: |
             GOOGLE_CLIENT_ID=google-oauth-client-id:latest
             GOOGLE_CLIENT_SECRET=google-oauth-client-secret:latest
@@ -167,8 +168,7 @@ jobs:
           sleep 5
 
           # Install Playwright dependencies and browser
-          sudo npx playwright install-deps chromium
-          npx playwright install chromium
+          npx playwright install --with-deps chromium
 
           # Pass DEPLOYED_URL explicitly to the test command
           DEPLOYED_URL="$FINAL_URL" npx playwright test e2e/validate-deployment.spec.js --config e2e/playwright.config.js
