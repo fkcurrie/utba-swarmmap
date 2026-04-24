@@ -1,4 +1,16 @@
 ### Investigating PR Checks failure
+Run: [24867175742](https://github.com/fkcurrie/utba-swarmmap/actions/runs/24867175742)
+Name: `PR Checks`
+Cause: `Code Error / Linting`
+Details: 
+- **YAML Lint failure:** The `.agents/branch-cleanup.yaml` and `.agents/security-audit.yaml` files had invalid YAML syntax (Markdown content outside of YAML keys) and some lines exceeded the 160-character limit. These files were recently introduced or merged from `main`.
+- **Prettier failure:** `frontend/static/js/main.js` had formatting inconsistencies introduced in the last commit.
+Action Taken: 
+- Updated `.agents/branch-cleanup.yaml` and `.agents/security-audit.yaml` to use a valid YAML structure with an `instructions` key for the Markdown content and wrapped long lines.
+- Ran `npx prettier --write` on `frontend/static/js/main.js` to fix formatting.
+- Merged `upstream/main` to ensure all recently added agent files are correctly formatted and linted.
+
+### Investigating PR Checks failure
 Run: [24701637960](https://github.com/fkcurrie/utba-swarmmap/actions/runs/24701637960)
 Name: `PR Checks`
 Cause: `Code Error / Infrastructure`

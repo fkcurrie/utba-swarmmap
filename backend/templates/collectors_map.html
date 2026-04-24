@@ -12,8 +12,8 @@
         </div>
         <div class="col-md-6 text-md-end mt-3 mt-md-0">
             <div class="btn-group shadow-sm">
-                <button type="button" class="btn btn-white btn-sm fw-bold border-end" id="btnRecenter">
-                    <i class="fa-solid fa-location-crosshairs me-1"></i> Recenter
+                <button type="button" class="btn btn-white btn-sm fw-bold border-end" id="btnRecentre">
+                    <i class="fa-solid fa-location-crosshairs me-1"></i> Recentre
                 </button>
                 <button type="button" class="btn btn-white btn-sm fw-bold" id="btnRefresh">
                     <i class="fa-solid fa-rotate me-1"></i> Refresh
@@ -22,14 +22,20 @@
         </div>
     </div>
 
-    <!-- Map and Side Info -->
+    <!-- Main Content Section -->
     <div class="row g-4 mb-4">
-        <!-- Legend Section -->
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm h-100">
+        <!-- Left Column: Map and Legend -->
+        <div class="col-lg-9 order-1">
+            <!-- Map Section -->
+            <div class="card border-0 shadow-sm overflow-hidden mb-4" style="height: 600px; border-radius: var(--border-radius-lg);">
+                <div id="map" class="h-100 w-100" style="min-height: 500px;"></div>
+            </div>
+
+            <!-- Legend Section -->
+            <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
                     <h2 id="legendTitle" class="h6 fw-bold mb-4 tracking-wider text-uppercase text-muted"><i class="fa-solid fa-circle-info me-2 text-warning"></i>Map Legend</h2>
-                    <div class="d-flex flex-column gap-3" role="list">
+                    <div class="d-flex flex-wrap gap-4" role="list">
                         <div class="legend-item d-flex align-items-center" role="listitem">
                             <span class="legend-color" style="background-color: rgb(232, 65, 24);" aria-hidden="true"></span>
                             <span class="small fw-bold text-uppercase tracking-wider">Reported (New)</span>
@@ -55,27 +61,18 @@
             </div>
         </div>
         
-        <!-- List Section -->
-        <div class="col-lg-8">
+        <!-- Right Column: List Section -->
+        <div class="col-lg-3 order-2">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body p-4">
                     <h2 class="h6 fw-bold mb-3"><i class="fa-solid fa-list me-2 text-muted"></i>Active Swarms List</h2>
-                    <div id="debugSwarms" class="small" style="max-height: 250px; overflow-y: auto;">
+                    <div id="debugSwarms" class="small" style="max-height: 700px; overflow-y: auto;">
                         <div class="text-center p-5">
                             <div class="spinner-border spinner-border-sm text-primary mb-3" role="status"></div>
                             <p class="text-muted mb-0">Loading swarms data...</p>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Map Section -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm overflow-hidden" style="height: 600px; border-radius: var(--border-radius-lg);">
-                <div id="map" class="h-100 w-100" style="min-height: 500px;"></div>
             </div>
         </div>
     </div>
