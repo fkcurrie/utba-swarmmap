@@ -15,6 +15,7 @@ import (
 
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
+	"cloud.google.com/go/vertexai/genai"
 	"github.com/fkcurrie/utba-swarmmap/handlers"
 	"github.com/fkcurrie/utba-swarmmap/service"
 	"github.com/fkcurrie/utba-swarmmap/store"
@@ -128,12 +129,29 @@ func main() {
 		slog.Info("GitHub integration configured", "repo", githubRepo)
 	}
 
+	// Initialize AI Service
+	var aiService handlers.AIService
+	geminiModel := getEnv("GEMINI_MODEL", "gemini-1.5-flash") // Default to a known stable model
+	gcpLocation := getEnv("GCP_LOCATION", "us-central1")
+
+	aiClient, err := genai.NewClient(ctx, projectID, gcpLocation)
+	if err != nil {
+		slog.Warn("Failed to initialize Vertex AI client, AI interpretation will be disabled", "error", err)
+	} else {
+		aiService = &handlers.VertexAIService{
+			Client: aiClient,
+			Model:  geminiModel,
+		}
+		slog.Info("Vertex AI Gemini service initialized", "model", geminiModel, "location", gcpLocation)
+	}
+
 	// Initialize handlers with dependencies
 	h := &handlers.Handlers{
 		Store:             dataStore,
 		SwarmService:      swarmService,
 		LocationService:   locationService,
 		GitHubService:     &handlers.RealGitHubService{Client: &http.Client{Timeout: 10 * time.Second}},
+		AIService:         aiService,
 		GoogleOAuthConfig: googleOAuthConfig,
 		Version:           version,
 		Templates:         templates,

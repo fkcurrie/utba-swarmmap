@@ -3,6 +3,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"html/template"
 	"log/slog"
@@ -14,11 +15,16 @@ import (
 	"golang.org/x/oauth2"
 )
 
+type AIService interface {
+	InterpretFeedback(ctx context.Context, rawText string, feedbackType string, context FeedbackContext) (string, error)
+}
+
 type Handlers struct {
 	Store             store.Storer
 	SwarmService      service.SwarmService
 	LocationService   LocationService
 	GitHubService     GitHubService
+	AIService         AIService
 	GoogleOAuthConfig *oauth2.Config
 	AppleOAuthConfig  *oauth2.Config
 	Version           string

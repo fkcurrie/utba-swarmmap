@@ -42,6 +42,9 @@ The application can be configured using the following environment variables:
 - `GOOGLE_CLIENT_SECRET`: Required for Google OAuth.
 - `GITHUB_TOKEN`: Required for feedback submission. A Personal Access Token with repo scope.
 - `GITHUB_REPO`: (Optional) The GitHub repository where feedback issues will be created (default: `fkcurrie/utba-swarmmap`).
+- `GEMINI_MODEL`: (Optional) The Vertex AI Gemini model to use for feedback interpretation (e.g., `gemini-1.5-flash`, `gemini-2.0-flash`).
+- `GCP_LOCATION`: (Optional) The Google Cloud location for Vertex AI (default: `us-central1`).
+- `GCP_PROJECT_ID`: (Optional) The Google Cloud project ID (default: `utba-swarmmap`).
 
 ## Local Development & Deployment
 
