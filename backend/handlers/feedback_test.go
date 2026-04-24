@@ -35,7 +35,7 @@ type MockAIService struct {
 	ReturnErr       error
 }
 
-func (m *MockAIService) InterpretFeedback(ctx context.Context, rawText string, feedbackType string, context FeedbackContext) (string, error) {
+func (m *MockAIService) InterpretFeedback(_ context.Context, _, _ string, _ FeedbackContext) (string, error) {
 	return m.InterpretedBody, m.ReturnErr
 }
 
