@@ -7,6 +7,7 @@ ignore:
   - 'vendor/'
   - 'backend/vendor/'
   - '.git/'
+  - '.agents/'
 
 rules:
   line-length:
