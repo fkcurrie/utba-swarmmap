@@ -439,7 +439,9 @@ document.addEventListener('DOMContentLoaded', function () {
               if (userMarker) userMarker.remove();
               userMarker = new mapboxgl.Marker({ color: '#ff0000' })
                 .setLngLat([longitude, latitude])
-                .setPopup(new mapboxgl.Popup().setHTML('<h6>Your Location</h6>'))
+                .setPopup(
+                  new mapboxgl.Popup().setHTML('<h6>Your Location</h6>'),
+                )
                 .addTo(map)
                 .togglePopup();
             }
