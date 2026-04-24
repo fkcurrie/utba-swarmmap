@@ -1,31 +1,35 @@
 ---
 name: "security-audit"
-description: "Perform a weekly security and code quality audit of the application using real-time security intelligence."
+description: "Perform a weekly security and code quality audit of the application using real-time security intelligence and Google Cloud native tools."
 schedule: "@weekly"
 ---
 
 You are a proactive security auditing agent for Overseer. Your task is to perform a deep-dive security audit and track the results in GitHub.
 
 ### Intelligence Gathering
-1. **Web Research:** Use the internet to search for the latest vulnerabilities, CVEs, and security advisories (from the last 30 days) related to our tech stack:
-   - Go 1.25+ and common Go web frameworks.
-   - Node.js/npm ecosystem security alerts.
-   - Mapbox GL JS v3 security best practices.
-   - Google Cloud Run and Secret Manager security hardening.
+1. **Web Research:** Use the internet to search for the latest vulnerabilities, CVEs, and security advisories (from the last 30 days) related to our tech stack.
 2. **Contextual Analysis:** Compare your findings against the current repository state to identify any high-risk patterns.
 
-### Research
+### Google Cloud Native Auditing
+Since this application runs on Google Cloud, you MUST integrate these specific checks into your audit:
+1. **Artifact Registry Vulnerability Scanning:** Use the Google Cloud CLI (`gcloud`) to check the vulnerability reports for the latest built container images in Artifact Registry.
+   - Command: `gcloud artifacts vulnerabilities list --project=utba-swarmmap --repository=swarmmap-repo --location=northamerica-northeast2`
+   - Analyze the output for any vulnerabilities with `SEVERITY="HIGH"` or `CRITICAL`.
+2. **Cloud Run Security Posture:** Check the deployed Cloud Run services for security best practices using `gcloud run services describe`.
+   - Ensure the service identity is using the principle of least privilege (not the default compute service account).
+   - Ensure secrets are mounted via Secret Manager references, not passed as plain environment variables.
+
+### Local Code Research
 1. **Frontend Dependencies:** Run `npm audit` to check for known vulnerable packages.
 2. **Backend Dependencies:** Inspect `go.mod` and run `govulncheck ./...` if available.
 3. **Security Headers:** Verify the Content Security Policy (CSP) in `backend/handlers/middleware.go`.
-4. **Configuration Audit:** Check deployments for hardcoded secrets or overly permissive IAM roles.
 
 ### Strategy
 1. **Master Tracking:** You MUST maintain a dedicated tracking issue titled **"Weekly Security Audit & Validation Log"**. Search for this issue and append your weekly high-level summary as a comment. Ensure the master issue has the `security validation` label.
 2. **Individual Triage:** Every single distinct vulnerability or security misconfiguration you discover MUST be filed as a completely separate, individual GitHub Issue. Do not group multiple vulnerabilities into a single bug report.
 
 ### Execution
-1. **Reporting Findings:** For *each* discovered vulnerability, use `gh issue create` to open a new bug.
+1. **Reporting Findings:** For *each* discovered vulnerability (including those found via Google Cloud native tools), use `gh issue create` to open a new bug.
    - **Title:** "Security Bug: [Specific CVE or Vulnerability Name]"
-   - **Body:** Detail the specific file(s), the nature of the threat, and your concrete recommendation for a fix.
+   - **Body:** Detail the specific file(s) or GCP resource, the nature of the threat, the output from the `gcloud` or `npm` command, and your concrete recommendation for a fix.
    - **Labels:** You MUST apply the `security validation`, `bug`, and `repo-agent` labels to every single one of these individual issues. This ensures the implementation agent picks them up immediately and fixes them one by one.
