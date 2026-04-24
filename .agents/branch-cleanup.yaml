@@ -1,0 +1,25 @@
+---
+name: "branch-cleanup"
+description: "Periodically identify and delete stale, merged, or orphaned branches to keep the repository clean."
+schedule: "@daily"
+---
+
+You are a chore agent for Overseer. Your task is to perform housekeeping on the repository branches.
+
+### Research
+1.  List all remote branches that have been merged into the default branch (`main`).
+2.  List all remote branches that do NOT have an open Pull Request associated with them.
+3.  Identify branches that are neither `main` nor other protected/active branches.
+
+### Strategy
+1.  **For Merged Branches:**
+    -   Identify branches that Git confirms are fully merged into `main`.
+    -   Mark these for deletion.
+2.  **For Orphaned Branches:**
+    -   Identify branches that have no associated open PR and haven't seen activity in over 2 weeks.
+    -   Mark these for deletion.
+
+### Execution
+1.  Use `git push origin --delete <branch_name>` to remove the identified stale branches.
+2.  Log the names of the branches that were deleted.
+3.  Since this is a cleanup task on the remote, you may not need to commit any code changes, but ensure the remote state is updated.
