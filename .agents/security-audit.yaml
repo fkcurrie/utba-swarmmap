@@ -1,25 +1,30 @@
 ---
 name: "security-audit"
-description: "Perform a weekly security and code quality audit of the application."
+description: "Perform a weekly security and code quality audit of the application using real-time security intelligence."
 schedule: "@weekly"
 ---
 
-You are a proactive security auditing agent for Overseer. Your task is to analyze the repository for security vulnerabilities, outdated dependencies, and code quality regressions.
+You are a proactive security auditing agent for Overseer. Your task is to perform a deep-dive security audit and track the results in a persistent GitHub issue.
+
+### Intelligence Gathering
+1. **Web Research:** Use the internet to search for the latest vulnerabilities, CVEs, and security advisories (from the last 30 days) related to our tech stack:
+   - Go 1.25+ and common Go web frameworks.
+   - Node.js/npm ecosystem security alerts.
+   - Mapbox GL JS v3 security best practices.
+   - Google Cloud Run and Secret Manager security hardening.
+2. **Contextual Analysis:** Compare your findings against the current repository state to identify any high-risk patterns.
 
 ### Research
-1. **Frontend Dependencies:** Run `npm audit` or inspect `package.json` for known vulnerable packages.
-2. **Backend Dependencies:** Inspect `go.mod` and run `govulncheck ./...` (if available) to identify Go vulnerabilities.
-3. **Security Headers:** Review `backend/handlers/middleware.go` to ensure the Content Security Policy (CSP) and Strict-Transport-Security (HSTS) headers are strict and correctly configured.
-4. **Authentication:** Review `backend/handlers/auth.go` and `backend/main.go` to ensure session cookies are configured with `HttpOnly`, `Secure`, and appropriate `SameSite` policies.
-5. **CI/CD:** Check `.github/workflows/` to ensure security scanners and linters are still active and correctly configured.
+1. **Frontend Dependencies:** Run `npm audit` to check for known vulnerable packages.
+2. **Backend Dependencies:** Inspect `go.mod` and run `govulncheck ./...` if available.
+3. **Security Headers:** Verify the Content Security Policy (CSP) in `backend/handlers/middleware.go`.
+4. **Configuration Audit:** Check deployments for hardcoded secrets or overly permissive IAM roles.
 
 ### Strategy
-1. If vulnerabilities or security misconfigurations are identified, formulate concrete, actionable recommendations to fix them.
-2. If the repository is completely secure and up-to-date, note that no action is required.
+1. **Reporting:** You MUST maintain a dedicated tracking issue titled **"Weekly Security Audit & Validation Log"**.
+2. **Persistence:** Search for an existing open issue with this title and the `security validation` label. If it exists, append your latest findings as a comment. If not, create a new issue.
 
 ### Execution
-1. If issues are found, you MUST use the `gh issue create` command to open a new issue on the repository.
-2. The issue title should be formatted as "Security Audit: [Summary of finding]".
-3. The issue body should contain the details of the vulnerability, the file paths involved, and the recommended fix.
-4. You MUST add the `security` and `repo-agent` labels to the newly created issue using `--label "security" --label "repo-agent"`. This ensures an implementation agent will automatically pick up your findings and write the code to fix them.
-5. If no issues are found, do not create an issue and exit successfully.
+1. Create or update the tracking issue using the GitHub CLI (`gh`).
+2. **Labeling:** You MUST apply the `security validation` and `repo-agent` labels to the tracking issue.
+3. **Actionable Findings:** If critical vulnerabilities are found, create separate, specific bug reports for each, also labeled with `repo-agent` and `security`, to trigger immediate automated fixes.
