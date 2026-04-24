@@ -34,9 +34,8 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
       if (url.includes('mapbox.com') || url.includes('events.mapbox.com')) {
         return;
       }
-      console.log(`HTTP ${status} for ${url}`);
-      // We'll treat critical HTTP errors as console errors to fail the test
-      // but only if they are not specifically ignored
+      console.error(`HTTP ${status} for ${url}`);
+      failedRequests.push(`${url}: HTTP ${status}`);
     }
   });
 
@@ -58,7 +57,8 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
       // Ignore generic resource load failures as they are often flaky in CI for non-critical assets
       // (like tracking pixels, optional fonts, etc.) and we track HTTP 4xx/5xx separately.
       if (text.includes('Failed to load resource')) {
-        console.log(`Ignoring console error: ${text}`);
+        // We still log it for visibility but don't fail immediately here as we track responses
+        console.warn(`Console error: ${text}`);
         return;
       }
       
@@ -68,7 +68,22 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
 
   const baseURL = testInfo.project.use.baseURL || 'default';
   console.log(`Validating deployment at: ${baseURL}`);
-  await page.goto('/', { waitUntil: 'load', timeout: 30000 });
+  await page.goto('/', { waitUntil: 'networkidle', timeout: 30000 });
+
+  // 1. Check for failed requests immediately after load
+  if (failedRequests.length > 0) {
+    console.error('Failed requests during initial load:', failedRequests);
+    // Filter for critical assets that should never fail
+    const criticalFailures = failedRequests.filter(f => 
+      f.includes('main.js') || 
+      f.includes('style.css') || 
+      f.includes('bootstrap.min.css') ||
+      f.includes('bootstrap.bundle.min.js')
+    );
+    if (criticalFailures.length > 0) {
+      throw new Error(`Critical assets failed to load: ${criticalFailures.join(', ')}`);
+    }
+  }
 
   // 1. Verify basic page title/content
   await expect(page).toHaveTitle(/UTBA Swarm Map/i);
@@ -104,7 +119,9 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
     console.error('Map visibility failure details:', {
       boundingBox: box,
       computedStyles: styles,
-      html: await map.innerHTML().catch(() => 'could not get innerHTML')
+      html: await map.innerHTML().catch(() => 'could not get innerHTML'),
+      failedRequests,
+      consoleErrors
     });
     throw error;
   }
@@ -182,19 +199,27 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   console.log('Verifying Mapbox state...');
   // Accept any alert within the map container as a valid fallback state
   const mapboxElement = page.locator('#map .mapboxgl-map, #map .alert');
-  await expect(mapboxElement.first()).toBeVisible({ timeout: 20000 });
+  
+  // Wait for it with a clear diagnostic message if it fails
+  try {
+    await expect(mapboxElement.first()).toBeVisible({ timeout: 20000 });
+  } catch (error) {
+    console.error('Failed to find mapboxgl-map or alert after 20s. Current HTML:', await page.locator('#map').innerHTML());
+    throw error;
+  }
 
   // 4. Verify no critical assets failed to load
   if (failedRequests.length > 0) {
     console.error('Failed requests:', failedRequests);
   }
-  expect(failedRequests, `Found ${failedRequests.length} failed requests: ${failedRequests.join(', ')}`).toHaveLength(0);
+  // Filter out Mapbox internal errors that might be expected in CI
+  const criticalFailedRequests = failedRequests.filter(f => !f.includes('mapbox.com') && !f.includes('events.mapbox.com'));
+  expect(criticalFailedRequests, `Found ${criticalFailedRequests.length} non-Mapbox failed requests: ${criticalFailedRequests.join(', ')}`).toHaveLength(0);
 
   // 5. Verify no console errors
   if (consoleErrors.length > 0) {
     console.error('Console errors:', consoleErrors);
   }
-  // We might allow some minor console errors, but generally want none
   expect(consoleErrors, `Found ${consoleErrors.length} console errors: ${consoleErrors.join(', ')}`).toHaveLength(0);
   
   // 6. Verify map is rendered (if initialized)

@@ -86,7 +86,7 @@ func (s *Store) TrackVisit(ctx context.Context, visitorID string) error {
 			return err
 		}
 
-		if !doc.Exists() {
+		if doc == nil || !doc.Exists() {
 			return tx.Set(docRef, map[string]interface{}{
 				"visitors":  []string{visitorID},
 				"timestamp": time.Now().UTC(),
