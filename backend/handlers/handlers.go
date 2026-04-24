@@ -49,6 +49,12 @@ func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		w.Header().Set("Allow", "GET, HEAD")
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	session := h.getSession(r)
 
 	err := h.Templates.ExecuteTemplate(w, "index.html", map[string]interface{}{
