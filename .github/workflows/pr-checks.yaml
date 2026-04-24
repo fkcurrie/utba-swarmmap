@@ -2,6 +2,9 @@
 ---
 name: PR Checks
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 "on":
   push:
     branches: [main, issue-12-NPJh]
@@ -114,10 +117,10 @@ jobs:
         working-directory: frontend
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: frontend/go.mod
           cache-dependency-path: frontend/go.mod
