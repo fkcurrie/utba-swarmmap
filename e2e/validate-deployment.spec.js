@@ -118,8 +118,16 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   await expect(legend).toHaveText(/Map Legend/i);
   await expect(legend.locator('i.fa-circle-info')).toBeAttached();
 
-  // Check legend items specifically within the aside/legend area
-  const legendItems = page.locator('aside .legend-item');
+  // Check legend items - more flexible locator to handle different layouts (aside or card)
+  const legendItems = page.locator('.legend-item');
+  const count = await legendItems.count();
+  if (count !== 5) {
+    console.error(`Expected 5 legend items, but found ${count}`);
+    // Log the text of items found for debugging
+    for (let i = 0; i < count; i++) {
+      console.log(`Legend item ${i}: ${await legendItems.nth(i).innerText()}`);
+    }
+  }
   await expect(legendItems).toHaveCount(5);
   
   // Verify specific legend text and colors for robustness

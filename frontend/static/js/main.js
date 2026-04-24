@@ -415,10 +415,23 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   // Hook up refresh button if it exists
-  const refreshMapBtn = document.getElementById('refreshMapBtn');
+  const refreshMapBtn = document.getElementById('refreshMapBtn') || document.getElementById('btnRefresh');
   if (refreshMapBtn) {
     refreshMapBtn.addEventListener('click', () => {
       fetchSwarms(true);
+    });
+  }
+
+  // Hook up recenter button if it exists
+  const recenterMapBtn = document.getElementById('recenterMapBtn') || document.getElementById('btnRecenter');
+  if (recenterMapBtn) {
+    recenterMapBtn.addEventListener('click', () => {
+      if (map) {
+        map.flyTo({
+          center: [-79.3832, 43.6532],
+          zoom: 11,
+        });
+      }
     });
   }
 

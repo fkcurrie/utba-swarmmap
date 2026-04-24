@@ -169,7 +169,7 @@ jobs:
           sleep 5
 
           # Install Playwright dependencies and browser
-          npx playwright install --with-deps chromium
+          sudo npx playwright install --with-deps chromium
 
           # Pass DEPLOYED_URL explicitly to the test command
           DEPLOYED_URL="$FINAL_URL" npx playwright test e2e/validate-deployment.spec.js --config e2e/playwright.config.js
