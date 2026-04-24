@@ -223,7 +223,9 @@ jobs:
         run: npm ci
 
       - name: Install Playwright Browsers
-        run: sudo npx playwright install --with-deps chromium
+        run: |
+          sudo npx playwright install-deps chromium
+          npx playwright install chromium
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

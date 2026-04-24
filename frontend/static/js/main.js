@@ -415,7 +415,9 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   // Hook up refresh button if it exists
-  const refreshMapBtn = document.getElementById('refreshMapBtn') || document.getElementById('btnRefresh');
+  const refreshMapBtn =
+    document.getElementById('refreshMapBtn') ||
+    document.getElementById('btnRefresh');
   if (refreshMapBtn) {
     refreshMapBtn.addEventListener('click', () => {
       fetchSwarms(true);
@@ -423,7 +425,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Hook up recenter button if it exists
-  const recenterMapBtn = document.getElementById('recenterMapBtn') || document.getElementById('btnRecenter');
+  const recenterMapBtn =
+    document.getElementById('recenterMapBtn') ||
+    document.getElementById('btnRecenter');
   if (recenterMapBtn) {
     recenterMapBtn.addEventListener('click', () => {
       if (map) {
