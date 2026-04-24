@@ -156,11 +156,14 @@ func main() {
 	if _, err := os.Stat(staticDir); err == nil {
 		slog.Info("Serving static files", "dir", staticDir)
 		fs := http.FileServer(http.Dir(staticDir))
-		mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
+		// Use a more permissive pattern for static files to support all methods (GET, HEAD, etc.)
+		mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	}
 
 	// Public routes
-	mux.HandleFunc("GET /{$}", h.IndexHandler)
+	// Root handler matches "/" exactly but also acts as a catch-all if needed.
+	// IndexHandler already contains logic to return 404 for unknown paths.
+	mux.HandleFunc("/", h.IndexHandler)
 	mux.HandleFunc("GET /get_swarms", h.GetSwarmsHandler)
 	mux.HandleFunc("GET /login", h.LoginPageHandler)
 	mux.HandleFunc("GET /register", h.RegisterPageHandler)
