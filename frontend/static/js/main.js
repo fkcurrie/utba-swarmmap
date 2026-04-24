@@ -414,11 +414,46 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
-  // Hook up refresh button if it exists
-  const refreshMapBtn = document.getElementById('refreshMapBtn');
-  if (refreshMapBtn) {
-    refreshMapBtn.addEventListener('click', () => {
+  // Hook up map controls
+  const btnRefresh = document.getElementById('btnRefresh');
+  if (btnRefresh) {
+    btnRefresh.addEventListener('click', () => {
       fetchSwarms(true);
+    });
+  }
+
+  const btnRecentre = document.getElementById('btnRecentre');
+  if (btnRecentre) {
+    btnRecentre.addEventListener('click', () => {
+      if (navigator.geolocation) {
+        const originalContent = btnRecentre.innerHTML;
+        btnRecentre.disabled = true;
+        btnRecentre.innerHTML =
+          '<i class="fa-solid fa-spinner fa-spin me-1"></i> Recentring...';
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            if (map) {
+              map.flyTo({ center: [longitude, latitude], zoom: 15 });
+              if (userMarker) userMarker.remove();
+              userMarker = new mapboxgl.Marker({ color: '#ff0000' })
+                .setLngLat([longitude, latitude])
+                .setPopup(new mapboxgl.Popup().setHTML('<h6>Your Location</h6>'))
+                .addTo(map)
+                .togglePopup();
+            }
+            btnRecentre.disabled = false;
+            btnRecentre.innerHTML = originalContent;
+          },
+          (error) => {
+            console.warn('Could not get your location:', error.message);
+            btnRecentre.disabled = false;
+            btnRecentre.innerHTML = originalContent;
+          },
+          { timeout: 10000, enableHighAccuracy: true },
+        );
+      }
     });
   }
 
