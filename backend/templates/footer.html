@@ -2,18 +2,15 @@
     </main> <!-- closes main-content -->
     <footer class="footer py-4" role="contentinfo">
         <div class="container-xl text-center">
-            <p class="text-muted small mb-2">
-                Made with 🐝❤️🐝 with <a href="https://github.com/google/gemini-cli" target="_blank" rel="noopener">gemini-cli</a>
+            <p class="text-muted small mb-0">
+                Made by 🐝 in Toronto Canada | <a href="mailto:swarmmap@sfle.ca">contact us</a>
+                |
+                {{if and .User (eq .User.Role "site_admin")}}
+                    <a href="/admin" class="text-decoration-none">Site Administration</a>
+                {{else}}
+                    <a href="/login?role=site_admin" class="text-decoration-none">Site Admin Login</a>
+                {{end}}
             </p>
-            <nav aria-label="Admin navigation">
-                <p class="text-muted small mb-0">
-                    {{if and .User (eq .User.Role "site_admin")}}
-                        <a href="/admin" class="text-decoration-none">Site Administration</a>
-                    {{else}}
-                        <a href="/login?role=site_admin" class="text-decoration-none">Site Admin Login</a>
-                    {{end}}
-                </p>
-            </nav>
         </div>
     </footer>
 
