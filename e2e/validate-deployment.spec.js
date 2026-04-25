@@ -118,7 +118,16 @@ test('deployment validation - basic elements and assets', async ({
   // 2. Verify key UI elements are present
   console.log('Verifying key UI elements...');
   const reportBtn = page.locator('#reportSwarmBtn');
-  await expect(reportBtn).toBeVisible({ timeout: 30000 });
+  try {
+    await expect(reportBtn).toBeVisible({ timeout: 30000 });
+  } catch (error) {
+    console.error('Report button visibility failure details:', {
+      text: await reportBtn.innerText().catch(() => 'could not get innerText'),
+      html: await reportBtn.innerHTML().catch(() => 'could not get innerHTML'),
+      classes: await reportBtn.getAttribute('class').catch(() => 'could not get class'),
+    });
+    throw error;
+  }
   await expect(reportBtn).toHaveClass(/btn-primary/);
   // Using an even more flexible regex to handle potential rendering differences,
   // whitespace, or flaky text updates during geolocation
