@@ -123,7 +123,13 @@ jobs:
         run: |
           cp -r frontend/static backend/static
           IMAGE_NAME="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/backend"
-          docker build -t "$IMAGE_NAME:${{ github.sha }}" ./backend
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          VERSION="${{ github.ref_name }}-$SHORT_SHA"
+          docker build \
+            --build-arg BUILD_VERSION="$VERSION" \
+            --build-arg BUILD_DATE="$BUILD_DATE" \
+            -t "$IMAGE_NAME:${{ github.sha }}" ./backend
           docker tag "$IMAGE_NAME:${{ github.sha }}" "$IMAGE_NAME:latest"
           docker push "$IMAGE_NAME:${{ github.sha }}"
           docker push "$IMAGE_NAME:latest"

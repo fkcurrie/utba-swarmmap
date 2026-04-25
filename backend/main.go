@@ -23,7 +23,10 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-var version = "0.6.0"
+var (
+	version   = "0.6.0"
+	buildDate = "unknown"
+)
 
 // getEnv reads an environment variable with a fallback value.
 func getEnv(key, fallback string) string {
@@ -155,6 +158,7 @@ func main() {
 		AIService:         aiService,
 		GoogleOAuthConfig: googleOAuthConfig,
 		Version:           version,
+		BuildDate:         buildDate,
 		Templates:         templates,
 		FrontendAssetsURL: frontendAssetsURL,
 		MapboxToken:       mapboxToken,

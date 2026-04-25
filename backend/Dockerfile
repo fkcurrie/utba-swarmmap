@@ -8,7 +8,9 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server .
+ARG BUILD_VERSION=unknown
+ARG BUILD_DATE=unknown
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-X 'main.version=${BUILD_VERSION}' -X 'main.buildDate=${BUILD_DATE}'" -o /app/server .
 
 # STAGE 2: Create the final, minimal image
 FROM alpine:3.21.3
