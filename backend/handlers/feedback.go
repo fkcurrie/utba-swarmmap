@@ -74,7 +74,7 @@ Maintain a professional and constructive tone. Do not include any other text tha
 		return "", fmt.Errorf("failed to generate content with Gemini: %w", err)
 	}
 
-	if len(resp.Candidates) == 0 || len(resp.Candidates[0].Content.Parts) == 0 {
+	if resp == nil || len(resp.Candidates) == 0 || len(resp.Candidates[0].Content.Parts) == 0 {
 		return "", fmt.Errorf("empty response from Gemini")
 	}
 

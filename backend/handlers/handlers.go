@@ -16,7 +16,7 @@ import (
 )
 
 type AIService interface {
-	InterpretFeedback(ctx context.Context, rawText string, feedbackType string, context FeedbackContext) (string, error)
+	InterpretFeedback(ctx context.Context, rawText string, feedbackType string, fbCtx FeedbackContext) (string, error)
 }
 
 type Handlers struct {

@@ -138,6 +138,7 @@ func main() {
 	if err != nil {
 		slog.Warn("Failed to initialize Vertex AI client, AI interpretation will be disabled", "error", err)
 	} else {
+		defer aiClient.Close()
 		aiService = &handlers.VertexAIService{
 			Client: aiClient,
 			Model:  geminiModel,
@@ -176,7 +177,18 @@ func main() {
 		fs := http.FileServer(http.Dir(staticDir))
 		// Use a more permissive pattern for static files to support all methods (GET, HEAD, etc.)
 		mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	} else {
+		slog.Warn("Static files directory not found, some assets may fail to load", "dir", staticDir)
 	}
+
+	// Health and utility routes
+	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("ok"))
+	})
+	mux.HandleFunc("GET /favicon.ico", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	})
 
 	// Public routes
 	// Root handler matches "/" exactly but also acts as a catch-all if needed.

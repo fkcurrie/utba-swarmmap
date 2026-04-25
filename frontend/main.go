@@ -58,6 +58,15 @@ func main() {
 	
 	mux.Handle("/static/", staticHandler)
 
+	// Health and utility routes
+	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("ok"))
+	})
+	mux.HandleFunc("GET /favicon.ico", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	})
+
 	slog.Info("Listening", "port", portInt) // #nosec G706
 
 	srv := &http.Server{
