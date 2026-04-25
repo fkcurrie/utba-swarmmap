@@ -20,6 +20,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
+      - name: Copy Static Assets for Backend Build
+        run: cp -r frontend/static backend/static
+
       - name: Build Services
         run: docker compose build --progress=plain
 
