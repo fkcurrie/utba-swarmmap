@@ -171,11 +171,18 @@ func main() {
 		staticDir = "../frontend/static"
 	}
 
-	if _, err := os.Stat(staticDir); err == nil {
-		slog.Info("Serving static files", "dir", staticDir)
+	if info, err := os.Stat(staticDir); err == nil && info.IsDir() {
+		files, _ := os.ReadDir(staticDir)
+		if len(files) == 0 {
+			slog.Warn("Static directory is empty", "dir", staticDir)
+		} else {
+			slog.Info("Serving static files", "dir", staticDir, "fileCount", len(files))
+		}
 		fs := http.FileServer(http.Dir(staticDir))
 		// Use a more permissive pattern for static files to support all methods (GET, HEAD, etc.)
 		mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	} else {
+		slog.Warn("Static directory not found or is not a directory", "dir", staticDir)
 	}
 
 	// Public routes
