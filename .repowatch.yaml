@@ -1,0 +1,10 @@
+# RepoWatch configuration for AI agents
+# This file configures the sandbox environment for agents running in this repository.
+
+agent:
+  sandbox:
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: "/secret/gcp-auditor-credentials/key.json"
+    mounts:
+      - secret: "gcp-auditor-credentials"
+        path: "/secret/gcp-auditor-credentials"

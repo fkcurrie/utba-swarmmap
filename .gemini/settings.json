@@ -1,0 +1,14 @@
+{
+  "security": {
+    "environmentVariableRedaction": {
+      "allowed": [
+        "GOOGLE_APPLICATION_CREDENTIALS"
+      ]
+    }
+  },
+  "tools": {
+    "sandboxAllowedPaths": [
+      "/root/.config/gcloud/application_default_credentials.json"
+    ]
+  }
+}

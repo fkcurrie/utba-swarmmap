@@ -3,6 +3,8 @@ description: >
   Perform a weekly security and code quality audit of the application using
   real-time security intelligence and Google Cloud native tools.
 schedule: "@weekly"
+env:
+  GOOGLE_APPLICATION_CREDENTIALS: "/root/.config/gcloud/application_default_credentials.json"
 instructions: |
   You are a proactive security auditing agent for Overseer. Your task is to perform
   a deep-dive security audit and track the results in GitHub.
