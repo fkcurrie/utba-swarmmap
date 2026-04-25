@@ -36,6 +36,22 @@ func TestIndexHandler(t *testing.T) {
 	}
 }
 
+func TestIndexHandler_IndexHtml(t *testing.T) {
+	mockStore := &MockStore{}
+	tmpl, _ := template.New("index.html").Parse("<html>Index</html>")
+	h := &Handlers{Store: mockStore, Templates: tmpl}
+
+	req, _ := http.NewRequest("GET", "/index.html", nil)
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(h.IndexHandler)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code for /index.html: got %v want %v",
+			status, http.StatusOK)
+	}
+}
+
 func TestIndexHandler_NotFound(t *testing.T) {
 	h := &Handlers{}
 

@@ -175,8 +175,8 @@ func main() {
 	if _, err := os.Stat(staticDir); err == nil {
 		slog.Info("Serving static files", "dir", staticDir)
 		fs := http.FileServer(http.Dir(staticDir))
-		// Use a more permissive pattern for static files to support all methods (GET, HEAD, etc.)
-		mux.Handle("/static/", http.StripPrefix("/static/", fs))
+		// Use the GET prefix to avoid conflict with the catch-all root handler in Go 1.22+
+		mux.Handle("GET /static/", http.StripPrefix("/static/", fs))
 	} else {
 		slog.Warn("Static files directory not found, some assets may fail to load", "dir", staticDir)
 	}
@@ -191,8 +191,9 @@ func main() {
 	})
 
 	// Public routes
-	// Root handler matches "/" exactly. Go 1.22+ patterns with "GET" also match "HEAD".
-	mux.HandleFunc("GET /{$}", h.IndexHandler)
+	// Root handler matches "/" and acts as a catch-all for unknown GET requests.
+	// IndexHandler contains logic to return 404 for unknown sub-paths.
+	mux.HandleFunc("GET /", h.IndexHandler)
 	mux.HandleFunc("GET /get_swarms", h.GetSwarmsHandler)
 	mux.HandleFunc("GET /login", h.LoginPageHandler)
 	mux.HandleFunc("GET /register", h.RegisterPageHandler)

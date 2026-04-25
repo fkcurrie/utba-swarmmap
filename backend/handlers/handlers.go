@@ -48,9 +48,11 @@ func (h *Handlers) sanitize(s string) string {
 }
 
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	slog.Debug("IndexHandler called", "path", h.sanitize(r.URL.Path)) // #nosec G706
-	if r.URL.Path != "/" {
-		slog.Debug("Path not /, returning NotFound", "path", h.sanitize(r.URL.Path)) // #nosec G706
+	slog.Debug("IndexHandler called", "path", h.sanitize(r.URL.Path), "method", r.Method) // #nosec G706
+	
+	// Allow both "/" and "/index.html" for the home page
+	if r.URL.Path != "/" && r.URL.Path != "/index.html" {
+		slog.Debug("Path not recognized by IndexHandler, returning NotFound", "path", h.sanitize(r.URL.Path)) // #nosec G706
 		http.NotFound(w, r)
 		return
 	}
@@ -65,7 +67,7 @@ func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
 		"MapboxToken":       h.MapboxToken,
 	})
 	if err != nil {
-		slog.Error("Error executing template", "error", err) // #nosec G706
+		slog.Error("Error executing template", "error", err, "path", h.sanitize(r.URL.Path)) // #nosec G706
 		http.Error(w, "Failed to render page", http.StatusInternalServerError)
 		return
 	}
