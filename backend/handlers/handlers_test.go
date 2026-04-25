@@ -1361,6 +1361,30 @@ func TestUnclaimSwarmHandler(t *testing.T) {
 	}
 }
 
+func TestGetSwarmsHandler_Methods(t *testing.T) {
+	mockStore := &MockStore{}
+	h := &Handlers{
+		Store:        mockStore,
+		SwarmService: service.NewSwarmService(mockStore),
+	}
+
+	// Test HEAD request
+	req, _ := http.NewRequest("HEAD", "/get_swarms", nil)
+	rr := httptest.NewRecorder()
+	http.HandlerFunc(h.GetSwarmsHandler).ServeHTTP(rr, req)
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("HEAD request on /get_swarms failed: got %v want %v", status, http.StatusOK)
+	}
+
+	// Test POST request (should be 405)
+	req, _ = http.NewRequest("POST", "/get_swarms", nil)
+	rr = httptest.NewRecorder()
+	http.HandlerFunc(h.GetSwarmsHandler).ServeHTTP(rr, req)
+	if status := rr.Code; status != http.StatusMethodNotAllowed {
+		t.Errorf("POST request on /get_swarms should be 405: got %v want %v", status, http.StatusMethodNotAllowed)
+	}
+}
+
 func TestVerifyChecks(t *testing.T) {
 	if 1+1 != 2 {
 		t.Error("Math is broken")

@@ -53,3 +53,27 @@ func TestIndexHandler_NotFound(t *testing.T) {
 			status, http.StatusNotFound)
 	}
 }
+
+func TestIndexHandler_Methods(t *testing.T) {
+	mockStore := &MockStore{}
+	h := &Handlers{
+		Store:     mockStore,
+		Templates: template.Must(template.New("index.html").Parse("{{.Title}}")),
+	}
+
+	// Test HEAD request
+	req, _ := http.NewRequest("HEAD", "/", nil)
+	rr := httptest.NewRecorder()
+	http.HandlerFunc(h.IndexHandler).ServeHTTP(rr, req)
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("HEAD request failed: got %v want %v", status, http.StatusOK)
+	}
+
+	// Test POST request (should be 405)
+	req, _ = http.NewRequest("POST", "/", nil)
+	rr = httptest.NewRecorder()
+	http.HandlerFunc(h.IndexHandler).ServeHTTP(rr, req)
+	if status := rr.Code; status != http.StatusMethodNotAllowed {
+		t.Errorf("POST request on root should be 405: got %v want %v", status, http.StatusMethodNotAllowed)
+	}
+}

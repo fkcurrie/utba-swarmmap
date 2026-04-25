@@ -179,33 +179,30 @@ func main() {
 	}
 
 	// Public routes
-	// Root handler matches "/" exactly but also acts as a catch-all if needed.
-	// IndexHandler already contains logic to return 404 for unknown paths.
+	// Root handler matches "/" and acts as a catch-all for unknown paths.
+	// IndexHandler contains internal logic to return 404 for unknown sub-paths.
 	mux.HandleFunc("/", h.IndexHandler)
-	mux.HandleFunc("GET /get_swarms", h.GetSwarmsHandler)
-	mux.HandleFunc("GET /login", h.LoginPageHandler)
-	mux.HandleFunc("GET /register", h.RegisterPageHandler)
-	mux.HandleFunc("GET /auth/google", h.GoogleLoginHandler)
-	mux.HandleFunc("GET /auth/google/callback", h.GoogleCallbackHandler)
-	mux.HandleFunc("GET /auth/apple", h.AppleLoginHandler)
-	mux.HandleFunc("GET /auth/apple/callback", h.AppleCallbackHandler)
+	mux.HandleFunc("/get_swarms", h.GetSwarmsHandler)
+	mux.HandleFunc("/login", h.LoginPageHandler)
+	mux.HandleFunc("/register", h.RegisterPageHandler)
+	mux.HandleFunc("/auth/google", h.GoogleLoginHandler)
+	mux.HandleFunc("/auth/google/callback", h.GoogleCallbackHandler)
+	mux.HandleFunc("/auth/apple", h.AppleLoginHandler)
+	mux.HandleFunc("/auth/apple/callback", h.AppleCallbackHandler)
 	mux.HandleFunc("POST /auth/login", h.UsernameLoginHandler)
 	mux.HandleFunc("POST /auth/register", h.UsernameRegisterHandler)
-	mux.HandleFunc("GET /auth/verify-email", h.VerifyEmailHandler)
-	mux.HandleFunc("GET /auth/forgot-password", h.ForgotPasswordHandler)
-	mux.HandleFunc("POST /auth/forgot-password", h.ForgotPasswordHandler)
-	mux.HandleFunc("GET /auth/reset-password", h.ResetPasswordHandler)
-	mux.HandleFunc("POST /auth/reset-password", h.ResetPasswordHandler)
-	mux.HandleFunc("GET /logout", h.LogoutHandler)
-	mux.HandleFunc("GET /auth", h.AuthHandler)
+	mux.HandleFunc("/auth/verify-email", h.VerifyEmailHandler)
+	mux.HandleFunc("/auth/forgot-password", h.ForgotPasswordHandler)
+	mux.HandleFunc("/auth/reset-password", h.ResetPasswordHandler)
+	mux.HandleFunc("/logout", h.LogoutHandler)
+	mux.HandleFunc("/auth", h.AuthHandler)
 	mux.HandleFunc("POST /prepare_swarm", h.PrepareSwarmHandler)
 	mux.HandleFunc("POST /confirm_swarm", h.ConfirmSwarmHandler)
 	mux.HandleFunc("POST /demo/generate_sample_data", h.RequireAuth(h.RequireRole("site_admin", h.VerifyCSRF(http.HandlerFunc(h.GenerateSampleDataHandler)))).ServeHTTP)
 	mux.HandleFunc("POST /api/track_visit", h.TrackVisitHandler)
 	mux.Handle("POST /api/feedback", h.WithSession(h.VerifyCSRF(http.HandlerFunc(h.FeedbackHandler))))
 	mux.Handle("GET /api/visits", h.RequireAuth(h.RequireRole("site_admin", http.HandlerFunc(h.VisitsAPIHandler))))
-	mux.HandleFunc("GET /bootstrap", h.BootstrapHandler)
-	mux.HandleFunc("POST /bootstrap", h.BootstrapHandler)
+	mux.HandleFunc("/bootstrap", h.BootstrapHandler)
 
 	// Authenticated routes
 	mux.Handle("GET /dashboard", h.RequireAuth(http.HandlerFunc(h.DashboardHandler)))

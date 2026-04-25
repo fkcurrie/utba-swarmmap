@@ -16,7 +16,12 @@ import (
 )
 
 // LoginPageHandler renders the login page.
-func (h *Handlers) LoginPageHandler(w http.ResponseWriter, _ *http.Request) {
+func (h *Handlers) LoginPageHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		w.Header().Set("Allow", "GET, HEAD")
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 	err := h.Templates.ExecuteTemplate(w, "login.html", map[string]interface{}{
 		"Title":             "Login",
 		"Version":           h.Version,
@@ -30,7 +35,12 @@ func (h *Handlers) LoginPageHandler(w http.ResponseWriter, _ *http.Request) {
 }
 
 // RegisterPageHandler renders the registration page.
-func (h *Handlers) RegisterPageHandler(w http.ResponseWriter, _ *http.Request) {
+func (h *Handlers) RegisterPageHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		w.Header().Set("Allow", "GET, HEAD")
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 	err := h.Templates.ExecuteTemplate(w, "register.html", map[string]interface{}{
 		"Title":             "Register",
 		"Version":           h.Version,

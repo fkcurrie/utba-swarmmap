@@ -48,9 +48,17 @@ func (h *Handlers) sanitize(s string) string {
 }
 
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	slog.Debug("IndexHandler called", "path", h.sanitize(r.URL.Path)) // #nosec G706
-	if r.URL.Path != "/" {
-		slog.Debug("Path not /, returning NotFound", "path", h.sanitize(r.URL.Path)) // #nosec G706
+	slog.Info("IndexHandler called", "method", r.Method, "path", h.sanitize(r.URL.Path)) // #nosec G706
+	
+	// Normalize path and check if it's the root.
+	// We allow empty path or "/" to be handled as root for maximum robustness.
+	p := r.URL.Path
+	if p == "" {
+		p = "/"
+	}
+
+	if p != "/" {
+		slog.Debug("Path not root, returning NotFound", "path", h.sanitize(p)) // #nosec G706
 		http.NotFound(w, r)
 		return
 	}
@@ -78,8 +86,9 @@ func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handlers) GetSwarmsHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		h.jsonError(w, "Only GET method is allowed", http.StatusMethodNotAllowed)
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		w.Header().Set("Allow", "GET, HEAD")
+		h.jsonError(w, "Only GET and HEAD methods are allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	ctx := r.Context()
