@@ -149,7 +149,7 @@ jobs:
       - name: Health Check
         id: health-check
         run: |
-          curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "${{ steps.deploy-backend.outputs.url }}"
+          curl --retry 5 --retry-all-errors --retry-delay 5 -I --fail --silent --show-error "${{ steps.deploy-backend.outputs.url }}/healthz"
 
       - name: Install Playwright Browsers
         run: |

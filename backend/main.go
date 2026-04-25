@@ -182,17 +182,19 @@ func main() {
 	}
 
 	// Health and utility routes
-	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
+	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write([]byte("ok"))
 	})
-	mux.HandleFunc("GET /favicon.ico", func(w http.ResponseWriter, _ *http.Request) {
-		w.WriteHeader(http.StatusNoContent)
+	mux.HandleFunc("/favicon.ico", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
 	})
 
 	// Public routes
 	// Root handler matches "/" exactly. Go 1.22+ patterns with "GET" also match "HEAD".
+	// We use the exact match pattern /{$} to ensure it doesn't act as a catch-all for other paths.
 	mux.HandleFunc("GET /{$}", h.IndexHandler)
+	mux.HandleFunc("HEAD /{$}", h.IndexHandler)
 	mux.HandleFunc("GET /get_swarms", h.GetSwarmsHandler)
 	mux.HandleFunc("GET /login", h.LoginPageHandler)
 	mux.HandleFunc("GET /register", h.RegisterPageHandler)
