@@ -470,13 +470,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Show modal immediately so user (and E2E tests) sees it's working
       const reportModalEl = document.getElementById('reportSwarmModal');
-      if (reportModalEl && typeof bootstrap !== 'undefined') {
-        try {
-          const reportModal =
-            bootstrap.Modal.getOrCreateInstance(reportModalEl);
-          reportModal.show();
-        } catch (e) {
-          console.warn('Failed to show report modal:', e);
+      if (reportModalEl) {
+        if (typeof bootstrap !== 'undefined') {
+          try {
+            const reportModal =
+              bootstrap.Modal.getOrCreateInstance(reportModalEl);
+            reportModal.show();
+          } catch (e) {
+            console.warn('Failed to show report modal:', e);
+          }
+        } else {
+          console.error('Bootstrap library is not loaded. Cannot show report modal.');
         }
       }
     }
@@ -814,8 +818,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
   });
-
-  locateUser(false);
 
   (function trackVisit() {
     let visitorId = localStorage.getItem('utba_visitor_id');
