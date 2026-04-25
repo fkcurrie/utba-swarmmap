@@ -179,9 +179,8 @@ func main() {
 	}
 
 	// Public routes
-	// Root handler matches "/" exactly but also acts as a catch-all if needed.
-	// IndexHandler already contains logic to return 404 for unknown paths.
-	mux.HandleFunc("/", h.IndexHandler)
+	// Root handler matches "/" exactly. Go 1.22+ patterns with "GET" also match "HEAD".
+	mux.HandleFunc("GET /{$}", h.IndexHandler)
 	mux.HandleFunc("GET /get_swarms", h.GetSwarmsHandler)
 	mux.HandleFunc("GET /login", h.LoginPageHandler)
 	mux.HandleFunc("GET /register", h.RegisterPageHandler)
