@@ -1,7 +1,10 @@
 // Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 import { test, expect } from '@playwright/test';
 
-test('deployment validation - basic elements and assets', async ({ page, context }, testInfo) => {
+test('deployment validation - basic elements and assets', async ({
+  page,
+  context,
+}, testInfo) => {
   const failedRequests = [];
   const consoleErrors = [];
 
@@ -40,7 +43,9 @@ test('deployment validation - basic elements and assets', async ({ page, context
       url.includes('fonts.gstatic.com') ||
       url.includes('favicon.ico')
     ) {
-      console.log(`Ignoring failed non-critical request: ${url} (${errorText})`);
+      console.log(
+        `Ignoring failed non-critical request: ${url} (${errorText})`,
+      );
       return;
     }
 
@@ -76,7 +81,10 @@ test('deployment validation - basic elements and assets', async ({ page, context
       if (text.includes('Mapbox token is missing')) return;
       if (text.includes('Mapbox library failed to load')) return;
       if (text.includes('Map initialization error')) return;
-      if (text.includes('track_visit') || text.includes('Failed to track visit'))
+      if (
+        text.includes('track_visit') ||
+        text.includes('Failed to track visit')
+      )
         return;
       if (text.includes('net::ERR_EMPTY_RESPONSE')) return; // Also ignore this if it's from the tracking request
       if (text.includes('net::ERR_ABORTED')) return;
@@ -99,7 +107,9 @@ test('deployment validation - basic elements and assets', async ({ page, context
   await page.waitForLoadState('domcontentloaded');
   // Network idle can be flaky if there are long-running background requests, so we wrap it with a short timeout
   await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {
-    console.log('Timed out waiting for network idle, proceeding with validation');
+    console.log(
+      'Timed out waiting for network idle, proceeding with validation',
+    );
   });
 
   // 1. Verify basic page title/content
@@ -197,18 +207,13 @@ test('deployment validation - basic elements and assets', async ({ page, context
 
   const footer = page.locator('footer');
   await expect(footer).toBeVisible();
-  await expect(footer).toContainText(/Made with .* with/i);
-  await expect(footer).toContainText(/gemini-cli/i);
+  await expect(footer).toContainText(/Made by .* in Toronto Canada/i);
+  await expect(footer).toContainText(/contact us/i);
 
   // Verify footer link specifically
-  const footerLink = footer.getByRole('link', { name: 'gemini-cli' });
-  await expect(footerLink).toHaveAttribute(
-    'href',
-    'https://github.com/google/gemini-cli',
-  );
-  await expect(footerLink).toHaveAttribute('target', '_blank');
-  await expect(footerLink).toHaveAttribute('rel', 'noopener');
-  await expect(footerLink).toHaveText('gemini-cli');
+  const footerLink = footer.getByRole('link', { name: 'contact us' });
+  await expect(footerLink).toHaveAttribute('href', 'mailto:swarmmap@sfle.ca');
+  await expect(footerLink).toHaveText('contact us');
   await expect(footerLink).toBeVisible();
 
   // Verify Give Feedback button is present
@@ -220,7 +225,9 @@ test('deployment validation - basic elements and assets', async ({ page, context
   await reportBtn.click();
   const modal = page.locator('#reportSwarmModal');
   await expect(modal).toBeVisible({ timeout: 30000 });
-  await expect(modal.locator('.modal-title')).toContainText(/Report Bee Swarm/i);
+  await expect(modal.locator('.modal-title')).toContainText(
+    /Report Bee Swarm/i,
+  );
   await expect(modal.locator('i.fa-bug')).toBeAttached();
 
   const submitBtn = modal.locator('button[type="submit"]');
