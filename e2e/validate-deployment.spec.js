@@ -1,9 +1,24 @@
 // Copyright (c) 2026 Frank Currie (frank@sfle.ca)
 import { test, expect } from '@playwright/test';
 
-test('deployment validation - basic elements and assets', async ({ page }, testInfo) => {
+test('deployment validation - basic elements and assets', async ({ page, context }, testInfo) => {
   const failedRequests = [];
   const consoleErrors = [];
+
+  const baseURL = testInfo.project.use.baseURL || 'default';
+  console.log(`Validating deployment at: ${baseURL}`);
+
+  // Grant geolocation permissions to prevent browser prompts and ensure main.js logic can proceed
+  if (baseURL !== 'default') {
+    try {
+      const origin = new URL(baseURL).origin;
+      await context.grantPermissions(['geolocation'], { origin });
+      await context.setGeolocation({ latitude: 43.6532, longitude: -79.3832 });
+      console.log(`Granted geolocation permissions for ${origin}`);
+    } catch (e) {
+      console.warn('Failed to grant geolocation permissions:', e.message);
+    }
+  }
 
   // Track failed requests
   page.on('requestfailed', (request) => {
@@ -21,6 +36,8 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
       url.includes('mapbox.com') ||
       url.includes('events.mapbox.com') ||
       url.includes('nominatim.openstreetmap.org') ||
+      url.includes('fonts.googleapis.com') ||
+      url.includes('fonts.gstatic.com') ||
       url.includes('favicon.ico')
     ) {
       console.log(`Ignoring failed non-critical request: ${url} (${errorText})`);
@@ -40,13 +57,13 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
         url.includes('mapbox.com') ||
         url.includes('events.mapbox.com') ||
         url.includes('nominatim.openstreetmap.org') ||
+        url.includes('fonts.googleapis.com') ||
+        url.includes('fonts.gstatic.com') ||
         url.includes('favicon.ico')
       ) {
         return;
       }
       console.log(`HTTP ${status} for ${url}`);
-      // We'll treat critical HTTP errors as console errors to fail the test
-      // but only if they are not specifically ignored
     }
   });
 
@@ -76,9 +93,6 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
       consoleErrors.push(text);
     }
   });
-
-  const baseURL = testInfo.project.use.baseURL || 'default';
-  console.log(`Validating deployment at: ${baseURL}`);
 
   // Increase reliability by waiting for various load states
   await page.goto('/', { waitUntil: 'load', timeout: 30000 });
@@ -168,10 +182,16 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
     const actualColor = await colorSpan.evaluate(
       (el) => window.getComputedStyle(el).backgroundColor,
     );
-    const normalize = (c) => c.replace(/\s+/g, '').toLowerCase();
+    const normalize = (c) => {
+      if (!c) return '';
+      // Remove spaces and lowercase
+      let n = c.replace(/\s+/g, '').toLowerCase();
+      // Handle rgba(r,g,b,1) -> rgb(r,g,b)
+      return n.replace(/rgba\((\d+,\d+,\d+),1\)/, 'rgb($1)');
+    };
     expect(
       normalize(actualColor),
-      `Legend item ${i} (${expectedLegend[i].text}) has wrong color`,
+      `Legend item ${i} (${expectedLegend[i].text}) has wrong color (Actual: ${actualColor})`,
     ).toBe(normalize(expectedLegend[i].color));
   }
 
@@ -223,7 +243,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
   const mapboxElement = page.locator('#map .mapboxgl-map, #map .alert');
   await expect(mapboxElement.first()).toBeVisible({ timeout: 30000 });
 
-  // 4. Verify no critical assets failed to load
+  // 5. Verify no critical assets failed to load
   if (failedRequests.length > 0) {
     console.error('Failed requests:', failedRequests);
   }
@@ -232,7 +252,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
     `Found ${failedRequests.length} failed requests: ${failedRequests.join(', ')}`,
   ).toHaveLength(0);
 
-  // 5. Verify no console errors
+  // 6. Verify no console errors
   if (consoleErrors.length > 0) {
     console.error('Console errors:', consoleErrors);
   }
@@ -242,7 +262,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
     `Found ${consoleErrors.length} console errors: ${consoleErrors.join(', ')}`,
   ).toHaveLength(0);
 
-  // 6. Verify map is rendered (if initialized)
+  // 7. Verify map is rendered (if initialized)
   if ((await page.locator('.mapboxgl-map').count()) > 0) {
     // Wait for at least the map canvas to be visible. Increased timeout for CI robustness.
     await expect(page.locator('.mapboxgl-canvas').first()).toBeVisible({
@@ -250,7 +270,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
     });
   }
 
-  // Verify visible images are rendered (non-zero size)
+  // 8. Verify visible images are rendered (non-zero size)
   const images = page.locator('img:visible');
   const imageCount = await images.count();
   for (let i = 0; i < imageCount; i++) {
@@ -280,7 +300,7 @@ test('deployment validation - basic elements and assets', async ({ page }, testI
     ).toBeGreaterThan(1);
   }
 
-  // 7. Visual check - attach a screenshot to the test report
+  // 9. Visual check - attach a screenshot to the test report
   await testInfo.attach('deployment-screenshot', {
     body: await page.screenshot({ fullPage: true }),
     contentType: 'image/png',
