@@ -4,6 +4,7 @@ package handlers
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -27,6 +28,15 @@ func (m *MockGitHubService) CreateIssue(repo, token, title, body string, labels 
 	m.LastBody = body
 	m.LastLabels = labels
 	return m.ReturnErr
+}
+
+type MockAIService struct {
+	InterpretedBody string
+	ReturnErr       error
+}
+
+func (m *MockAIService) InterpretFeedback(_ context.Context, _, _ string, _ FeedbackContext) (string, error) {
+	return m.InterpretedBody, m.ReturnErr
 }
 
 func TestFeedbackHandler_Success(t *testing.T) {
@@ -63,6 +73,44 @@ func TestFeedbackHandler_Success(t *testing.T) {
 	}
 	if mockGitHub.LastLabels[0] != "repo-agent" || mockGitHub.LastLabels[1] != "bug" {
 		t.Errorf("unexpected labels: %v", mockGitHub.LastLabels)
+	}
+}
+
+func TestFeedbackHandler_AISuccess(t *testing.T) {
+	mockGitHub := &MockGitHubService{}
+	mockAI := &MockAIService{
+		InterpretedBody: "Interpreted AI Body",
+	}
+	h := &Handlers{
+		GitHubService: mockGitHub,
+		AIService:     mockAI,
+		GithubToken:   "test-token",
+		GithubRepo:    "test/repo",
+	}
+
+	payload := FeedbackRequest{
+		Type:        "bug",
+		Title:       "Test AI",
+		Description: "Raw feedback",
+		Context: FeedbackContext{
+			URL:      "http://localhost/test",
+			Browser:  "Test Browser",
+			LoggedIn: true,
+		},
+	}
+	body, _ := json.Marshal(payload)
+	req, _ := http.NewRequest("POST", "/api/feedback", bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	h.FeedbackHandler(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	if mockGitHub.LastBody != "Interpreted AI Body" {
+		t.Errorf("expected body %v, got %v", "Interpreted AI Body", mockGitHub.LastBody)
 	}
 }
 
