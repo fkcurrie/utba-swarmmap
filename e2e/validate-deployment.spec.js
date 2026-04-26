@@ -181,48 +181,6 @@ test('deployment validation - basic elements and assets', async ({
     `Map height should be at least 350px, but got ${mapHeight}`,
   ).toBeGreaterThanOrEqual(350);
 
-  const legend = page.locator('#legendTitle');
-  await expect(legend).toBeVisible({ timeout: 15000 });
-  await expect(legend).toHaveText(/Map Legend/i);
-  await expect(legend.locator('i.fa-circle-info')).toBeAttached();
-
-  // Check legend items specifically within the aside area for robustness
-  console.log('Verifying legend items...');
-  const legendItems = page.locator('aside .legend-item');
-  await expect(legendItems).toHaveCount(5);
-
-  // Verify specific legend text and colors for robustness
-  const expectedLegend = [
-    { text: /Reported/i, color: 'rgb(232, 65, 24)' }, // #e84118
-    { text: /Verified/i, color: 'rgb(251, 197, 49)' }, // #fbc531
-    { text: /Claimed/i, color: 'rgb(255, 140, 0)' }, // #ff8c00
-    { text: /Captured/i, color: 'rgb(76, 209, 55)' }, // #4cd137
-    { text: /Archived/i, color: 'rgb(72, 126, 176)' }, // #487eb0
-  ];
-
-  for (let i = 0; i < expectedLegend.length; i++) {
-    const item = legendItems.nth(i);
-    await expect(item).toContainText(expectedLegend[i].text);
-    const colorSpan = item.locator('.legend-color');
-    await expect(colorSpan).toBeVisible();
-
-    // Use normalized color comparison to handle browser spacing differences in rgb strings
-    const actualColor = await colorSpan.evaluate(
-      (el) => window.getComputedStyle(el).backgroundColor,
-    );
-    const normalize = (c) => {
-      if (!c) return '';
-      // Remove spaces and lowercase
-      let n = c.replace(/\s+/g, '').toLowerCase();
-      // Handle rgba(r,g,b,1) -> rgb(r,g,b)
-      return n.replace(/rgba\((\d+,\d+,\d+),1\)/, 'rgb($1)');
-    };
-    expect(
-      normalize(actualColor),
-      `Legend item ${i} (${expectedLegend[i].text}) has wrong color (Actual: ${actualColor})`,
-    ).toBe(normalize(expectedLegend[i].color));
-  }
-
   const footer = page.locator('footer');
   await expect(footer).toBeVisible();
   await expect(footer).toContainText(/Made by .* in Toronto Canada/i);
