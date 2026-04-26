@@ -1,0 +1,77 @@
+<!-- Copyright (c) 2026 Frank Currie (frank@sfle.ca) -->
+{{template "header.html" .}}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-800 mb-3">What's New</h1>
+                <p class="lead text-muted">Tracking the latest features and bug fixes on the UTBA Swarm Map.</p>
+            </div>
+
+            {{if .Groups}}
+                {{range .Groups}}
+                    <div class="mb-5">
+                        <div class="d-flex align-items-center mb-4">
+                            <h2 class="h3 fw-bold mb-0">{{.Month}}</h2>
+                            <div class="flex-grow-1 ms-3 border-bottom"></div>
+                        </div>
+                        
+                        <div class="row">
+                            {{if .Features}}
+                                <div class="col-md-6 mb-4">
+                                    <h3 class="h5 text-primary fw-bold mb-3">
+                                        <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Features
+                                    </h3>
+                                    <div class="list-group list-group-flush shadow-sm rounded border">
+                                        {{range .Features}}
+                                            <div class="list-group-item py-3">
+                                                <div class="fw-bold text-dark">{{.Title}}</div>
+                                            </div>
+                                        {{/range}}
+                                    </div>
+                                </div>
+                            {{end}}
+
+                            {{if .Bugs}}
+                                <div class="col-md-6 mb-4">
+                                    <h3 class="h5 text-warning fw-bold mb-3">
+                                        <i class="fa-solid fa-bug me-2"></i> Bug Fixes
+                                    </h3>
+                                    <div class="list-group list-group-flush shadow-sm rounded border">
+                                        {{range .Bugs}}
+                                            <div class="list-group-item py-3">
+                                                <div class="fw-bold text-dark">{{.Title}}</div>
+                                            </div>
+                                        {{/range}}
+                                    </div>
+                                </div>
+                            {{end}}
+                        </div>
+                    </div>
+                {{end}}
+            {{else}}
+                <div class="text-center py-5 bg-light rounded-4 border border-dashed">
+                    <i class="fa-solid fa-clock-rotate-left fa-3x text-muted opacity-25 mb-3"></i>
+                    <p class="text-muted mb-0">No updates found yet. We're constantly working on improvements!</p>
+                </div>
+            {{end}}
+
+            <div class="mt-5 pt-5 border-top text-center">
+                <p class="text-muted small">
+                    This information is live-synced from our <a href="https://github.com/fkcurrie/utba-swarmmap/issues" target="_blank" class="text-decoration-none">GitHub repository</a>.
+                </p>
+                <a href="/" class="btn btn-outline-secondary btn-sm mt-3">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Back to Map
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fw-800 { font-weight: 800; }
+    .border-dashed { border-style: dashed !important; }
+</style>
+
+{{template "footer.html" .}}

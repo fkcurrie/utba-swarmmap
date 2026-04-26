@@ -202,6 +202,7 @@ func main() {
 	// Root handler matches "/" exactly. Go 1.22+ patterns with "GET" also match "HEAD".
 	// We use the exact match pattern /{$} to ensure it doesn't act as a catch-all for other paths.
 	mux.HandleFunc("GET /{$}", h.IndexHandler)
+	mux.HandleFunc("GET /about", h.AboutHandler)
 	mux.HandleFunc("GET /get_swarms", h.GetSwarmsHandler)
 	mux.HandleFunc("GET /login", h.LoginPageHandler)
 	mux.HandleFunc("GET /register", h.RegisterPageHandler)
