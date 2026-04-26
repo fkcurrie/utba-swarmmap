@@ -5,28 +5,12 @@ services:
     image: gcr.io/google.com/cloudsdktool/cloud-sdk:emulators
     command: gcloud beta emulators firestore start --host-port=0.0.0.0:8081
     ports:
-      - '8081:8081'
-    healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          'python3 -c ''import socket; s = socket.socket(); s.connect(("localhost", 8081))'' || exit 1',
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-
+      - 8081:8081
   gcs-emulator:
     image: fsouza/fake-gcs-server
     command: -scheme http
     ports:
-      - '4443:4443'
-    healthcheck:
-      test: ['CMD', 'nc', '-z', 'localhost', '4443']
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
+      - 4443:4443
   backend:
     build:
       context: ./backend
@@ -42,24 +26,16 @@ services:
       - MAPBOX_ACCESS_TOKEN=${MAPBOX_ACCESS_TOKEN:-}
       - FRONTEND_ASSETS_URL=http://localhost:8082
     ports:
-      - '8085:8085'
+      - 8085:8085
     volumes:
       - ./frontend/static:/app/static
     depends_on:
-      firestore-emulator:
-        condition: service_healthy
-      gcs-emulator:
-        condition: service_healthy
-    healthcheck:
-      test: ['CMD-SHELL', 'wget -q --spider http://localhost:8085/ || exit 1']
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
+      - firestore-emulator
+      - gcs-emulator
   frontend:
     build:
       context: ./frontend
     environment:
       - PORT=8082
     ports:
-      - '8082:8082'
+      - 8082:8082
