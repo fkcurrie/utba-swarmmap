@@ -48,24 +48,32 @@ func (h *Handlers) sanitize(s string) string {
 }
 
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	slog.Debug("IndexHandler called", "path", h.sanitize(r.URL.Path)) // #nosec G706
-	if r.URL.Path != "/" {
-		slog.Debug("Path not /, returning NotFound", "path", h.sanitize(r.URL.Path)) // #nosec G706
+	path := h.sanitize(r.URL.Path)
+	slog.Debug("IndexHandler called", "path", path) // #nosec G706
+	if path != "/" {
+		slog.Debug("Path not /, returning NotFound", "path", path) // #nosec G706
 		http.NotFound(w, r)
 		return
 	}
 
 	session := h.getSession(r)
+	if session != nil {
+		slog.Debug("IndexHandler: session found", "userID", h.sanitize(session.UserID), "role", session.Role)
+	} else {
+		slog.Debug("IndexHandler: no session found")
+	}
 
-	err := h.Templates.ExecuteTemplate(w, "index.html", map[string]interface{}{
+	data := map[string]interface{}{
 		"Title":             "Home",
 		"Version":           h.Version,
 		"User":              session,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 		"MapboxToken":       h.MapboxToken,
-	})
+	}
+
+	err := h.Templates.ExecuteTemplate(w, "index.html", data)
 	if err != nil {
-		slog.Error("Error executing template", "error", err) // #nosec G706
+		slog.Error("Error executing template", "error", err, "path", path, "hasSession", session != nil) // #nosec G706
 		http.Error(w, "Failed to render page", http.StatusInternalServerError)
 		return
 	}

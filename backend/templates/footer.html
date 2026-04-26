@@ -5,8 +5,12 @@
             <p class="text-muted small mb-0">
                 Made by 🐝 in Toronto Canada | <a href="mailto:swarmmap@sfle.ca">contact us</a>
                 |
-                {{if and .User (eq .User.Role "site_admin")}}
-                    <a href="/admin" class="text-decoration-none">Site Administration</a>
+                {{if .User}}
+                    {{if eq .User.Role "site_admin"}}
+                        <a href="/admin" class="text-decoration-none">Site Administration</a>
+                    {{else}}
+                        <a href="/login?role=site_admin" class="text-decoration-none">Site Admin Login</a>
+                    {{end}}
                 {{else}}
                     <a href="/login?role=site_admin" class="text-decoration-none">Site Admin Login</a>
                 {{end}}
