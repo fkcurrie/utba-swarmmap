@@ -28,6 +28,7 @@ func (h *Handlers) SwarmListHandler(w http.ResponseWriter, r *http.Request) {
 		"Title":             "Swarm List",
 		"Swarms":            swarms,
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"User":              session,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
@@ -50,6 +51,7 @@ func (h *Handlers) CollectorsMapHandler(w http.ResponseWriter, r *http.Request) 
 	data := map[string]interface{}{
 		"Title":             "Collectors Map",
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"User":              session,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 		"MapboxToken":       h.MapboxToken,

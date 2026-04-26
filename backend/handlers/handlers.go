@@ -28,6 +28,7 @@ type Handlers struct {
 	GoogleOAuthConfig *oauth2.Config
 	AppleOAuthConfig  *oauth2.Config
 	Version           string
+	BuildDate         string
 	Templates         *template.Template
 	FrontendAssetsURL string
 	MapboxToken       string
@@ -66,6 +67,7 @@ func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{
 		"Title":             "Home",
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"User":              session,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 		"MapboxToken":       h.MapboxToken,

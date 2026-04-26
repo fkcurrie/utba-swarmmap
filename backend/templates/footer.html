@@ -14,6 +14,9 @@
                 {{else}}
                     <a href="/login?role=site_admin" class="text-decoration-none">Site Admin Login</a>
                 {{end}}
+                <br>
+                {{if .Version}}<span class="opacity-75">v{{.Version}}</span>{{end}}
+                {{if .BuildDate}}<span class="opacity-75"> &bull; Built: {{.BuildDate}}</span>{{end}}
             </p>
         </div>
     </footer>

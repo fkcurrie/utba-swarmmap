@@ -42,6 +42,7 @@ func (h *Handlers) DashboardHandler(w http.ResponseWriter, r *http.Request) {
 	err = h.Templates.ExecuteTemplate(w, "dashboard.html", map[string]interface{}{
 		"Title":              "Dashboard",
 		"Version":            h.Version,
+		"BuildDate":          h.BuildDate,
 		"User":               session,
 		"AvailableSwarms":    availableSwarms,
 		"AssignedSwarms":     assignedSwarms,

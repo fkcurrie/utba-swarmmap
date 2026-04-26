@@ -20,6 +20,7 @@ func (h *Handlers) LoginPageHandler(w http.ResponseWriter, _ *http.Request) {
 	err := h.Templates.ExecuteTemplate(w, "login.html", map[string]interface{}{
 		"Title":             "Login",
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
 	if err != nil {
@@ -34,6 +35,7 @@ func (h *Handlers) RegisterPageHandler(w http.ResponseWriter, _ *http.Request) {
 	err := h.Templates.ExecuteTemplate(w, "register.html", map[string]interface{}{
 		"Title":             "Register",
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
 	if err != nil {
@@ -254,6 +256,7 @@ func (h *Handlers) renderLoginPageWithError(w http.ResponseWriter, errorMsg stri
 	err := h.Templates.ExecuteTemplate(w, "login.html", map[string]interface{}{
 		"Title":             "Login",
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"Error":             errorMsg,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
@@ -268,6 +271,7 @@ func (h *Handlers) renderRegisterPageWithError(w http.ResponseWriter, errorMsg s
 	err := h.Templates.ExecuteTemplate(w, "register.html", map[string]interface{}{
 		"Title":             "Register",
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"Error":             errorMsg,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
@@ -283,6 +287,7 @@ func (h *Handlers) renderMessagePage(w http.ResponseWriter, title, message strin
 		"Title":             title,
 		"Message":           message,
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
 	if err != nil {
@@ -296,6 +301,7 @@ func (h *Handlers) showPendingApprovalPage(w http.ResponseWriter, name string) {
 	err := h.Templates.ExecuteTemplate(w, "pending-approval.html", map[string]interface{}{
 		"Name":              name,
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
 	if err != nil {
@@ -360,6 +366,7 @@ func (h *Handlers) ForgotPasswordHandler(w http.ResponseWriter, r *http.Request)
 		err := h.Templates.ExecuteTemplate(w, "forgot-password.html", map[string]interface{}{
 			"Title":             "Forgot Password",
 			"Version":           h.Version,
+			"BuildDate":         h.BuildDate,
 			"FrontendAssetsURL": h.FrontendAssetsURL,
 		})
 		if err != nil {
@@ -414,6 +421,7 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 		err := h.Templates.ExecuteTemplate(w, "reset-password.html", map[string]interface{}{
 			"Title":             "Reset Password",
 			"Version":           h.Version,
+			"BuildDate":         h.BuildDate,
 			"Token":             token,
 			"FrontendAssetsURL": h.FrontendAssetsURL,
 		})
@@ -446,6 +454,7 @@ func (h *Handlers) ResetPasswordHandler(w http.ResponseWriter, r *http.Request) 
 		err := h.Templates.ExecuteTemplate(w, "reset-password.html", map[string]interface{}{
 			"Title":             "Reset Password",
 			"Version":           h.Version,
+			"BuildDate":         h.BuildDate,
 			"Token":             token,
 			"Error":             "Password must be at least 8 characters long",
 			"FrontendAssetsURL": h.FrontendAssetsURL,

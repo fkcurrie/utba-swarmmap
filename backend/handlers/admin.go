@@ -79,6 +79,7 @@ func (h *Handlers) AdminHandler(w http.ResponseWriter, r *http.Request) {
 	err = h.Templates.ExecuteTemplate(w, "admin.html", map[string]interface{}{
 		"Title":             "Admin Dashboard",
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"User":              session,
 		"PendingUsers":      pendingUsers,
 		"AllUsers":          allUsers,
@@ -118,6 +119,7 @@ func (h *Handlers) BootstrapHandler(w http.ResponseWriter, r *http.Request) {
 		err := h.Templates.ExecuteTemplate(w, "bootstrap.html", map[string]interface{}{
 			"Title":             "Bootstrap Admin",
 			"Version":           h.Version,
+			"BuildDate":         h.BuildDate,
 			"FrontendAssetsURL": h.FrontendAssetsURL,
 		})
 		if err != nil {
@@ -136,6 +138,7 @@ func (h *Handlers) BootstrapHandler(w http.ResponseWriter, r *http.Request) {
 		err := h.Templates.ExecuteTemplate(w, "bootstrap.html", map[string]interface{}{
 			"Title":             "Bootstrap Admin",
 			"Version":           h.Version,
+			"BuildDate":         h.BuildDate,
 			"Error":             "Name and Email are required",
 			"FrontendAssetsURL": h.FrontendAssetsURL,
 		})
@@ -166,6 +169,7 @@ func (h *Handlers) BootstrapHandler(w http.ResponseWriter, r *http.Request) {
 	err = h.Templates.ExecuteTemplate(w, "bootstrap.html", map[string]interface{}{
 		"Title":             "Bootstrap Admin",
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"Success":           fmt.Sprintf("Administrator %s (%s) has been created successfully.", name, email),
 		"FrontendAssetsURL": h.FrontendAssetsURL,
 	})
@@ -309,6 +313,7 @@ func (h *Handlers) CollectorAdminHandler(w http.ResponseWriter, r *http.Request)
 	err = h.Templates.ExecuteTemplate(w, "collector_admin.html", map[string]interface{}{
 		"Title":             "Collector Admin",
 		"Version":           h.Version,
+		"BuildDate":         h.BuildDate,
 		"User":              session,
 		"PendingUsers":      pendingUsers,
 		"AllCollectors":     allCollectors,
