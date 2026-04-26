@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"cloud.google.com/go/vertexai/genai"
 )
@@ -90,14 +91,59 @@ Maintain a professional and constructive tone. Do not include any other text tha
 	return interpreted, nil
 }
 
+// GitHubIssue represents a GitHub issue.
+type GitHubIssue struct {
+	Title       string    `json:"title"`
+	Body        string    `json:"body"`
+	State       string    `json:"state"`
+	CreatedAt   time.Time `json:"created_at"`
+	ClosedAt    time.Time `json:"closed_at"`
+	PullRequest interface{} `json:"pull_request,omitempty"`
+	Labels      []struct {
+		Name string `json:"name"`
+	} `json:"labels"`
+}
+
 // GitHubService defines the interface for GitHub operations.
 type GitHubService interface {
 	CreateIssue(repo, token, title, body string, labels []string) error
+	GetClosedIssues(repo, token string) ([]GitHubIssue, error)
 }
 
 // RealGitHubService implements GitHubService using the GitHub API.
 type RealGitHubService struct {
 	Client *http.Client
+}
+
+func (s *RealGitHubService) GetClosedIssues(repo, token string) ([]GitHubIssue, error) {
+	url := fmt.Sprintf("https://api.github.com/repos/%s/issues?state=closed&per_page=100", repo)
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create GitHub request: %w", err)
+	}
+
+	if token != "" {
+		req.Header.Set("Authorization", "token "+token)
+	}
+	req.Header.Set("Accept", "application/vnd.github.v3+json")
+
+	resp, err := s.Client.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to send GitHub request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("GitHub API returned non-200 status: %d", resp.StatusCode)
+	}
+
+	var issues []GitHubIssue
+	if err := json.NewDecoder(resp.Body).Decode(&issues); err != nil {
+		return nil, fmt.Errorf("failed to decode GitHub issues: %w", err)
+	}
+
+	return issues, nil
 }
 
 func (s *RealGitHubService) CreateIssue(repo, token, title, body string, labels []string) error {

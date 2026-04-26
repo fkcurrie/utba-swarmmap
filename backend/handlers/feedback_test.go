@@ -13,12 +13,13 @@ import (
 )
 
 type MockGitHubService struct {
-	LastRepo   string
-	LastToken  string
-	LastTitle  string
-	LastBody   string
-	LastLabels []string
-	ReturnErr  error
+	LastRepo     string
+	LastToken    string
+	LastTitle    string
+	LastBody     string
+	LastLabels   []string
+	ReturnErr    error
+	ReturnIssues []GitHubIssue
 }
 
 func (m *MockGitHubService) CreateIssue(repo, token, title, body string, labels []string) error {
@@ -28,6 +29,12 @@ func (m *MockGitHubService) CreateIssue(repo, token, title, body string, labels 
 	m.LastBody = body
 	m.LastLabels = labels
 	return m.ReturnErr
+}
+
+func (m *MockGitHubService) GetClosedIssues(repo, token string) ([]GitHubIssue, error) {
+	m.LastRepo = repo
+	m.LastToken = token
+	return m.ReturnIssues, m.ReturnErr
 }
 
 type MockAIService struct {
