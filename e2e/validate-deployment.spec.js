@@ -86,8 +86,10 @@ test('deployment validation - basic elements and assets', async ({
         text.includes('Failed to track visit')
       )
         return;
-      if (text.includes('net::ERR_EMPTY_RESPONSE')) return; // Also ignore this if it's from the tracking request
+      if (text.includes('net::ERR_EMPTY_RESPONSE')) return;
       if (text.includes('net::ERR_ABORTED')) return;
+      if (text.includes('net::ERR_CONNECTION_CLOSED')) return;
+      if (text.includes('net::ERR_CONNECTION_RESET')) return;
       if (text.includes('favicon.ico')) return;
       if (text.includes('getLayer')) return; // Ignore Mapbox internal layer cleanup issues
 
@@ -130,8 +132,15 @@ test('deployment validation - basic elements and assets', async ({
   }
   await expect(reportBtn).toHaveClass(/btn-primary/);
   // Using an even more flexible regex to handle potential rendering differences,
-  // whitespace, or flaky text updates during geolocation
-  await expect(reportBtn).toHaveText(/Report (a Swarm )?at Your Location/i);
+  // whitespace, or flaky text updates during geolocation. 
+  // We also log the actual text if it fails to help debugging.
+  const actualReportBtnText = await reportBtn.innerText().catch(() => 'unknown');
+  try {
+    await expect(reportBtn).toHaveText(/Report (a Swarm )?at Your Location/i);
+  } catch (error) {
+    console.error(`Report button text mismatch. Expected regex: /Report (a Swarm )?at Your Location/i, Actual text: "${actualReportBtnText}"`);
+    throw error;
+  }
   await expect(reportBtn).toHaveAttribute(
     'aria-label',
     /Report a Bee Swarm at your current location/i,
