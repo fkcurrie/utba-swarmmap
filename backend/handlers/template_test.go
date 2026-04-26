@@ -36,6 +36,12 @@ func TestTemplatesRender(t *testing.T) {
 		{"swarmlist", "swarmlist.html", map[string]interface{}{"Title": "Swarm List", "User": nil, "Swarms": nil}},
 		{"admin", "admin.html", map[string]interface{}{"Title": "Admin", "User": nil, "PendingUsers": nil, "AllUsers": nil, "AllSwarms": nil}},
 		{"collector_admin", "collector_admin.html", map[string]interface{}{"Title": "Collector Admin", "User": nil, "PendingUsers": nil, "AllCollectors": nil}},
+		{"forgot_password", "forgot-password.html", map[string]interface{}{"Title": "Forgot Password"}},
+		{"reset_password", "reset-password.html", map[string]interface{}{"Title": "Reset Password"}},
+		{"pending_approval", "pending-approval.html", map[string]interface{}{"Title": "Pending Approval"}},
+		{"message", "message.html", map[string]interface{}{"Title": "Message", "Message": "Test"}},
+		{"collectors_map", "collectors_map.html", map[string]interface{}{"Title": "Collectors Map", "User": nil}},
+		{"bootstrap", "bootstrap.html", map[string]interface{}{"Title": "Bootstrap"}},
 	}
 
 	for _, tc := range testCases {
