@@ -4,6 +4,13 @@
 # Use this for backend deployments.
 # Command: gcloud builds submit --config cloudbuild-backend.yaml .
 steps:
+  # Prepare static assets
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Prepare Assets'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - 'cp -r ../frontend/static ./static || echo "Static assets already present or frontend not found"'
   # Build and deploy the backend service
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Backend'

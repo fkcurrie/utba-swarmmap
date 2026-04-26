@@ -70,6 +70,9 @@ jobs:
           cd backend
           go test -v ./...
 
+      - name: Prepare Backend Assets
+        run: cp -r frontend/static backend/static
+
       - name: Docker Build Test
         run: |
           docker build -t test-backend ./backend
@@ -121,7 +124,6 @@ jobs:
 
       - name: Build and Push Backend
         run: |
-          cp -r frontend/static backend/static
           IMAGE_NAME="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO }}/backend"
           docker build -t "$IMAGE_NAME:${{ github.sha }}" ./backend
           docker tag "$IMAGE_NAME:${{ github.sha }}" "$IMAGE_NAME:latest"

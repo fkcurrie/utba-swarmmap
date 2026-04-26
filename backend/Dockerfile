@@ -19,9 +19,9 @@ WORKDIR /app
 COPY --from=builder /app/server /app/server
 COPY --from=builder /src/templates /app/templates/
 # Copy static assets - they should be provided in the build context at backend/static
-# We use wildcards to ensure the build succeeds even if assets are missing, 
-# although they are required for full functionality.
-COPY static* /app/static/
+# We remove the wildcard to ensure the build fails if the static directory is missing,
+# as it is required for proper frontend functionality when served by the backend.
+COPY static /app/static/
 
 ENV PORT=8080
 EXPOSE 8080

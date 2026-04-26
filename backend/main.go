@@ -169,16 +169,20 @@ func main() {
 	// or ../frontend/static (for local development), ensuring backend self-sufficiency.
 	staticDir := "./static"
 	if _, err := os.Stat(staticDir); os.IsNotExist(err) {
+		slog.Info("Primary static directory not found, trying fallback", "dir", staticDir)
 		staticDir = "../frontend/static"
 	}
 
-	if _, err := os.Stat(staticDir); err == nil {
-		slog.Info("Serving static files", "dir", staticDir)
+	if info, err := os.Stat(staticDir); err == nil && info.IsDir() {
+		slog.Info("Serving static files", "dir", staticDir, "absPath", func() string {
+			abs, _ := filepath.Abs(staticDir)
+			return abs
+		}())
 		fs := http.FileServer(http.Dir(staticDir))
 		// Use a more permissive pattern for static files to support all methods (GET, HEAD, etc.)
 		mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	} else {
-		slog.Warn("Static files directory not found, some assets may fail to load", "dir", staticDir)
+		slog.Warn("Static files directory not found or is not a directory, some assets will fail to load", "dir", staticDir)
 	}
 
 	// Health and utility routes
