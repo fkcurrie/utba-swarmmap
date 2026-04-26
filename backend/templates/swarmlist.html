@@ -53,17 +53,19 @@
                                     {{if .AssignedCollectorEmail}}
                                         <div class="d-flex flex-column align-items-end gap-1">
                                             <span class="badge bg-info-subtle text-info-emphasis small">Claimed by {{.AssignedCollectorEmail}}</span>
-                                            {{if eq $.User.UserID .AssignedCollectorID}}
-                                            <form action="/unclaim_swarm" method="POST">
-                                                <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
-                                                <input type="hidden" name="swarmID" value="{{.ID}}">
-                                                <button type="submit" class="btn btn-sm btn-link text-danger p-0 text-decoration-none small">Unclaim</button>
-                                            </form>
+                                            {{if $.User}}
+                                                {{if eq $.User.UserID .AssignedCollectorID}}
+                                                <form action="/unclaim_swarm" method="POST">
+                                                    <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                    <input type="hidden" name="swarmID" value="{{.ID}}">
+                                                    <button type="submit" class="btn btn-sm btn-link text-danger p-0 text-decoration-none small">Unclaim</button>
+                                                </form>
+                                                {{end}}
                                             {{end}}
                                         </div>
                                     {{else}}
                                         <form action="/claim_swarm" method="POST">
-                                            <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                            <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                             <input type="hidden" name="swarmID" value="{{.ID}}">
                                             <button type="submit" class="btn btn-sm btn-primary px-3 shadow-sm">Claim</button>
                                         </form>

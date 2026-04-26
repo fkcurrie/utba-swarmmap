@@ -17,7 +17,7 @@
                         <h2 class="h5 mb-0 fw-bold text-warning">
                             <i class="fa-solid fa-user-clock me-2"></i> Pending Approvals
                         </h2>
-                        <span class="badge bg-warning text-dark rounded-pill">{{len .PendingUsers}}</span>
+                        <span class="badge bg-warning text-dark rounded-pill">{{if .PendingUsers}}{{len .PendingUsers}}{{else}}0{{end}}</span>
                     </div>
                     <div class="card-body p-0">
                         {{if .PendingUsers}}
@@ -48,12 +48,12 @@
                                             <td class="pe-4 text-end" data-label="Actions">
                                                 <div class="d-flex justify-content-end gap-2">
                                                     <form method="POST" action="/admin/approve_user">
-                                                        <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                        <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                                         <input type="hidden" name="userID" value="{{.ID}}">
                                                         <button type="submit" class="btn btn-sm btn-success px-3">Approve</button>
                                                     </form>
                                                     <form method="POST" action="/admin/reject_user">
-                                                        <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                        <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                                         <input type="hidden" name="userID" value="{{.ID}}">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger px-3">Reject</button>
                                                     </form>
@@ -97,7 +97,7 @@
                     <div class="col-12">
                         <div class="card border-0 shadow-sm text-center py-4 bg-white">
                             <div class="card-body">
-                                <div class="display-6 fw-800 mb-1 text-warning">{{len .PendingUsers}}</div>
+                                <div class="display-6 fw-800 mb-1 text-warning">{{if .PendingUsers}}{{len .PendingUsers}}{{else}}0{{end}}</div>
                                 <div class="text-muted small fw-bold text-uppercase tracking-wider">Pending Approvals</div>
                             </div>
                         </div>
@@ -105,7 +105,7 @@
                     <div class="col-12">
                         <div class="card border-0 shadow-sm text-center py-4 bg-white">
                             <div class="card-body">
-                                <div class="display-6 fw-800 mb-1 text-primary">{{len .AllCollectors}}</div>
+                                <div class="display-6 fw-800 mb-1 text-primary">{{if .AllCollectors}}{{len .AllCollectors}}{{else}}0{{end}}</div>
                                 <div class="text-muted small fw-bold text-uppercase tracking-wider">Active Collectors</div>
                             </div>
                         </div>

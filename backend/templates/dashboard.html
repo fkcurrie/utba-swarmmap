@@ -56,10 +56,10 @@
                             </h2>
                             <p class="text-muted small mb-0 mt-1">New reports needing attention</p>
                         </div>
-                        <span class="badge bg-danger rounded-pill">{{len .AvailableSwarms}}</span>
+                        <span class="badge bg-danger rounded-pill">{{if .AvailableSwarms}}{{len .AvailableSwarms}}{{else}}0{{end}}</span>
                     </div>
                     <div class="card-body px-4">
-                        {{if .AvailableSwarms}}
+                        {{if and .AvailableSwarms (gt (len .AvailableSwarms) 0)}}
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle responsive-card-table">
                                     <thead>
@@ -80,14 +80,14 @@
                                             <td class="text-end" data-label="Action">
                                                 {{if .AssignedCollectorID}}
                                                     <form method="POST" action="/assign_swarm" class="d-inline">
-                                                        <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                        <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                                         <input type="hidden" name="swarmID" value="{{.ID}}">
                                                         <input type="hidden" name="action" value="unassign">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger">Unclaim</button>
                                                     </form>
                                                 {{else}}
                                                     <form method="POST" action="/assign_swarm" class="d-inline">
-                                                        <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                        <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                                         <input type="hidden" name="swarmID" value="{{.ID}}">
                                                         <input type="hidden" name="action" value="assign">
                                                         <button type="submit" class="btn btn-sm btn-primary px-3">Claim</button>
@@ -121,10 +121,10 @@
                             </h2>
                             <p class="text-muted small mb-0 mt-1">Swarms you're currently handling</p>
                         </div>
-                        <span class="badge bg-success rounded-pill">{{len .AssignedSwarms}}</span>
+                        <span class="badge bg-success rounded-pill">{{if .AssignedSwarms}}{{len .AssignedSwarms}}{{else}}0{{end}}</span>
                     </div>
                     <div class="card-body px-4">
-                        {{if .AssignedSwarms}}
+                        {{if and .AssignedSwarms (gt (len .AssignedSwarms) 0)}}
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle responsive-card-table">
                                     <thead>
@@ -149,14 +149,14 @@
                                             <td class="text-end" data-label="Update">
                                                 {{if or (eq .Status "Reported") (eq .Status "Claimed")}}
                                                     <form method="POST" action="/update_swarm_status" class="d-inline">
-                                                        <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                        <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                                         <input type="hidden" name="id" value="{{.ID}}">
                                                         <input type="hidden" name="status" value="Verified">
                                                         <button type="submit" class="btn btn-sm btn-warning">Verify</button>
                                                     </form>
                                                 {{else if eq .Status "Verified"}}
                                                     <form method="POST" action="/update_swarm_status" class="d-inline">
-                                                        <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                        <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                                         <input type="hidden" name="id" value="{{.ID}}">
                                                         <input type="hidden" name="status" value="Captured">
                                                         <button type="submit" class="btn btn-sm btn-success">Captured</button>
