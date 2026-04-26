@@ -50,9 +50,9 @@ func (h *Handlers) sanitize(s string) string {
 
 func (h *Handlers) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	path := h.sanitize(r.URL.Path)
-	slog.Debug("IndexHandler called", "path", path) // #nosec G706
+	slog.Info("IndexHandler called", "path", path) // #nosec G706
 	if path != "/" {
-		slog.Debug("Path not /, returning NotFound", "path", path) // #nosec G706
+		slog.Info("Path not /, returning NotFound", "path", path) // #nosec G706
 		http.NotFound(w, r)
 		return
 	}

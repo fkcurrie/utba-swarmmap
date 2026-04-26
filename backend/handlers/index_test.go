@@ -34,6 +34,20 @@ func TestIndexHandler(t *testing.T) {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
 	}
+
+	// Test HEAD request
+	reqHEAD, err := http.NewRequest("HEAD", "/", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rrHEAD := httptest.NewRecorder()
+	handler.ServeHTTP(rrHEAD, reqHEAD)
+
+	if status := rrHEAD.Code; status != http.StatusOK {
+		t.Errorf("HEAD request returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
 }
 
 func TestIndexHandler_NotFound(t *testing.T) {

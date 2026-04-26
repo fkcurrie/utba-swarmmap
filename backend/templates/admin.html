@@ -52,7 +52,7 @@
                                         <td class="pe-4" data-label="Actions">
                                             {{if ne .Role "site_admin"}}
                                                 <form method="POST" action="/admin/promote_user" class="d-flex align-items-center justify-content-end justify-content-md-start" aria-label="Update user role">
-                                                    <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                    <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                                     <input type="hidden" name="userID" value="{{.ID}}">
                                                     <select name="role" class="form-select form-select-sm me-2 border-0 bg-light" style="width: auto;" aria-label="Select new role">
                                                         <option value="collector" {{if eq .Role "collector"}}selected{{end}}>Collector</option>
@@ -114,12 +114,12 @@
                                             <td class="pe-4 text-end">
                                                 <div class="d-flex justify-content-end gap-2">
                                                     <form method="POST" action="/admin/approve_user">
-                                                        <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                        <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                                         <input type="hidden" name="userID" value="{{.ID}}">
                                                         <button type="submit" class="btn btn-sm btn-success px-3">Approve</button>
                                                     </form>
                                                     <form method="POST" action="/admin/reject_user">
-                                                        <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                        <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                                         <input type="hidden" name="userID" value="{{.ID}}">
                                                         <button type="submit" class="btn btn-sm btn-outline-danger px-3">Reject</button>
                                                     </form>
@@ -163,7 +163,7 @@
                     <div class="col-6">
                         <div class="card border-0 shadow-sm text-center h-100 d-flex justify-content-center bg-white">
                             <div class="card-body py-4">
-                                <div class="display-6 fw-800 mb-1 text-primary">{{len .AllSwarms}}</div>
+                                <div class="display-6 fw-800 mb-1 text-primary">{{if .AllSwarms}}{{len .AllSwarms}}{{else}}0{{end}}</div>
                                 <div class="text-muted small fw-bold text-uppercase tracking-wider">Total Swarms</div>
                             </div>
                         </div>
@@ -171,7 +171,7 @@
                     <div class="col-6">
                         <div class="card border-0 shadow-sm text-center h-100 d-flex justify-content-center bg-white">
                             <div class="card-body py-4">
-                                <div class="display-6 fw-800 mb-1 text-warning">{{len .PendingUsers}}</div>
+                                <div class="display-6 fw-800 mb-1 text-warning">{{if .PendingUsers}}{{len .PendingUsers}}{{else}}0{{end}}</div>
                                 <div class="text-muted small fw-bold text-uppercase tracking-wider">Pending Users</div>
                             </div>
                         </div>
@@ -232,7 +232,7 @@
                                             <td class="small text-muted" data-label="Reported">{{.ReportedTimestamp.Format "Jan 02, 15:04"}}</td>
                                             <td class="pe-4 text-end" data-label="Action">
                                                 <form method="POST" action="/admin/delete_swarm" onsubmit="return confirm('Delete this swarm report permanently?');" class="d-flex justify-content-end">
-                                                    <input type="hidden" name="csrf_token" value="{{$.User.CSRFToken}}">
+                                                    <input type="hidden" name="csrf_token" value="{{if $.User}}{{$.User.CSRFToken}}{{end}}">
                                                     <input type="hidden" name="swarmID" value="{{.ID}}">
                                                     <button type="submit" class="btn btn-sm text-danger text-decoration-none">Delete</button>
                                                 </form>

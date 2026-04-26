@@ -49,4 +49,17 @@ func TestStaticFiles(t *testing.T) {
 	if body := rr.Body.String(); body != testCSS {
 		t.Errorf("handler returned unexpected body: got %v want %v", body, testCSS)
 	}
+
+	// Test requesting a non-existent file
+	req404, err := http.NewRequest("GET", "/static/missing.txt", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr404 := httptest.NewRecorder()
+	mux.ServeHTTP(rr404, req404)
+
+	if status := rr404.Code; status != http.StatusNotFound {
+		t.Errorf("handler for missing file returned wrong status code: got %v want %v", status, http.StatusNotFound)
+	}
 }
